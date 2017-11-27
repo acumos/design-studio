@@ -1,0 +1,1768 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "840a0122_be2a751d",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please update to say \"Acumos\" and point to the documentation in the docs/ area.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45a90d36_36c5d366",
+        "filename": "TOSCAGeneratorClient/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use valid MarkDown format, and add details.  If the details are in the docs/ area, point to that.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f39b09a1_8580cf00",
+        "filename": "TOSCAGeneratorClient/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "This URL is wrong, please remove",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7d42a55_f68d61ab",
+        "filename": "TOSCAGeneratorClient/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "This deployment detail is wrong, there is no acumos.com",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ee5cd32_a1cac60f",
+        "filename": "TOSCAGeneratorClient/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "What is nexus.acumos.com?",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4287a2cb_e04e82e0",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/ToscaGeneratorClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Remove code, don\u0027t comment it out",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "457dcdd6_11670590",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/util/ToscaUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Get the logger for ToscaUtil, not Properties, class!",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32378faf_dc9c0ba4",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/util/ToscaUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "The close should be in a finally {} block",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5205456_8403f7b4",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/util/ToscaUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Severe resource leak - this does NOT close the FileReader.  That\u0027s a great way to cause your process to use up all its file descriptors then suddenly hang.  MUST FIX!",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 69
+      },
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "49ead176_a67475f2",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/protobuf/InputMessage.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Should this implement Serializable?  If not used, can it be deleted?",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0124ff7d_78ca279d",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/protobuf/MessageBody.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Needs a generated serial UID",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73e21e62_044120ab",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/protobuf/MessageSortByTag.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t catch and discard exceptions - log them",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05a25891_821e9dd0",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/protobuf/MessageargumentList.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Needs a generated serial UID",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d6a94dc_c776a3a4",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/protobuf/Operation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Needs a generated serial UID",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf538b59_3e3761a3",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/protobuf/Option.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Needs a generated serial UID",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 1
+      },
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6826dca7_f848dade",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/protobuf/OutputMessage.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Needs a generated serial UID",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88da8c08_dd0303b1",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/protobuf/ProtoBufClass.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Needs a generated serial UID",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a52b12e4_cb908c7e",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/protobuf/Service.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Needs a generated ID",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ede0061f_3c4e4424",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/tgif/Artifact.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bdd29f7c_04e0ffef",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/tgif/Auxiliary.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32aa789e_046760d2",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/tgif/Call.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c72a5fd5_751c6250",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/tgif/Parameter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ece9c1d8_dde41b54",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/tgif/Provide.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e635368_2d804749",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/tgif/Request.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62cb4317_00994ae9",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/tgif/Response.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ed7f961_1c193c7f",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/tgif/Self.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "617f6874_91d43b24",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/tgif/Service.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d335220_49309d4a",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/tgif/Stream.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a0b65380_8bf92b73",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/tgif/Tgif.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "80d65e0f_805b0988",
+        "filename": "TOSCAGeneratorClient/src/test/java/org/acumos/designstudio/toscagenerator/test/TgifGeneratorServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Do not catch and discard all exceptions. JUnit cannot detect a failure.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "47aea472_e30b59e1",
+        "filename": "TOSCAGeneratorClient/src/test/java/org/acumos/designstudio/toscagenerator/test/ToscaGeneratorServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please remove hardcoded Windows paths such as these.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a32d1a3_1acc28cf",
+        "filename": "TOSCAGeneratorClient/src/test/java/org/acumos/designstudio/toscagenerator/test/ToscaGeneratorServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please do NOT commit username and password combinations, not ever.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2a3e5c3_ab0194e7",
+        "filename": "TOSCAGeneratorClient/src/test/java/org/acumos/designstudio/toscagenerator/test/ToscaGeneratorServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Do not catch the exception; if you must, then re-throw it.  An exception is the only way for JUnit to detect a failure.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f362a56_b28d98c7",
+        "filename": "docs/design-studio.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "I believe this content must be ReStructuredText (rst), not MD.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba3c0dcb_5c5020c8",
+        "filename": "docs/release-notes.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please populate this file.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6553924_ec7021a0",
+        "filename": "docs/tutorials/index.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "There is no tutorial here - either supply the missing files lesson1, lesson2, lesson3 or remove tutorials/ directory.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0773453b_b0883bec",
+        "filename": "ds-compositionengine/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use valid MD format, and point to the docs/ area.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "507ddb27_f144f694",
+        "filename": "ds-compositionengine/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please do NOT commit user names and passwords to Git.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "38d831bf_0b33046d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/App.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Suggest removing this useless class",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc183b82_125dab7e",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/Capabilities.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t use \"1\" as the serial version UID.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95c24afd_51ebf9b9",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/Capability.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t use \"1\" as the serial version UID.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e349fb1f_eb9d881c",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/CapabilityTarget.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t use \"1\" as the serial version UID.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16e59d4f_5ab79d09",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/Message.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t use \"1\" as the serial version UID.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d31cd577_e1c2207d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/Ndata.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t use \"1\" as the serial version UID.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7569e41_1fb0b193",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/NodeType.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t use \"1\" as the serial version UID.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58b7b3a6_439ee88f",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/Property.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t use \"1\" as the serial version UID.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "211beee2_25b6bd98",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/Relations.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t use \"1\" as the serial version UID.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a95d4e36_00bbf66b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/Relationship.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t use \"1\" as the serial version UID.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7a4b31_44d54d89",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/ReqCapability.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t use \"1\" as the serial version UID.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "878a720e_32768a7a",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/Requirements.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t use \"1\" as the serial version UID.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b5f4958_0835fb18",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/Target.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t use \"1\" as the serial version UID.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "256660cb_10cf8bed",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/Type.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t use \"1\" as the serial version UID.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3adc469d_c6d0eef1",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/Typeinfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Can this empty class be removed?",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 49
+      },
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36e28191_716a1a62",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/config/AppConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use the interface (ICommonDataServiceRestClient) and not the Impl class.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f588f78_63383560",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/config/SwaggerConfiguration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please state \"Apache 2.0\"",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7884325c_c9851480",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/ArtfactDetailsController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Does this produce text/plain or application/JSON?",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3125d574_e9a5d3ff",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/ArtfactDetailsController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Remove code, don\u0027t comment it out",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2bbf691_ec9164ff",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/ArtfactDetailsController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Does this produce text or JSON?",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45fc317f_20e03242",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/HelloController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "If this controller is not used, please remove",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1882855d_2d3dc03c",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/HelloController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Does this return JSON?",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ea11720_3c6b0494",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/exceptionhandler/CustomException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Can you please find a more descriptive name than \"Custom\" ?",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5847971_16e3b326",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "This is duplicated in several places.  Can it be moved to a common class?  Even better, can you define an Error POJO and use it instead?",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "761f6c69_e945e134",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Building JSON by hand is prone to error.  Please use a simple POJO and let the Jackson serializer do the work for you.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03da0690_42a76aa3",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/IAcumosCatalog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please document the methods in the interface, then don\u0027t put any javadoc on the implementations.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51eec751_cc0ff8c5",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/ICompositeSolutionService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please document the methods in the interface, then don\u0027t put any javadoc on the implementations.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3aa8d73_624bd608",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Be consistent, use a leading \"I\" here.\n\nPlease document the methods in the interface, then don\u0027t put any javadoc on the implementations.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb58e111_f8dc9e88",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceDummy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Dummy in what sense?  A test implementation only?",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "382255af_c825883b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Should use the interface, not the Impl class here.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "38fc5151_c7d3df50",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/ConfigurationProperties.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "I really don\u0027t think the setter() functions should be defined here.  This is not a POJO that has to be serialized.  Spring gives you values from a file.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c9d748a8_f60a166f",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Probably need to specify character encoding (\"UTF-8\") here instead of assuming the platform coding is sufficient.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f967a9bd_a7313cbb",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Close should be in a finally{} clause",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4ae7fbe_562fd511",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/Properties.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Why have setter() methods?  Spring populates the properties from the file, you don\u0027t want user code to change the properties, right??",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fd46e196_d688816d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/Artifact.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Use a generated UID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23f277ab_574c873a",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/DSCompositeSolution.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Use a generated UID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29192116_50f7ec96",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/BluePrint.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Use a generated UID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8d98bc6_1ee7b1c0",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/Depends_On.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Use a generated UID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79087b64_cdf5e1d8",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/InputOperationSignatures.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Use a generated UID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc64f31c_9fa77490",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/Node.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Use a generated UID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46273f7c_24e93a03",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/OperationSignature.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Use a generated UID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f025ae8e_230d6c61",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/protobuf/MessageBody.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Use a generated UID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d3f0cca_451d4118",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/protobuf/MessageargumentList.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28aaa162_0308df76",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/protobuf/ProtoBufClass.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9661a73_1b9f3141",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/tgif/Artifact.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4d9ab7b_5d44caca",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/tgif/Auxiliary.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "709d30ff_92aceebc",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/tgif/Call.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75f1df66_5fed9a1c",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/tgif/Parameter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d557e0ab_36311c93",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/tgif/Provide.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8b2be13_ac7e3624",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/tgif/Request.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa434133_67ab00a0",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/tgif/Response.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bc6752c_6d11192f",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/tgif/Self.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e22feeb4_ba82b702",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/tgif/Service.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f5577dc_96094ed2",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/tgif/Stream.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Please use a generated ID, not \"1\".",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f8485e5e_e501e3b8",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/ControllersTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "A test cannot catch all exceptions and it must test the result.  It appears that this will NEVER detect a failure.",
+      "range": {
+        "startLine": 99,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 25
+      },
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "60cee49a_8b918cba",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/DSCompositionEngineTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "This will not work when run by Jenkins.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46f92242_6d2129aa",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/DSCompositionEngineTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Don\u0027t catch and discard all exceptions.  JUnit detects a failed test this way.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff2c9034_7b192abd",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/GetMatchingModelTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Do not commit usernames and passwords to Git",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f7c447c_89e8d03e",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/GetMatchingModelTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Do not commit usernames and passwords to git",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e9de4a1_65c80830",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/GetMatchingModelTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Do not commit usernames and passwords to Git",
+      "range": {
+        "startLine": 72,
+        "startChar": 1,
+        "endLine": 72,
+        "endChar": 58
+      },
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7b545b3_5bf47522",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/SolutionControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Do not catch and discard all exceptions.  JUnit cannot detect a failed case.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99342a1c_5001345d",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/TGIFTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Where are the assert statements to check the values that were set?  This calls setters and getters - achieves coverage - but does NOT verify whether the getters and setters actually work.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a87df1b2_3704c40d",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/VOTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "Remove \"att.com\"",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bde1254c_4ad00646",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/VOTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-11-27T14:58:47Z",
+      "side": 1,
+      "message": "This is a good start but not a valid test, because it does not compare values - must check that get() yileds the same value that was set() via an Assertion.",
+      "revId": "c9b97196ef1dee8893094dd890538e6800b729da",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
