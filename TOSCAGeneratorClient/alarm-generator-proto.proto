@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+message DataFrame {
+  string mime_type = 1;
+  string binary_stream = 2;
+  int32 frame_size = 3;
+}
+
+message Prediction {
+  repeated int64 idx = 1;
+  repeated string class = 2;
+  repeated double prediction = 3;
+}
+
+message ClassifiedData {
+  repeated fixed32 idx = 1;
+  repeated string class = 2;
+  repeated int32 classifier_idx = 3;
+}
+
+message Alarms {
+  repeated int32 idx = 1;
+  repeated string alarm_name = 2;
+  repeated int32 alarm_threshold = 3;
+}
+
+message AlarmList {
+  repeated string alarm_type = 1;
+  repeated string alarm_name = 2;
+}
+
+service AlarmGenerator {
+  rpc generateAlarms (ClassifiedData) returns (Alarms);
+  rpc searchAlarm (DataFrame) returns (AlarmList);
+}
