@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+message DataFrame {
+  string mime_type = 1;
+  string binary_stream = 2;
+}
+
+message AggregateData {
+  repeated string mime_type = 1;
+  repeated string binary_stream = 2;
+}
+
+service Aggregator {
+  rpc aggregate (DataFrame) returns (AggregateData);
+}
