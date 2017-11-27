@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+message DataFrame {
+  string mime_type = 1;
+  string binary_stream = 2;
+}
+
+
+message Prediction_mapped {
+  repeated int64 idx = 1;
+  repeated string class = 2;
+  repeated double prediction = 3;
+}
+
+
+message ClassifiedData {
+  repeated fixed32 idx = 1;
+  repeated string class = 2;
+  repeated int32 classifier_idx = 3;
+}
+
+message Classification {
+  repeated int32 idx = 1;
+  repeated string class = 2;
+  repeated int32 classifier_idx = 3;
+}
+
+message AggregateData {
+  repeated string mime_type = 1;
+  repeated string binary_stream = 2;
+}
+
+service Classifier {
+  rpc classify (Prediction_mapped) returns (ClassifiedData);
+  rpc doClassification (DataFrame) returns (Classification);
+}
