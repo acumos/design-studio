@@ -1,0 +1,282 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "004879d2_d5acffcc",
+        "filename": "docs/index.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "I cannot find file overview.rst, was it missed in the transfer?",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb8ef9f8_45c78e71",
+        "filename": "docs/release-notes.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "Remove this file - you already have release-notes.rst",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f11fe5de_c2da9eeb",
+        "filename": "docs/release-notes.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "C",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "623bc6ca_3f1517a3",
+        "filename": "ds-compositionengine/application.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "MUST remove user names and passwords from files committed to git",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "acd32db6_cc256763",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/Argument.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "Please use a proper generated value, not 1",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adc346a7_e421092c",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/config/SwaggerConfiguration.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "This is not the CDS project :) change email",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3988cb22_bc750e12",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/config/SwaggerConfiguration.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "Update to say \"Apache 2.0\"",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46f61f21_587ce416",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/DSUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "Use logger for DSUtil, not SolutionController",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba7eabd8_48c3ccfc",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/ArtfactDetailsControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "Don\u0027t hard-code Azure paths, move to config",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d80f600_71821741",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/ControllersTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "Fix class in logger",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53a90dae_0480975f",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/DSCompositionEngineTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "Move URL to configuration",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7cdf181e_f7277933",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/GetMatchingModelTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "Wrong logger class",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0fb15a58_16215116",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/GetMatchingModelTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "Move path to configuration",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96f4ce20_c133ff64",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/TGIFTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "Wrong logger class",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 95
+      },
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b0bb543_16be0e7b",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/VOTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "Move azure URLs to configuration, out of code",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8c3244b4_b43a5748",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-01T13:38:44Z",
+      "side": 1,
+      "message": "Use org.acumos, NOT COGNITA",
+      "revId": "d196f3b99e8407c442c97d6511ee0ece6fb036e4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
