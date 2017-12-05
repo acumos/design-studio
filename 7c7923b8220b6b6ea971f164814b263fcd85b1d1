@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df18a946_8f237c46",
+        "filename": "docs/release-notes.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-05T12:27:45Z",
+      "side": 1,
+      "message": "please remove this file",
+      "revId": "7c7923b8220b6b6ea971f164814b263fcd85b1d1",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e44f442f_d76f24af",
+        "filename": "ds-compositionengine/application.properties",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-05T12:27:45Z",
+      "side": 1,
+      "message": "Please remove all username and password entries",
+      "revId": "7c7923b8220b6b6ea971f164814b263fcd85b1d1",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
