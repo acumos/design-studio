@@ -33,6 +33,23 @@
       "revId": "2e6651bbe28e83acc287a2fd5332246437e0dd3a",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6dccaf6_73cab2b2",
+        "filename": "ds-compositionengine/pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-06T18:15:01Z",
+      "side": 1,
+      "message": "For individual developer use, use these values:\n\n                \u003cacumos.nexus.url\u003ehttp://cognita-nexus01.eastus.cloudapp.azure.com:8081\u003c/acumos.nexus.url\u003e\n                \u003cacumos.nexus.snapshot.path\u003erepository/repo_cognita_platform_maven_snapshots\u003c/acumos.nexus.snapshot.path\u003e\n                \u003cacumos.nexus.release.path\u003erepository/repo_cognita_platform_maven\u003c/acumos.nexus.release.path\u003e",
+      "revId": "2e6651bbe28e83acc287a2fd5332246437e0dd3a",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
     }
   ]
 }
