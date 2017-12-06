@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ea428c2_b3c4d92e",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/vo/protobuf/MessageSortByTag.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-06T18:09:00Z",
+      "side": 1,
+      "message": "Suggest this way instead:\n\n    logger.error(\"compare failed\", ex);",
+      "revId": "2e6651bbe28e83acc287a2fd5332246437e0dd3a",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
