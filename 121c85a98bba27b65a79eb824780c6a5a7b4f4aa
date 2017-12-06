@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df0da57d_0b121d9b",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/util/ToscaUtil.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2017-12-06T16:16:58Z",
+      "side": 1,
+      "message": "Must close the file reader when it\u0027s done.  This leaks resources.",
+      "revId": "121c85a98bba27b65a79eb824780c6a5a7b4f4aa",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
