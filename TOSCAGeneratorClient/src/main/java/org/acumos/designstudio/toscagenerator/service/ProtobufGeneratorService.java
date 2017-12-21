@@ -135,6 +135,7 @@ public class ProtobufGeneratorService {
 				logger.error(" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------", ex);
 			}
 		}
+		logger.debug("ProtoBufToJsonString : " + protoBufToJsonString);
 		return protoBufToJsonString;
 	}
 
@@ -188,18 +189,18 @@ public class ProtobufGeneratorService {
 			listOfOperation = new ArrayList<Operation>();
 			line = line.replace(";","").replace("\t", "").trim();
 			String operationType = "";
-			String OperatioName = "";
+			String OperationName = "";
 			String inputParameterString = "";
 			String outPutParameterString = "";
 			
 			String line1 = line.split("returns")[0];
 			operationType = line1.split(" ",2)[0].trim();
 			String line2 = line1.split(" ",2)[1].replace(" " , "").replace("(", "%br%").replace(")","").trim();
-			OperatioName = line2.split("%br%")[0].trim();
+			OperationName = line2.split("%br%")[0].trim();
 			inputParameterString = line2.split("%br%")[1].trim();
 			outPutParameterString = line.split("returns")[1].replace("(", "").replace(")","").trim();
 			operation.setOperationType(operationType);
-			operation.setOperatioName(OperatioName);
+			operation.setOperationName(OperationName);
 			listOfInputMessages = constructInputMessage(inputParameterString);
 			listOfOputPutMessages = constructOutputMessage(outPutParameterString);
 			
@@ -213,6 +214,7 @@ public class ProtobufGeneratorService {
 				service.setListOfOperations(listOfOperation);
 				protoBufClass.setService(service);
 			}
+		 } else if (isItservice && line.contains("}") && !line.isEmpty()) {
 			isItservice = false;
 			logger.debug("-------------- constructService() end ---------------");
 		}
@@ -413,4 +415,5 @@ public class ProtobufGeneratorService {
 		logger.debug("-------------- constructOutputMessage() end ---------------");
 		return listOfOputPutMessages;
 	}
+	
 }

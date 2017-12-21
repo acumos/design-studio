@@ -32,7 +32,7 @@ public class Operation implements Serializable{
 	
 	private static final long serialVersionUID = 6913785969226335666L;
 	private String operationType = "";
-	private String operatioName = "";
+	private String operationName = "";
 	private List<InputMessage> listOfInputMessages;
 	private List<OutputMessage> listOfOutputMessages;	
 	
@@ -42,11 +42,11 @@ public class Operation implements Serializable{
 	public void setOperationType(String operationType) {
 		this.operationType = operationType;
 	}
-	public String getOperatioName() {
-		return operatioName;
+	public String getOperationName() {
+		return operationName;
 	}
-	public void setOperatioName(String operatioName) {
-		this.operatioName = operatioName;
+	public void setOperationName(String operationName) {
+		this.operationName = operationName;
 	}
 	public List<InputMessage> getListOfInputMessages() {
 		return listOfInputMessages;
