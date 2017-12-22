@@ -105,6 +105,7 @@ public class ToscaGeneratorServiceTest {
 			logger.error("------------ Exception Occured  generateTOSCA() ----------- ", ex);
 			throw ex;
 		}
+		
 		logger.info("Toscagenerator client end");
 	}
 
