@@ -58,9 +58,6 @@ public class ServiceException extends AcumosException {
 	public static final String TOSCA_FILE_GENERATION_ERROR_CODE = Properties.getTOSCAFileGenerationErrorCode();
 	public static final String TOSCA_FILE_GENERATION_ERROR_DESC = Properties.getTOSCAFileGenerationErrorDesc();
 
-	public ServiceException() {
-		super();
-	}
 
 	public ServiceException(String message, String errorCode, String errorDesc) {
 		super(message, errorCode, errorDesc);

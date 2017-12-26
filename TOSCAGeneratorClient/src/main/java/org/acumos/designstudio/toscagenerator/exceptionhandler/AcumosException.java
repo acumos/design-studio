@@ -29,32 +29,23 @@ import org.slf4j.LoggerFactory;
  *
  */
 public abstract class AcumosException extends Exception {
-	private static final long serialVersionUID = 1L;
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(AcumosException.class);
 
-	private Object param;
-	private String errorCode;
-	private String errorDesc;
+	private  transient Object param;
+	private  final String errorCode;
+	private  final String errorDesc;
+
+	public Object getParam() {
+		return param;
+	}
 
 	public String getErrorCode() {
 		return errorCode;
 	}
 
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
-	}
-
 	public String getErrorDesc() {
 		return errorDesc;
-	}
-
-	public void setErrorDesc(String errorDesc) {
-		this.errorDesc = errorDesc;
-	}
-
-	public AcumosException() {
-		super();
 	}
 
 	public AcumosException(String message, String errorCode, String errorDesc) {

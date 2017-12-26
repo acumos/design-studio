@@ -54,9 +54,6 @@ public class ControllerException extends AcumosException {
 	public static final String TOSCA_FILE_GENERATION_ERROR_CODE = Properties.getTOSCAFileGenerationErrorCode();
 	public static final String TOSCA_FILE_GENERATION_ERROR_DESC = Properties.getTOSCAFileGenerationErrorDesc();
 
-	public ControllerException() {
-		super();
-	}
 
 	public ControllerException(String message, String errorCode, String errorDesc) {
 		super(message, errorCode, errorDesc);

@@ -56,11 +56,14 @@ public class ToscaUtil {
 			logger.debug("-------------- writeDataToFile() ended -------------");
 		} catch (Exception e) {
 			logger.error(" --------------- Exception Occured   writeDataToFile() ----------------" + fileName, e);
-		}
-		finally {
-			writer.close();
+		} finally {
+			if (null != writer) {
+				writer.close();
+			}
+
 		}
 	}
+
 	/**
 	 * 
 	 * @param filePath
@@ -87,18 +90,19 @@ public class ToscaUtil {
 			fr.close();
 		}
 	}
+
 	/**
 	 * 
 	 * @param filePath
 	 * @return
 	 */
-	public static String readJSONFile(String filePath) throws Exception{
+	public static String readJSONFile(String filePath) throws Exception {
 		logger.debug("------------- readJSONFile() started -------------");
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject = null;
 		FileReader fr = null;
 		try {
-		    fr = new FileReader(filePath);
+			fr = new FileReader(filePath);
 			Object obj = parser.parse(new FileReader(filePath));
 			jsonObject = (JSONObject) obj;
 			logger.debug("JSON Object : " + jsonObject.toJSONString());
@@ -109,14 +113,15 @@ public class ToscaUtil {
 			logger.error("----------- Exception Occured readJSONFile() -------------", e);
 		} catch (org.json.simple.parser.ParseException e) {
 			logger.error(" ------------- Exception Occured readJSONFile()-----------", e);
-		}finally {
-			if(null != fr){
+		} finally {
+			if (null != fr) {
 				fr.close();
 			}
 		}
 		logger.debug("-----------  readJSONFile() ended ------------");
 		return jsonObject.toJSONString();
 	}
+
 	/**
 	 * 
 	 * @param file
