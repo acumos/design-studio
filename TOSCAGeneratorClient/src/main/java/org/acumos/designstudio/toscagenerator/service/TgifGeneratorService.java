@@ -222,7 +222,7 @@ public class TgifGeneratorService {
 		
 		while(itr.hasNext()){
 			operation = itr.next();
-			operationName = operation.get("operatioName").toString();
+			operationName = operation.get("operationName").toString();
 			//Construct the format : for each output Message get the message name and then get collect the message details 
 			listOfInputMessages = (JSONArray) operation.get("listOfInputMessages");
 			inputMsgItr = listOfInputMessages.iterator();
@@ -280,7 +280,7 @@ public class TgifGeneratorService {
 		 
 		while(itr.hasNext()){
 			operation = itr.next();
-			operationName = operation.get("operatioName").toString();
+			operationName = operation.get("operationName").toString();
 			//Construct the format : for each output Message get the message name and then get collect the message details 
 			listOfOutputMessages = (JSONArray) operation.get("listOfOutputMessages");
 			outputMsgJsonArray = new JSONArray();
