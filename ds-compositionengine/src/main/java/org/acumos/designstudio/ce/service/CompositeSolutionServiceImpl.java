@@ -93,6 +93,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	@Autowired
 	NexusArtifactClient nexusArtifactClient;
+	
+	@Autowired
+	GenericDataMapperServiceImpl gdmService;
 
 	@Override
 	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException{
@@ -987,7 +990,10 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								bpnodes.add(bpnode);
 							}
 							bluePrint.setNodes(bpnodes);
-
+							
+							//Construct the image for the Generic Data mapper : 
+							String gdmDockerImageURI = gdmService.createDeployGDM(cdump, userId);
+							
 							// 15. Write Data to bluePrint file and construct the name of the file
 							bluePrintFileName = "BluePrint" + "-" + solutionId;
 							// 16. Convert bluePrint to json
@@ -1037,6 +1043,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								logger.debug(EELFLoggerDelegator.debugLogger,
 										"------- Successfully associated the Solution Revision Artifact for solution ID  : "
 												+ solutionId);
+								
 							} catch (Exception e) {
 								logger.error(EELFLoggerDelegator.errorLogger,
 										"---------Error : Exception in validateCompositeSolution() : Failed to create the Solution Artifact ----------",

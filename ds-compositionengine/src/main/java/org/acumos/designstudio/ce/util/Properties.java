@@ -93,6 +93,79 @@ public class Properties implements Serializable {
 	@Value("${protoArtifactType}")
 	private String protoArtifactType;
 
+	@Value("${protobufFileName}")
+	private String protobufFileName;
+	
+	
+	@Value("${packagepath}")
+	private String packagepath;
+
+	@Value("${className}")
+	private String className;
+	
+	@Value("${protobufjar}")
+	private String protobufjar;
+	
+	
+	@Value("${fieldMapping}")
+	private String fieldMapping;
+	
+	@Value("${target}")
+	private String target;
+	
+	@Value("${gdmJarName}")
+	private String gdmJarName;
+	
+	
+	
+	/**
+	 * @return the gdmJarName
+	 */
+	public String getGdmJarName() {
+		return gdmJarName;
+	}
+
+	/**
+	 * @return the target
+	 */
+	public String getTarget() {
+		return target;
+	}
+
+	/**
+	 * @return the fieldMapping
+	 */
+	public String getFieldMapping() {
+		return fieldMapping;
+	}
+
+	/**
+	 * @return the protobufjar
+	 */
+	public String getProtobufjar() {
+		return protobufjar;
+	}
+
+	/**
+	 * @return the packagepath
+	 */
+	public String getPackagepath() {
+		return packagepath;
+	}
+
+	/**
+	 * @return the className
+	 */
+	public String getClassName() {
+		return className;
+	}
+
+	/**
+	 * @return the protobufFileName
+	 */
+	public String getProtobufFileName() {
+		return protobufFileName;
+	}
 
 	/**
 	 * @return the solutionErrorCode
