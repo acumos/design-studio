@@ -39,7 +39,7 @@ public class Properties {
 
 	// to load application's properties, we use this class
 	private static java.util.Properties mainProperties = null;
-	
+
 	private static ConfigurationProperties configurationProperties = null;
 
 	static {
@@ -60,7 +60,7 @@ public class Properties {
 					is = new FileInputStream("./TOSCAApplication.properties");
 				}
 				mainProperties.load(is);
-				
+
 				configurationProperties = ConfigurationProperties.getConfigurationProperties();
 				logger.debug("------------  getMainProperties() ended --------------");
 			} catch (Exception e) {
@@ -82,11 +82,11 @@ public class Properties {
 		String lastchar = "";
 		if (!path.trim().isEmpty()) {
 			pathlength = path.length();
-			lastchar = path.substring(pathlength-1);
-			if(lastchar.equals("/")){
+			lastchar = path.substring(pathlength - 1);
+			if (lastchar.equals("/")) {
 				path = path + solutionID + version + '/';
 			} else {
-			path = path + "/" + solutionID + version + '/';
+				path = path + "/" + solutionID + version + '/';
 			}
 			// create the directory for the solution and version specified
 			File dir = new File(path);
@@ -114,12 +114,12 @@ public class Properties {
 	}
 
 	public static String getNexusUserName() {
-		//return mainProperties.getProperty("nexusUserName", "");
+		// return mainProperties.getProperty("nexusUserName", "");
 		return configurationProperties.getNexusUserName();
 	}
 
 	public static String getNexusPassword() {
-		//return mainProperties.getProperty("nexusPassword", "");
+		// return mainProperties.getProperty("nexusPassword", "");
 		return configurationProperties.getNexusPassword();
 	}
 
@@ -128,7 +128,7 @@ public class Properties {
 	}
 
 	public static String getNexusGropuId() {
-		//return mainProperties.getProperty("nexusGroupId", "");
+		// return mainProperties.getProperty("nexusGroupId", "");
 		return configurationProperties.getNexusGroupId();
 	}
 
@@ -150,17 +150,17 @@ public class Properties {
 	}
 
 	public static String getCmnDataSvcEndPoinURL() {
-		//return mainProperties.getProperty("cmnDataSvcEndPoinURL", "");
+		// return mainProperties.getProperty("cmnDataSvcEndPoinURL", "");
 		return configurationProperties.getCmnDataSvcEndPoinURL();
 	}
 
 	public static String getCmnDataSvcUser() {
-		//return mainProperties.getProperty("cmnDataSvcUser", "");
+		// return mainProperties.getProperty("cmnDataSvcUser", "");
 		return configurationProperties.getCmnDataSvcUser();
 	}
 
 	public static String getCmnDataSvcPwd() {
-		//return mainProperties.getProperty("cmnDataSvcPwd", "");
+		// return mainProperties.getProperty("cmnDataSvcPwd", "");
 		return configurationProperties.getCmnDataSvcPwd();
 	}
 
@@ -261,11 +261,17 @@ public class Properties {
 	public static String getInvalidCredsErrorDesc() {
 		return mainProperties.getProperty("invalidCredentialsDesc", "");
 	}
-	
-	public static String getTOSCATypeCode(String toscaType){
+
+	public static String getTOSCATypeCode(String toscaType) {
 		return mainProperties.getProperty(toscaType + "_code", "1");
 	}
-	public static String isOptionKeywordRequirede(){
+
+	public static String isOptionKeywordRequirede() {
 		return mainProperties.getProperty("isOptionKeywordRequired", "");
 	}
+
+	public static String getProtobufBasicType() {
+		return mainProperties.getProperty("protobufbasicType", "");
+	}
+
 }

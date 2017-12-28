@@ -25,12 +25,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import org.acumos.designstudio.toscagenerator.util.Properties;
+import org.acumos.designstudio.toscagenerator.vo.protobuf.ComplexType;
 import org.acumos.designstudio.toscagenerator.vo.protobuf.InputMessage;
 import org.acumos.designstudio.toscagenerator.vo.protobuf.MessageBody;
 import org.acumos.designstudio.toscagenerator.vo.protobuf.MessageargumentList;
@@ -42,11 +44,13 @@ import org.acumos.designstudio.toscagenerator.vo.protobuf.SortComparator;
 import org.acumos.designstudio.toscagenerator.vo.protobuf.SortFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 
 /**
- * 
+ * @author AB00343130
  */
 
 public class ProtobufGeneratorService {
@@ -55,16 +59,16 @@ public class ProtobufGeneratorService {
 	boolean isItservice = false;
 	boolean isItMessage = false;
 	int servicesLineCount = 0;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ProtobufGeneratorService.class);
-    //Protobuf's variable declaration section started
+	// Protobuf's variable declaration section started
 	final Pattern pattern = Pattern.compile("\\((.*?)\\)");
 	private List<MessageargumentList> messageargumentList = null;
 	private List<InputMessage> listOfInputMessages = null;
 	private List<OutputMessage> listOfOputPutMessages = null;
 	private List<Operation> listOfOperation = null;
 
-	private ProtoBufClass protoBufClass= null;
+	private ProtoBufClass protoBufClass = null;
 
 	private MessageBody messageBody = null;
 	private List<MessageBody> messageBodyList = null;
@@ -72,8 +76,10 @@ public class ProtobufGeneratorService {
 	private Operation operation = null;
 	private List<String> listOfInputAndOutputMessage = null;
 	private List<Option> listOfOption = null;
-    //Probuf's variable declaration section end
-	
+
+	// Start to declare new variables as per new complex protobuf file.
+	private ProtoBufClass duplicateProtoBufClass = null;
+
 	/**
 	 * 
 	 * @param solutionId
@@ -81,11 +87,11 @@ public class ProtobufGeneratorService {
 	 * @param localMetadataFile
 	 * @return
 	 */
-	public String createProtoJson(String solutionId, String version, File localMetadataFile){
+	public String createProtoJson(String solutionId, String version, File localMetadataFile) {
 		logger.debug("-------------- CreateProtoJson() strated ---------------");
 		protoBufClass = new ProtoBufClass();
 		messageBodyList = new ArrayList<>();
-		listOfInputAndOutputMessage =  new ArrayList<>();
+		listOfInputAndOutputMessage = new ArrayList<>();
 		listOfOption = new ArrayList<>();
 		BufferedReader br = null;
 		FileReader fr = null;
@@ -95,47 +101,40 @@ public class ProtobufGeneratorService {
 			br = new BufferedReader(fr);
 			String sCurrentLine;
 			while ((sCurrentLine = br.readLine()) != null) {
-				parseLine(sCurrentLine.replace("\t",""));
+				parseLine(sCurrentLine.replace("\t", ""));
 			}
 			Gson gson = new Gson();
-			boolean messageIsFound = false;
-			int i;
-			for(i = 0; i <protoBufClass.getListOfMessages().size(); i++){
-				for(int k = 0; k<listOfInputAndOutputMessage.size();k++){
-					if(listOfInputAndOutputMessage.get(k).equals(protoBufClass.getListOfMessages().get(i).getMessageName())){
-						messageIsFound = true;
-						break;
-					}else{
-						messageIsFound = false;
-						
-					}
-				}
-				if(!messageIsFound){
-					protoBufClass.getListOfMessages().remove(i);	
-					i=0;
-					i--;
-				}
-				messageIsFound = false;
-			}
 			protoBufToJsonString = gson.toJson(protoBufClass);
+			try {
+				List<MessageBody> expendedmessageBodyList = constructSubMessageBody(protoBufToJsonString);
+				protoBufClass.setListOfMessages(expendedmessageBodyList);
+				Gson gson1 = new Gson();
+				protoBufToJsonString = gson1.toJson(protoBufClass);
+				System.out.println("protoBufToJsonString----------------" + protoBufToJsonString);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 			isMessage = false;
 			isItservice = false;
 			isItMessage = false;
 			servicesLineCount = 0;
-		logger.debug("-------------- CreateProtoJson() end ---------------");	
+			logger.debug("-------------- CreateProtoJson() end ---------------");
 		} catch (Exception ex) {
-			logger.error(" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------", ex);
-		}finally {
-		 try {
+			logger.error(
+					" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------",
+					ex);
+		} finally {
+			try {
 				if (br != null)
 					br.close();
 				if (fr != null)
 					fr.close();
 			} catch (IOException ex) {
-				logger.error(" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------", ex);
+				logger.error(
+						" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------",
+						ex);
 			}
 		}
-		logger.debug("ProtoBufToJsonString : " + protoBufToJsonString);
 		return protoBufToJsonString;
 	}
 
@@ -144,86 +143,84 @@ public class ProtobufGeneratorService {
 	 * @param line
 	 */
 	private void parseLine(String line) {
-      try{
-		// construct syntax
-		if (line.contains("syntax")) {
-			protoBufClass.setSyntax(constructSyntax(line));
-		}
-		// construct package
-		if (line.startsWith("package")) {
-			protoBufClass.setPackageName(constructPackage(line));
-		}
-		if(Properties.isOptionKeywordRequirede().equals("true")){
-			if(line.startsWith("option")){
-				constructOption(line);
-				protoBufClass.setListOfOption(listOfOption);
+		try {
+			// construct syntax
+			if (line.contains("syntax")) {
+				protoBufClass.setSyntax(constructSyntax(line));
 			}
-        }
-		// start package
-
-		if (line.startsWith("message")) {
-			logger.debug("-------------- costructMessage() strated ---------------");
-			isMessage = false;
-			messageBody = new MessageBody();
-
-			messageBody = costructMessage(line, messageBody, null);
-
-		} else if (isMessage && !line.contains("}")) {
-			messageargumentList = new ArrayList<MessageargumentList>();
-			messageBody = costructMessage(line, messageBody, messageargumentList);
-		} else if (isMessage && line.startsWith("}")) {
-			messageBodyList.add(messageBody);
-			protoBufClass.setListOfMessages(messageBodyList);
-			isMessage = false;
-			logger.debug("-------------- costructMessage() end ---------------");
-		}
-        
-		
-		if (line.startsWith("service")) {
-			logger.debug("-------------- constructService() started ---------------");
-			service = new org.acumos.designstudio.toscagenerator.vo.protobuf.Service();
-			service = constructService(line, service);
-
-		}else if (isItservice && !line.contains("}") && !line.isEmpty()) {
-			operation = new Operation();
-			listOfOperation = new ArrayList<Operation>();
-			line = line.replace(";","").replace("\t", "").trim();
-			String operationType = "";
-			String OperationName = "";
-			String inputParameterString = "";
-			String outPutParameterString = "";
-			
-			String line1 = line.split("returns")[0];
-			operationType = line1.split(" ",2)[0].trim();
-			String line2 = line1.split(" ",2)[1].replace(" " , "").replace("(", "%br%").replace(")","").trim();
-			OperationName = line2.split("%br%")[0].trim();
-			inputParameterString = line2.split("%br%")[1].trim();
-			outPutParameterString = line.split("returns")[1].replace("(", "").replace(")","").trim();
-			operation.setOperationType(operationType);
-			operation.setOperationName(OperationName);
-			listOfInputMessages = constructInputMessage(inputParameterString);
-			listOfOputPutMessages = constructOutputMessage(outPutParameterString);
-			
-				
-			operation.setListOfInputMessages(listOfInputMessages);
-			operation.setListOfOutputMessages(listOfOputPutMessages);
-			if (service.getListOfOperations() != null && !service.getListOfOperations().isEmpty()) {
-				service.getListOfOperations().add(operation);
-			} else {
-				listOfOperation.add(operation);
-				service.setListOfOperations(listOfOperation);
-				protoBufClass.setService(service);
+			// construct package
+			if (line.startsWith("package")) {
+				protoBufClass.setPackageName(constructPackage(line));
 			}
-		 } else if (isItservice && line.contains("}") && !line.isEmpty()) {
-			isItservice = false;
-			logger.debug("-------------- constructService() end ---------------");
+			if (Properties.isOptionKeywordRequirede().equals("true")) {
+				if (line.startsWith("option")) {
+					constructOption(line);
+					protoBufClass.setListOfOption(listOfOption);
+				}
+			}
+			// start package
+
+			if (line.startsWith("message")) {
+				logger.debug("-------------- costructMessage() strated ---------------");
+				isMessage = false;
+				messageBody = new MessageBody();
+
+				messageBody = costructMessage(line, messageBody, null);
+
+			} else if (isMessage && !line.contains("}")) {
+				messageargumentList = new ArrayList<MessageargumentList>();
+				messageBody = costructMessage(line, messageBody, messageargumentList);
+			} else if (isMessage && line.startsWith("}")) {
+				messageBodyList.add(messageBody);
+				protoBufClass.setListOfMessages(messageBodyList);
+				isMessage = false;
+				logger.debug("-------------- costructMessage() end ---------------");
+			}
+
+			if (line.startsWith("service")) {
+				logger.debug("-------------- constructService() started ---------------");
+				service = new org.acumos.designstudio.toscagenerator.vo.protobuf.Service();
+				service = constructService(line, service);
+
+			} else if (isItservice && !line.contains("}") && !line.isEmpty()) {
+				operation = new Operation();
+				listOfOperation = new ArrayList<Operation>();
+				line = line.replace(";", "").replace("\t", "").trim();
+				String operationType = "";
+				String operationName = "";
+				String inputParameterString = "";
+				String outPutParameterString = "";
+
+				String line1 = line.split("returns")[0];
+				operationType = line1.split(" ", 2)[0].trim();
+				String line2 = line1.split(" ", 2)[1].replace(" ", "").replace("(", "%br%").replace(")", "").trim();
+				operationName = line2.split("%br%")[0].trim();
+				inputParameterString = line2.split("%br%")[1].trim();
+				outPutParameterString = line.split("returns")[1].replace("(", "").replace(")", "").trim();
+				operation.setOperationType(operationType);
+				operation.setOperationName(operationName);
+				listOfInputMessages = constructInputMessage(inputParameterString);
+				listOfOputPutMessages = constructOutputMessage(outPutParameterString);
+
+				operation.setListOfInputMessages(listOfInputMessages);
+				operation.setListOfOutputMessages(listOfOputPutMessages);
+				if (service.getListOfOperations() != null && !service.getListOfOperations().isEmpty()) {
+					service.getListOfOperations().add(operation);
+				} else {
+					listOfOperation.add(operation);
+					service.setListOfOperations(listOfOperation);
+					protoBufClass.setService(service);
+				}
+				isItservice = false;
+				logger.debug("-------------- constructService() end ---------------");
+			}
+		} catch (Exception ex) {
+			logger.error(" --------------- Exception Occured  parseLine() --------------", ex);
+
 		}
-      }catch(Exception ex){
-    	  logger.error(" --------------- Exception Occured  parseLine() --------------", ex);
-					 
-      }
-		
+
 	}
+
 	/**
 	 * 
 	 * @param line
@@ -232,21 +229,21 @@ public class ProtobufGeneratorService {
 	private String constructSyntax(String line) {
 		logger.debug("-------------- constructSyntax() strated ---------------");
 		String removequotes = "";
-		try{
+		try {
 			if (line.startsWith("syntax")) {
 				String[] fields = line.split("=");
 				String removeSemicolon = fields[1].replace(";", "");
 				String trimString = removeSemicolon.trim();
 				removequotes = trimString.replaceAll("^\"|\"$", "");
 			}
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			logger.error(" --------------- Exception Occured  constructSyntax() --------------", ex);
 		}
 		logger.debug("-------------- constructSyntax() end ---------------");
 		return removequotes;
 
 	}
-	
+
 	/**
 	 * 
 	 * @param line
@@ -257,26 +254,26 @@ public class ProtobufGeneratorService {
 		String[] fields = line.split(" ");
 		logger.debug("-------------- constructPackage() end ---------------");
 		return fields[1].replace(";", "");
-		
+
 	}
-	
+
 	/**
 	 * 
 	 * @param line
 	 * @return
 	 */
-	private String constructOption(String line){
+	private String constructOption(String line) {
 		Option optionInstance = new Option();
-		StringTokenizer st = new StringTokenizer(line," ");
+		StringTokenizer st = new StringTokenizer(line, " ");
 		String removequotes = "";
 		while (st.hasMoreElements()) {
-			  st.nextElement();
-			  optionInstance.setKey(st.nextElement().toString());
-			  st.nextElement();
-			  String removeSemicolon = st.nextElement().toString().replace(";", "");
-			  String trimString = removeSemicolon.trim();
-			  removequotes = trimString.replaceAll("^\"|\"$", "");
-			  optionInstance.setValue(removequotes);
+			st.nextElement();
+			optionInstance.setKey(st.nextElement().toString());
+			st.nextElement();
+			String removeSemicolon = st.nextElement().toString().replace(";", "");
+			String trimString = removeSemicolon.trim();
+			removequotes = trimString.replaceAll("^\"|\"$", "");
+			optionInstance.setValue(removequotes);
 		}
 		listOfOption.add(optionInstance);
 		return "";
@@ -291,7 +288,7 @@ public class ProtobufGeneratorService {
 	 */
 	private MessageBody costructMessage(String line, MessageBody messageBody,
 			List<MessageargumentList> messageargumentList) {
-		try{
+		try {
 			if (line.startsWith("message")) {
 				int openCurlybacketPosition;
 				String messageValue = "";
@@ -300,25 +297,26 @@ public class ProtobufGeneratorService {
 				messageBody.setMessageName(messageValue.trim());
 			}
 			if (isMessage) {
-	
+
 				if (line.endsWith(";") || line.contains(";")) {
-				    StringTokenizer st = new StringTokenizer(line," ");
+					StringTokenizer st = new StringTokenizer(line, " ");
 					String[] fields = line.split(" ");
 					MessageargumentList messageargumentListInstance = new MessageargumentList();
-					
+
 					for (int i = 0; i < fields.length; i++) {
 						if (!fields[i].isEmpty()) {
-							if(st.countTokens() == 5){//count total number of token in line.
-						    messageargumentListInstance.setRule(fields[i]);
-							messageargumentListInstance.setType(fields[i + 1]);
-							messageargumentListInstance.setName(fields[i + 2]);
-							messageargumentListInstance.setTag(fields[i + 4].replace(";", ""));
-						}else{
-							messageargumentListInstance.setRule("");
-							messageargumentListInstance.setType(fields[i]);
-							messageargumentListInstance.setName(fields[i + 1]);
-							messageargumentListInstance.setTag(fields[i + 3].replace(";", ""));
-						}
+							if (st.countTokens() == 5) {// count total number of
+														// token in line.
+								messageargumentListInstance.setRule(fields[i]);
+								messageargumentListInstance.setType(fields[i + 1]);
+								messageargumentListInstance.setName(fields[i + 2]);
+								messageargumentListInstance.setTag(fields[i + 4].replace(";", ""));
+							} else {
+								messageargumentListInstance.setRule("");
+								messageargumentListInstance.setType(fields[i]);
+								messageargumentListInstance.setName(fields[i + 1]);
+								messageargumentListInstance.setTag(fields[i + 3].replace(";", ""));
+							}
 							break;
 						}
 					}
@@ -337,7 +335,7 @@ public class ProtobufGeneratorService {
 			} else {
 				isMessage = true;
 			}
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			logger.error(" --------------- Exception Occured  costructMessage() --------------", ex);
 		}
 		return messageBody;
@@ -349,8 +347,9 @@ public class ProtobufGeneratorService {
 	 * @param service
 	 * @return
 	 */
-	private org.acumos.designstudio.toscagenerator.vo.protobuf.Service constructService(String line, org.acumos.designstudio.toscagenerator.vo.protobuf.Service service) {
-		try{
+	private org.acumos.designstudio.toscagenerator.vo.protobuf.Service constructService(String line,
+			org.acumos.designstudio.toscagenerator.vo.protobuf.Service service) {
+		try {
 			String servicesName = "";
 			int openCurlybacketPosition;
 			openCurlybacketPosition = line.indexOf("{");
@@ -361,7 +360,7 @@ public class ProtobufGeneratorService {
 			} else {
 				isItservice = true;
 			}
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			logger.error(" --------------- Exception Occured  constructService() --------------", ex);
 		}
 		return service;
@@ -376,8 +375,8 @@ public class ProtobufGeneratorService {
 	private List<InputMessage> constructInputMessage(String inputParameterString) {
 		logger.debug("-------------- constructInputMessage() strated ---------------");
 		listOfInputMessages = new ArrayList<InputMessage>();
-		try{
-			
+		try {
+
 			String[] inPutParameterArray = inputParameterString.split(",");
 			for (int i = 0; i < inPutParameterArray.length; i++) {
 				InputMessage inputMessage = new InputMessage();
@@ -385,7 +384,7 @@ public class ProtobufGeneratorService {
 				listOfInputMessages.add(inputMessage);
 				listOfInputAndOutputMessage.add(inputMessage.getInputMessageName());
 			}
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			logger.error(" --------------- Exception Occured  constructInputMessage() --------------", ex);
 		}
 		logger.debug("-------------- constructInputMessage() end ---------------");
@@ -401,19 +400,279 @@ public class ProtobufGeneratorService {
 	private List<OutputMessage> constructOutputMessage(String outPutParameterString) {
 		logger.debug("-------------- constructOutputMessage() strated ---------------");
 		listOfOputPutMessages = new ArrayList<OutputMessage>();
-		try{
+		try {
 			String[] outPutParameterArray = outPutParameterString.split(",");
-		for (int i = 0; i < outPutParameterArray.length; i++) {
-			OutputMessage outputMessage = new OutputMessage();
-			outputMessage.setOutPutMessageName(outPutParameterArray[i]);
-			listOfOputPutMessages.add(outputMessage);
-			listOfInputAndOutputMessage.add(outputMessage.getOutPutMessageName());
-		}
-		}catch(Exception ex){
-			logger.error("-------------- constructOutputMessage() end ---------------",ex);
+			for (int i = 0; i < outPutParameterArray.length; i++) {
+				OutputMessage outputMessage = new OutputMessage();
+				outputMessage.setOutPutMessageName(outPutParameterArray[i]);
+				listOfOputPutMessages.add(outputMessage);
+				listOfInputAndOutputMessage.add(outputMessage.getOutPutMessageName());
+			}
+		} catch (Exception ex) {
+			logger.error("-------------- constructOutputMessage() end ---------------", ex);
 		}
 		logger.debug("-------------- constructOutputMessage() end ---------------");
 		return listOfOputPutMessages;
 	}
-	
+
+	/**
+	 * 
+	 * @param protoBufToJsonString
+	 * @return
+	 */
+	private List<MessageBody> constructSubMessageBody(String protoBufToJsonString) throws Exception {
+		List<MessageBody> expendedmessageBodyList = new ArrayList<MessageBody>();
+		// private List<MessageBody> duplicateexpendedmessageBodyList = new
+		// ArrayList<MessageBody>();
+		List<MessageBody> parentNotExistList = new ArrayList<MessageBody>();
+		List<String> expendedChildmessageBodyList = new ArrayList<String>();
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		mapper.configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true);
+		protoBufClass = mapper.readValue(protoBufToJsonString, ProtoBufClass.class);
+		duplicateProtoBufClass = mapper.readValue(protoBufToJsonString, ProtoBufClass.class);
+		List<MessageBody> sourceMessageBody = protoBufClass.getListOfMessages();
+		List<MessageBody> destinationMessageBody = duplicateProtoBufClass.getListOfMessages();
+		// String[] basicProtobufTypes = { "string", "int32", "int64" };
+		String basicProtobufTypes = Properties.getProtobufBasicType();
+		String[] basicProtobufTypesArray = basicProtobufTypes.split(",");
+		List<String> basicProtobufTypesList = Arrays.asList(basicProtobufTypesArray);
+		int i;
+		boolean isSubMessageFound = false;
+		for (i = 0; i < sourceMessageBody.size(); i++) {
+			String sourceMessageName = sourceMessageBody.get(i).getMessageName();
+			List<MessageargumentList> messageargumentList = sourceMessageBody.get(i).getMessageargumentList();
+			List<MessageargumentList> comlpexmessageargumentList = new ArrayList<MessageargumentList>();
+			int j = 0;
+			for (j = 0; j < destinationMessageBody.size(); j++) {
+				String destinationMessageName = destinationMessageBody.get(j).getMessageName(); // change
+																								// before
+																								// it
+																								// was
+																								// messageBody
+				if (sourceMessageName.equals(destinationMessageName)) {
+					continue;
+				}
+				List<MessageargumentList> parentmessageNamemessageargumentList = destinationMessageBody.get(j)
+						.getMessageargumentList();
+
+				for (int k = 0; k < parentmessageNamemessageargumentList.size(); k++) {
+					String type = parentmessageNamemessageargumentList.get(k).getType();
+					if (!basicProtobufTypesList.contains(type) && type.equals(sourceMessageName)) {
+						isSubMessageFound = true;
+						MessageBody expendedmessageBody = null;
+						List<MessageargumentList> messageargumentListInstanceList = null;
+						String message = "";
+						if (expendedmessageBodyList != null && !expendedmessageBodyList.isEmpty()) {
+							for (int ei = 0; ei < expendedmessageBodyList.size(); ei++) {
+								expendedmessageBody = expendedmessageBodyList.get(ei);
+								message = expendedmessageBody.getMessageName();
+								if (message == destinationMessageBody.get(j).getMessageName()) {
+									messageargumentListInstanceList = expendedmessageBody.getMessageargumentList();
+									break;
+								} else {
+									messageargumentListInstanceList = new ArrayList<MessageargumentList>();
+									expendedmessageBody = new MessageBody();
+								}
+
+							}
+						} else {
+							messageargumentListInstanceList = new ArrayList<MessageargumentList>();
+							expendedmessageBody = new MessageBody();
+						}
+						if (expendedChildmessageBodyList.contains(destinationMessageName)) {
+							MessageargumentList messageargumentListInstance = new MessageargumentList();
+							ComplexType complexType = null;
+							for (MessageBody messageBody0 : expendedmessageBodyList) {
+								List<MessageargumentList> list = messageBody0.getMessageargumentList();
+								MessageargumentList messageArgumentList = null;
+								int messageArgumentListIndex = 0;
+								for (int jj = 0; jj < list.size(); jj++) {
+									messageArgumentList = messageBody0.getMessageargumentList().get(jj);
+									if (messageArgumentList.getComplexType() != null) {
+										complexType = messageArgumentList.getComplexType();
+										messageArgumentListIndex = jj;
+									}
+								}
+								// MessageargumentList messageArgumentList =
+								// messageBody0.getMessageargumentList().get(0);
+
+								// complexType =
+								// messageArgumentList.getComplexType();
+								List<MessageargumentList> complexMessageargumentList = complexType
+										.getMessageargumentList();
+								ComplexType complexTypeObject = null;
+								for (int ii = 0; ii < complexMessageargumentList.size(); ii++) {
+									MessageargumentList MessageargumentList = complexMessageargumentList.get(ii);
+									if (MessageargumentList.getType().equals(sourceMessageName)) {
+										String parentTag = MessageargumentList.getTag();
+										List<MessageargumentList> comlpexmessageargumentList20 = new ArrayList<MessageargumentList>();
+										complexTypeObject = new ComplexType();
+										for (int l = 0; l < messageargumentList.size(); l++) {
+											MessageargumentList messageargumentList12 = (MessageargumentList) messageargumentList
+													.get(l);
+											MessageargumentList complexMessageargumentInstance = new MessageargumentList();
+											complexMessageargumentInstance.setRule(messageargumentList12.getRule());
+											complexMessageargumentInstance.setType(messageargumentList12.getType());
+											complexMessageargumentInstance.setName(messageargumentList12.getName());
+											complexMessageargumentInstance
+													.setTag(parentTag + "." + messageargumentList12.getTag());
+											comlpexmessageargumentList20.add(complexMessageargumentInstance);
+										}
+										complexTypeObject.setMessageName(sourceMessageName);
+										complexTypeObject.setMessageargumentList(comlpexmessageargumentList20);
+										messageargumentListInstance.setRule(MessageargumentList.getRule());
+										messageargumentListInstance.setType(MessageargumentList.getType());
+										messageargumentListInstance.setComplexType(complexTypeObject);
+										messageargumentListInstance.setName(MessageargumentList.getName());
+										messageargumentListInstance.setTag(MessageargumentList.getTag());
+										complexMessageargumentList.set(ii, messageargumentListInstance);
+										complexType.setMessageargumentList(complexMessageargumentList);
+										messageArgumentList.setComplexType(complexType);
+										messageBody0.getMessageargumentList().set(messageArgumentListIndex,
+												messageArgumentList);
+
+									}
+
+								}
+
+							}
+
+						} else {
+							expendedmessageBody.setMessageName(destinationMessageBody.get(j).getMessageName());
+							MessageargumentList messageargumentListInstance = new MessageargumentList();
+							MessageargumentList messageargumentListInstanceSympletype = null;
+							List<MessageargumentList> messageargumentListInstanceSympletypePreList = new ArrayList<MessageargumentList>();
+							List<MessageargumentList> messageargumentListInstanceSympletypePostList = new ArrayList<MessageargumentList>();
+							int simpleTypePreIndex = k;
+							int simpleTypePostIndex = k + 1;
+							if (simpleTypePreIndex > 0) {
+								for (int kk = 0; kk < simpleTypePreIndex; kk++) {
+									messageargumentListInstanceSympletype = new MessageargumentList();
+									messageargumentListInstanceSympletype
+											.setRule(parentmessageNamemessageargumentList.get(kk).getRule());
+									messageargumentListInstanceSympletype
+											.setType(parentmessageNamemessageargumentList.get(kk).getType());
+									messageargumentListInstanceSympletype
+											.setName(parentmessageNamemessageargumentList.get(kk).getName());
+									messageargumentListInstanceSympletype
+											.setTag(parentmessageNamemessageargumentList.get(kk).getTag());
+									messageargumentListInstanceSympletypePreList
+											.add(messageargumentListInstanceSympletype);
+								}
+
+							}
+							List<MessageargumentList> postList = parentmessageNamemessageargumentList
+									.subList(simpleTypePostIndex, parentmessageNamemessageargumentList.size());
+							/*
+							 * if(postList != null && !postList.isEmpty()){
+							 * for(int kk = 0; kk < postList.size(); kk++ ){
+							 * String type1 = postList.get(kk).getType();
+							 * if(basicProtobufTypesList.contains(type1)){
+							 * messageargumentListInstanceSympletype = new
+							 * MessageargumentList();
+							 * messageargumentListInstanceSympletype.setRule(
+							 * postList.get(kk).getRule());
+							 * messageargumentListInstanceSympletype.setType(
+							 * postList.get(kk).getType());
+							 * messageargumentListInstanceSympletype.setName(
+							 * postList.get(kk).getName());
+							 * messageargumentListInstanceSympletype.setTag(
+							 * postList.get(kk).getTag());
+							 * messageargumentListInstanceSympletypePostList.add
+							 * (messageargumentListInstanceSympletype); } }
+							 * 
+							 * }
+							 */
+
+							messageargumentListInstance.setRule(parentmessageNamemessageargumentList.get(k).getRule());
+							messageargumentListInstance.setType(parentmessageNamemessageargumentList.get(k).getType());
+							String parentTag = parentmessageNamemessageargumentList.get(k).getTag();
+
+							ComplexType complexType = new ComplexType();
+
+							complexType.setMessageName(sourceMessageName);
+							for (int l = 0; l < messageargumentList.size(); l++) {
+								MessageargumentList messageargumentList12 = (MessageargumentList) messageargumentList
+										.get(l);
+								MessageargumentList complexMessageargumentInstance = new MessageargumentList();
+								complexMessageargumentInstance.setRule(messageargumentList12.getRule());
+								complexMessageargumentInstance.setType(messageargumentList12.getType());
+								complexMessageargumentInstance.setName(messageargumentList12.getName());
+								complexMessageargumentInstance.setTag(parentTag + "." + messageargumentList12.getTag());
+								comlpexmessageargumentList.add(complexMessageargumentInstance);
+
+							}
+							complexType.setMessageargumentList(comlpexmessageargumentList);
+							messageargumentListInstance.setComplexType(complexType);
+							messageargumentListInstance.setName(parentmessageNamemessageargumentList.get(k).getName());
+							messageargumentListInstance.setTag(parentmessageNamemessageargumentList.get(k).getTag());
+							if (messageargumentListInstanceList != null
+									&& messageargumentListInstanceList.size() != 0) {
+								messageargumentListInstanceList.add(messageargumentListInstance);
+								expendedmessageBody.setMessageargumentList(messageargumentListInstanceList);
+							} else {
+								messageargumentListInstanceList.addAll(messageargumentListInstanceSympletypePreList);
+								messageargumentListInstanceList.add(messageargumentListInstance);
+								messageargumentListInstanceList.addAll(messageargumentListInstanceSympletypePostList);
+								expendedmessageBody.setMessageargumentList(messageargumentListInstanceList);
+							}
+							expendedChildmessageBodyList.add(sourceMessageBody.get(i).getMessageName());
+							if (message == destinationMessageBody.get(j).getMessageName()) {
+
+							} else {
+								expendedmessageBodyList.add(expendedmessageBody);
+							}
+
+						}
+						break;
+					} else {
+						isSubMessageFound = false;
+					}
+				}
+				if (isSubMessageFound) {
+					isSubMessageFound = true;
+					break;
+				}
+			}
+			if (!isSubMessageFound) {
+				parentNotExistList.add(sourceMessageBody.get(i));
+			}
+		}
+		System.out.println(expendedmessageBodyList.size());
+		final int size = parentNotExistList.size();
+		boolean dulicateMessageIsFound = false;
+		for (int ij = 0; ij < size; ij++) {
+			String duplicateMessage = parentNotExistList.get(ij).getMessageName();
+			for (int j = 0; j < expendedmessageBodyList.size(); j++) {
+				if (duplicateMessage.equals(expendedmessageBodyList.get(j).getMessageName())) {
+					dulicateMessageIsFound = true;
+					break;
+				} else {
+					dulicateMessageIsFound = false;
+				}
+			}
+			if (!dulicateMessageIsFound) {
+				expendedmessageBodyList.add(parentNotExistList.get(ij));
+				dulicateMessageIsFound = false;
+			}
+		}
+		return expendedmessageBodyList;
+	}
+
+	/*public static void main(String args[]) {
+		ProtobufGeneratorService protobufGeneratorService = new ProtobufGeneratorService();
+
+		ProtobufGeneratorService protoService = new ProtobufGeneratorService();
+
+		File localProtofile1 = new File("D:/nb00350480/TECHM/Ashis/checkin code/Complex1.proto");
+		File localProtofile2 = new File("D:/nb00350480/TECHM/Ashis/checkin code/Complex1.proto");
+
+		String protoJSON = protoService.createProtoJson("1234", "1.0.0", localProtofile1);
+		String protoJSON2 = protoService.createProtoJson("1234", "1.0.0", localProtofile2);
+
+		System.out.println("Proto JSON 1 : " + protoJSON);
+		System.out.println("Proto JSON 2 : " + protoJSON2);
+
+	}*/
 }
