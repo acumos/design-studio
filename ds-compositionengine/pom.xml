@@ -301,6 +301,16 @@
 												<destName>application.properties</destName> 
 											</file> -->
 											<file>
+												<source>lib/gdmservice-0.0.1-SNAPSHOT.jar</source>
+												<outputDirectory>lib</outputDirectory>
+												<!-- <destName>lib/gdmservice-0.0.1-SNAPSHOT.jar</destName> -->
+											</file>
+											<file>
+												<source>lib/protobuf-java-3.4.0.jar</source>
+												<outputDirectory>lib</outputDirectory>
+												<!-- <destName>lib/protobuf-java-3.4.0.jar</destName> -->
+											</file>
+											<file>
 												<source>target/${project.artifactId}-${project.version}.${project.packaging}</source>
 												<outputDirectory />
 											</file>

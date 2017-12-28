@@ -262,5 +262,37 @@ public class DSUtil {
 			return false;
 		}
 	}
-	  
+	
+	
+	/**
+	 * 
+	 * @param cmd
+	 * @return
+	 * @throws Exception
+	 */
+	public static int runCommand(String cmd) throws Exception {
+		logger.debug("Exec: " + cmd);
+		Process p = Runtime.getRuntime().exec(cmd);
+
+		// get the error stream of the process and print it
+		InputStream error = p.getErrorStream();
+		for (int i = 0; i < error.available(); i++) {
+			logger.debug("" + error.read());
+		}
+
+		int exitVal = p.waitFor();
+		logger.debug("Exit Value: " + exitVal);
+		return exitVal;
+	}
+	
+	public static void main(String[] args){
+		String[] cmds = {"cd"," D:/VS00485966/ATT/Cognita/gerritRepository/design-studio/docs/"};
+		
+		try {
+			rmdir(new File("D:/VS00485966/ATT/Cognita/Temp/output/123456/"+"org"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

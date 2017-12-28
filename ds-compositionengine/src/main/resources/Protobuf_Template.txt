@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package org.acumos;
+
+option java_package = "packageName";
+option java_outer_classname = "className";
+
+message input {
+inputmessage
+}
+
+message output {
+outputmessage
+}
+
+service DataMapper {
+  rpc mapData (input) returns (output);
+}
