@@ -34,7 +34,7 @@
 		<!-- Jenkins invokes mvn with argument -Dbuild.number=${BUILD_NUMBER} -->
 		<build.number>0</build.number>
 		<!-- tests require database to be running -->
-		<!-- <skipTests>true</skipTests> --> 
+		<skipTests>true</skipTests> 
 		<!-- Docker daemon; overridden by Jenkins CognitaSettings -->
 		<docker.host.url>unix:/var/run/docker.sock</docker.host.url>
 		<!-- Docker image registry; all overriden by Jenkins CognitaSettings -->
@@ -172,6 +172,12 @@
 		<dependency>
 			<groupId>org.jolokia</groupId>
 			<artifactId>jolokia-core</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.github.docker-java</groupId>
+			<artifactId>docker-java</artifactId>
+			<version>3.0.10</version>
 		</dependency>
 	</dependencies>
 

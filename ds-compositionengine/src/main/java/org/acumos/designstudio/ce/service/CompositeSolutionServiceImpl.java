@@ -43,7 +43,9 @@ import org.acumos.cds.domain.MLPSolution;
 import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.cds.domain.MLPUser;
 import org.acumos.designstudio.cdump.Cdump;
+import org.acumos.designstudio.cdump.DataMap;
 import org.acumos.designstudio.cdump.Nodes;
+import org.acumos.designstudio.cdump.Property;
 import org.acumos.designstudio.cdump.Relations;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
@@ -965,6 +967,11 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							List<Node> bpnodes = new ArrayList<>();
 							List<MLPSolutionRevision> mlpSolRevisions = null;
 							MLPSolutionRevision mlpSolRevision = null;
+							int propLength = 0;
+							DataMap dataMap = null;
+							Property[] properties = null;
+							String gdm = "GDM";
+							
 
 							// 9. Extract NodeId, NodeName,NodeSolutionId,NodeVersion
 							for (Nodes n : cdumpNodes) {
@@ -976,10 +983,34 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								dependsOnList = getRelations(cdump, nodeId);
 								// 11. Get the MlpSolutionRevisions from CDMSClient for the NodeSolutionId
 								mlpSolRevision = getSolutionRevisions(nodeSolutionId, nodeVersion, mlpSolRevision);
-
-								// 12. Get the list of artifact from CDMSClient
-								dockerImageURL = getDockerImageURL(nodeSolutionId, mlpSolRevision);
-
+								boolean isGDM = false;
+								//get the properties from Nodes
+								properties = n.getProperties();
+								// check whether properties are exits or not
+								if(null != properties && properties.length > 0){
+										propLength = properties.length;
+										for(int i = 0 ; i < propLength; i++){
+											dataMap = properties[i].getData_map();
+											if(null!=dataMap){
+												if(null != gdm){
+													isGDM = true;
+												}
+												break;
+											}
+										}
+									
+								}
+								
+								if(isGDM){
+									//For Generic Data Mapper, get the dockerImageUrl by deploying the GDM
+									//Construct the image for the Generic Data mapper
+									dockerImageURL = gdmService.createDeployGDM(cdump, userId);
+								}
+								else {
+									//Else for basic models, upload the image and get the uri
+									// 12. Get the list of artifact from CDMSClient which will return the DockerImageUrl
+									dockerImageURL = getDockerImageURL(nodeSolutionId, mlpSolRevision);
+								}
 								// 13. Set the values in the bluePrint Node
 								bpnode = new Node();
 								bpnode.setContainer_name(nodeName);
@@ -989,11 +1020,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								// 14. Add the nodedetails to bluepring nodes list
 								bpnodes.add(bpnode);
 							}
+							 
+														
 							bluePrint.setNodes(bpnodes);
-							
-							//Construct the image for the Generic Data mapper : 
-							String gdmDockerImageURI = gdmService.createDeployGDM(cdump, userId);
-							
 							// 15. Write Data to bluePrint file and construct the name of the file
 							bluePrintFileName = "BluePrint" + "-" + solutionId;
 							// 16. Convert bluePrint to json

@@ -1,0 +1,4 @@
+FROM openjdk:8-jdk
+COPY ./gdmservice .
+EXPOSE 8334
+CMD ["java","-jar","gdmservice"]

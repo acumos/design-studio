@@ -58,17 +58,15 @@ public class ConfigurationProperties {
 	@Value("${dateformat}")
 	private String dateFormat;
 	
+	@Value("${lib}")
+	private String lib;
+	
 	/**
 	 * @return the lib
 	 */
 	public String getLib() {
 		return lib;
-	}
-
-	@Value("${lib}")
-	private String lib;
-	
-	
+	}	
 
 	/**
 	 * @return the toscaOutputFolder
