@@ -30,7 +30,7 @@ import java.io.Serializable;
 public class MessageargumentList implements Serializable{
     
 	private static final long serialVersionUID = 3921037942106214981L;
-	private String rule;
+	private String role;
     private String type;
     private String name;
     private String tag;
@@ -47,11 +47,11 @@ public class MessageargumentList implements Serializable{
 	public void setComplexType(ComplexType complexType) {
 		this.complexType = complexType;
 	}
-	public String getRule() {
-		return rule;
+	public String getRole() {
+		return role;
 	}
-	public void setRule(String rule) {
-		this.rule = rule;
+	public void setRole(String role) {
+		this.role = role;
 	}
 	public String getType() {
 		return type;

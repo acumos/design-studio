@@ -307,12 +307,12 @@ public class ProtobufGeneratorService {
 						if (!fields[i].isEmpty()) {
 							if (st.countTokens() == 5) {// count total number of
 														// token in line.
-								messageargumentListInstance.setRule(fields[i]);
+								messageargumentListInstance.setRole(fields[i]);
 								messageargumentListInstance.setType(fields[i + 1]);
 								messageargumentListInstance.setName(fields[i + 2]);
 								messageargumentListInstance.setTag(fields[i + 4].replace(";", ""));
 							} else {
-								messageargumentListInstance.setRule("");
+								messageargumentListInstance.setRole("");
 								messageargumentListInstance.setType(fields[i]);
 								messageargumentListInstance.setName(fields[i + 1]);
 								messageargumentListInstance.setTag(fields[i + 3].replace(";", ""));
@@ -512,7 +512,7 @@ public class ProtobufGeneratorService {
 											MessageargumentList messageargumentList12 = (MessageargumentList) messageargumentList
 													.get(l);
 											MessageargumentList complexMessageargumentInstance = new MessageargumentList();
-											complexMessageargumentInstance.setRule(messageargumentList12.getRule());
+											complexMessageargumentInstance.setRole(messageargumentList12.getRole());
 											complexMessageargumentInstance.setType(messageargumentList12.getType());
 											complexMessageargumentInstance.setName(messageargumentList12.getName());
 											complexMessageargumentInstance
@@ -521,7 +521,7 @@ public class ProtobufGeneratorService {
 										}
 										complexTypeObject.setMessageName(sourceMessageName);
 										complexTypeObject.setMessageargumentList(comlpexmessageargumentList20);
-										messageargumentListInstance.setRule(MessageargumentList.getRule());
+										messageargumentListInstance.setRole(MessageargumentList.getRole());
 										messageargumentListInstance.setType(MessageargumentList.getType());
 										messageargumentListInstance.setComplexType(complexTypeObject);
 										messageargumentListInstance.setName(MessageargumentList.getName());
@@ -550,7 +550,7 @@ public class ProtobufGeneratorService {
 								for (int kk = 0; kk < simpleTypePreIndex; kk++) {
 									messageargumentListInstanceSympletype = new MessageargumentList();
 									messageargumentListInstanceSympletype
-											.setRule(parentmessageNamemessageargumentList.get(kk).getRule());
+											.setRole(parentmessageNamemessageargumentList.get(kk).getRole());
 									messageargumentListInstanceSympletype
 											.setType(parentmessageNamemessageargumentList.get(kk).getType());
 									messageargumentListInstanceSympletype
@@ -585,7 +585,7 @@ public class ProtobufGeneratorService {
 							 * }
 							 */
 
-							messageargumentListInstance.setRule(parentmessageNamemessageargumentList.get(k).getRule());
+							messageargumentListInstance.setRole(parentmessageNamemessageargumentList.get(k).getRole());
 							messageargumentListInstance.setType(parentmessageNamemessageargumentList.get(k).getType());
 							String parentTag = parentmessageNamemessageargumentList.get(k).getTag();
 
@@ -596,7 +596,7 @@ public class ProtobufGeneratorService {
 								MessageargumentList messageargumentList12 = (MessageargumentList) messageargumentList
 										.get(l);
 								MessageargumentList complexMessageargumentInstance = new MessageargumentList();
-								complexMessageargumentInstance.setRule(messageargumentList12.getRule());
+								complexMessageargumentInstance.setRole(messageargumentList12.getRole());
 								complexMessageargumentInstance.setType(messageargumentList12.getType());
 								complexMessageargumentInstance.setName(messageargumentList12.getName());
 								complexMessageargumentInstance.setTag(parentTag + "." + messageargumentList12.getTag());
