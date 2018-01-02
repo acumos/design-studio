@@ -24,7 +24,7 @@ import java.io.Serializable;
 
 /**
  * 
- * 
+ * @author *********
  *
  */
 public class MessageargumentList implements Serializable{
@@ -34,7 +34,20 @@ public class MessageargumentList implements Serializable{
     private String type;
     private String name;
     private String tag;
-    public String getRule() {
+    private ComplexType complexType;
+    /**
+	 * @return the complexType
+	 */
+	public ComplexType getComplexType() {
+		return complexType;
+	}
+	/**
+	 * @param complexType the complexType to set
+	 */
+	public void setComplexType(ComplexType complexType) {
+		this.complexType = complexType;
+	}
+	public String getRule() {
 		return rule;
 	}
 	public void setRule(String rule) {
