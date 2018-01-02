@@ -323,6 +323,7 @@
 										</files>
 									</inline>
 								</assembly>
+								<optimise>true</optimise>
 								<runCmds>
 									<runCmd>
 										curl -OL https://github.com/google/protobuf/releases/download/v3.4.0/protoc-3.4.0-linux-x86_64.zip
