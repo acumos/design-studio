@@ -332,17 +332,17 @@
 										unzip protoc-3.4.0-linux-x86_64.zip -d protoc3
 									</runCmd>
 									<runCmd>
-										sudo mv protoc3/bin/* /usr/local/bin/
+										mv protoc3/bin/* /usr/local/bin/
 									</runCmd>
 									<runCmd>
-										sudo mv protoc3/include/* /usr/local/include/
+										mv protoc3/include/* /usr/local/include/
+									</runCmd>
+									<!-- <runCmd>
+										chown root /usr/local/bin/protoc
 									</runCmd>
 									<runCmd>
-										sudo chown root /usr/local/bin/protoc
-									</runCmd>
-									<runCmd>
-										sudo chown -R root /usr/local/include/google
-									</runCmd>
+										chown -R root /usr/local/include/google
+									</runCmd> -->
 								</runCmds>
 								<!-- This is the same CMD used in a Dockerfile -->
 								<cmd>
