@@ -1000,11 +1000,17 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 										}
 									
 								}
-								
+								System.out.println("GDM Found : "+ isGDM);
 								if(isGDM){
 									//For Generic Data Mapper, get the dockerImageUrl by deploying the GDM
 									//Construct the image for the Generic Data mapper
 									dockerImageURL = gdmService.createDeployGDM(cdump, userId);
+									if(null == dockerImageURL){
+										logger.error(EELFLoggerDelegator.errorLogger,
+												"---------Error : Issue in createDeployGDM() : Failed to create the Solution Artifact ----------");
+										throw new ServiceException("---  Issue in createDeployGDM() ----", "333",
+												"Issue while crearting and deploying GDM image");
+									}
 								}
 								else {
 									//Else for basic models, upload the image and get the uri

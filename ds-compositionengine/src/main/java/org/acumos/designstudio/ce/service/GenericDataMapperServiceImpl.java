@@ -89,6 +89,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		result = createProtobufFile(cdump, userId);
 		
 		if(result){
+			System.out.println("1. Protobuf File created ");
 			//2. generate and compile the java code as per the protobuf file.
 			result = generateProtoJavaCode(userId);
 		} else {
@@ -98,6 +99,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		}
 		
 		if(result){
+			System.out.println("2. generate and compile the java code as per the protobuf file. ");
 			//3. Generate the MappingDetails as per the cdump.
 			result = generateMappingDetails(cdump);
 		} else {
@@ -108,6 +110,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		
 		String jarPath = null;
 		if(result){
+			System.out.println("3. Generated the MappingDetails as per the cdump.");
 			//4. Create new the GDMJar 
 			jarPath = createNewGDMJar(userId);
 		} else {
@@ -117,6 +120,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		}
 		
 		if(null != jarPath){
+			System.out.println("4. Created new the GDMJar");
 			//5. Create Docker Image
 			String dockerFolder = jarPath.substring(0,jarPath.lastIndexOf("/")+1).trim();
 			String jarName = jarPath.substring(jarPath.lastIndexOf("/")+1).trim();
@@ -670,6 +674,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 
             logger.debug("image : " + imageTagName + ":" + tagId + " uploaded successfully");
             result  = imageTagName + ":" + tagId;
+            System.out.println("Image URL : " + result);
 		} finally {
 			
 		}
@@ -693,6 +698,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			dockerfile.replace("gdmservice", jarName);
 			path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 			DSUtil.writeDataToFile(path, "Dockerfile", "", dockerfile);
+			System.out.println("Docker File created successfully. " + dockerfile);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -630,8 +630,10 @@ public class SolutionController {
 			result = compositeServiceImpl.validateCompositeSolution(userId, solutionName, solutionId, version);
 			result = String.format(result);
 		} catch (Exception e) {
+			result = "{\"success\" : \"false\", \"errorDescription\" : \"Failed to Validate Composite Solution\"}";
 			result = String.format(result);
 			logger.debug(EELFLoggerDelegator.errorLogger, "------ Exception in validateCompositeSolution() ------",e);
+			e.printStackTrace();
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "----- validateCompositeSolution() ------- : End ");
 		return result;
