@@ -195,7 +195,7 @@ public class SolutionControllerTest {
 		msg.setMessageName("DataFrame");
 		List<Argument> al = new ArrayList<Argument>();
 		Argument arg = new Argument();
-		arg.setRule("repeated");
+		arg.setRole("repeated");
 		arg.setTag("1");
 		arg.setType("float");
 		al.add(arg);
@@ -226,7 +226,7 @@ public class SolutionControllerTest {
 		Message m = new Message();
 		m.setMessageName("Prediction");
 		Argument a = new Argument();
-		a.setRule("Rule 1");
+		a.setRole("Rule 1");
 		a.setTag("Tag1");
 		a.setType("Tag1");
 		List<Argument> ArgList = new ArrayList<Argument>();
@@ -287,7 +287,7 @@ public class SolutionControllerTest {
 		msg.setMessageName("DataFrame");
 		List<Argument> al = new ArrayList<Argument>();
 		Argument arg = new Argument();
-		arg.setRule("repeated");
+		arg.setRole("repeated");
 		arg.setTag("1");
 		arg.setType("float");
 		al.add(arg);
@@ -318,7 +318,7 @@ public class SolutionControllerTest {
 		Message m = new Message();
 		m.setMessageName("Prediction");
 		Argument a = new Argument();
-		a.setRule("Rule 1");
+		a.setRole("Rule 1");
 		a.setTag("Tag1");
 		a.setType("Tag1");
 		List<Argument> ArgList = new ArrayList<Argument>();
@@ -379,7 +379,7 @@ public class SolutionControllerTest {
 		msg.setMessageName("DataFrame");
 		List<Argument> al = new ArrayList<Argument>();
 		Argument arg = new Argument();
-		arg.setRule("repeated");
+		arg.setRole("repeated");
 		arg.setTag("1");
 		arg.setType("float");
 		al.add(arg);
@@ -410,7 +410,7 @@ public class SolutionControllerTest {
 		Message m = new Message();
 		m.setMessageName("Prediction");
 		Argument a = new Argument();
-		a.setRule("Rule 1");
+		a.setRole("Rule 1");
 		a.setTag("Tag1");
 		a.setType("Tag1");
 		List<Argument> ArgList = new ArrayList<Argument>();
@@ -471,7 +471,7 @@ public class SolutionControllerTest {
 		msg.setMessageName("DataFrame");
 		List<Argument> al = new ArrayList<Argument>();
 		Argument arg = new Argument();
-		arg.setRule("repeated");
+		arg.setRole("repeated");
 		arg.setTag("1");
 		arg.setType("float");
 		al.add(arg);
@@ -502,7 +502,7 @@ public class SolutionControllerTest {
 		Message m = new Message();
 		m.setMessageName("Prediction");
 		Argument a = new Argument();
-		a.setRule("Rule 1");
+		a.setRole("Rule 1");
 		a.setTag("Tag1");
 		a.setType("Tag1");
 		List<Argument> ArgList = new ArrayList<Argument>();

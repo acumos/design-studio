@@ -32,6 +32,8 @@ public class DataMapOutputField implements Serializable{
 	private String role;
 	private String name;
 	private String type;
+	private ComplexType complexType;
+
 	/**
 	 * @return the tag
 	 */
@@ -80,5 +82,12 @@ public class DataMapOutputField implements Serializable{
 	public void settype(String type) {
 		this.type = type;
 	}
-	
+
+	public ComplexType getComplexType() {
+		return complexType;
+	}
+
+	public void setComplexType(ComplexType complexType) {
+		this.complexType = complexType;
+	}
 }

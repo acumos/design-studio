@@ -31,6 +31,7 @@ public class DataMapInputField implements Serializable{
 	private String role;
 	private String name;
 	private String type;
+	private ComplexType complexType;
 	private String mapped_to_message;
 	private String mapped_to_field;
 	public String getTag() {
@@ -69,9 +70,13 @@ public class DataMapInputField implements Serializable{
 	public void setMapped_to_field(String mapped_to_field) {
 		this.mapped_to_field = mapped_to_field;
 	}
-	
-	
-	
-	
-	
+
+	public ComplexType getComplexType() {
+		return complexType;
+	}
+
+	public void setComplexType(ComplexType complexType) {
+		this.complexType = complexType;
+	}
+
 }

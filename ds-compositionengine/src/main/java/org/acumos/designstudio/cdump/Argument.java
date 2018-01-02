@@ -41,20 +41,22 @@ public class Argument implements Serializable{
 	 */
 	
 	private String name;
-	private String rule;
+	private String role;
 	private String tag;
 	private String type;
+	private ComplexType complexType;
 	/**
-	 * @return the rule
+	 * @return the role
 	 */
-	public String getRule() {
-		return rule;
+	public String getRole() {
+		return role;
 	}
 	/**
-	 * @param rule the rule to set
+	 * @param role
+	 *            the role to set
 	 */
-	public void setRule(String rule) {
-		this.rule = rule;
+	public void setRole(String role) {
+		this.role = role;
 	}
 	/**
 	 * @return the tag
@@ -92,9 +94,14 @@ public class Argument implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
-	
+
+	public ComplexType getComplexType() {
+		return complexType;
+	}
+
+	public void setComplexType(ComplexType complexType) {
+		this.complexType = complexType;
+	}
 
 	
 }

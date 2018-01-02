@@ -910,7 +910,7 @@ public class SolutionServiceImpl implements ISolutionService {
 									for(int k = 0; k<messageBody1.getMessageargumentList().size(); k++){
 											messageargumentListObject = new MessageargumentList(); 
 											messageargumentListObject.setTag(messageBody1.getMessageargumentList().get(k).getTag());
-											messageargumentListObject.setRule(messageBody1.getMessageargumentList().get(k).getRule());
+											messageargumentListObject.setRole(messageBody1.getMessageargumentList().get(k).getRole());
 											messageargumentListObject.setType(messageBody1.getMessageargumentList().get(k).getType());
 											listOfArgument.add(messageargumentListObject);
 											listOfArgument.toArray().toString();
@@ -980,7 +980,7 @@ public class SolutionServiceImpl implements ISolutionService {
 									for(int k = 0; k<messageBody1.getMessageargumentList().size(); k++){
 											messageargumentListObject = new MessageargumentList(); 
 											messageargumentListObject.setTag(messageBody1.getMessageargumentList().get(k).getTag());
-											messageargumentListObject.setRule(messageBody1.getMessageargumentList().get(k).getRule());
+											messageargumentListObject.setRole(messageBody1.getMessageargumentList().get(k).getRole());
 											messageargumentListObject.setType(messageBody1.getMessageargumentList().get(k).getType());
 											listOfArgument.add(messageargumentListObject);
 											listOfArgument.toArray().toString();
