@@ -44,9 +44,9 @@
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-		
-		<!-- Dependencies for SLF4J Loggers Starts -->
-		
+
+			<!-- Dependencies for SLF4J Loggers Starts -->
+
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.7</version>
@@ -63,7 +63,7 @@
 			<artifactId>logback-core</artifactId>
 			<version>1.0.1</version>
 		</dependency>
-		
+
 		<!-- Dependencies for SLF4J Loggers End -->
 
 
@@ -105,14 +105,14 @@
 			<version>1.9.13</version>
 		</dependency>
 
-		
+
 		<dependency>
-            <groupId>org.acumos.common-dataservice</groupId>
-            <artifactId>cmn-data-svc-client</artifactId>
-            <version>1.9.0-SNAPSHOT</version>
-        </dependency>
-		
-		
+			<groupId>org.acumos.common-dataservice</groupId>
+			<artifactId>cmn-data-svc-client</artifactId>
+			<version>1.9.0-SNAPSHOT</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -124,19 +124,24 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- <dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>2.0.73-beta</version>
+		</dependency> -->
 		<dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>2.0.73-beta</version>
-        </dependency>
-		
+			<groupId>com.att.eelf</groupId>
+			<artifactId>eelf-core</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 
 	</dependencies>
 
 	<build>
 
 		<plugins>
-		<plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<version>1.14</version>
@@ -214,26 +219,26 @@
 					</execution>
 				</executions>
 			</plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.6.201602180812</version>
-                <executions>
-                    <execution>
-                        <id>default-prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>default-report</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-          </plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.6.201602180812</version>
+				<executions>
+					<execution>
+						<id>default-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>default-report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
 		</plugins>
 	</build>
