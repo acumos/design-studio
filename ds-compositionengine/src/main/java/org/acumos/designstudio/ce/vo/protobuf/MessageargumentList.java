@@ -22,6 +22,8 @@ package org.acumos.designstudio.ce.vo.protobuf;
 
 import java.io.Serializable;
 
+import org.acumos.designstudio.cdump.ComplexType;
+
 /**
  * 
  * 
@@ -32,27 +34,27 @@ public class MessageargumentList implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String rule;
+	private String role;
     private String type;
     private String name;
     private String tag;
-    
+    private ComplexType complexType;
     
     
 	/**
-	 * @return the rule
+	 * @return the role
 	 */
-	public String getRule() {
-		return rule;
+	public String getRole() {
+		return role;
 	}
 
 
 
 	/**
-	 * @param rule the rule to set
+	 * @param role the role to set
 	 */
-	public void setRule(String rule) {
-		this.rule = rule;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 
@@ -114,6 +116,18 @@ public class MessageargumentList implements Serializable{
 	 * 
 	 */
 	public MessageargumentList() {
+	}
+
+
+
+	public ComplexType getComplexType() {
+		return complexType;
+	}
+
+
+
+	public void setComplexType(ComplexType complexType) {
+		this.complexType = complexType;
 	}
 
 }
