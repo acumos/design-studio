@@ -297,7 +297,7 @@
 							<name>ds-compositionengine:${project.version}</name>
 							<build>
 								<!-- This is the same FROM used in a Dockerfile -->
-								<from>openjdk:8-jdk</from>
+								<from>java:8</from>
 								<assembly>
 									<inline>
 										<files>
@@ -323,25 +323,25 @@
 										</files>
 									</inline>
 								</assembly>
-								<optimise>true</optimise>
+								<!-- <optimise>true</optimise> -->
 								<runCmds>
 									<runCmd>
 										curl -OL https://github.com/google/protobuf/releases/download/v3.4.0/protoc-3.4.0-linux-x86_64.zip
 									</runCmd>
 									<runCmd>
-										unzip protoc-3.4.0-linux-x86_64.zip
+										unzip protoc-3.4.0-linux-x86_64.zip -d protoc3
 									</runCmd>
 									<runCmd>
-										mv bin/* /usr/local/bin/
+										sudo mv protoc3/bin/* /usr/local/bin/
 									</runCmd>
 									<runCmd>
-										mv include/* /usr/local/include/
+										sudo mv protoc3/include/* /usr/local/include/
 									</runCmd>
 									<runCmd>
-										chown root /usr/local/bin/protoc
+										sudo chown root /usr/local/bin/protoc
 									</runCmd>
 									<runCmd>
-										chown -R root /usr/local/include/google
+										sudo chown -R root /usr/local/include/google
 									</runCmd>
 								</runCmds>
 								<!-- This is the same CMD used in a Dockerfile -->
