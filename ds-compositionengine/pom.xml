@@ -297,7 +297,7 @@
 							<name>ds-compositionengine:${project.version}</name>
 							<build>
 								<!-- This is the same FROM used in a Dockerfile -->
-								<from>java:8</from>
+								<from>openjdk:8-jdk</from>
 								<assembly>
 									<inline>
 										<files>
