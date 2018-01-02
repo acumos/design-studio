@@ -4,7 +4,7 @@
 
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>ds-compositionengine</artifactId>
-	<version>0.0.17</version>
+	<version>0.0.17-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Design Studio Composition Engine</name>
 
@@ -323,6 +323,26 @@
 										</files>
 									</inline>
 								</assembly>
+								<runCmds>
+									<runCmd>
+										curl -OL https://github.com/google/protobuf/releases/download/v3.4.0/protoc-3.4.0-linux-x86_64.zip
+									</runCmd>
+									<runCmd>
+										unzip protoc-3.4.0-linux-x86_64.zip
+									</runCmd>
+									<runCmd>
+										mv bin/* /usr/local/bin/
+									</runCmd>
+									<runCmd>
+										mv include/* /usr/local/include/
+									</runCmd>
+									<runCmd>
+										chown root /usr/local/bin/protoc
+									</runCmd>
+									<runCmd>
+										chown -R root /usr/local/include/google
+									</runCmd>
+								</runCmds>
 								<!-- This is the same CMD used in a Dockerfile -->
 								<cmd>
 									<shell>cd /maven; java -Djava.security.egd=file:/dev/./urandom -jar ${project.artifactId}-${project.version}.${project.packaging}</shell>
