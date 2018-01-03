@@ -905,9 +905,11 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 			Cdump cdump = null;
 			// 1. Read the cdump file
+			logger.debug("1. Read the cdump file");
 			String cdumpFileName = "acumos-cdump" + "-" + solutionId;
 			cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
 			// 2. get the Nodes from the cdump file and collect the nodeId's
+			logger.debug("2. get the Nodes from the cdump file and collect the nodeId's");
 			List<Nodes> nodes = cdump.getNodes();
 			ArrayList<String> idList = new ArrayList<>();
 			if (nodes != null) {
@@ -916,6 +918,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				}
 				// 3. get the Relations(Links) from cdump file and collect the
 				// SourceNodeId and TargetNodeId and add those to set
+				logger.debug("3. get the Relations(Links) from cdump file and collect the SourceNodeId and TargetNodeId and add those to set");
 				List<Relations> relationsList = cdump.getRelations();
 				HashSet<String> set = new HashSet<>();
 				if (relationsList != null) {
@@ -927,12 +930,16 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						}
 					}
 					// 4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.
+					logger.debug("4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.");
 					if (CollectionUtils.isEqualCollection(idList, set)) {
 						// 5. Checking the Composite Solution Nodes and Relations are connected or not.
+						logger.debug("5. Checking the Composite Solution Nodes and Relations are connected or not.");
 						if (relationsList.size() >= idList.size() - 1) {
 							// 6. On successful validation generate the BluePrint file
+							logger.debug("6. On successful validation generate the BluePrint file");
 							BluePrint bluePrint = new BluePrint();
 							// 7. Set the Solution name and version
+							logger.debug("6. On successful validation generate the BluePrint file");
 							bluePrint.setName(solutionName);
 							bluePrint.setVersion(version);
 							// need to develop the Input Operation Signature
@@ -957,6 +964,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							}
 							bluePrint.setInput_operation_signatures(iosList);
 							// 8. Get the nodes from Cdump file & set the required details in the blueprint nodes
+							logger.debug("8. Get the nodes from Cdump file & set the required details in the blueprint nodes");
 							List<Nodes> cdumpNodes = cdump.getNodes();
 							String nodeName = "";
 							String nodeId = "";
@@ -975,25 +983,30 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							
 
 							// 9. Extract NodeId, NodeName,NodeSolutionId,NodeVersion
+							logger.debug("9. Extract NodeId, NodeName,NodeSolutionId,NodeVersion");
 							for (Nodes n : cdumpNodes) {
 								nodeName = n.getName(); // TO set in the blue print
 								nodeId = n.getNodeId(); // To get the depends_on
 								nodeSolutionId = n.getNodeSolutionId(); // To get the DockerImageUrl
 								nodeVersion = n.getNodeVersion(); // To get the nodeVersion
 								// 10. Get the Connected_to Class details
+								logger.debug("10. Get the Connected_to Class details");
 								dependsOnList = getRelations(cdump, nodeId);
 								// 11. Get the MlpSolutionRevisions from CDMSClient for the NodeSolutionId
+								logger.debug("11. Get the MlpSolutionRevisions from CDMSClient for the NodeSolutionId");
 								mlpSolRevision = getSolutionRevisions(nodeSolutionId, nodeVersion, mlpSolRevision);
 								boolean isGDM = false;
 								//get the properties from Nodes
 								properties = n.getProperties();
 								// check whether properties are exits or not
+								logger.debug("check whether properties are exits or not");
 								if(null != properties && properties.length > 0){
 										propLength = properties.length;
 										for(int i = 0 ; i < propLength; i++){
 											dataMap = properties[i].getData_map();
 											if(null!=dataMap){
 												if(null != gdm){
+													logger.debug("GDM present");
 													isGDM = true;
 												}
 												break;
@@ -1005,6 +1018,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								if(isGDM){
 									//For Generic Data Mapper, get the dockerImageUrl by deploying the GDM
 									//Construct the image for the Generic Data mapper
+									logger.debug("For Generic Data Mapper, get the dockerImageUrl by deploying the GDM Construct the image for the Generic Data mapper");
 									dockerImageURL = gdmService.createDeployGDM(cdump, userId);
 									if(null == dockerImageURL){
 										logger.error(EELFLoggerDelegator.errorLogger,
@@ -1017,33 +1031,42 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								else {
 									//Else for basic models, upload the image and get the uri
 									// 12. Get the list of artifact from CDMSClient which will return the DockerImageUrl
+									logger.debug("12. Get the list of artifact from CDMSClient which will return the DockerImageUrl");
 									dockerImageURL = getDockerImageURL(nodeSolutionId, mlpSolRevision);
 								}
 								// 13. Set the values in the bluePrint Node
+								logger.debug("13. Set the values in the bluePrint Node");
 								bpnode = new Node();
 								bpnode.setContainer_name(nodeName);
 								bpnode.setImage(dockerImageURL);
 								bpnode.setDepends_on(dependsOnList);
 
 								// 14. Add the nodedetails to bluepring nodes list
+								logger.debug("14. Add the nodedetails to bluepring nodes list");
 								bpnodes.add(bpnode);
 							}
 							 
 														
 							bluePrint.setNodes(bpnodes);
 							// 15. Write Data to bluePrint file and construct the name of the file
+							logger.debug("15. Write Data to bluePrint file and construct the name of the file");
 							bluePrintFileName = "BluePrint" + "-" + solutionId;
 							// 16. Convert bluePrint to json
+							logger.debug("16. Convert bluePrint to json");
 							String bluePrintJson = mapper.writeValueAsString(bluePrint);
 							// 17. Create and write details to file
+							logger.debug("17. Create and write details to file");
 							DSUtil.writeDataToFile(path, bluePrintFileName, "json", bluePrintJson);
 							// 18. Get the Artifact Data
+							logger.debug("18. Get the Artifact Data");
 							Artifact bluePrintArtifact = new Artifact(bluePrintFileName, "json", solutionId, version,
 									path, bluePrintJson.length());
 							// 19. Upload the file to Nexus
+							logger.debug("19. Upload the file to Nexus");
 							uploadFilesToRepository(solutionId, version, bluePrintArtifact);
 
 							// 20. Create the MLPArtifact
+							logger.debug("20. Create the MLPArtifact");
 							MLPArtifact mlpArtifact = null;
 							try {
 								mlpArtifact = new MLPArtifact();
@@ -1057,15 +1080,18 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								mlpArtifact.setSize(bluePrintJson.length());
 
 								// 21. Creating the Artifact from CDMSClient.
+								logger.debug("21. Creating the Artifact from CDMSClient.");
 								mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
 
 								logger.debug("-------Successfully created the artifact for the BluePrint for the solution : "
 												+ solutionId + " artifact ID : " + mlpArtifact.getArtifactId());
 
 								// 22. Get the SolutionRevisions from CDMSClient.
+								logger.debug("22. Get the SolutionRevisions from CDMSClient.");
 								mlpSolRevisions = cdmsClient.getSolutionRevisions(solutionId);
 								MLPSolutionRevision compositeSolutionRevision = null;
 								// 23. Iterate over MLPSolutionRevisions and get the CompositeSolutionRevision.
+								logger.debug("23. Iterate over MLPSolutionRevisions and get the CompositeSolutionRevision.");
 								for (MLPSolutionRevision solRev : mlpSolRevisions) {
 									if (solRev.getVersion().equals(version)) {
 										compositeSolutionRevision = solRev;
@@ -1073,6 +1099,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 									}
 								}
 								// 24. Associate the SolutionRevisionArtifact for solution ID.
+								logger.debug("24. Associate the SolutionRevisionArtifact for solution ID.");
 								cdmsClient.addSolutionRevisionArtifact(solutionId,
 										compositeSolutionRevision.getRevisionId(), mlpArtifact.getArtifactId());
 
@@ -1104,8 +1131,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
 					"------- Exception in validateCompositeSolution() in Service -------",e);
-			logger.error(EELFLoggerDelegator.errorLogger, "------------Exception Message : " + e.getMessage());
+			logger.error("------------Exception Message : " + e.getMessage());
 		}
+		logger.debug("---- validateCompositeSolution() in Service ------ : End ");
 		logger.debug(EELFLoggerDelegator.debugLogger, "---- validateCompositeSolution() in Service ------ : End ");
 		return result;
 	}
