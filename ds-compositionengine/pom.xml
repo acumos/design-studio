@@ -352,8 +352,15 @@
 										mv protoc3/include/* /usr/local/include/
 									</runCmd>
 									<runCmd>
-										ls -ltr
+										find / -name gdmservice-0.0.1-SNAPSHOT.jar
 									</runCmd>
+									<runCmd>
+										find . -name gdmservice-0.0.1-SNAPSHOT.jar
+									</runCmd>
+									<runCmd>
+										ls -ltr /maven/
+									</runCmd>
+									
 									<!-- <runCmd>
 										chown root /usr/local/bin/protoc
 									</runCmd>
