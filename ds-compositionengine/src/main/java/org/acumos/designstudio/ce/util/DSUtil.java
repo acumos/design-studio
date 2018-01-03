@@ -272,16 +272,29 @@ public class DSUtil {
 	 */
 	public static int runCommand(String cmd) throws Exception {
 		logger.debug("Exec: " + cmd);
-		Process p = Runtime.getRuntime().exec(cmd);
+		Process p = null;
+		int exitVal = 1;
+		try {
+			 p = Runtime.getRuntime().exec(cmd);
 
-		// get the error stream of the process and print it
-		InputStream error = p.getErrorStream();
-		for (int i = 0; i < error.available(); i++) {
-			logger.debug("" + error.read());
+				// get the error stream of the process and print it
+				InputStream error = p.getErrorStream();
+				for (int i = 0; i < error.available(); i++) {
+					logger.debug("" + error.read());
+				}
+
+				exitVal = p.waitFor();
+				logger.debug("Exit Value: " + exitVal);
+		} catch (Throwable t){
+			logger.error(" --------------- Exception Occured   runCommand() ----------------");
+			t.printStackTrace();
+			logger.error(EELFLoggerDelegator.errorLogger,
+					" --------------- Exception Occured   runCommand() ----------------", t);
 		}
-
-		int exitVal = p.waitFor();
-		logger.debug("Exit Value: " + exitVal);
+		
+		
+		
+		
 		return exitVal;
 	}
 	
