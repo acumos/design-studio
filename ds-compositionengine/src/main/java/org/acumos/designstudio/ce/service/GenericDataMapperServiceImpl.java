@@ -502,8 +502,28 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		if(targetDir.exists()){
 			targetDir.delete();
 		}
-		
 		targetDir.mkdirs();
+		
+		File protobufJar = new File(protobufjarpath);
+		if(protobufJar.exists() && protobufJar.isFile()){
+			logger.debug("------- protobuf jar found ------");
+		} else {
+			logger.debug("------- protobuf jar not found ------");
+		}
+		
+		File dataVOjava = new File(path + packagepath + className + ".java");
+		if(dataVOjava.exists() && dataVOjava.isFile()){
+			logger.debug("------- java class found ------");
+		} else {
+			logger.debug("------- java class not found ------");
+		}
+		
+		if(targetDir.exists() && targetDir.isDirectory()){
+			logger.debug("------- targetDir exists ------");
+		} else {
+			logger.debug("------- targetDir does not exists ------");
+		}
+		
 		cmd = "/usr/bin/javac -cp " + protobufjarpath + " " + path + packagepath + className + ".java"
 				+ " -d " + targetPath;
 

@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import org.acumos.designstudio.ce.controller.SolutionController;
 import org.everit.json.schema.Schema;
@@ -286,15 +287,13 @@ public class DSUtil {
 				exitVal = p.waitFor();
 				logger.debug("Exit Value: " + exitVal);
 		} catch (Throwable t){
-			logger.error(" --------------- Exception Occured   runCommand() ----------------");
-			t.printStackTrace();
+			logger.error(" --------------- Exception Occured   runCommand() ----------------",t);
+			StringWriter stack = new StringWriter();
+			t.printStackTrace(new PrintWriter(stack));
+			logger.debug(stack.toString());
 			logger.error(EELFLoggerDelegator.errorLogger,
 					" --------------- Exception Occured   runCommand() ----------------", t);
 		}
-		
-		
-		
-		
 		return exitVal;
 	}
 	
