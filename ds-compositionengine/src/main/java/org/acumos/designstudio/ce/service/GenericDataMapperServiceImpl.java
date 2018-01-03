@@ -504,7 +504,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		}
 		
 		targetDir.mkdirs();
-		cmd = "/maven/javac -cp " + protobufjarpath + " " + path + packagepath + className + ".java"
+		cmd = "/usr/bin/javac -cp " + protobufjarpath + " " + path + packagepath + className + ".java"
 				+ " -d " + targetPath;
 
 		try {
