@@ -484,8 +484,8 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	
 	private boolean compileProtoJavaCode() {
 		
-		logger.debug(EELFLoggerDelegator.debugLogger, "compileProtoJavaCode() : End ");
-		logger.debug( "------ compileProtoJavaCode() : End -------");
+		logger.debug(EELFLoggerDelegator.debugLogger, "compileProtoJavaCode() : Begin ");
+		logger.debug( "------ compileProtoJavaCode() : Begin -------");
 		
 		boolean result = false;
 		//String buildPath;
@@ -504,6 +504,16 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		}
 		targetDir.mkdirs();
 		
+		File libDir = new File(confprops.getLib());
+		if(libDir.exists() && libDir.isDirectory()){
+			logger.debug("------- libDir found ------");
+			File[] files = libDir.listFiles();
+			for(int i =0 ; i < files.length ; i++){
+				logger.debug(files[i].getName() + " is : " + (files[i].isDirectory()? "Dir" : "File"));
+			}
+		} else {
+			logger.debug("------- libDir not found ------");
+		}
 		File protobufJar = new File(protobufjarpath);
 		if(protobufJar.exists() && protobufJar.isFile()){
 			logger.debug("------- protobuf jar found ------");
