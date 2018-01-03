@@ -624,7 +624,8 @@ public class SolutionController {
 			@RequestParam(value = "solutionName", required = true) String solutionName,
 			@RequestParam(value = "solutionId", required = true) String solutionId,
 			@RequestParam(value = "version", required = true) String version) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "----- validateCompositeSolution() ------- : Begin ");
+		logger.debug(EELFLoggerDelegator.debugLogger, "validateCompositeSolution() : Begin ");
+		logger.debug("----- validateCompositeSolution() ------- : Begin ");
 		String result = "";
 		try {
 			result = compositeServiceImpl.validateCompositeSolution(userId, solutionName, solutionId, version);
@@ -633,9 +634,11 @@ public class SolutionController {
 			result = "{\"success\" : \"false\", \"errorDescription\" : \"Failed to Validate Composite Solution\"}";
 			result = String.format(result);
 			logger.debug(EELFLoggerDelegator.errorLogger, "------ Exception in validateCompositeSolution() ------",e);
+			logger.debug("------ Exception in validateCompositeSolution() ------");
 			e.printStackTrace();
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "----- validateCompositeSolution() ------- : End ");
+		logger.debug(EELFLoggerDelegator.debugLogger, "validateCompositeSolution() : End ");
+		logger.debug("----- validateCompositeSolution() ------- : End ");
 		return result;
 	}
 	

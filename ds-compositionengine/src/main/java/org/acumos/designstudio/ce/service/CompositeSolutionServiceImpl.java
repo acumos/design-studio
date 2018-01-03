@@ -896,7 +896,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	@Override
 	public String validateCompositeSolution(String userId, String solutionName, String solutionId, String version) {
 		String result = "";
-		logger.debug(EELFLoggerDelegator.debugLogger, "---- validateCompositeSolution() in Service ------ : Begin ");
+		logger.debug(EELFLoggerDelegator.debugLogger, "validateCompositeSolution() : Begin ");
+		logger.debug("---- validateCompositeSolution() ------ : Begin ");
 		String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 		String bluePrintFileName = "";
 		ObjectMapper mapper = new ObjectMapper();
@@ -1000,7 +1001,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 										}
 									
 								}
-								System.out.println("GDM Found : "+ isGDM);
+								logger.debug("GDM Found : "+ isGDM);
 								if(isGDM){
 									//For Generic Data Mapper, get the dockerImageUrl by deploying the GDM
 									//Construct the image for the Generic Data mapper
@@ -1008,6 +1009,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 									if(null == dockerImageURL){
 										logger.error(EELFLoggerDelegator.errorLogger,
 												"---------Error : Issue in createDeployGDM() : Failed to create the Solution Artifact ----------");
+										logger.debug("---------Error : Issue in createDeployGDM() : Failed to create the Solution Artifact ----------");
 										throw new ServiceException("---  Issue in createDeployGDM() ----", "333",
 												"Issue while crearting and deploying GDM image");
 									}
@@ -1057,8 +1059,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								// 21. Creating the Artifact from CDMSClient.
 								mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
 
-								logger.debug(EELFLoggerDelegator.debugLogger,
-										"-------Successfully created the artifact for the BluePrint for the solution : "
+								logger.debug("-------Successfully created the artifact for the BluePrint for the solution : "
 												+ solutionId + " artifact ID : " + mlpArtifact.getArtifactId());
 
 								// 22. Get the SolutionRevisions from CDMSClient.
