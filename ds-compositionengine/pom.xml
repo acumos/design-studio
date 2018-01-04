@@ -4,7 +4,7 @@
 
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>ds-compositionengine</artifactId>
-	<version>0.0.18</version>
+	<version>0.0.18-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Design Studio Composition Engine</name>
 
@@ -34,7 +34,7 @@
 		<!-- Jenkins invokes mvn with argument -Dbuild.number=${BUILD_NUMBER} -->
 		<build.number>0</build.number>
 		<!-- tests require database to be running -->
-		<skipTests>true</skipTests> 
+		<!-- <skipTests>true</skipTests> --> 
 		<!-- Docker daemon; overridden by Jenkins CognitaSettings -->
 		<docker.host.url>unix:/var/run/docker.sock</docker.host.url>
 		<!-- Docker image registry; all overriden by Jenkins CognitaSettings -->
