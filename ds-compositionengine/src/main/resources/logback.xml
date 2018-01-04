@@ -130,6 +130,8 @@
 		<appender-ref ref="asyncEELFDebug" />
 	</logger>
 
+	<logger name="com.github.dockerjava.netty" level="INFO"/>
+    
 	<root level="debug">
 		<appender-ref ref="asyncEELF" />
 		<appender-ref ref="STDOUT" />
