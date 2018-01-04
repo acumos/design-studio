@@ -24,13 +24,14 @@ package org.acumos.designstudio.ce.docker;
 
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * 
  * 
  *  
  */
-
+@Component
 public class DockerConfiguration {
 	// TODO : Need to get the details from SPRING_APPLICATION_JSON
 	@Value("${docker.config}")

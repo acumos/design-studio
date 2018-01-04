@@ -91,8 +91,12 @@ public class DSUtil {
 	public static void writeDataToFile(String path, String fileName, String extension, String data) {
 		logger.debug("-------------- writeDataToFile() started --------------");
 		PrintWriter writer = null;
+		String completeFileName = path + fileName; 
+		if(null != extension && !extension.trim().equals("")){
+			completeFileName = completeFileName + "." + extension;
+		}
 		try {
-			writer = new PrintWriter(path + fileName + "." + extension, "UTF-8");
+			writer = new PrintWriter(completeFileName, "UTF-8");
 			writer.write(data);
 
 			logger.debug("-------------- writeDataToFile() ended -------------");

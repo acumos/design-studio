@@ -14,6 +14,8 @@ import java.util.UUID;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.acumos.designstudio.cdump.Cdump;
 import org.acumos.designstudio.cdump.DataMap;
@@ -53,6 +55,8 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	@Autowired
 	Properties props;
 	
+	@Autowired
+    DockerConfiguration dockerConfiguration;
 	
 	private ResourceLoader resourceLoader;
 	
@@ -691,10 +695,11 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		
 		String result = null;
 		
-		String imageName = (jarName.split("-")[0]).toLowerCase();
+		//jarName.substring(jarPath.lastIndexOf("-")+1).trim();
+		String imageName = jarName.substring(0,jarName.lastIndexOf("-")).trim();
+		imageName = imageName.substring(0,imageName.lastIndexOf("-")).trim();
+		//1. DockerConfiguration :
 		
-		//1. DockerConfiguration : 
-        DockerConfiguration dockerConfiguration = new DockerConfiguration();
         
         //2. CreateDockerClient using dockercofiguration 
         
@@ -704,7 +709,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
         	
         	//Create the Docker File : 
     		createDockerFile(userId, jarName);
-    		
+    		Logger.getLogger("io.netty").setLevel(Level.OFF);
 			dockerClient = DockerClientFactory.getDockerClient(dockerConfiguration);
             CreateImageCommand createCMD = new CreateImageCommand(new File(dockerFolder), imageName, tagId, "Dockerfile", false, true);
             createCMD.setClient(dockerClient);
@@ -751,10 +756,10 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			scanner = new Scanner(inputStream);
 			String dockerfile = scanner.useDelimiter("\\A").next();
 			//String dockerfile = DSUtil.readFile(classLoader.getResource(DOCKERFILE_TEMPLATE_NAME).getFile());
-			dockerfile.replace("gdmservice", jarName);
+			dockerfile = dockerfile.replace("gdmservice", jarName);
 			path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
-			DSUtil.writeDataToFile(path, "Dockerfile", "", dockerfile);
-			System.out.println("Docker File created successfully. " + dockerfile);
+			DSUtil.writeDataToFile(path, "Dockerfile", null, dockerfile);
+			logger.debug("------ Docker File created successfully. " + dockerfile);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1006,16 +1011,17 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	
 	
 
-	public static void main(String[] args){
-		String jarPath = "D:/RP00490596/TechM/Cognita/Payload/output/123456/120ad12DBC034De91sde3852134098_gdmservice-0.0.1-SNAPSHOT.jar"; 
+	public static void 	main(String[] args){
+		String jarPath = "D:/RP00490596/TechM/Cognita/Payload/output/123456/1f10c13a-03f6-4a91-b6b6-4a17c6d7d7e8_gdmservice-0.0.1-SNAPSHOT.jar"; 
 		
 		String dockerFolder = "";
 		String imageName = "";
 		
 		dockerFolder = jarPath.substring(0,jarPath.lastIndexOf("/")+1).trim();
 		String jarName = jarPath.substring(jarPath.lastIndexOf("/")+1).trim();
-		imageName = (jarName.split("-")[0]).toLowerCase();
-		
+		//imageName = (jarName.split("-")[0]).toLowerCase();
+		imageName = jarName.substring(0,jarName.lastIndexOf("-")).trim();
+		imageName = imageName.substring(0,imageName.lastIndexOf("-")).trim();
 		System.out.println("dockerFolder : " + dockerFolder);
 		System.out.println("jarName : " + jarName);
 		System.out.println("imageName : " + imageName);
