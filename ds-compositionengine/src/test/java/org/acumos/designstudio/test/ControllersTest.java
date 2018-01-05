@@ -156,7 +156,7 @@ public class ControllersTest {
 			Message m = new Message();
 			m.setMessageName("Prediction");
 			Argument a = new Argument();
-			a.setRole("Rule 1");
+			a.setRole("Role 1");
 			a.setTag("Tag1");
 			a.setType("Tag1");
 			List<Argument> ArgList = new ArrayList<Argument>();

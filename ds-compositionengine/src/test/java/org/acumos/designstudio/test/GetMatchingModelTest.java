@@ -88,7 +88,7 @@ public class GetMatchingModelTest {
 		SolutionServiceImpl solutionServiceImpl= new SolutionServiceImpl();
 		String userId = "";
 		String portType = "output";
-		String protobufJsonString = "[{\"rule\":\"repeated\",\"tag\":\"1\",\"type\":\"string\"},{\"rule\":\"repeated\",\"tag\":\"2\",\"type\":\"string\"}]";
+		String protobufJsonString = "[{\"role\":\"repeated\",\"tag\":\"1\",\"type\":\"string\"},{\"role\":\"repeated\",\"tag\":\"2\",\"type\":\"string\"}]";
 		try{
 			solutionServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
 			solutionServiceImpl.getNexusClient(nexusArtifactClient, null, null);

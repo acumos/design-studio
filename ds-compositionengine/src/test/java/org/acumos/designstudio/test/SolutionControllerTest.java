@@ -226,7 +226,7 @@ public class SolutionControllerTest {
 		Message m = new Message();
 		m.setMessageName("Prediction");
 		Argument a = new Argument();
-		a.setRole("Rule 1");
+		a.setRole("Role 1");
 		a.setTag("Tag1");
 		a.setType("Tag1");
 		List<Argument> ArgList = new ArrayList<Argument>();
@@ -318,7 +318,7 @@ public class SolutionControllerTest {
 		Message m = new Message();
 		m.setMessageName("Prediction");
 		Argument a = new Argument();
-		a.setRole("Rule 1");
+		a.setRole("Role 1");
 		a.setTag("Tag1");
 		a.setType("Tag1");
 		List<Argument> ArgList = new ArrayList<Argument>();
@@ -410,7 +410,7 @@ public class SolutionControllerTest {
 		Message m = new Message();
 		m.setMessageName("Prediction");
 		Argument a = new Argument();
-		a.setRole("Rule 1");
+		a.setRole("Role 1");
 		a.setTag("Tag1");
 		a.setType("Tag1");
 		List<Argument> ArgList = new ArrayList<Argument>();
@@ -502,7 +502,7 @@ public class SolutionControllerTest {
 		Message m = new Message();
 		m.setMessageName("Prediction");
 		Argument a = new Argument();
-		a.setRole("Rule 1");
+		a.setRole("Role 1");
 		a.setTag("Tag1");
 		a.setType("Tag1");
 		List<Argument> ArgList = new ArrayList<Argument>();
@@ -1057,7 +1057,7 @@ public class SolutionControllerTest {
 		solutionServiceImpl.getNexusClient(nexusArtifactClient, confprops1, properties);
 		String userId = "";
 		String portType = "output";
-		String protobufJsonString = "[{\"rule\":\"repeated\",\"tag\":\"1\",\"type\":\"string\"},{\"rule\":\"repeated\",\"tag\":\"2\",\"type\":\"string\"}]";
+		String protobufJsonString = "[{\"role\":\"repeated\",\"tag\":\"1\",\"type\":\"string\"},{\"role\":\"repeated\",\"tag\":\"2\",\"type\":\"string\"}]";
 		try {
 			JSONArray protobufJsonString1 = new JSONArray(protobufJsonString);
 			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,protobufJsonString1);
@@ -1078,7 +1078,7 @@ public class SolutionControllerTest {
 		solutionServiceImpl.getNexusClient(nexusArtifactClient, confprops1, properties);
 		String userId = "";
 		String portType = "input";
-		String protobufJsonString = "[{\"rule\":\"repeated\",\"tag\":\"1\",\"type\":\"string\"},{\"rule\":\"repeated\",\"tag\":\"2\",\"type\":\"string\"}]";
+		String protobufJsonString = "[{\"role\":\"repeated\",\"tag\":\"1\",\"type\":\"string\"},{\"role\":\"repeated\",\"tag\":\"2\",\"type\":\"string\"}]";
 		try {
 			JSONArray protobufJsonString1 = new JSONArray(protobufJsonString);
 			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,protobufJsonString1);
