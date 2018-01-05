@@ -114,7 +114,7 @@ public class ProtobufGeneratorService {
 				// System.out.println("protoBufToJsonString----------------" +
 				// protoBufToJsonString);
 			} catch (Exception ex) {
-				logger.error(" --------------- Exception Occured  constructSubMessageBody() ---------",ex);
+				logger.error(" --------------- Exception Occured  constructSubMessageBody() ---------", ex);
 				ex.printStackTrace();
 			}
 			isMessage = false;
@@ -123,7 +123,9 @@ public class ProtobufGeneratorService {
 			servicesLineCount = 0;
 			logger.debug("-------------- CreateProtoJson() end ---------------");
 		} catch (Exception ex) {
-			logger.error(" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------",ex);
+			logger.error(
+					" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------",
+					ex);
 		} finally {
 			try {
 				if (br != null)
@@ -131,7 +133,9 @@ public class ProtobufGeneratorService {
 				if (fr != null)
 					fr.close();
 			} catch (IOException ex) {
-				logger.error(" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------",ex);
+				logger.error(
+						" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------",
+						ex);
 			}
 		}
 		return protoBufToJsonString;
@@ -210,6 +214,7 @@ public class ProtobufGeneratorService {
 					service.setListOfOperations(listOfOperation);
 					protoBufClass.setService(service);
 				}
+			} else if (isItservice && line.contains("}") && !line.isEmpty()) {
 				isItservice = false;
 				logger.debug("-------------- constructService() end ---------------");
 			}
@@ -289,8 +294,9 @@ public class ProtobufGeneratorService {
 			List<MessageargumentList> messageargumentList) {
 		try {
 			if (line.startsWith("message")) {
-				/*int openCurlybacketPosition;
-				String messageValue = "";*/
+				/*
+				 * int openCurlybacketPosition; String messageValue = "";
+				 */
 				/*
 				 * openCurlybacketPosition = line.indexOf("{"); messageValue =
 				 * line.substring(8, openCurlybacketPosition);
@@ -353,8 +359,9 @@ public class ProtobufGeneratorService {
 	private org.acumos.designstudio.toscagenerator.vo.protobuf.Service constructService(String line,
 			org.acumos.designstudio.toscagenerator.vo.protobuf.Service service) {
 		try {
-			/*String servicesName = "";
-			int openCurlybacketPosition;*/
+			/*
+			 * String servicesName = ""; int openCurlybacketPosition;
+			 */
 			/*
 			 * openCurlybacketPosition = line.indexOf("{"); servicesName =
 			 * line.substring(8, openCurlybacketPosition);
