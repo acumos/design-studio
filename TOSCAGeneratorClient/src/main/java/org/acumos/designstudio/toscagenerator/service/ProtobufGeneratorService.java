@@ -289,8 +289,8 @@ public class ProtobufGeneratorService {
 			List<MessageargumentList> messageargumentList) {
 		try {
 			if (line.startsWith("message")) {
-				int openCurlybacketPosition;
-				String messageValue = "";
+				/*int openCurlybacketPosition;
+				String messageValue = "";*/
 				/*
 				 * openCurlybacketPosition = line.indexOf("{"); messageValue =
 				 * line.substring(8, openCurlybacketPosition);
@@ -353,8 +353,8 @@ public class ProtobufGeneratorService {
 	private org.acumos.designstudio.toscagenerator.vo.protobuf.Service constructService(String line,
 			org.acumos.designstudio.toscagenerator.vo.protobuf.Service service) {
 		try {
-			String servicesName = "";
-			int openCurlybacketPosition;
+			/*String servicesName = "";
+			int openCurlybacketPosition;*/
 			/*
 			 * openCurlybacketPosition = line.indexOf("{"); servicesName =
 			 * line.substring(8, openCurlybacketPosition);
