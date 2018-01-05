@@ -91,7 +91,7 @@ public class TGIFTest {
 		call.setConfig_key("config_key");
 		
 		Request request = new Request();
-		String jsonString = "[{\"messageName\": \"Prediction\",\"messageargumentList\": [{\"name\": \"myRow\",\"rule\": \"repeated\",\"tag\": \"1\",\"type\": \"int64\"}]}]";
+		String jsonString = "[{\"messageName\": \"Prediction\",\"messageargumentList\": [{\"name\": \"myRow\",\"role\": \"repeated\",\"tag\": \"1\",\"type\": \"int64\"}]}]";
 		
 		Object object=null;
 		JSONArray arrayObj=null;
@@ -117,7 +117,7 @@ public class TGIFTest {
 		provide.setRoute("transform");
 		
 		Request request = new Request();
-		String jsonString = "[{\"messageName\": \"Prediction\",\"messageargumentList\": [{\"name\": \"myRow\",\"rule\": \"repeated\",\"tag\": \"1\",\"type\": \"int64\"}]}]";
+		String jsonString = "[{\"messageName\": \"Prediction\",\"messageargumentList\": [{\"name\": \"myRow\",\"role\": \"repeated\",\"tag\": \"1\",\"type\": \"int64\"}]}]";
 		
 		Object object=null;
 		JSONArray arrayObj=null;
