@@ -20,75 +20,66 @@
 
 package org.acumos.designstudio.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 import java.util.Properties;
 
-import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
+import org.acumos.designstudio.ce.controller.ArtfactDetailsController;
+import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.service.AcumosCatalogServiceImpl;
+import org.acumos.designstudio.ce.service.ICompositeSolutionService;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.nexus.client.RepositoryLocation;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 /**
  * 
- * 
+ * @author ****
  *
  */
 public class ArtfactDetailsControllerTest {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ArtfactDetailsControllerTest.class);
-	private String url = "";
-	private String user ="";
-	private String pass = "";
-	
 	public static Properties CONFIG = new Properties();
 	RepositoryLocation repositoryLocation = null;
-	private final String solutionId = "010646b2-0298-4d25-9571-b775c3737bb6"; 
-	private final String version = "1";
-	private final String userId = "e57490ed-8462-4a77-ab39-157138dfbda8";
-	private final String artifactType = "TG";
+	String solutionId = "010646b2-0298-4d25-9571-b775c3737bb6"; 
+	String version = "1";
+	String userId = "e57490ed-8462-4a77-ab39-157138dfbda8";
+	String artifactType = "TG";
+	@Rule
+	public MockitoRule mockitoRule = MockitoJUnit.rule();
+	@InjectMocks
+	ArtfactDetailsController artfactDetailsController;
+	@Mock
+	AcumosCatalogServiceImpl acumosCatalogServiceImpl;
+	@Mock
+	ICompositeSolutionService compositeServiceImpl;
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
-	@Before
+	@Test
 	/**
 	 * 
 	 * @throws Exception
 	 */
-	public void createClient() throws Exception {
-	    CONFIG.load(ArtfactDetailsControllerTest.class.getResourceAsStream("/application.properties"));
-		url = CONFIG.getProperty("cmndatasvc.cmndatasvcendpoinurlTest");
-		user = CONFIG.getProperty("cmndatasvc.cmndatasvcuserTest");
-		pass = CONFIG.getProperty("cmndatasvc.cmndatasvcpwdTest");
-		repositoryLocation = getRepositoryLocationInstance();
-	}
-	
-	@Test
-	public void fetchJsonTOSCA() {
-
-		AcumosCatalogServiceImpl acumosCatalogService = new AcumosCatalogServiceImpl();
-		acumosCatalogService.getRestClient(url, user, pass);
-		acumosCatalogService.getNexusClient(repositoryLocation);
-		String result = "";
+public void fetchJsonTOSCA() throws Exception {
 		try {
-			result = acumosCatalogService.readArtifact(userId, solutionId, version, artifactType);
-			assertNotNull(result);
-			logger.info("fetchJsonTOSCA" + result);
-		} catch (AcumosException e) {
-			logger.debug(EELFLoggerDelegator.errorLogger, e.getMessage());
+				String resultStatment = "{\"self\":{\"version\":\"1\",\"name\":\"CPM1\",\"description\":\"\",\"component_type\":\"Docker\"},\"streams\":{},\"services\":{\"calls\":[{\"config_key\":\"transform\",\"request\":{\"format\":[{\"messageName\":\"DataFrame\",\"messageargumentList\":[{\"role\":\"repeated\",\"complexType\":{\"messageName\":\"DataFrameRow\",\"messageargumentList\":[{\"role\":\"\",\"name\":\"sepal_len\",\"tag\":\"1.1\",\"type\":\"string\"},{\"role\":\"\",\"name\":\"sepal_wid\",\"tag\":\"1.2\",\"type\":\"int32\"},{\"role\":\"\",\"complexType\":{\"messageName\":\"SubFrameRow\",\"messageargumentList\":[{\"role\":\"repeated\",\"name\":\"row_1\",\"tag\":\"1.3.1\",\"type\":\"string\"},{\"role\":\"repeated\",\"name\":\"row_2\",\"tag\":\"1.3.2\",\"type\":\"string\"}]},\"name\":\"petal_len\",\"tag\":\"1.3\",\"type\":\"SubFrameRow\"},{\"role\":\"\",\"name\":\"petal_wid\",\"tag\":\"1.4\",\"type\":\"string\"}]},\"name\":\"rows\",\"tag\":\"1\",\"type\":\"DataFrameRow\"},{\"role\":\"repeated\",\"complexType\":{\"messageName\":\"MyFrameRow\",\"messageargumentList\":[{\"role\":\"repeated\",\"name\":\"row_1\",\"tag\":\"2.1\",\"type\":\"int64\"},{\"role\":\"repeated\",\"name\":\"row_2\",\"tag\":\"2.2\",\"type\":\"string\"}]},\"name\":\"myRow\",\"tag\":\"2\",\"type\":\"MyFrameRow\"}]}],\"version\":\"\"},\"response\":{\"format\":[],\"version\":\"\"}}],\"provides\":[{\"route\":\"transform\",\"request\":{\"format\":[{\"messageName\":\"Prediction\",\"messageargumentList\":[{\"role\":\"repeated\",\"name\":\"myRow\",\"tag\":\"1\",\"type\":\"int64\"}]}],\"version\":\"\"},\"response\":{\"format\":[],\"version\":\"\"}}]},\"parameters\":[],\"auxiliary\":{},\"artifacts\":[]}";
+				when(acumosCatalogServiceImpl.readArtifact(userId, solutionId, version, artifactType)).thenReturn(resultStatment);
+				String results = acumosCatalogServiceImpl.readArtifact(userId, solutionId, version, artifactType);
+				assertNotNull(results);
+				logger.debug(EELFLoggerDelegator.debugLogger, results);
+		 }catch (ServiceException e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "CDUMP file not created", e);
+			throw e;
 		}
-
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	private RepositoryLocation getRepositoryLocationInstance() {
-		repositoryLocation = new RepositoryLocation();
-		repositoryLocation.setId("1");
-		repositoryLocation.setUrl(CONFIG.getProperty("nexus.nexusendpointurlTest"));
-		repositoryLocation.setUsername(CONFIG.getProperty("nexus.nexususernameTest"));
-		repositoryLocation.setPassword(CONFIG.getProperty("nexus.nexuspasswordTest"));
-		return repositoryLocation;
-	}
+
 }

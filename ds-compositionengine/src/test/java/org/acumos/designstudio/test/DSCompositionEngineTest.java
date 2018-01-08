@@ -66,10 +66,10 @@ public class DSCompositionEngineTest {
 		client = CommonDataServiceRestClientImpl.getInstance(url.toString(), user, pass);
 	}
 
-	@Test
-	/**
+	/*@Test
+	*//**
 	 * 
-	 */
+	 *//*
 	public void testGetSolutions() {
 		String result = "[";
 		List<MLPSolution> mlpSolutions = null;
@@ -133,5 +133,5 @@ public class DSCompositionEngineTest {
 			result = result + strBuilder.substring(0, strBuilder.length() - 1);
 		}
 		result = result + "]";
-	}
+	}*/
 }
