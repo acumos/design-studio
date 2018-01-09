@@ -46,7 +46,7 @@ import org.junit.Test;
  */
 public class DSCompositionEngineTest {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(DSCompositionEngineTest.class);
-	private String url = "";
+	private String url = "localhost";
 	private String user = "";
 	private String pass = "";
 	public static Properties CONFIG = new Properties();
