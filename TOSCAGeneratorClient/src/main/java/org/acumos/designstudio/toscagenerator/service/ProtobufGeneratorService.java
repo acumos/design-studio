@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
+import org.acumos.designstudio.toscagenerator.exceptionhandler.ServiceException;
 import org.acumos.designstudio.toscagenerator.util.Properties;
 import org.acumos.designstudio.toscagenerator.vo.protobuf.ComplexType;
 import org.acumos.designstudio.toscagenerator.vo.protobuf.InputMessage;
@@ -87,8 +88,9 @@ public class ProtobufGeneratorService {
 	 * @param version
 	 * @param localMetadataFile
 	 * @return
+	 * @throws ServiceException
 	 */
-	public String createProtoJson(String solutionId, String version, File localMetadataFile) {
+	public String createProtoJson(String solutionId, String version, File localMetadataFile) throws ServiceException {
 		logger.debug("-------------- CreateProtoJson() strated ---------------");
 		protoBufClass = new ProtoBufClass();
 		messageBodyList = new ArrayList<>();
@@ -122,10 +124,18 @@ public class ProtobufGeneratorService {
 			isItMessage = false;
 			servicesLineCount = 0;
 			logger.debug("-------------- CreateProtoJson() end ---------------");
-		} catch (Exception ex) {
+		} catch (ServiceException ex) {
 			logger.error(
 					" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------",
 					ex);
+			throw new ServiceException(ex.getMessage(), ex.getErrorCode(), ex.getErrorDesc(), ex.getCause());
+
+		} 
+		catch (Exception ex) {
+			logger.error(
+					" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------",
+					ex);
+
 		} finally {
 			try {
 				if (br != null)
@@ -144,8 +154,9 @@ public class ProtobufGeneratorService {
 	/**
 	 * 
 	 * @param line
+	 * @throws ServiceException
 	 */
-	private void parseLine(String line) {
+	private void parseLine(String line) throws ServiceException {
 		try {
 			// construct syntax
 			if (line.contains("syntax")) {
@@ -220,7 +231,8 @@ public class ProtobufGeneratorService {
 			}
 		} catch (Exception ex) {
 			logger.error(" --------------- Exception Occured  parseLine() --------------", ex);
-
+			throw new ServiceException(" --------------- Exception Occured while parsing protobuf --------------",
+					Properties.getDecryptionErrorCode(), "Error while parsing protoBuf file", ex.getCause());
 		}
 
 	}
