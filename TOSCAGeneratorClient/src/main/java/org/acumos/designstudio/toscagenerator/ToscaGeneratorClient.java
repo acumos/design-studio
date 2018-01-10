@@ -56,7 +56,7 @@ public class ToscaGeneratorClient {
 	
 	/**
 	 * 
-	 * @param jsonstr
+	 * @param jsonstr JSON string
 	 */
 	public ToscaGeneratorClient(String jsonstr){
 		service = new ToscaGeneratorService();
@@ -73,8 +73,15 @@ public class ToscaGeneratorClient {
 	
 	/**
 	 * This construct accept the configuration passed as a parameter.
-	 * @param jsonstr
-	 * @param j
+	 * @param toscaOutputFolder 
+	 * @param toscaGeneratorEndPointURL 
+	 * @param nexusEndPointURL 
+	 * @param nexusUserName 
+	 * @param nexusPassword 
+	 * @param nexusGroupId 
+	 * @param cmnDataSvcEndPoinURL 
+	 * @param cmnDataSvcUser 
+	 * @param cmnDataSvcPwd 
 	 */
 	public ToscaGeneratorClient(String toscaOutputFolder, String toscaGeneratorEndPointURL, String nexusEndPointURL,
 			String nexusUserName, String nexusPassword, String nexusGroupId, String cmnDataSvcEndPoinURL,
