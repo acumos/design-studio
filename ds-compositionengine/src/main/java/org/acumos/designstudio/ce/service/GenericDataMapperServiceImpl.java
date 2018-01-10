@@ -50,13 +50,13 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(GenericDataMapperServiceImpl.class);
 	
 	@Autowired
-	ConfigurationProperties confprops;
+	private ConfigurationProperties confprops;
 	
 	@Autowired
-	Properties props;
+	private Properties props;
 	
 	@Autowired
-    DockerConfiguration dockerConfiguration;
+    private DockerConfiguration dockerConfiguration;
 	
 	private ResourceLoader resourceLoader;
 	

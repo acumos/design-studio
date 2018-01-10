@@ -22,30 +22,10 @@ package org.acumos.designstudio.ce.service;
 
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 
-/**
- * 
- *
- *
- */
 public interface IAcumosCatalog {
 	
-	/**
-	 * 
-	 * @param solutionID
-	 * @param version
-	 * @return
-	 */
 	public String fetchJsonTOSCA(String solutionID, String version);
 
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param version
-	 * @param artifactType
-	 * @return
-	 * @throws AcumosException
-	 */
 	public String readArtifact(String userId, String solutionId, String version, String artifactType)
 			throws AcumosException;
 

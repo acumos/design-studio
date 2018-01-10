@@ -24,60 +24,17 @@ import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
 import org.json.JSONException;
 
-/**
- * 
- * 
- *
- */
 public interface ICompositeSolutionService {
 
-	/**
-	 * 
-	 * @param dscs
-	 * @return
-	 * @throws AcumosException
-	 * @throws JSONException
-	 */
 	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException, JSONException;
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param version
-	 * @return
-	 * @throws AcumosException
-	 * @throws JSONException
-	 */
+
 	public boolean deleteCompositeSolution(String userId, String solutionId, String version) throws AcumosException, JSONException;
-	/**
-	 * @param userId
-	 * @param solutionId
-	 * @param solutionVersion
-	 * @param cid
-	 * @return
-	 */
+
 	public String closeCompositeSolution(String userId, String solutionId, String solutionVersion, String cid);
-	/**
-	 * @param userId
-	 * @param solutionId
-	 * @param solutionVersion
-	 * @param cid
-	 * @return
-	 */
+
 	public String clearCompositeSolution(String userId, String solutionId, String solutionVersion, String cid);
-	/**
-	 * @param userId
-	 * @param visibilityLevel 
-	 * @return List of active Public Composite Solutions
-	 */
+
 	public String getCompositeSolutions(String userId, String visibilityLevel ) throws AcumosException;
 	
-	/**
-	 * @param userId
-	 * @param version
-	 * @param solutionId
-	 * @param cid
-	 * @return
-	 */
 	public String validateCompositeSolution(String userId, String solutionName, String solutionId, String version);
 }

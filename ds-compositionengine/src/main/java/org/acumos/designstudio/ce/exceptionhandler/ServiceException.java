@@ -36,53 +36,67 @@ public class ServiceException extends AcumosException {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
 	@Autowired
 	Properties props;
-	
+
 	/**
 	 * 
 	 */
 	public ServiceException() {
 		super();
 	}
-	
+
 	/**
 	 * 
 	 * @param errmessage
+	 *            Error message
 	 */
 	public ServiceException(String errmessage) {
 		super(errmessage);
 	}
-	
+
 	/**
-	 * 
 	 * @param message
+	 *            Error message
 	 * @param errorCode
+	 *            Error code
 	 * @param errorDesc
+	 *            Error description
 	 * @param cause
+	 *            Throwable
 	 * @param param
+	 *            Object
+	 * 
 	 */
 	public ServiceException(String message, String errorCode, String errorDesc, Throwable cause, Object param) {
 		super(message, errorCode, errorDesc, cause, param);
 	}
-	
+
 	/**
 	 * 
 	 * @param message
+	 *            Error message
 	 * @param errorCode
+	 *            Error code
 	 * @param errorDesc
+	 *            Error description
 	 * @param cause
+	 *            Throwable
+	 * 
+	 * 
 	 */
 	public ServiceException(String message, String errorCode, String errorDesc, Throwable cause) {
 		super(message, errorCode, errorDesc, cause);
 	}
-	
+
 	/**
-	 * 
 	 * @param message
+	 *            Error message
 	 * @param errorCode
+	 *            Error code
 	 * @param errorDesc
+	 *            Error description
+	 * 
 	 */
 	public ServiceException(String message, String errorCode, String errorDesc) {
 		super(message, errorCode, errorDesc);

@@ -70,7 +70,7 @@ public abstract class AcumosException extends Exception {
 	public void setErrorDesc(String errorDesc) {
 		this.errorDesc = errorDesc;
 	}
-	
+
 	/**
 	 * @return the param
 	 */
@@ -79,7 +79,8 @@ public abstract class AcumosException extends Exception {
 	}
 
 	/**
-	 * @param param the param to set
+	 * @param param
+	 *            the param to set
 	 */
 	public void setParam(Object param) {
 		this.param = param;
@@ -91,19 +92,25 @@ public abstract class AcumosException extends Exception {
 	public AcumosException() {
 		super();
 	}
+
 	/**
 	 * 
 	 * @param errmessage
+	 *            Error message
 	 */
 	public AcumosException(String errmessage) {
 		super(errmessage);
 		this.errorDesc = errmessage;
 	}
+
 	/**
 	 * 
 	 * @param message
+	 *            Error message
 	 * @param errorCode
+	 *            Error code
 	 * @param errorDesc
+	 *            Error description
 	 */
 	public AcumosException(String message, String errorCode, String errorDesc) {
 		super(message);
@@ -111,25 +118,37 @@ public abstract class AcumosException extends Exception {
 		this.errorCode = errorCode;
 		this.errorDesc = errorDesc;
 	}
+
 	/**
 	 * 
 	 * @param message
+	 *            Error message
 	 * @param errorCode
+	 *            Error code
 	 * @param errorDesc
+	 *            Error description
 	 * @param cause
+	 *            Throwable
 	 */
 	public AcumosException(String message, String errorCode, String errorDesc, Throwable cause) {
 		super(message, cause);
 		this.errorCode = errorCode;
 		this.errorDesc = errorDesc;
 	}
+
 	/**
 	 * 
+	 * 
 	 * @param message
+	 *            Error message
 	 * @param errorCode
+	 *            Error code
 	 * @param errorDesc
+	 *            Error description
 	 * @param cause
+	 *            Throwable
 	 * @param param
+	 *            Object
 	 */
 	public AcumosException(String message, String errorCode, String errorDesc, Throwable cause, Object param) {
 		super(message, cause);

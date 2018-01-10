@@ -87,8 +87,8 @@ public class DockerConfiguration {
 
 	/**
 	 * 
-	 * @return
-	 * @throws AcumosServiceException
+	 * @return URL
+	 * @throws ServiceException On failure
 	 */
 	public String toUrl() throws ServiceException {
 		if (this.host == null)

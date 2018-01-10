@@ -27,21 +27,23 @@ import java.io.Serializable;
  * 
  *
  */
-public class Service implements Serializable{
-	
+public class Service implements Serializable {
+
 	private static final long serialVersionUID = 5637513244290307708L;
-	
-	
+
 	private Call[] calls;
 	private Provide[] provides;
-	
-	public Service(){
-		
+
+	public Service() {
+
 	}
+
 	/**
 	 * 
 	 * @param calls
+	 *            Array of Call objects
 	 * @param provides
+	 *            Array of Provide objects
 	 */
 	public Service(Call[] calls, Provide[] provides) {
 		super();
@@ -57,7 +59,8 @@ public class Service implements Serializable{
 	}
 
 	/**
-	 * @param calls the calls to set
+	 * @param calls
+	 *            the calls to set
 	 */
 	public void setCalls(Call[] calls) {
 		this.calls = calls;
@@ -71,12 +74,11 @@ public class Service implements Serializable{
 	}
 
 	/**
-	 * @param provides the provides to set
+	 * @param provides
+	 *            the provides to set
 	 */
 	public void setProvides(Provide[] provides) {
 		this.provides = provides;
 	}
-	
-	
-	
+
 }

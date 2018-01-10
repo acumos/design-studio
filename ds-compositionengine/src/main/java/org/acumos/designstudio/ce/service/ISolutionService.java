@@ -26,115 +26,30 @@ import org.acumos.designstudio.cdump.Property;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.json.JSONArray;
 
-/**
- * 
- * 
- *
- */
 public interface ISolutionService {
-	/**
-	 * 
-	 * @param userId
-	 * @return
-	 * @throws ServiceException
-	 */
+
 	public String getSolutions(String userId) throws ServiceException;
 
-	/**
-	 * @param userId
-	 * @return
-	 */
 	public String createNewCompositeSolution(String userId);
 
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param version
-	 * @param linkName
-	 * @param linkId
-	 * @param sourceNodeName
-	 * @param sourceNodeId
-	 * @param targetNodeName
-	 * @param targetNodeId
-	 * @param sourceNodeRequirement
-	 * @param targetNodeCapabilityName
-	 * @param cid
-	 * @param propertieValues
-	 * @return
-	 */
 	public boolean addLink(String userId, String solutionId, String version, String linkName, String linkId,
 			String sourceNodeName, String sourceNodeId, String targetNodeName, String targetNodeId,
 			String sourceNodeRequirement, String targetNodeCapabilityName, String cid, Property propertieValues);
 
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionID
-	 * @param version
-	 * @return
-	 */
 	public String readCompositeSolutionGraph(String userId, String solutionID, String version);
 
-	/**
-	 * @param userId
-	 * @param solutionId
-	 * @param version
-	 * @param cid
-	 * @param nodeId
-	 * @param nodeName
-	 * @param ndata
-	 * @return
-	 */
 	public String modifyNode(String userId, String solutionId, String version, String cid, String nodeId,
 			String nodeName, String ndata, FieldMap field_map);
 
-	/**
-	 * @param userId
-	 * @param cid
-	 * @param solutionId
-	 * @param version
-	 * @param linkId
-	 * @param linkName
-	 * @return
-	 */
 	public String modifyLink(String userId, String cid, String solutionId, String version, String linkId,
 			String linkName);
 
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param version
-	 * @param cid
-	 * @param nodeId
-	 * @return
-	 */
 	public boolean deleteNode(String userId, String solutionId, String version, String cid, String nodeId);
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param version
-	 * @param cid
-	 * @param linkId
-	 * @return
-	 */
+
 	public boolean deleteLink(String userId, String solutionId, String version, String cid, String linkId);
 
-	/**
-	 * @param nodeElements
-	 * @return
-	 */
 	public String addNode(String userId, String solutionId, String version, String cid, Nodes nodes);
-	/**
-	 * 
-	 * @param userId
-	 * @param portType
-	 * @param protobufJsonString
-	 * @return
-	 * @throws Exception
-	 */
+
 	public String getMatchingModels(String userId, String portType, JSONArray protobufJsonString) throws Exception;
 
 }

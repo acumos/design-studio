@@ -172,6 +172,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- getSolutions() End --------");
 		return result;
 	}
+
 	/**
 	 * 
 	 * @param mlpsolution
@@ -245,7 +246,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- buildSolutionDetails() Ends --------");
 		return strBuilder;
 	}
-	
+
 	@Override
 	public String createNewCompositeSolution(String userId) {
 		logger.debug(EELFLoggerDelegator.debugLogger, "------ createNewCompositeSolution() : Begin -------");
@@ -272,13 +273,12 @@ public class SolutionServiceImpl implements ISolutionService {
 			}
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					"------- Exception Occured in createNewCompositeSolution() --------",e);
+					"------- Exception Occured in createNewCompositeSolution() --------", e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------ createNewCompositeSolution() : End -------");
 		return response;
 	}
 
-	
 	@Override
 	public String addNode(String userId, String solutionId, String version, String cid, Nodes node) {
 		String results = "";
@@ -343,7 +343,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				node1.setNdata(node.getNdata());
 				node1.setNodeSolutionId(node.getNodeSolutionId());
 				node1.setNodeVersion(node.getNodeVersion());
-				
+
 				if (node.getProperties() == null) {
 					node1.setProperties(propertyarray);
 				} else {
@@ -370,13 +370,13 @@ public class SolutionServiceImpl implements ISolutionService {
 			mapper.writeValue(new File(path.concat(cdumpFileName)), cdump);
 
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in addNode() -------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in addNode() -------", e);
 			results = String.format(resultTemplate, false, "Node not Added");
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "----- addNode() : End  --------");
 		return results;
 	}
-	
+
 	@Override
 	public String readCompositeSolutionGraph(String userId, String solutionID, String version) {
 		boolean isValidVersion = false;
@@ -413,36 +413,38 @@ public class SolutionServiceImpl implements ISolutionService {
 						nexusURI = mlpArti.getUri();
 						logger.debug(EELFLoggerDelegator.debugLogger, "------ Nexus URI : " + nexusURI + " -------");
 						break;
-					} 
+					}
 				}
 			}
-			
-			if(null!=nexusURI && !"".equals(nexusURI)){
-					byteArrayOutputStream = getPayload(nexusURI);
-					result = byteArrayOutputStream.toString();
-					String path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
-					DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionID, "json", result);
-					logger.debug(EELFLoggerDelegator.debugLogger, "------ Response in String Format : " + result + " -------");
+
+			if (null != nexusURI && !"".equals(nexusURI)) {
+				byteArrayOutputStream = getPayload(nexusURI);
+				result = byteArrayOutputStream.toString();
+				String path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
+				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionID, "json", result);
+				logger.debug(EELFLoggerDelegator.debugLogger,
+						"------ Response in String Format : " + result + " -------");
 
 			} else {
-				result =  "{\"error\": \"CDUMP Artifact Not Found for this solution\"}";
+				result = "{\"error\": \"CDUMP Artifact Not Found for this solution\"}";
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "---- exception occured in readCompositeSolutionGraph()----",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "---- exception occured in readCompositeSolutionGraph()----",
+					e);
 		} finally {
 			try {
-				if(byteArrayOutputStream != null){
+				if (byteArrayOutputStream != null) {
 					byteArrayOutputStream.close();
 				}
 			} catch (IOException e) {
 				logger.error(EELFLoggerDelegator.errorLogger,
-						"Error : Exception in readArtifact() : Failed to close the byteArrayOutputStream",
-						e);
+						"Error : Exception in readArtifact() : Failed to close the byteArrayOutputStream", e);
 			}
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "-------- fetchJsonTOSCA() --------- : End ");
 		return result;
 	}
+
 	/**
 	 * 
 	 * @param solutionId
@@ -454,12 +456,12 @@ public class SolutionServiceImpl implements ISolutionService {
 		try {
 			solRevisions = cmnDataService.getSolutionRevisions(solutionId);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getSolutionRevisions() ----------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getSolutionRevisions() ----------", e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- getSolutionRevisions() : End ----------");
 		return solRevisions;
 	}
-	
+
 	/**
 	 * 
 	 * @param solutionId
@@ -471,10 +473,11 @@ public class SolutionServiceImpl implements ISolutionService {
 		try {
 			mlpArtifacts = cmnDataService.getSolutionRevisionArtifacts(solutionId, solutionRevisionId);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getListOfArtifacts() ----------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getListOfArtifacts() ----------", e);
 		}
 		return mlpArtifacts;
 	}
+
 	/**
 	 * 
 	 * @param uri
@@ -485,10 +488,11 @@ public class SolutionServiceImpl implements ISolutionService {
 		try {
 			outputStream = nexusArtifactClient.getArtifact(uri);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getPayload()",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getPayload()", e);
 		}
 		return outputStream;
 	}
+
 	/**
 	 * 
 	 * @param solutionId
@@ -497,17 +501,17 @@ public class SolutionServiceImpl implements ISolutionService {
 	private boolean isSolutionIdValid(String solutionId) {
 		try {
 			MLPSolution mLPSolution = cmnDataService.getSolution(solutionId);
-			if (null !=mLPSolution.getSolutionId()) {
+			if (null != mLPSolution.getSolutionId()) {
 				return true;
 			} else {
 				return false;
 			}
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in isSolutionIdValid() ----------",ex);
+			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in isSolutionIdValid() ----------", ex);
 			return false;
 		}
 	}
-	
+
 	@Override
 	public String modifyNode(String userId, String solutionId, String version, String cid, String nodeId,
 			String nodeName, String ndata, FieldMap fieldmap) {
@@ -523,27 +527,27 @@ public class SolutionServiceImpl implements ISolutionService {
 			} else if (null == cid) {
 				id = solutionId;
 			}
-			logger.debug(EELFLoggerDelegator.debugLogger, "======userId ======"+userId);
-			logger.debug(EELFLoggerDelegator.debugLogger, "======solutionId ======"+solutionId);
-			logger.debug(EELFLoggerDelegator.debugLogger, "======version======"+version);
-			logger.debug(EELFLoggerDelegator.debugLogger, "======cid ======"+cid);
-			logger.debug(EELFLoggerDelegator.debugLogger, "======id ======"+id);
-			
+			logger.debug(EELFLoggerDelegator.debugLogger, "======userId ======" + userId);
+			logger.debug(EELFLoggerDelegator.debugLogger, "======solutionId ======" + solutionId);
+			logger.debug(EELFLoggerDelegator.debugLogger, "======version======" + version);
+			logger.debug(EELFLoggerDelegator.debugLogger, "======cid ======" + cid);
+			logger.debug(EELFLoggerDelegator.debugLogger, "======id ======" + id);
+
 			String cdumpFileName = "acumos-cdump" + "-" + id;
 			String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 			cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
 			mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 			List<Nodes> cdumpNodeList = cdump.getNodes();
-			
+
 			if (null == cdumpNodeList || cdumpNodeList.isEmpty()) {
 				results = String.format(resultTemplate, false, "Invalid Node Id – not found");
 			} else {
 				for (Nodes nodesData : cdumpNodeList) {
 					if (nodesData.getNodeId().equals(nodeId)) {
-						if(null != nodeName){
+						if (null != nodeName) {
 							nodesData.setName(nodeName);
 						}
-						if(null != ndata && ndata.length() != 0){
+						if (null != ndata && ndata.length() != 0) {
 							Ndata data1 = new Gson().fromJson(ndata, Ndata.class);
 							Ndata dat = nodesData.getNdata();
 							dat.setPx(data1.getPx());
@@ -553,32 +557,36 @@ public class SolutionServiceImpl implements ISolutionService {
 							dat.setRadius(data1.getRadius());
 							nodesData.setNdata(dat);
 						}
-						//Code to modify the link if node names are changed
+						// Code to modify the link if node names are changed
 						List<Relations> relations = cdump.getRelations();
-						if(null != relations && !relations.isEmpty()){
-							//iterate through relation
-							for(Relations relation : relations){
-								//check if the relation contains the specified nodeId
-								if(relation.getSourceNodeId().equals(nodeId) ){
+						if (null != relations && !relations.isEmpty()) {
+							// iterate through relation
+							for (Relations relation : relations) {
+								// check if the relation contains the specified nodeId
+								if (relation.getSourceNodeId().equals(nodeId)) {
 									relation.setSourceNodeName(nodeName);
-									}else if(relation.getTargetNodeId().equals(nodeId)){
-										relation.setTargetNodeName(nodeName);
-									}
-							}	
+								} else if (relation.getTargetNodeId().equals(nodeId)) {
+									relation.setTargetNodeName(nodeName);
+								}
+							}
 						}
 						// to update the datamapper
-						if(null != fieldmap && fieldmap.toString().length()!= 0){
+						if (null != fieldmap && fieldmap.toString().length() != 0) {
 							logger.debug(EELFLoggerDelegator.debugLogger, "Modifying the mappings for Datamapper ");
-							logger.debug(EELFLoggerDelegator.debugLogger, "===Input_tag_Id==="+fieldmap.getInput_field_tag_id());
-							logger.debug(EELFLoggerDelegator.debugLogger, "===Input_tag_Id==="+fieldmap.getOutput_field_tag_id());
-							logger.debug(EELFLoggerDelegator.debugLogger, "===Input_field_message_name==="+fieldmap.getInput_field_message_name());
-							logger.debug(EELFLoggerDelegator.debugLogger, "===Output_field_message_name==="+fieldmap.getOutput_field_message_name());
-							
+							logger.debug(EELFLoggerDelegator.debugLogger,
+									"===Input_tag_Id===" + fieldmap.getInput_field_tag_id());
+							logger.debug(EELFLoggerDelegator.debugLogger,
+									"===Input_tag_Id===" + fieldmap.getOutput_field_tag_id());
+							logger.debug(EELFLoggerDelegator.debugLogger,
+									"===Input_field_message_name===" + fieldmap.getInput_field_message_name());
+							logger.debug(EELFLoggerDelegator.debugLogger,
+									"===Output_field_message_name===" + fieldmap.getOutput_field_message_name());
+
 							Property properties[] = nodesData.getProperties();
-							if(null != properties && properties.length !=0){
+							if (null != properties && properties.length != 0) {
 								// iterate through each property
 								for (Property props : properties) {
-									
+
 									DataMap datamap = props.getData_map();
 									if (null != datamap && !datamap.toString().isEmpty()) {
 										MapInputs[] mapInputs = datamap.getMap_inputs();
@@ -586,34 +594,37 @@ public class SolutionServiceImpl implements ISolutionService {
 										if (null != mapInputs && mapInputs.length != 0) {
 											// iterate through mapinputs
 											for (MapInputs mapInput : mapInputs) {
-												// Check if the input message name matches with the provided input meassage name
+												// Check if the input message name matches with the provided input
+												// meassage name
 												if (mapInput.getMessage_name()
 														.equals(fieldmap.getInput_field_message_name())) {
-													
+
 													DataMapInputField[] dataMapInputFieldList = mapInput
 															.getInput_fields();
-													if (null != dataMapInputFieldList && dataMapInputFieldList.length != 0) {
+													if (null != dataMapInputFieldList
+															&& dataMapInputFieldList.length != 0) {
 														// iterate through dataMapInput fields
 														for (DataMapInputField dataMapInputField : dataMapInputFieldList) {
-															//check if the output/destination tag id is already linked to any source node 
-															//remove the destination node from the object
+															// check if the output/destination tag id is already linked
+															// to any source node
+															// remove the destination node from the object
 															if (dataMapInputField.getMapped_to_field()
 																	.equals(fieldmap.getOutput_field_tag_id())) {
 
 																// delete the mapping if any
 																dataMapInputField.setMapped_to_message("");
-																dataMapInputField
-																		.setMapped_to_field("");
+																dataMapInputField.setMapped_to_field("");
 															}
-															// check if the input/source tag id matches with the provided input/source tag id
+															// check if the input/source tag id matches with the
+															// provided input/source tag id
 															if (dataMapInputField.getTag()
 																	.equals(fieldmap.getInput_field_tag_id())) {
 
 																// update the object with the latest mapping
 																dataMapInputField.setMapped_to_message(
 																		fieldmap.getOutput_field_message_name());
-																dataMapInputField
-																		.setMapped_to_field(fieldmap.getOutput_field_tag_id());
+																dataMapInputField.setMapped_to_field(
+																		fieldmap.getOutput_field_tag_id());
 															}
 														}
 													}
@@ -634,7 +645,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				logger.debug(EELFLoggerDelegator.debugLogger, "------- Node Modified Successfully -------");
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  modifyNode()------- ",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  modifyNode()------- ", e);
 			results = String.format(resultTemplate, false, "Not able to modify the Node");
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- modifyNode() ------- : End");
@@ -676,7 +687,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				logger.debug(EELFLoggerDelegator.debugLogger, "------- Link Modified Successfully -------");
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  modifyLink()------- ",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  modifyLink()------- ", e);
 			results = String.format(resultTemplate, false, "Not able to modify the Link");
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- modifyLink() ------- : End");
@@ -734,25 +745,25 @@ public class SolutionServiceImpl implements ISolutionService {
 						DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
 					}
 				} catch (JsonParseException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "------- JsonParseException in deleteNode() -------",e);
+					logger.error(EELFLoggerDelegator.errorLogger, "------- JsonParseException in deleteNode() -------",
+							e);
 				} catch (JsonMappingException e) {
 					logger.error(EELFLoggerDelegator.errorLogger,
-							"------- JsonMappingException in deleteNode() -------",e);
-					
+							"------- JsonMappingException in deleteNode() -------", e);
+
 				} catch (IOException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "------- IOException in deleteNode() -------",e);
+					logger.error(EELFLoggerDelegator.errorLogger, "------- IOException in deleteNode() -------", e);
 				}
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in deleteNode() -------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in deleteNode() -------", e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- deleteNode() in SolutionServiceImpl : Ends --------");
 		return deletedNode;
 	}
 
-	
 	@Override
-	public String getMatchingModels(String userId,String portType, JSONArray protobufJsonString) throws Exception{
+	public String getMatchingModels(String userId, String portType, JSONArray protobufJsonString) throws Exception {
 		Gson gson = new Gson();
 		List<MLPSolution> mlpSolutions = null;
 		List<MatchingModel> matchingModelList = new ArrayList<>();
@@ -764,16 +775,17 @@ public class SolutionServiceImpl implements ISolutionService {
 			MatchingModel matchingModel = null;
 			List<MLPSolutionRevision> mlpSolRevisions;
 			String solutionId = null;
-			if(null !=mlpSolutions && !mlpSolutions.isEmpty()){
+			if (null != mlpSolutions && !mlpSolutions.isEmpty()) {
 				logger.debug(EELFLoggerDelegator.debugLogger,
 						"------- CommonDataService returned Solution list of size : " + mlpSolutions.size());
 				mlpSolRevisions = new ArrayList<>();
 				for (MLPSolution mlpsol : mlpSolutions) {
 					solutionId = mlpsol.getSolutionId();
 					mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
-					if(mlpSolRevisions != null && mlpSolRevisions.size() !=0){
+					if (mlpSolRevisions != null && mlpSolRevisions.size() != 0) {
 						logger.debug(EELFLoggerDelegator.debugLogger,
-								"------- CommonDataService returned Solution Revision list of size : " + mlpSolRevisions.size());
+								"------- CommonDataService returned Solution Revision list of size : "
+										+ mlpSolRevisions.size());
 						validMatchingModel = false;
 						for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
 							matchingModel = new MatchingModel();
@@ -784,44 +796,46 @@ public class SolutionServiceImpl implements ISolutionService {
 							String artifactURI = "";
 							if (null != mlpArtifact && !mlpArtifact.isEmpty()) {
 								logger.debug(EELFLoggerDelegator.debugLogger,
-										"------- CommonDataService returned Solution Revision Artifact list of size : " + mlpArtifact.size());
-									for (MLPArtifact mlpArti : mlpArtifact) {
-										if("TG".equalsIgnoreCase(mlpArti.getArtifactTypeCode())){
-											artifactURI = mlpArti.getUri();
-											if(validateTheMatchingPort(artifactURI,portType,protobufJsonString)){
-													validMatchingModel = true;
-											}
-										}else {
+										"------- CommonDataService returned Solution Revision Artifact list of size : "
+												+ mlpArtifact.size());
+								for (MLPArtifact mlpArti : mlpArtifact) {
+									if ("TG".equalsIgnoreCase(mlpArti.getArtifactTypeCode())) {
+										artifactURI = mlpArti.getUri();
+										if (validateTheMatchingPort(artifactURI, portType, protobufJsonString)) {
+											validMatchingModel = true;
 										}
+									} else {
 									}
+								}
 							}
-							if(validMatchingModel){
+							if (validMatchingModel) {
 								matchingModel.setMatchingModelName(mlpsol.getName());
 								matchingModel.setTgifFileNexusURI(artifactURI);
 								matchingModelList.add(matchingModel);
 							}
 						}
-					}else{
+					} else {
 						logger.debug(EELFLoggerDelegator.debugLogger,
 								"------- CommonDataService returned empty Solution Revision list --------");
 					}
 
 				}
-			}else{
+			} else {
 				logger.debug(EELFLoggerDelegator.debugLogger,
 						"------- CommonDataService returned empty Solution list--------");
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in getMatchingModels() -------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in getMatchingModels() -------", e);
 			throw new ServiceException("Exception in getMatchingModels() solution, revision and Artifact section---");
 		}
-		if(matchingModelList != null && !matchingModelList.isEmpty()){
+		if (matchingModelList != null && !matchingModelList.isEmpty()) {
 			String jsonInString = gson.toJson(matchingModelList);
 			return jsonInString;
-		}else{
+		} else {
 			return "false";
 		}
 	}
+
 	/**
 	 * 
 	 * @param artifactURI
@@ -832,11 +846,11 @@ public class SolutionServiceImpl implements ISolutionService {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-    private boolean validateTheMatchingPort(String artifactURI, String portType, JSONArray protobufJsonString) {
-    	logger.debug(EELFLoggerDelegator.debugLogger, "------- validateTheMatchingPort() Begin --------");
-    	boolean matchingPortisFound = false;
-    	ByteArrayOutputStream byteArrayOutputStream = null;
-    	try {		
+	private boolean validateTheMatchingPort(String artifactURI, String portType, JSONArray protobufJsonString) {
+		logger.debug(EELFLoggerDelegator.debugLogger, "------- validateTheMatchingPort() Begin --------");
+		boolean matchingPortisFound = false;
+		ByteArrayOutputStream byteArrayOutputStream = null;
+		try {
 			if (null != artifactURI && !"".equals(artifactURI)) {
 				byteArrayOutputStream = getPayload(artifactURI);
 				String result = byteArrayOutputStream.toString();
@@ -846,100 +860,33 @@ public class SolutionServiceImpl implements ISolutionService {
 					matchingPortisFound = validateConsumerPort(result, protobufJsonString);
 				}
 			} else {
-				logger.error(EELFLoggerDelegator.errorLogger,"validateTheMatchingPort() : artifactURI is null or empty");
+				logger.error(EELFLoggerDelegator.errorLogger,
+						"validateTheMatchingPort() : artifactURI is null or empty");
 			}
-		
-    	} catch (JsonParseException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "JsonParseException in validateTheMatchingPort() method : ",e);
+
+		} catch (JsonParseException e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "JsonParseException in validateTheMatchingPort() method : ",
+					e);
 		} catch (JsonMappingException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "JsonMappingException in validateTheMatchingPort() method : ",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "JsonMappingException in validateTheMatchingPort() method : ",
+					e);
 		} catch (IOException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "IOException in validateTheMatchingPort() method : ",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "IOException in validateTheMatchingPort() method : ", e);
 		} finally {
 			try {
-				if(byteArrayOutputStream != null){
+				if (byteArrayOutputStream != null) {
 					byteArrayOutputStream.close();
 				}
 			} catch (IOException e) {
 				logger.error(EELFLoggerDelegator.errorLogger,
-						"Error : Exception in readArtifact() : Failed to close the byteArrayOutputStream",
-						e);
+						"Error : Exception in readArtifact() : Failed to close the byteArrayOutputStream", e);
 			}
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- validateTheMatchingPort() End --------");
 		return matchingPortisFound;
 
 	}
-    /**
-     * 
-     * @param protobufTgifOutput
-     * @param protobufJsonString
-     * @return
-     * @throws JsonParseException
-     * @throws JsonMappingException
-     * @throws IOException
-     */
-	private boolean validateProviderPort(String protobufTgifOutput, JSONArray protobufJsonString) throws JsonParseException, JsonMappingException, IOException{
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- validateProviderPort() Begin --------");
-		Gson gson = new Gson();
-		Tgif tgif = new Tgif();
-		org.acumos.designstudio.ce.vo.tgif.Service service = new org.acumos.designstudio.ce.vo.tgif.Service();
-		ObjectMapper mapper = new ObjectMapper();
-		try{
-		     tgif = mapper.readValue(protobufTgifOutput, Tgif.class);
-		}catch(Exception ex){
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" ------ Exception in  validateProviderPort   -------- " + ex);
-		}
-		service = tgif.getServices(); 
-		boolean matchingPortIsFound = false;
-		if(service !=null){
-			if(service.getCalls() != null && service.getCalls().length != 0){
-				Call[] call = service.getCalls();
-				MessageBody messageBody1;
-				MessageargumentList messageargumentListObject;
-				List<MessageargumentList> listOfArgument = new ArrayList<MessageargumentList>();
-				for(int i= 0; i<call.length;i++){
-					MessageBody[] messageBody = mapper.readValue(call[i].getRequest().getFormat().toJSONString(), MessageBody[].class);
-					if(messageBody !=null && messageBody.length !=0){
-						for(int j= 0; j<messageBody.length; j++){
-							messageBody1 = new MessageBody();
-							messageBody1.setMessageargumentList(messageBody[j].getMessageargumentList());
-							if(messageBody[j].getMessageargumentList() != null && !messageBody[j].getMessageargumentList().isEmpty()){
-								if(protobufJsonString.length() == messageBody1.getMessageargumentList().size()){
-									for(int k = 0; k<messageBody1.getMessageargumentList().size(); k++){
-											messageargumentListObject = new MessageargumentList(); 
-											messageargumentListObject.setTag(messageBody1.getMessageargumentList().get(k).getTag());
-											messageargumentListObject.setRole(messageBody1.getMessageargumentList().get(k).getRole());
-											messageargumentListObject.setType(messageBody1.getMessageargumentList().get(k).getType());
-											listOfArgument.add(messageargumentListObject);
-											listOfArgument.toArray().toString();
-					                 }
-											String jsonInString = gson.toJson(listOfArgument);
-											ObjectMapper mapper12 = new ObjectMapper();
-											JsonNode tree1 = mapper12.readTree(jsonInString);
-											JsonNode tree2 = mapper12.readTree(protobufJsonString.toString());
-							                boolean isItSame = tree1.equals(tree2);
-						                if(isItSame){
-						                	matchingPortIsFound = true;
-						                	return matchingPortIsFound;
-						                }	
-				                }else{
-				                	matchingPortIsFound = false;
-								}	
-							}
-			             }
-						
-						
-					 }	
-					
-				}
-		   }
-	   }
-	   logger.debug(EELFLoggerDelegator.debugLogger, "------- validateProviderPort() End --------");	
-	   return matchingPortIsFound;
-		
-	}
+
 	/**
 	 * 
 	 * @param protobufTgifOutput
@@ -949,66 +896,147 @@ public class SolutionServiceImpl implements ISolutionService {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	private boolean validateConsumerPort(String protobufTgifOutput, JSONArray protobufJsonString) throws JsonParseException, JsonMappingException, IOException{
+	private boolean validateProviderPort(String protobufTgifOutput, JSONArray protobufJsonString)
+			throws JsonParseException, JsonMappingException, IOException {
+		logger.debug(EELFLoggerDelegator.debugLogger, "------- validateProviderPort() Begin --------");
+		Gson gson = new Gson();
+		Tgif tgif = new Tgif();
+		org.acumos.designstudio.ce.vo.tgif.Service service = new org.acumos.designstudio.ce.vo.tgif.Service();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			tgif = mapper.readValue(protobufTgifOutput, Tgif.class);
+		} catch (Exception ex) {
+			logger.error(EELFLoggerDelegator.errorLogger,
+					" ------ Exception in  validateProviderPort   -------- " + ex);
+		}
+		service = tgif.getServices();
+		boolean matchingPortIsFound = false;
+		if (service != null) {
+			if (service.getCalls() != null && service.getCalls().length != 0) {
+				Call[] call = service.getCalls();
+				MessageBody messageBody1;
+				MessageargumentList messageargumentListObject;
+				List<MessageargumentList> listOfArgument = new ArrayList<MessageargumentList>();
+				for (int i = 0; i < call.length; i++) {
+					MessageBody[] messageBody = mapper.readValue(call[i].getRequest().getFormat().toJSONString(),
+							MessageBody[].class);
+					if (messageBody != null && messageBody.length != 0) {
+						for (int j = 0; j < messageBody.length; j++) {
+							messageBody1 = new MessageBody();
+							messageBody1.setMessageargumentList(messageBody[j].getMessageargumentList());
+							if (messageBody[j].getMessageargumentList() != null
+									&& !messageBody[j].getMessageargumentList().isEmpty()) {
+								if (protobufJsonString.length() == messageBody1.getMessageargumentList().size()) {
+									for (int k = 0; k < messageBody1.getMessageargumentList().size(); k++) {
+										messageargumentListObject = new MessageargumentList();
+										messageargumentListObject
+												.setTag(messageBody1.getMessageargumentList().get(k).getTag());
+										messageargumentListObject
+												.setRole(messageBody1.getMessageargumentList().get(k).getRole());
+										messageargumentListObject
+												.setType(messageBody1.getMessageargumentList().get(k).getType());
+										listOfArgument.add(messageargumentListObject);
+										listOfArgument.toArray().toString();
+									}
+									String jsonInString = gson.toJson(listOfArgument);
+									ObjectMapper mapper12 = new ObjectMapper();
+									JsonNode tree1 = mapper12.readTree(jsonInString);
+									JsonNode tree2 = mapper12.readTree(protobufJsonString.toString());
+									boolean isItSame = tree1.equals(tree2);
+									if (isItSame) {
+										matchingPortIsFound = true;
+										return matchingPortIsFound;
+									}
+								} else {
+									matchingPortIsFound = false;
+								}
+							}
+						}
+
+					}
+
+				}
+			}
+		}
+		logger.debug(EELFLoggerDelegator.debugLogger, "------- validateProviderPort() End --------");
+		return matchingPortIsFound;
+
+	}
+
+	/**
+	 * 
+	 * @param protobufTgifOutput
+	 * @param protobufJsonString
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	private boolean validateConsumerPort(String protobufTgifOutput, JSONArray protobufJsonString)
+			throws JsonParseException, JsonMappingException, IOException {
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- validateConsumerPort() Start --------");
 		Gson gson = new Gson();
 		Tgif tgif = new Tgif();
 		org.acumos.designstudio.ce.vo.tgif.Service service = new org.acumos.designstudio.ce.vo.tgif.Service();
 		ObjectMapper mapper = new ObjectMapper();
-		try{
-		     tgif = mapper.readValue(protobufTgifOutput, Tgif.class);
-		}catch(Exception ex){
+		try {
+			tgif = mapper.readValue(protobufTgifOutput, Tgif.class);
+		} catch (Exception ex) {
 			logger.error(EELFLoggerDelegator.errorLogger,
 					" ------ Exception in  validateConsumerPort   -------- " + ex);
 		}
-		service = tgif.getServices(); 
+		service = tgif.getServices();
 		boolean matchingPortIsFound = false;
-		if(service !=null){
-			if(service.getProvides() != null && service.getProvides().length != 0){
+		if (service != null) {
+			if (service.getProvides() != null && service.getProvides().length != 0) {
 				Provide[] provide = service.getProvides();
 				MessageBody messageBody1;
 				MessageargumentList messageargumentListObject;
 				List<MessageargumentList> listOfArgument = new ArrayList<MessageargumentList>();
-				for(int i= 0; i<provide.length;i++){
-					MessageBody[] messageBody = mapper.readValue(provide[i].getRequest().getFormat().toJSONString(), MessageBody[].class);
-					if(messageBody !=null && messageBody.length !=0){
-						for(int j= 0; j<messageBody.length; j++){
+				for (int i = 0; i < provide.length; i++) {
+					MessageBody[] messageBody = mapper.readValue(provide[i].getRequest().getFormat().toJSONString(),
+							MessageBody[].class);
+					if (messageBody != null && messageBody.length != 0) {
+						for (int j = 0; j < messageBody.length; j++) {
 							messageBody1 = new MessageBody();
 							messageBody1.setMessageargumentList(messageBody[j].getMessageargumentList());
-							if(messageBody[j].getMessageargumentList() != null && !messageBody[j].getMessageargumentList().isEmpty()){
-								if(protobufJsonString.length() == messageBody1.getMessageargumentList().size()){
-									for(int k = 0; k<messageBody1.getMessageargumentList().size(); k++){
-											messageargumentListObject = new MessageargumentList(); 
-											messageargumentListObject.setTag(messageBody1.getMessageargumentList().get(k).getTag());
-											messageargumentListObject.setRole(messageBody1.getMessageargumentList().get(k).getRole());
-											messageargumentListObject.setType(messageBody1.getMessageargumentList().get(k).getType());
-											listOfArgument.add(messageargumentListObject);
-											listOfArgument.toArray().toString();
-					                 }
-											String jsonInString = gson.toJson(listOfArgument);
-											ObjectMapper mapper12 = new ObjectMapper();
-											JsonNode tree1 = mapper12.readTree(jsonInString);
-											JsonNode tree2 = mapper12.readTree(protobufJsonString.toString());
-							                boolean isItSame = tree1.equals(tree2);
-						                if(isItSame){
-						                	matchingPortIsFound = true;
-						                	return matchingPortIsFound;
-						                }	
-				                }else{
-				                	matchingPortIsFound = false;
-								}	
+							if (messageBody[j].getMessageargumentList() != null
+									&& !messageBody[j].getMessageargumentList().isEmpty()) {
+								if (protobufJsonString.length() == messageBody1.getMessageargumentList().size()) {
+									for (int k = 0; k < messageBody1.getMessageargumentList().size(); k++) {
+										messageargumentListObject = new MessageargumentList();
+										messageargumentListObject
+												.setTag(messageBody1.getMessageargumentList().get(k).getTag());
+										messageargumentListObject
+												.setRole(messageBody1.getMessageargumentList().get(k).getRole());
+										messageargumentListObject
+												.setType(messageBody1.getMessageargumentList().get(k).getType());
+										listOfArgument.add(messageargumentListObject);
+										listOfArgument.toArray().toString();
+									}
+									String jsonInString = gson.toJson(listOfArgument);
+									ObjectMapper mapper12 = new ObjectMapper();
+									JsonNode tree1 = mapper12.readTree(jsonInString);
+									JsonNode tree2 = mapper12.readTree(protobufJsonString.toString());
+									boolean isItSame = tree1.equals(tree2);
+									if (isItSame) {
+										matchingPortIsFound = true;
+										return matchingPortIsFound;
+									}
+								} else {
+									matchingPortIsFound = false;
+								}
 							}
-							
-			             }
-						
-						
-					 }	
-					
+
+						}
+
+					}
+
 				}
-		   }
-	   }
-	   logger.debug(EELFLoggerDelegator.debugLogger, "------- validateConsumerPort() End --------");	
-	   return matchingPortIsFound;
+			}
+		}
+		logger.debug(EELFLoggerDelegator.debugLogger, "------- validateConsumerPort() End --------");
+		return matchingPortIsFound;
 	}
 
 	@Override
@@ -1040,10 +1068,11 @@ public class SolutionServiceImpl implements ISolutionService {
 			// update relations list, if link is created b/w 2 models
 			if (null == property || (null != property && null == property.getData_map())) {
 				updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName, targetNodeId,
-				sourceNodeRequirement, targetNodeCapabilityName, cdump);
+						sourceNodeRequirement, targetNodeCapabilityName, cdump);
 				addedLink = true;
-			} else { // set properties field of DM + update relations list, if link is b/w Model & Data Mapper
-				
+			} else { // set properties field of DM + update relations list, if link is b/w Model &
+						// Data Mapper
+
 				nodesList = cdump.getNodes();
 				// Identify Data Mapper node to update
 				if (property.getData_map().getMap_inputs().length == 0) {
@@ -1061,33 +1090,35 @@ public class SolutionServiceImpl implements ISolutionService {
 							org.acumos.designstudio.cdump.Property[] propertyarray = node.getProperties();
 							logger.debug(EELFLoggerDelegator.debugLogger, "PropertyArray : " + propertyarray);
 							if (null == propertyarray || propertyarray.length == 0) {
-								logger.debug(EELFLoggerDelegator.debugLogger, "propertyarray  : "+ propertyarray);
+								logger.debug(EELFLoggerDelegator.debugLogger, "propertyarray  : " + propertyarray);
 								org.acumos.designstudio.cdump.Property[] propertyArray = new org.acumos.designstudio.cdump.Property[1];
 								propertyArray[0] = property;
 								node.setProperties(propertyArray);
-								
+
 								updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
-								targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
+										targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
 								addedLink = true;
 								break;
-								
+
 							} else {
-								//set map_outputs of data_map under properties field of DM
+								// set map_outputs of data_map under properties field of DM
 								if (property.getData_map().getMap_inputs().length == 0) {
-									
-									propertyarray[0].getData_map().setMap_outputs(property.getData_map().getMap_outputs());
-									
+
+									propertyarray[0].getData_map()
+											.setMap_outputs(property.getData_map().getMap_outputs());
+
 									updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
-									targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
+											targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
 									addedLink = true;
 									break;
 								}
-								
-								//set map_inputs of data_map under properties field of DM
+
+								// set map_inputs of data_map under properties field of DM
 								if (property.getData_map().getMap_outputs().length == 0) {
-									propertyarray[0].getData_map().setMap_inputs(property.getData_map().getMap_inputs());
+									propertyarray[0].getData_map()
+											.setMap_inputs(property.getData_map().getMap_inputs());
 									updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
-									targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
+											targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
 									addedLink = true;
 									break;
 								}
@@ -1100,17 +1131,18 @@ public class SolutionServiceImpl implements ISolutionService {
 				String jsonInString = gson.toJson(cdump);
 				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
 			} catch (JsonIOException e) {
-				logger.error(EELFLoggerDelegator.errorLogger, "------Exception in addLink() ----------",e);
+				logger.error(EELFLoggerDelegator.errorLogger, "------Exception in addLink() ----------", e);
 				addedLink = false;
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception Occured in addLink() ------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception Occured in addLink() ------", e);
 			addedLink = false;
 		}
 
 		logger.debug(EELFLoggerDelegator.debugLogger, "------ addLink() in SolutionServiceImpl : End---------- ");
 		return addedLink;
 	}
+
 	/**
 	 * 
 	 * @param linkName
@@ -1177,7 +1209,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				} else {
 					Iterator<Relations> relationsItr = relationsList.iterator();
 
-					// Identify link to delete + Data mapper node to delete it's  properties field
+					// Identify link to delete + Data mapper node to delete it's properties field
 					while (relationsItr.hasNext()) {
 						Relations relation = relationsItr.next();
 						if (relation.getLinkId().equals(linkId)) {
@@ -1189,14 +1221,12 @@ public class SolutionServiceImpl implements ISolutionService {
 
 							// delete properties field from DM
 							for (Nodes node : nodesList) {
-								if (node.getNodeId().equals(sourceNodeId)
-										&& node.getProperties().length != 0) {
+								if (node.getNodeId().equals(sourceNodeId) && node.getProperties().length != 0) {
 
 									node.getProperties()[0].getData_map().setMap_outputs(new MapOutput[0]);
 								}
-								if (node.getNodeId().equals(targetNodeId)
-										&& node.getProperties().length != 0) {
-									
+								if (node.getNodeId().equals(targetNodeId) && node.getProperties().length != 0) {
+
 									node.getProperties()[0].getData_map().setMap_inputs(new MapInputs[0]);
 								}
 							}
@@ -1213,33 +1243,38 @@ public class SolutionServiceImpl implements ISolutionService {
 			}
 		} catch (IOException e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					"------- IOException in deleteLink() in SolutionServiceImpl-------",e);
+					"------- IOException in deleteLink() in SolutionServiceImpl-------", e);
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					"------- Exception in deleteLink() in SolutionServiceImpl-------",e);
+					"------- Exception in deleteLink() in SolutionServiceImpl-------", e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- deleteLink() in SolutionServiceImpl End --------");
 		return deletedLink;
 	}
+
 	/**
 	 * 
 	 * @param commonDataServiceRestClient
+	 *            Client
 	 */
-	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient){
+	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
 		cmnDataService = commonDataServiceRestClient;
 	}
+
 	/**
 	 * 
 	 * @param nexusArtifactClient1
+	 *            NexusArtifactClient
 	 * @param confprops1
+	 *            ConfigurationProperties
 	 * @param properties
+	 *            Properties
 	 */
-	public void getNexusClient(NexusArtifactClient nexusArtifactClient1,ConfigurationProperties confprops1,org.acumos.designstudio.ce.util.Properties properties){
+	public void getNexusClient(NexusArtifactClient nexusArtifactClient1, ConfigurationProperties confprops1,
+			org.acumos.designstudio.ce.util.Properties properties) {
 		confprops = confprops1;
 		props = properties;
 		nexusArtifactClient = nexusArtifactClient1;
-    }
-
-	
+	}
 
 }

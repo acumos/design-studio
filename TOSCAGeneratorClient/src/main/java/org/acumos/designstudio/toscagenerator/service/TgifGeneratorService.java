@@ -52,16 +52,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class TgifGeneratorService {
 
 	private static final Logger logger = LoggerFactory.getLogger(TgifGeneratorService.class);
-	
+
 	/**
 	 * 
 	 * @param solutionID
+	 *            solution ID
 	 * @param version
+	 *            version
 	 * @param modelMetaData
-	 * @return
+	 *            model meta data
+	 * @return Artifact
 	 * @throws AcumosException
+	 *             On failure
 	 */
-	public Artifact createTgif1(String solutionID, String version, String modelMetaData) throws AcumosException{
+	public Artifact createTgif1(String solutionID, String version, String modelMetaData) throws AcumosException {
 		logger.debug("--------  createTgif() Started ------------");
 		Artifact result = null;
 		String path = Properties.getTempFolderPath(solutionID, version);
@@ -70,9 +74,9 @@ public class TgifGeneratorService {
 			Object obj = parser.parse(modelMetaData);
 			JSONObject jsonObject = (JSONObject) obj;
 			String jsonString = jsonObject.toJSONString();
-			ToscaUtil.writeDataToFile(path, "tgif", "json", jsonString );
-			result = new Artifact("tgif", "json",  solutionID, version, path, jsonString.length());
-			
+			ToscaUtil.writeDataToFile(path, "tgif", "json", jsonString);
+			result = new Artifact("tgif", "json", solutionID, version, path, jsonString.length());
+
 		} catch (Exception e) {
 			logger.error("------------- Exception Occured  createTgif() -------------", e);
 			throw new ServiceException(" --------------- Exception Occured decryptAndWriteTofile() --------------",
@@ -81,17 +85,23 @@ public class TgifGeneratorService {
 		logger.debug("--------  createTgif() End ------------");
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @param solutionID
+	 *            solution ID
 	 * @param version
+	 *            version
 	 * @param protobuf
+	 *            Protobuf spec
 	 * @param metaData
-	 * @return
+	 *            metadata
+	 * @return the TGIF as JSON
 	 * @throws AcumosException
+	 *             on Failure
 	 */
-	public Artifact createTgif(String solutionID, String version,  String protobuf, String metaData) throws AcumosException{
+	public Artifact createTgif(String solutionID, String version, String protobuf, String metaData)
+			throws AcumosException {
 		logger.debug("--------  createTgif() Started ------------");
 		Artifact result = null;
 		String path = Properties.getTempFolderPath(solutionID, version);
@@ -100,31 +110,32 @@ public class TgifGeneratorService {
 		try {
 			Object obj = parser.parse(metaData.replace("\t", ""));
 			JSONObject metaDataJson = (JSONObject) obj;
-			//String jsonString = jsonObject.toJSONString();
+			// String jsonString = jsonObject.toJSONString();
 			obj = parser.parse(protobuf.replace("\t", ""));
 			JSONObject protobufJson = (JSONObject) obj;
 			Tgif tgif = populateTgif(version, metaDataJson, protobufJson);
-			//convert Tgif to json 
-			ObjectMapper  mapper = new ObjectMapper();
+			// convert Tgif to json
+			ObjectMapper mapper = new ObjectMapper();
 			jsonString = mapper.writeValueAsString(tgif);
 			jsonString = jsonString.replace("[null]", "[]");
 			jsonString = jsonString.replace("null", "{}");
 			logger.debug("Generated TGIF.json : " + jsonString);
-			ToscaUtil.writeDataToFile(path, "TGIF", "json", jsonString );
-			result = new Artifact("TGIF", "json",  solutionID, version, path, jsonString.length());
-			
+			ToscaUtil.writeDataToFile(path, "TGIF", "json", jsonString);
+			result = new Artifact("TGIF", "json", solutionID, version, path, jsonString.length());
+
 		} catch (Exception e) {
 			logger.error("------------- Exception Occured in createTgif() -------------", e);
 			logger.error("metaData : " + metaData);
 			logger.error("protobuf : " + protobuf);
 			logger.error("tgif : " + jsonString);
-			throw new ServiceException(" --------------- Exception Occured parsing either metaData or protobuf --------------",
+			throw new ServiceException(
+					" --------------- Exception Occurred parsing either metaData or protobuf --------------",
 					Properties.getDecryptionErrorCode(), "Error creating TGIF details", e.getCause());
 		}
 		logger.debug("--------  createTgif() End ------------");
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @param version
@@ -134,41 +145,40 @@ public class TgifGeneratorService {
 	 */
 	private Tgif populateTgif(String version, JSONObject metaDataJson, JSONObject protobufJson) {
 		logger.debug("--------  populateTgif() Begin ------------");
-		
-		
+
 		@SuppressWarnings("unchecked")
 		String solutionName = metaDataJson.getOrDefault("name", "Key not found").toString();
 		@SuppressWarnings("unchecked")
 		String description = metaDataJson.getOrDefault("description", "").toString();
 		String COMPONENT_TYPE = "Docker";
-		
-		//Set Self 
-		Self self = new Self(version,solutionName, description, COMPONENT_TYPE);
-		
-		//Set empty Stream 
+
+		// Set Self
+		Self self = new Self(version, solutionName, description, COMPONENT_TYPE);
+
+		// Set empty Stream
 		Stream streams = null;
-		
-		//Set services 
+
+		// Set services
 		Call[] scalls = getCalls(protobufJson);
 		Provide[] sprovides = getProvides(protobufJson);
-		
+
 		Service services = new Service(scalls, sprovides);
-		
-		//Set array of Parameters 
+
+		// Set array of Parameters
 		Parameter[] parameters = getParameters(protobufJson);
-		
-		//Set Auxilary 
+
+		// Set Auxilary
 		Auxiliary auxiliary = null;
-		
-		//Set array of artifacts
+
+		// Set array of artifacts
 		org.acumos.designstudio.toscagenerator.vo.tgif.Artifact[] artifacts = getArtifacts(protobufJson);
-		
-		Tgif result = new Tgif(self,streams,services, parameters,auxiliary,artifacts);
-		
+
+		Tgif result = new Tgif(self, streams, services, parameters, auxiliary, artifacts);
+
 		logger.debug("--------  populateTgif() End ------------");
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @param protobufJson
@@ -176,7 +186,7 @@ public class TgifGeneratorService {
 	 */
 	private org.acumos.designstudio.toscagenerator.vo.tgif.Artifact[] getArtifacts(JSONObject protobufJson) {
 		org.acumos.designstudio.toscagenerator.vo.tgif.Artifact[] result = new org.acumos.designstudio.toscagenerator.vo.tgif.Artifact[1];
-		
+
 		return result;
 	}
 
@@ -200,46 +210,47 @@ public class TgifGeneratorService {
 		JSONObject service = (JSONObject) protobufJson.get("service");
 		JSONArray listOfOperations = (JSONArray) service.get("listOfOperations");
 		JSONArray listOfMessages = (JSONArray) protobufJson.get("listOfMessages");
-		
+
 		Provide[] result = new Provide[listOfOperations.size()];
-		
+
 		JSONObject operation = null;
 		JSONArray listOfInputMessages = null;
 		String operationName = null;
-		int operationCnt = 0 ;
-		
+		int operationCnt = 0;
+
 		Iterator<JSONObject> itr = listOfOperations.iterator();
 		Iterator<JSONObject> inputMsgItr = null;
 		JSONObject inputMessage = null;
 		String inputMsgName = null;
 		JSONArray inputMsgJsonArray = null;
-		
+
 		Request request = null;
 		Response response = null;
 		Provide provide = null;
 		@SuppressWarnings("unused")
 		int inputMsgCnt = 0;
-		
-		while(itr.hasNext()){
+
+		while (itr.hasNext()) {
 			operation = itr.next();
 			operationName = operation.get("operationName").toString();
-			//Construct the format : for each output Message get the message name and then get collect the message details 
+			// Construct the format : for each output Message get the message name and then
+			// get collect the message details
 			listOfInputMessages = (JSONArray) operation.get("listOfInputMessages");
 			inputMsgItr = listOfInputMessages.iterator();
 			inputMsgCnt = 0;
 			inputMsgJsonArray = new JSONArray();
-			while(inputMsgItr.hasNext()){
+			while (inputMsgItr.hasNext()) {
 				inputMessage = (JSONObject) inputMsgItr.next();
 				inputMsgName = (String) inputMessage.get("inputMessageName");
 				inputMsgJsonArray.add(getMsgJson(inputMsgName, listOfMessages));
 			}
 			request = new Request(inputMsgJsonArray, "");
 			response = new Response(new JSONArray(), "");
-			provide = new Provide(operationName,request, response);
+			provide = new Provide(operationName, request, response);
 			result[operationCnt] = provide;
 			operationCnt++;
 		}
-	
+
 		return result;
 	}
 
@@ -250,56 +261,55 @@ public class TgifGeneratorService {
 	 */
 	@SuppressWarnings("unchecked")
 	private Call[] getCalls(JSONObject protobufJson) {
-		
+
 		JSONObject service = (JSONObject) protobufJson.get("service");
 		JSONArray listOfOperations = (JSONArray) service.get("listOfOperations");
 		JSONArray listOfMessages = (JSONArray) protobufJson.get("listOfMessages");
-		
+
 		Call[] result = new Call[listOfOperations.size()];
-		
-		
+
 		JSONObject operation = null;
-		
+
 		JSONArray listOfOutputMessages = null;
-		
+
 		String operationName = null;
-		int operationCnt = 0 ;
-		
-		
+		int operationCnt = 0;
+
 		Iterator<JSONObject> itr = listOfOperations.iterator();
 		Iterator<JSONObject> outputMsgItr = null;
 		JSONObject outputMessage = null;
 		String outputMsgName = null;
 		JSONArray outputMsgJsonArray = null;
-		
+
 		Request request = null;
 		Response response = null;
 		Call call = null;
 		@SuppressWarnings("unused")
 		int outputMsgCnt = 0;
-		 
-		while(itr.hasNext()){
+
+		while (itr.hasNext()) {
 			operation = itr.next();
 			operationName = operation.get("operationName").toString();
-			//Construct the format : for each output Message get the message name and then get collect the message details 
+			// Construct the format : for each output Message get the message name and then
+			// get collect the message details
 			listOfOutputMessages = (JSONArray) operation.get("listOfOutputMessages");
 			outputMsgJsonArray = new JSONArray();
 			outputMsgItr = listOfOutputMessages.iterator();
 			outputMsgCnt = 0;
-			while(outputMsgItr.hasNext()){
+			while (outputMsgItr.hasNext()) {
 				outputMessage = (JSONObject) outputMsgItr.next();
 				outputMsgName = (String) outputMessage.get("outPutMessageName");
 				outputMsgJsonArray.add(getMsgJson(outputMsgName, listOfMessages));
 			}
 			request = new Request(outputMsgJsonArray, "");
 			response = new Response(new JSONArray(), "");
-			call = new Call(operationName,request, response);
+			call = new Call(operationName, request, response);
 			result[operationCnt] = call;
 			operationCnt++;
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @param msgName
@@ -311,10 +321,10 @@ public class TgifGeneratorService {
 		Iterator<JSONObject> itr = listOfMessages.iterator();
 		JSONObject message = null;
 		String messageName = null;
-		while(itr.hasNext()){
+		while (itr.hasNext()) {
 			message = (JSONObject) itr.next();
 			messageName = (String) message.get("messageName");
-			if(messageName.equals(msgName)){
+			if (messageName.equals(msgName)) {
 				logger.debug("message : " + message.toJSONString());
 				break;
 			}
