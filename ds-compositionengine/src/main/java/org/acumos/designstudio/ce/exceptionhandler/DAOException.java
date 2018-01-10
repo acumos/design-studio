@@ -38,7 +38,7 @@ public class DAOException extends AcumosException {
 
 	@Autowired
 	Properties props;
-	
+
 	/**
 	 * 
 	 */
@@ -47,41 +47,55 @@ public class DAOException extends AcumosException {
 	 * 
 	 */
 	public final String SOLUTION_ERROR_DESC = props.getSolutionErrorDesc();
-	
+
 	/**
 	 * 
 	 */
 	public DAOException() {
 		super();
 	}
-	
+
 	/**
 	 * 
 	 * @param message
+	 *            Error message
 	 * @param errorCode
+	 *            Error code
 	 * @param errorDesc
+	 *            Error description
 	 * @param cause
+	 *            Throwable
 	 * @param param
+	 *            Object
 	 */
 	public DAOException(String message, String errorCode, String errorDesc, Throwable cause, Object param) {
 		super(message, errorCode, errorDesc, cause, param);
 	}
-	
+
 	/**
 	 * 
 	 * @param message
+	 *            Error message
 	 * @param errorCode
+	 *            Error code
 	 * @param errorDesc
+	 *            Error description
 	 * @param cause
+	 *            Throwable
 	 */
 	public DAOException(String message, String errorCode, String errorDesc, Throwable cause) {
 		super(message, errorCode, errorDesc, cause);
 	}
+
 	/**
 	 * 
 	 * @param message
+	 *            Error message
 	 * @param errorCode
+	 *            Error code
 	 * @param errorDesc
+	 *            Error description
+	 * 
 	 */
 	public DAOException(String message, String errorCode, String errorDesc) {
 		super(message, errorCode, errorDesc);

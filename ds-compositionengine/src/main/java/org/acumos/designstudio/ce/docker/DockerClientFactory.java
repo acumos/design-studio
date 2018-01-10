@@ -43,9 +43,9 @@ public final class DockerClientFactory {
 /**
  * 
  * @param config
- * @return
- * @throws CustomException 
- * @throws AcumosServiceException
+ * DockerConfiguration
+ * @return DockerClient
+ * @throws ServiceException On failure
  */
 	public static DockerClient getDockerClient(DockerConfiguration config) throws ServiceException {
 		SSLConfig sslConfig;

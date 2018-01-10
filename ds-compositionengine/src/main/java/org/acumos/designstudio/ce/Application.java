@@ -44,11 +44,13 @@ public class Application {
 
 	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(Application.class);
 	public static final String CONFIG_ENV_VAR_NAME = "SPRING_APPLICATION_JSON";
-	
+
 	/**
 	 * 
 	 * @param args
+	 *            Command-line arguments
 	 * @throws Exception
+	 *             On failure
 	 */
 	public static void main(String[] args) throws Exception {
 		final String springApplicationJson = System.getenv(CONFIG_ENV_VAR_NAME);
@@ -64,8 +66,8 @@ public class Application {
 		} else {
 			logger.warn("main: no configuration found in environment {}", CONFIG_ENV_VAR_NAME);
 		}
-		//Clean the output Folder : 
-		
+		// Clean the output Folder :
+
 		SpringApplication.run(Application.class, args);
 	}
 }

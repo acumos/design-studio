@@ -78,12 +78,14 @@ public class SolutionController {
 	@Autowired
 	@Qualifier("compositeServiceImpl")
 	ICompositeSolutionService compositeServiceImpl;
-	
+
 	/**
 	 * 
 	 * @param userId
-	 * @return
+	 *            User ID
+	 * @return Solutions
 	 * @throws AcumosException
+	 *             On failure
 	 */
 	@ApiOperation(value = "Get Solutions for specified userId")
 	@RequestMapping(value = "/getSolutions", method = RequestMethod.GET)
@@ -106,20 +108,7 @@ public class SolutionController {
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- getSolutions() End --------");
 		return result;
 	}
-	
-	/**
-	 * 	
-	 * @param request
-	 * @param userId
-	 * @param solutionName
-	 * @param version
-	 * @param solutionId
-	 * @param description
-	 * @param cid
-	 * @param ignoreLesserVersionConflictFlag
-	 * @return
-	 * @throws AcumosException
-	 */
+
 	@ApiOperation(value = "Save the Composite Solution")
 	@RequestMapping(value = "/saveCompositeSolution", method = RequestMethod.POST)
 	@ResponseBody
@@ -170,22 +159,17 @@ public class SolutionController {
 			}
 
 		} catch (AcumosException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in getSolutions() -------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in getSolutions() -------", e);
 			result = String.format(error, e.getErrorCode(), e.getErrorDesc());
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception in getSolutions()------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception in getSolutions()------", e);
 			result = String.format(error, props.getCompositionSolutionErrorCode(),
 					props.getCompositionSolutionErrorDesc());
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- saveCompositeSolution() End --------");
 		return result;
 	}
-	
-	/**
-	 * 
-	 * @param dscs
-	 * @return
-	 */
+
 	public String checkMandatoryFieldsforSave(DSCompositeSolution dscs) {
 		List<String> errorList = new ArrayList<>();
 
@@ -208,12 +192,7 @@ public class SolutionController {
 		}
 
 	}
-	
-	/**
-	 * 
-	 * @param userId
-	 * @return
-	 */
+
 	@ApiOperation(value = "create new Composition Solution")
 	@RequestMapping(value = "/createNewCompositeSolution", method = RequestMethod.POST)
 	public String createNewCompositeSolution(@RequestParam(value = "userId", required = true) String userId) {
@@ -222,21 +201,13 @@ public class SolutionController {
 		try {
 			results = solutionService.createNewCompositeSolution(userId);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  createNewCompositeSolution() -------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  createNewCompositeSolution() -------",
+					e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- createNewCompositeSolution() ------- : End");
 		return results;
 	}
 
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param version
-	 * @param cid
-	 * @param node
-	 * @return
-	 */
 	@ApiOperation(value = "add Node Operation")
 	@RequestMapping(value = "/addNode", method = RequestMethod.POST)
 	public String addNode(@RequestParam(value = "userId", required = true) String userId,
@@ -258,7 +229,7 @@ public class SolutionController {
 				results = "{\"error\": \"JSON schema not valid, Please check the input JSON\"}";
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  addNode() -------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  addNode() -------", e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- addNode() ------- : End");
 		return results;
@@ -310,14 +281,7 @@ public class SolutionController {
 		}
 		return result;
 	}
-	
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param version
-	 * @return
-	 */
+
 	@ApiOperation(value = "Gets existing composite solution details for specified solutionId and version")
 	@RequestMapping(value = "/readCompositeSolutionGraph", method = RequestMethod.GET, produces = "text/plain")
 	@ResponseBody
@@ -352,19 +316,7 @@ public class SolutionController {
 		}
 		return errList.toString();
 	}
-	
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param version
-	 * @param cid
-	 * @param nodeId
-	 * @param nodeName
-	 * @param ndata
-	 * @param field_map
-	 * @return
-	 */
+
 	@ApiOperation(value = "Modify Node Operation")
 	@RequestMapping(value = "/modifyNode", method = RequestMethod.POST)
 	@ResponseBody
@@ -381,22 +333,12 @@ public class SolutionController {
 		try {
 			result = solutionService.modifyNode(userId, solutionId, version, cid, nodeId, nodeName, ndata, fieldmap);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  modifyNode() -------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  modifyNode() -------", e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- modifyNode() ------- : End");
 		return result;
 	}
-	
-	/**
-	 * 
-	 * @param userId
-	 * @param cid
-	 * @param solutionId
-	 * @param version
-	 * @param linkId
-	 * @param linkName
-	 * @return
-	 */
+
 	@ApiOperation(value = "Modify Link Operation")
 	@RequestMapping(value = "/modifyLink", method = RequestMethod.POST)
 	@ResponseBody
@@ -411,19 +353,12 @@ public class SolutionController {
 		try {
 			result = solutionService.modifyLink(userId, cid, solutionId, version, linkId, linkName);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  modifyLink() -------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  modifyLink() -------", e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- modifyLink() ------- : End");
 		return result;
 	}
-	
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param version
-	 * @return
-	 */
+
 	@ApiOperation(value = "Delete the CompositeSolution")
 	@RequestMapping(value = "/deleteCompositeSolution", method = RequestMethod.POST)
 	@ResponseBody
@@ -443,22 +378,13 @@ public class SolutionController {
 				result = String.format(resultTemplate, "true", "");
 			}
 		} catch (Exception e) {
-			logger.debug(EELFLoggerDelegator.debugLogger, "-------Exception in  deleteCompositeSolution() -------",e);
+			logger.debug(EELFLoggerDelegator.debugLogger, "-------Exception in  deleteCompositeSolution() -------", e);
 			result = String.format(resultTemplate, "false", "Exception : Requested Solution Not Found");
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- deleteCompositeSolution() ------- : End");
 		return result;
 	}
-	
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param version
-	 * @param cid
-	 * @param nodeId
-	 * @return
-	 */
+
 	@ApiOperation(value = "delete Node Operation")
 	@RequestMapping(value = "/deleteNode", method = RequestMethod.POST)
 	public String deleteNode(@RequestParam(value = "userId", required = true) String userId,
@@ -481,21 +407,13 @@ public class SolutionController {
 				}
 			} catch (Exception e) {
 				logger.error(EELFLoggerDelegator.errorLogger,
-						"------- Exception in deleteNode() in SolutionController -------",e);
+						"------- Exception in deleteNode() in SolutionController -------", e);
 			}
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- deleteNode() in SolutionController Ends --------");
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param solutionVersion
-	 * @param cid
-	 * @return
-	 */
 	@ApiOperation(value = "Close Composite Solution Operation")
 	@RequestMapping(value = "/closeCompositeSolution ", method = RequestMethod.POST)
 	@ResponseBody
@@ -508,20 +426,12 @@ public class SolutionController {
 		try {
 			result = compositeServiceImpl.closeCompositeSolution(userId, solutionId, solutionVersion, cid);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in closeCompositeSolution() -----",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in closeCompositeSolution() -----", e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------ closeCompositeSolution(): End -----");
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param solutionVersion
-	 * @param cid
-	 * @return
-	 */
 	@ApiOperation(value = "Clear Composite Solution Operation")
 	@RequestMapping(value = "/clearCompositeSolution", method = RequestMethod.POST)
 	@ResponseBody
@@ -534,19 +444,13 @@ public class SolutionController {
 		try {
 			result = compositeServiceImpl.clearCompositeSolution(userId, solutionId, solutionVersion, cid);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in clearCompositeSolution() -----",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in clearCompositeSolution() -----", e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------ clearCompositeSolution(): End -----");
 		return result;
 
 	}
-	
-	/**
-	 * 
-	 * @param userId
-	 * @param visibilityLevel
-	 * @return
-	 */
+
 	@ApiOperation(value = "Fetch the list of active public Composite Solution for the specified User Id")
 	@RequestMapping(value = "/getCompositeSolutions", method = RequestMethod.GET, produces = "text/plain")
 	@ResponseBody
@@ -561,26 +465,16 @@ public class SolutionController {
 			result = compositeServiceImpl.getCompositeSolutions(userId, visibilityLevel);
 			result = String.format(resultTemplate, result);
 		} catch (AcumosException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in getCompositeSolutions() -----",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in getCompositeSolutions() -----", e);
 			result = String.format(error, e.getErrorCode(), e.getErrorDesc());
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in getCompositeSolutions() -----",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in getCompositeSolutions() -----", e);
 			result = String.format(error, "401", "Failed to fetch the list of active Public Composite Solutions");
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- getCompositeSolutions() ------- : End");
 		return result;
 	}
-	
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param solutionVersion
-	 * @param cid
-	 * @param portType
-	 * @param protobufJsonString
-	 * @return
-	 */
+
 	@ApiOperation(value = "Fetch the all the maching models for any specified model")
 	@RequestMapping(value = "/getMatchingModels", method = RequestMethod.GET, produces = "text/plain")
 	@ResponseBody
@@ -602,21 +496,13 @@ public class SolutionController {
 				result = String.format(resultTemplate, "false", "No matching models found");
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in getMatchingModels() -----",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in getMatchingModels() -----", e);
 			result = String.format(error, e.getMessage());
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- getMatchingModels() ------- : End");
 		return result;
 	}
-	
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionName
-	 * @param solutionId
-	 * @param version
-	 * @return
-	 */
+
 	@ApiOperation(value = "Validate Composite Solution")
 	@RequestMapping(value = "/validateCompositeSolution", method = RequestMethod.POST, produces = "text/plain")
 	@ResponseBody
@@ -633,7 +519,7 @@ public class SolutionController {
 		} catch (Exception e) {
 			result = "{\"success\" : \"false\", \"errorDescription\" : \"Failed to Validate Composite Solution\"}";
 			result = String.format(result);
-			logger.debug(EELFLoggerDelegator.errorLogger, "------ Exception in validateCompositeSolution() ------",e);
+			logger.debug(EELFLoggerDelegator.errorLogger, "------ Exception in validateCompositeSolution() ------", e);
 			logger.debug("------ Exception in validateCompositeSolution() ------");
 			e.printStackTrace();
 		}
@@ -641,24 +527,7 @@ public class SolutionController {
 		logger.debug("----- validateCompositeSolution() ------- : End ");
 		return result;
 	}
-	
-	/**
-	 * 
-	 * @param userId
-	 * @param solutionId
-	 * @param version
-	 * @param cid
-	 * @param linkName
-	 * @param linkId
-	 * @param sourceNodeName
-	 * @param sourceNodeId
-	 * @param targetNodeName
-	 * @param targetNodeId
-	 * @param sourceNodeRequirement
-	 * @param targetNodeCapabilityName
-	 * @param property
-	 * @return
-	 */
+
 	@ApiOperation(value = "add link Operation")
 	@RequestMapping(value = "/addLink", method = RequestMethod.POST)
 	public String addLink(@RequestParam(value = "userId", required = true) String userId,
@@ -673,29 +542,30 @@ public class SolutionController {
 			@RequestParam(value = "targetNodeId", required = true) String targetNodeId,
 			@RequestParam(value = "sourceNodeRequirement", required = true) String sourceNodeRequirement,
 			@RequestParam(value = "targetNodeCapabilityName", required = true) String targetNodeCapabilityName,
-			@RequestBody(required = false) @Valid org.acumos.designstudio.cdump.Property property) { // Change in API signature
+			@RequestBody(required = false) @Valid org.acumos.designstudio.cdump.Property property) { // Change in API
+																										// signature
 
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- addLink() ------- : Begin");
 
 		String result = null;
 		boolean linkAdded = false;
 		String resultTemplate = "{\"success\" : \"%s\", \"errorDescription\" : \"%s\"}";
-		
+
 		try {
 			if (linkId != null && sourceNodeName != null && targetNodeName != null && targetNodeId != null
 					&& targetNodeCapabilityName != null) {
-				
+
 				if (validateProperty(property)) {
 					linkAdded = solutionService.addLink(userId, solutionId, version, linkName, linkId, sourceNodeName,
 							sourceNodeId, targetNodeName, targetNodeId, sourceNodeRequirement, targetNodeCapabilityName,
 							cid, property);
-					
+
 					if (linkAdded) {
 						result = String.format(resultTemplate, true, "");
 					} else {
 						result = String.format(resultTemplate, false, "Link not added");
 					}
-					
+
 				} else {
 					result = String.format(resultTemplate, false, "Invalid input: properties");
 				}
@@ -704,21 +574,21 @@ public class SolutionController {
 						sourceNodeId);
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception in addLink() ------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception in addLink() ------", e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- addLink() ------- : End");
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @param property
 	 * @return
 	 */
 	private boolean validateProperty(Property property) {
-		
+
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- validateProperty() ------- : Begin");
-		
+
 		Gson gson = new Gson();
 		boolean isValid = false;
 		DataMap dMap = new DataMap();
@@ -726,7 +596,7 @@ public class SolutionController {
 		boolean map_inputsFlag = false;
 		boolean map_outputsFlag = false;
 		JsonParser parser = new JsonParser();
-		
+
 		try {
 			// if link if b/w 2 models
 			if (null == property || (null != property && null == property.getData_map())) {
@@ -762,26 +632,17 @@ public class SolutionController {
 					}
 				}
 			}
-			if(map_outputsFlag == true && map_inputsFlag == true){
+			if (map_outputsFlag == true && map_inputsFlag == true) {
 				isValid = true;
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception in validateProperty() ------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception in validateProperty() ------", e);
 			isValid = false;
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- validateProperty() ------- : End");
 		return isValid;
 	}
-	
-	/**
-	 * 
-	 * @param userId
-	 * @param cid
-	 * @param solutionId
-	 * @param version
-	 * @param linkId
-	 * @return
-	 */
+
 	@ApiOperation(value = "delete link Operation")
 	@RequestMapping(value = "/deleteLink", method = RequestMethod.POST)
 	public String deleteLink(@RequestParam(value = "userId", required = true) String userId,
@@ -805,7 +666,7 @@ public class SolutionController {
 				}
 			} catch (Exception e) {
 				logger.error(EELFLoggerDelegator.errorLogger,
-						"------- Exception in deleteLink() in SolutionController -------",e);
+						"------- Exception in deleteLink() in SolutionController -------", e);
 			}
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- deleteLink() in SolutionController Ends --------");

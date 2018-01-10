@@ -36,7 +36,7 @@ public class Artifact implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private String name;
 	private String type;
 	private String solutionID;
@@ -49,14 +49,21 @@ public class Artifact implements Serializable {
 	public Artifact() {
 
 	}
+
 	/**
 	 * 
 	 * @param name
+	 *            Artifact name
 	 * @param extension
+	 *            Artifact file extension
 	 * @param solutionID
+	 *            Solution ID
 	 * @param version
+	 *            Version
 	 * @param payloadURI
+	 *            Payload URL
 	 * @param length
+	 *            Content length
 	 */
 	public Artifact(String name, String extension, String solutionID, String version, String payloadURI, int length) {
 		this.name = name;
@@ -67,102 +74,125 @@ public class Artifact implements Serializable {
 		this.contentLength = length;
 		this.extension = extension;
 	}
+
 	/**
 	 * @return the name
 	 */
 	public String getName() {
 		return name;
 	}
+
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	/**
 	 * @return the type
 	 */
 	public String getType() {
 		return type;
 	}
+
 	/**
-	 * @param type the type to set
+	 * @param type
+	 *            the type to set
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
+
 	/**
 	 * @return the solutionID
 	 */
 	public String getSolutionID() {
 		return solutionID;
 	}
+
 	/**
-	 * @param solutionID the solutionID to set
+	 * @param solutionID
+	 *            the solutionID to set
 	 */
 	public void setSolutionID(String solutionID) {
 		this.solutionID = solutionID;
 	}
+
 	/**
 	 * @return the version
 	 */
 	public String getVersion() {
 		return version;
 	}
+
 	/**
-	 * @param version the version to set
+	 * @param version
+	 *            the version to set
 	 */
 	public void setVersion(String version) {
 		this.version = version;
 	}
+
 	/**
 	 * @return the nexusURI
 	 */
 	public String getNexusURI() {
 		return nexusURI;
 	}
+
 	/**
-	 * @param nexusURI the nexusURI to set
+	 * @param nexusURI
+	 *            the nexusURI to set
 	 */
 	public void setNexusURI(String nexusURI) {
 		this.nexusURI = nexusURI;
 	}
+
 	/**
 	 * @return the payloadURI
 	 */
 	public String getPayloadURI() {
 		return payloadURI;
 	}
+
 	/**
-	 * @param payloadURI the payloadURI to set
+	 * @param payloadURI
+	 *            the payloadURI to set
 	 */
 	public void setPayloadURI(String payloadURI) {
 		this.payloadURI = payloadURI;
 	}
+
 	/**
 	 * @return the extension
 	 */
 	public String getExtension() {
 		return extension;
 	}
+
 	/**
-	 * @param extension the extension to set
+	 * @param extension
+	 *            the extension to set
 	 */
 	public void setExtension(String extension) {
 		this.extension = extension;
 	}
+
 	/**
 	 * @return the contentLength
 	 */
 	public int getContentLength() {
 		return contentLength;
 	}
+
 	/**
-	 * @param contentLength the contentLength to set
+	 * @param contentLength
+	 *            the contentLength to set
 	 */
 	public void setContentLength(int contentLength) {
 		this.contentLength = contentLength;
 	}
-	
 
 }

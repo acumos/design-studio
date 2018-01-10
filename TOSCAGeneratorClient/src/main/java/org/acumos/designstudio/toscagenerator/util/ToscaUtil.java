@@ -43,9 +43,13 @@ public class ToscaUtil {
 	/**
 	 * 
 	 * @param path
+	 *            Directory path
 	 * @param fileName
+	 *            File name
 	 * @param extension
+	 *            File extension
 	 * @param data
+	 *            Data to write
 	 */
 	public static void writeDataToFile(String path, String fileName, String extension, String data) {
 		logger.debug("-------------- writeDataToFile() started --------------");
@@ -67,8 +71,10 @@ public class ToscaUtil {
 	/**
 	 * 
 	 * @param filePath
-	 * @return
+	 *            File path
+	 * @return Content of file
 	 * @throws IOException
+	 *             On failure to read
 	 */
 	public static String readFile(String filePath) throws IOException {
 		logger.debug("-----------  readFile() started --------------");
@@ -94,7 +100,10 @@ public class ToscaUtil {
 	/**
 	 * 
 	 * @param filePath
-	 * @return
+	 *            File path
+	 * @return Content of file
+	 * @throws Exception
+	 *             On failure to close file
 	 */
 	public static String readJSONFile(String filePath) throws Exception {
 		logger.debug("------------- readJSONFile() started -------------");
@@ -125,7 +134,9 @@ public class ToscaUtil {
 	/**
 	 * 
 	 * @param file
+	 *            Directory or file to delete
 	 * @throws IOException
+	 *             On failure to delete
 	 */
 	public static void delete(File file) throws IOException {
 		logger.debug("------------  delete() started ------------");

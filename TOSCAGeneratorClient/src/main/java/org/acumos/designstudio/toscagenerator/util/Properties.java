@@ -72,8 +72,10 @@ public class Properties {
 	/**
 	 * 
 	 * @param solutionID
+	 *            Solution ID
 	 * @param version
-	 * @return
+	 *            Version String
+	 * @return Temporary folder path
 	 */
 	public static String getTempFolderPath(String solutionID, String version) {
 		logger.debug("--------------- getTempFolderPath() started --------------");

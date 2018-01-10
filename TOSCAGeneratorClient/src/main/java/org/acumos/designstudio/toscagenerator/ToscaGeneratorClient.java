@@ -43,69 +43,96 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class is the main controller for the TOSCA Model
- *         Generator Client
+ * This class is the main controller for the TOSCA Model Generator Client
  */
 public class ToscaGeneratorClient {
 	private static final Logger logger = LoggerFactory.getLogger(ToscaGeneratorClient.class);
-	
+
 	ToscaGeneratorService service = null;
 	ProtobufGeneratorService protoService = null;
-	TgifGeneratorService tgifService = null; 
-	
-	
+	TgifGeneratorService tgifService = null;
+
 	/**
 	 * 
 	 * @param jsonstr
+	 *            JSON string
 	 */
-	public ToscaGeneratorClient(String jsonstr){
+	public ToscaGeneratorClient(String jsonstr) {
 		service = new ToscaGeneratorService();
 		protoService = new ProtobufGeneratorService();
 		tgifService = new TgifGeneratorService();
 		JSONParser parser = new JSONParser();
 		try {
 			JSONObject config = (JSONObject) parser.parse(jsonstr);
-			ConfigurationProperties.init(config.get("toscaOutputFolder").toString(), config.get("toscaGeneratorEndPointURL").toString(), config.get("nexusEndPointURL").toString(), config.get("nexusUserName").toString(), config.get("nexusPassword").toString(), config.get("nexusGroupId").toString(), config.get("cmnDataSvcEndPoinURL").toString(), config.get("cmnDataSvcUser").toString(), config.get("cmnDataSvcPwd").toString());
+			ConfigurationProperties.init(config.get("toscaOutputFolder").toString(),
+					config.get("toscaGeneratorEndPointURL").toString(), config.get("nexusEndPointURL").toString(),
+					config.get("nexusUserName").toString(), config.get("nexusPassword").toString(),
+					config.get("nexusGroupId").toString(), config.get("cmnDataSvcEndPoinURL").toString(),
+					config.get("cmnDataSvcUser").toString(), config.get("cmnDataSvcPwd").toString());
 		} catch (ParseException e) {
-			logger.error("Exception in ToscaGeneratorClient()",e);
+			logger.error("Exception in ToscaGeneratorClient()", e);
 		}
 	}
-	
+
 	/**
-	 * This construct accept the configuration passed as a parameter.
-	 * @param jsonstr
-	 * @param j
+	 * This construct accepts the configuration passed as a parameter.
+	 * 
+	 * @param toscaOutputFolder
+	 *            Output folder
+	 * @param toscaGeneratorEndPointURL
+	 *            URL
+	 * @param nexusEndPointURL
+	 *            URL
+	 * @param nexusUserName
+	 *            user name
+	 * @param nexusPassword
+	 *            password
+	 * @param nexusGroupId
+	 *            group ID
+	 * @param cmnDataSvcEndPoinURL
+	 *            URL
+	 * @param cmnDataSvcUser
+	 *            user name
+	 * @param cmnDataSvcPwd
+	 *            password
 	 */
 	public ToscaGeneratorClient(String toscaOutputFolder, String toscaGeneratorEndPointURL, String nexusEndPointURL,
 			String nexusUserName, String nexusPassword, String nexusGroupId, String cmnDataSvcEndPoinURL,
-			String cmnDataSvcUser, String cmnDataSvcPwd){
+			String cmnDataSvcUser, String cmnDataSvcPwd) {
 		service = new ToscaGeneratorService();
 		protoService = new ProtobufGeneratorService();
 		tgifService = new TgifGeneratorService();
-		ConfigurationProperties.init(toscaOutputFolder, toscaGeneratorEndPointURL, nexusEndPointURL, nexusUserName, nexusPassword, nexusGroupId, cmnDataSvcEndPoinURL, cmnDataSvcUser, cmnDataSvcPwd);
+		ConfigurationProperties.init(toscaOutputFolder, toscaGeneratorEndPointURL, nexusEndPointURL, nexusUserName,
+				nexusPassword, nexusGroupId, cmnDataSvcEndPoinURL, cmnDataSvcUser, cmnDataSvcPwd);
 	}
-	
 
 	/**
-	 * This method is to Generat the TOSCA files and update the SolutionRevision accordingly. 
+	 * This method is to generate the TOSCA files and update the SolutionRevision
+	 * accordingly.
 	 * 
 	 * @param ownerID
+	 *            owner ID
 	 * @param solutionID
+	 *            solution ID
 	 * @param version
+	 *            version string
 	 * @param solutionRevisionID
+	 *            revision ID
 	 * @param localProtobufFile
+	 *            protobuf file
 	 * @param localMetadataFile
+	 *            metadata file
 	 * @return on success {solutionID:"solutionv id value",version:"version value"}
 	 * @throws AcumosException
+	 *             On failure
 	 */
-	public String generateTOSCA(String ownerID, String solutionID, String version, String solutionRevisionID, File localProtobufFile, File localMetadataFile )
-			throws AcumosException {
+	public String generateTOSCA(String ownerID, String solutionID, String version, String solutionRevisionID,
+			File localProtobufFile, File localMetadataFile) throws AcumosException {
 
 		logger.info("-------------- generateTOSCA() ----- : Begin");
 		String result = null;
 		String success = "{solutionID:\"%s\",version:\"%s\"}";
 		String error = "{errorCode : \"%s\", errorDescription : \"%s\"}";
-		
 
 		@SuppressWarnings("unused")
 		String response = null;
@@ -115,33 +142,32 @@ public class ToscaGeneratorClient {
 					&& localMetadataFile != null && version != null && !version.trim().isEmpty()) {
 
 				toscaFiles = new ArrayList<Artifact>();
-				
-				
-				//Define the switch to enable/disable the invocation of TSOCA Python Server. 
-				// 1. Integrate TOSCA Model Generator Python Web Service & 2. process the response.
-				//Disabling the call to TOSCA Generator.
+
+				// Define the switch to enable/disable the invocation of TSOCA Python Server.
+				// 1. Integrate TOSCA Model Generator Python Web Service & 2. process the
+				// response.
+				// Disabling the call to TOSCA Generator.
 
 				// 2. Decrypt the content of each file using Base64 &
-				// 3. Store the decrypted content into corresponding file and store the file at configured location
-				//Disabling the TOSCA file generation
-				
-				
-				//Include the .proto file in the toscaFiles to be uploaded : Already uploaded by On Boarding.
+				// 3. Store the decrypted content into corresponding file and store the file at
+				// configured location
+				// Disabling the TOSCA file generation
+
+				// Include the .proto file in the toscaFiles to be uploaded : Already uploaded
+				// by On Boarding.
 				String path = Properties.getTempFolderPath(solutionID, version);
-				
-			
-				//Generate Protobuf.json from protoData
+
+				// Generate Protobuf.json from protoData
 				String protoJsonStr = protoService.createProtoJson(solutionID, version, localProtobufFile);
 				ToscaUtil.writeDataToFile(path, "PROTOBUF", "json", protoJsonStr);
 				Artifact protoJson = new Artifact("PROTOBUF", "json", solutionID, version, path, protoJsonStr.length());
 				toscaFiles.add(protoJson);
-				
-				
+
 				String metaData = ToscaUtil.readJSONFile(localMetadataFile.getCanonicalPath());
-				//Create the tgif.json file and add it to toscaFiles list
+				// Create the tgif.json file and add it to toscaFiles list
 				Artifact tgif = tgifService.createTgif(solutionID, version, protoJsonStr, metaData);
 				toscaFiles.add(tgif);
-				
+
 				// 5. Invoke the library to store the files in Nexus :
 				service.uploadFilesToRepository(solutionID, version, toscaFiles);
 
@@ -173,7 +199,7 @@ public class ToscaGeneratorClient {
 					Properties.getTOSCAFileGenerationErrorDesc(), Properties.getTOSCAFileGenerationErrorDesc());
 			throw new ControllerException(e.getMessage(), Properties.getTOSCAFileGenerationErrorCode(),
 					Properties.getTOSCAFileGenerationErrorDesc(), e);
-			
+
 		} finally {
 			// Delete the TOSCA File from payloadPath
 			deleteTOSCAFiles(solutionID, version);

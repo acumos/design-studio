@@ -27,71 +27,76 @@ import java.io.Serializable;
  * 
  *
  */
-public class Provide implements Serializable{
+public class Provide implements Serializable {
 
 	private static final long serialVersionUID = 3529235743112597750L;
-		private String route;
-		private Request request;
-		private Response response;
-		
-		public Provide(){
-			
-		}
-		
-		/**
-		 * 
-		 * @param route
-		 * @param request
-		 * @param response
-		 */
-		public Provide(String route, Request request, Response response) {
-			super();
-			this.route = route;
-			this.request = request;
-			this.response = response;
-		}
+	private String route;
+	private Request request;
+	private Response response;
 
-		/**
-		 * @return the route
-		 */
-		public String getRoute() {
-			return route;
-		}
+	public Provide() {
 
-		/**
-		 * @param route the route to set
-		 */
-		public void setRoute(String route) {
-			this.route = route;
-		}
+	}
 
-		/**
-		 * @return the request
-		 */
-		public Request getRequest() {
-			return request;
-		}
+	/**
+	 * 
+	 * @param route
+	 *            Route
+	 * @param request
+	 *            Request
+	 * @param response
+	 *            Response
+	 */
+	public Provide(String route, Request request, Response response) {
+		super();
+		this.route = route;
+		this.request = request;
+		this.response = response;
+	}
 
-		/**
-		 * @param request the request to set
-		 */
-		public void setRequest(Request request) {
-			this.request = request;
-		}
+	/**
+	 * @return the route
+	 */
+	public String getRoute() {
+		return route;
+	}
 
-		/**
-		 * @return the respose
-		 */
-		public Response getResponse() {
-			return response;
-		}
+	/**
+	 * @param route
+	 *            the route to set
+	 */
+	public void setRoute(String route) {
+		this.route = route;
+	}
 
-		/**
-		 * @param respose the respose to set
-		 */
-		public void setResponse(Response response) {
-			this.response = response;
-		}
-		
-		
+	/**
+	 * @return the request
+	 */
+	public Request getRequest() {
+		return request;
+	}
+
+	/**
+	 * @param request
+	 *            the request to set
+	 */
+	public void setRequest(Request request) {
+		this.request = request;
+	}
+
+	/**
+	 * @return the response
+	 */
+	public Response getResponse() {
+		return response;
+	}
+
+	/**
+	 * @param response
+	 *            the response to set
+	 */
+	public void setResponse(Response response) {
+		this.response = response;
+	}
+
 }

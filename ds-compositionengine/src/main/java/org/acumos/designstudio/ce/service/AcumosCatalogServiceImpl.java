@@ -30,7 +30,6 @@ import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
-import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.nexus.client.NexusArtifactClient;
@@ -45,22 +44,18 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AcumosCatalogServiceImpl implements IAcumosCatalog {
-	
+
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(AcumosCatalogServiceImpl.class);
 
 	@Autowired
-	ConfigurationProperties properties;
+	private CommonDataServiceRestClientImpl cmnDataService;
 
 	@Autowired
-	CommonDataServiceRestClientImpl cmnDataService;
+	private Properties props;
 
 	@Autowired
-	Properties props;
+	private NexusArtifactClient nexusArtifactClient;
 
-	@Autowired
-	NexusArtifactClient nexusArtifactClient;
-
-	
 	@Override
 	public String fetchJsonTOSCA(String solutionId, String version) {
 		logger.debug(EELFLoggerDelegator.debugLogger, "--------fetchJsonTOSCA()-------- : Begin");
@@ -76,7 +71,8 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 			// 1. Get the list of SolutionRevision for the solutionId.
 			mlpSolutionRevisionList = getSolutionRevisionsList(solutionId);
 
-			// 2. Match the version with the SolutionRevision and get the solutionRevisionId.
+			// 2. Match the version with the SolutionRevision and get the
+			// solutionRevisionId.
 			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
 				solutionRevisionId = mlpSolutionRevisionList.stream().filter(mlp -> mlp.getVersion().equals(version))
 						.findFirst().get().getRevisionId();
@@ -124,13 +120,12 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 
 				} finally {
 					try {
-						if(byteArrayOutputStream != null){
+						if (byteArrayOutputStream != null) {
 							byteArrayOutputStream.close();
 						}
 					} catch (IOException e) {
 						logger.error(EELFLoggerDelegator.errorLogger,
-								"Error : Exception in readArtifact() : Failed to close the byteArrayOutputStream",
-								e);
+								"Error : Exception in readArtifact() : Failed to close the byteArrayOutputStream", e);
 					}
 				}
 
@@ -146,8 +141,6 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 		return result;
 	}
 
-
-
 	/**
 	 * 
 	 * @param solutionId
@@ -159,11 +152,12 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 		try {
 			solRevisionsList = cmnDataService.getSolutionRevisions(solutionId);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getSolutionRevisions() ----------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getSolutionRevisions() ----------", e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- getSolutionRevisions() : End ----------");
 		return solRevisionsList;
 	}
+
 	/**
 	 * 
 	 * @param solutionId
@@ -175,11 +169,12 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 		try {
 			mlpArtifactsList = cmnDataService.getSolutionRevisionArtifacts(solutionId, solutionRevisionId);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getListOfArtifacts() ----------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getListOfArtifacts() ----------", e);
 		}
 		return mlpArtifactsList;
 
 	}
+
 	/**
 	 * 
 	 * @param uri
@@ -191,12 +186,11 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 		try {
 			outputStream = nexusArtifactClient.getArtifact(uri);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getListOfArtifacts() ----------",ex);
+			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getListOfArtifacts() ----------", ex);
 		}
 		return outputStream;
 	}
 
-	
 	@Override
 	public String readArtifact(String userId, String solutionId, String version, String artifactType)
 			throws AcumosException {
@@ -212,11 +206,11 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 			// 1. Get the list of SolutionRevision for the solutionId.
 			mlpSolutionRevisionList = getSolutionRevisionsList(solutionId);
 
-			// 2. Match the version with the SolutionRevision and get the solutionRevisionId.
+			// 2. Match the version with the SolutionRevision and get the
+			// solutionRevisionId.
 			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
-				solutionRevisionId = mlpSolutionRevisionList.stream()
-						.filter(mlp -> mlp.getVersion().equals(version))
-								//&& mlp.getOwnerId().equalsIgnoreCase(userId))
+				solutionRevisionId = mlpSolutionRevisionList.stream().filter(mlp -> mlp.getVersion().equals(version))
+						// && mlp.getOwnerId().equalsIgnoreCase(userId))
 						.findFirst().get().getRevisionId();
 				logger.debug(EELFLoggerDelegator.debugLogger,
 						"------ SolutionRevisonId for Version : " + solutionRevisionId + " -------");
@@ -263,15 +257,14 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 					throw new ServiceException(
 							" --------------- Exception Occured decryptAndWriteTofile() --------------", "501",
 							"Could not search the artifact URI for artifactType " + artifactType, e.getCause());
-				} finally{
+				} finally {
 					try {
 						if (byteArrayOutputStream != null) {
 							byteArrayOutputStream.close();
 						}
 					} catch (IOException e) {
 						logger.error(EELFLoggerDelegator.errorLogger,
-								"Error : Exception in readArtifact() : Failed to close the byteArrayOutputStream",
-								e);
+								"Error : Exception in readArtifact() : Failed to close the byteArrayOutputStream", e);
 					}
 				}
 			}
@@ -279,21 +272,27 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 		logger.debug(EELFLoggerDelegator.debugLogger, "--------readArtifact()-------- : End");
 		return result;
 	}
+
 	/**
 	 * 
 	 * @param url
+	 *            Common dataservice endpoint
 	 * @param user
+	 *            User name
 	 * @param pass
+	 *            Passwor
 	 */
-	public void getRestClient(String url,String user, String pass){
+	public void getRestClient(String url, String user, String pass) {
 		cmnDataService = new CommonDataServiceRestClientImpl(url, user, pass);
 	}
+
 	/**
 	 * 
 	 * @param repositoryLocation
+	 *            RepositoryLocation
 	 */
-	public void getNexusClient(RepositoryLocation repositoryLocation){
+	public void getNexusClient(RepositoryLocation repositoryLocation) {
 		nexusArtifactClient = new NexusArtifactClient(repositoryLocation);
-    }
+	}
 
 }

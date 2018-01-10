@@ -50,22 +50,37 @@ public class DSSolution implements Serializable {
 	public DSSolution() {
 		super();
 	}
+
 	/**
 	 * 
 	 * @param solutionId
+	 *            Solution ID
 	 * @param solutionRevisionId
+	 *            Revision ID
 	 * @param solutionName
+	 *            Solution name
 	 * @param version
+	 *            Version string
 	 * @param onBoarder
+	 *            User ID
 	 * @param author
+	 *            User ID
 	 * @param provider
+	 *            Provider
 	 * @param toolKit
+	 *            Toolkit type code
 	 * @param category
+	 *            Category code
 	 * @param description
+	 *            Description
 	 * @param visibilityLevel
+	 *            Visibility
 	 * @param createdDate
+	 *            Date
 	 * @param modifiedDate
+	 *            Date
 	 * @param icon
+	 *            Image
 	 */
 	public DSSolution(String solutionId, String solutionRevisionId, String solutionName, String version,
 			String onBoarder, String author, String provider, String toolKit, String category, String description,
@@ -169,7 +184,7 @@ public class DSSolution implements Serializable {
 	}
 
 	/**
-	 * @param name
+	 * @param solutionName
 	 *            the name to set
 	 */
 	public void setSolutionName(String solutionName) {
@@ -307,20 +322,20 @@ public class DSSolution implements Serializable {
 				+ ", provider=" + provider + ", toolKit=" + toolKit + ", category=" + category + ", description="
 				+ description + ", visibilityLevel=" + visibilityLevel + "]";
 	}
+
 	/**
 	 * 
-	 * @return
+	 * @return Content as JSON
 	 */
 	public String toJsonString() {
 		return "{\"solutionId\":\"" + solutionId + "\", \"solutionName\":\""
 				+ solutionName.trim().replaceAll("[\n\r]", "") + "\", \"version\":\""
 				+ version.trim().replaceAll("[\n\r]", "") + "\", \"ownerId\":\"" + author + "\", \"provider\":\""
 				+ (null != provider ? provider.trim().replaceAll("[\n\r]", "") : provider) + "\", \"toolKit\":\""
-				+ toolKit + "\", \"category\":\""
-				+ category + "\", \"description\":\""
-				+ (null != description ? description.trim().replaceAll("[\n\r]", "") : description) + "\", \"visibilityLevel\":\""
-				+ visibilityLevel + "\", \"created\":\""
-				+ createdDate + "\", \"icon\":\"" + icon + "\"}";
+				+ toolKit + "\", \"category\":\"" + category + "\", \"description\":\""
+				+ (null != description ? description.trim().replaceAll("[\n\r]", "") : description)
+				+ "\", \"visibilityLevel\":\"" + visibilityLevel + "\", \"created\":\"" + createdDate
+				+ "\", \"icon\":\"" + icon + "\"}";
 	}
 
 }
