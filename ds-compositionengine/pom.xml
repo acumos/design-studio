@@ -16,176 +16,113 @@
 		<relativePath />
 	</parent>
 
-
 	<properties>
-		<!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
-		<encoding>UTF-8</encoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!-- Stand-alone RESTFul application -->
 		<start-class>org.acumos.designstudio.ce.Application</start-class>
-		<!-- Client jar is in Cognita nexus repo -->
-		<!-- URL is overridden by Jenkins "CognitaSettings" -->
-		<acumos.nexus.url>Set by Jenkins</acumos.nexus.url>
-		<acumos.nexus.snapshot.path>Set by Jenkins</acumos.nexus.snapshot.path>
-		<acumos.nexus.release.path>Set by Jenkins</acumos.nexus.release.path>
-		<!-- EELF jar is in ONAP nexus repo -->
-		<onap.nexus.url>https://nexus.onap.org</onap.nexus.url>
-		<onap.nexus.snapshot.path>content/repositories/snapshots/</onap.nexus.snapshot.path>
-		<onap.nexus.release.path>content/repositories/releases/</onap.nexus.release.path>
 		<!-- Jenkins invokes mvn with argument -Dbuild.number=${BUILD_NUMBER} -->
 		<build.number>0</build.number>
-		<!-- tests require database to be running -->
-		<!-- <skipTests>true</skipTests> --> 
-		<!-- Docker daemon; overridden by Jenkins CognitaSettings -->
-		<docker.host.url>unix:/var/run/docker.sock</docker.host.url>
-		<!-- Docker image registry; all overriden by Jenkins CognitaSettings -->
-		<docker.registry.url>set by Jenkins "CognitaSettings"</docker.registry.url>
-		<docker.registry.login>set by Jenkins "CognitaSettings"</docker.registry.login>
-		<docker.registry.password>set by Jenkins "CognitaSettings"</docker.registry.password>
+		<!-- Not supplied to all jobs; e.g., Javadoc -->
+		<docker.pull.registry>nexus3.acumos.org:10001</docker.pull.registry>
+		<!-- Supplied by Jenkins -->
+		<docker.push.registry>${env.NEXUS3_PUSH_REGISTRY}</docker.push.registry>
 	</properties>
 
-
-	<repositories>
-		<repository>
-			<id>acumos-snapshots</id>
-			<name>mlp-repository-snapshots</name>
-			<url>${acumos.nexus.url}/${acumos.nexus.snapshot.path}</url>
-		</repository>
-		<repository>
-			<id>acumos-releases</id>
-			<name>mlp-repository-releases</name>
-			<url>${acumos.nexus.url}/${acumos.nexus.release.path}</url>
-		</repository>
-		<repository>
-			<id>ecomp-snapshots</id>
-			<name>OpenECOMP - Snapshot Repository</name>
-			<url>${onap.nexus.url}/${onap.nexus.snapshot.path}</url>
-		</repository>
-		<repository>
-			<id>ecomp-releases</id>
-			<name>OpenECOMP - Release Repository</name>
-			<url>${onap.nexus.url}/${onap.nexus.release.path}</url>
-		</repository>
-	</repositories>
 	<dependencies>
-
+		<dependency>
+			<groupId>org.acumos.acumos-nexus-client</groupId>
+			<artifactId>acumos-nexus-client</artifactId>
+			<version>2.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.acumos.common-dataservice</groupId>
+			<artifactId>cmn-data-svc-client</artifactId>
+			<version>1.12.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<!-- spring sets the <version>3.2.2</version> -->
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<!-- Spring chooses <version>${slf4j.version}</version> -->
 		</dependency>
-
-		<dependency>
-			<groupId>com.att.eelf</groupId>
-			<artifactId>eelf-core</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<!-- Spring chooses <version>${logback.version}</version> -->
 		</dependency>
-
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
 			<!-- Spring chooses <version>${logback.version}</version> -->
 		</dependency>
 		<dependency>
-			<groupId>com.github.docker-java</groupId>
-			<artifactId>docker-java</artifactId>
-			<version>3.0.10</version>
+			<groupId>com.att.eelf</groupId>
+			<artifactId>eelf-core</artifactId>
+			<version>1.0.0</version>
 		</dependency>
-
 		<dependency>
 			<!-- Setup Spring Boot -->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-
 		<dependency>
 			<!-- Setup Spring MVC & REST, use Embedded Tomcat -->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.acumos.common-dataservice</groupId>
-			<artifactId>cmn-data-svc-client</artifactId>
-			<version>1.10.1-SNAPSHOT</version>
-		</dependency>
-
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>2.6.1</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.6.1</version>
 		</dependency>
-
 		<!-- Test dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<!-- Spring sets the <version>4.11</version> -->
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.acumos</groupId>
-			<artifactId>acumos-nexus-client</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
-			<!-- <version>1.1.1</version> -->
+			<!-- spring sets the <version>1.1.1</version> -->
 		</dependency>
-		
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.att.research.cognita.modeling</groupId>
-			<artifactId>Modeling-Toolkit-API</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<!-- Spring sets the version -->
 		</dependency>
 		<dependency>
-		    <groupId>org.everit.json</groupId>
-		    <artifactId>org.everit.json.schema</artifactId>
-		    <version>1.0.0</version>
-       </dependency>
-
+			<groupId>org.everit.json</groupId>
+			<artifactId>org.everit.json.schema</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.jolokia</groupId>
 			<artifactId>jolokia-core</artifactId>
 		</dependency>
-		
 		<dependency>
 			<groupId>com.github.docker-java</groupId>
 			<artifactId>docker-java</artifactId>
 			<version>3.0.10</version>
 		</dependency>
 	</dependencies>
-
 	<build>
-	    
-		<!-- <sourceDirectory>src</sourceDirectory> -->
-		<!-- <resources> Resource Dir <resource> <directory>resources</directory> 
-			</resource> </resources> -->
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -201,8 +138,7 @@
 			</resource>
 		</resources>
 		<plugins>
-		    
-		    <plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<version>1.14</version>
@@ -222,7 +158,6 @@
 					<emptyLineAfterHeader>true</emptyLineAfterHeader>
 				</configuration>
 			</plugin>
-			
 			<!-- Require Java 1.8 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -232,7 +167,6 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-
 			<!-- add build information to manifest -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -244,8 +178,7 @@
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 						</manifest>
 						<manifestEntries>
-							<Build-Number>${project.version}.${build.number}</Build-Number>
-							<Build-Time>${maven.build.timestamp}</Build-Time>
+							<Implementation-Version>${project.version}-b${build.number}</Implementation-Version>
 						</manifestEntries>
 					</archive>
 				</configuration>
@@ -271,64 +204,58 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
-			
 			<plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.6.201602180812</version>
-                <executions>
-                    <execution>
-                        <id>default-prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>default-report</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-             </plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.6.201602180812</version>
+				<executions>
+					<execution>
+						<id>default-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>default-report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>0.21.0</version>
 				<configuration>
 					<verbose>true</verbose>
-					<dockerHost>${docker.host.url}</dockerHost>
-					<registry>${docker.registry.url}</registry>
-					<authConfig>
-						<username>${docker.registry.login}</username>
-						<password>${docker.registry.password}</password>
-					</authConfig>
+					<!-- docker runs on the LF build minion so the default value is ok -->
+					<!-- LF <dockerHost>unix:///var/run/docker.sock</dockerHost> LF -->
+					<pullRegistry>${docker.pull.registry}</pullRegistry>
+					<pushRegistry>${docker.push.registry}</pushRegistry>
+					<!-- LF credentials are not supplied here -->
 					<images>
 						<image>
-							<!-- project-name -->
-							<!-- may want to use build number in tag: .${build.number} -->
+							<!-- Specify a tag to avoid default tag "latest" -->
 							<name>ds-compositionengine:${project.version}</name>
 							<build>
 								<!-- This is the same FROM used in a Dockerfile -->
 								<from>openjdk:8-jdk</from>
+								<tags>
+									<!-- Add tag with build number -->
+									<tag>${project.version}-b${build.number}</tag>
+								</tags>
 								<assembly>
 									<inline>
 										<files>
-											<!--  <file>
-												<source>application.properties.template</source>
-												<outputDirectory />
-												<destName>application.properties</destName> 
-											</file> -->
 											<file>
 												<source>target/gdmservice-0.0.1-SNAPSHOT.jar</source>
 												<outputDirectory>.</outputDirectory>
-												<!-- <destName>lib/gdmservice-0.0.1-SNAPSHOT.jar</destName> -->
 											</file>
 											<file>
 												<source>target/protobuf-java-3.4.0.jar</source>
 												<outputDirectory>.</outputDirectory>
-												<!-- <destName>lib/protobuf-java-3.4.0.jar</destName> -->
 											</file>
 											<file>
 												<source>target/${project.artifactId}-${project.version}.${project.packaging}</source>
@@ -337,10 +264,10 @@
 										</files>
 									</inline>
 								</assembly>
-								<!-- <optimise>true</optimise> -->
 								<runCmds>
 									<runCmd>
-										curl -OL https://github.com/google/protobuf/releases/download/v3.4.0/protoc-3.4.0-linux-x86_64.zip
+										<!-- CDATA prevents Eclipse formatter from breaking line -->
+										<![CDATA[curl -OL https://github.com/google/protobuf/releases/download/v3.4.0/protoc-3.4.0-linux-x86_64.zip]]>
 									</runCmd>
 									<runCmd>
 										unzip protoc-3.4.0-linux-x86_64.zip -d protoc3
@@ -351,38 +278,27 @@
 									<runCmd>
 										mv protoc3/include/* /usr/local/include/
 									</runCmd>
-									<!-- <runCmd>
-										chown root /usr/local/bin/protoc
-									</runCmd>
-									<runCmd>
-										chown -R root /usr/local/include/google
-									</runCmd> -->
 								</runCmds>
 								<!-- This is the same CMD used in a Dockerfile -->
 								<cmd>
-									<shell>cd /maven; java -Djava.security.egd=file:/dev/./urandom -jar ${project.artifactId}-${project.version}.${project.packaging}</shell>
+									<!-- CDATA prevents Eclipse formatter from breaking line -->
+									<shell><![CDATA[cd /maven; java -Djava.security.egd=file:/dev/./urandom -jar ${project.artifactId}-${project.version}.${project.packaging}]]></shell>
 								</cmd>
 							</build>
 						</image>
 					</images>
 				</configuration>
+				<!-- build Docker images in install phase, push in deploy phase -->
+				<executions>
+					<execution>
+						<goals>
+							<goal>build</goal>
+							<goal>push</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<!-- must match ID in Jenkins settings -->
-			<id>acumos-nexus</id>
-			<name>acumos-repository-snapshots</name>
-			<url>${acumos.nexus.url}/${acumos.nexus.snapshot.path}</url>
-		</snapshotRepository>
-		<repository>
-			<!-- must match ID in Jenkins settings -->
-			<id>acumos-nexus</id>
-			<name>acumos-repository-releases</name>
-			<url>${acumos.nexus.url}/${acumos.nexus.release.path}</url>
-		</repository>
-	</distributionManagement>
-
+	<!-- No distributionManagement section, jars are not deployed -->
 </project>

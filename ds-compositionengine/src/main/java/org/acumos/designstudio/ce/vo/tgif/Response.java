@@ -29,8 +29,7 @@ import org.json.simple.JSONArray;
  * 
  *
  */
-public class Response implements Serializable{
-	
+public class Response implements Serializable {
 
 	/**
 	 * 
@@ -38,48 +37,52 @@ public class Response implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private JSONArray format;
 	private String version;
-	
-	
-	public Response(){
-		
+
+	public Response() {
+
 	}
-	
+
 	/**
 	 * 
 	 * @param format
+	 *            JSONArray
 	 * @param version
+	 *            Version
 	 */
 	public Response(JSONArray format, String version) {
 		super();
 		this.format = format;
 		this.version = version;
 	}
+
 	/**
 	 * @return the format
 	 */
 	public JSONArray getFormat() {
 		return format;
 	}
+
 	/**
-	 * @param format the format to set
+	 * @param format
+	 *            the format to set
 	 */
 	public void setFormat(JSONArray format) {
 		this.format = format;
 	}
+
 	/**
 	 * @return the version
 	 */
 	public String getVersion() {
 		return version;
 	}
+
 	/**
-	 * @param version the version to set
+	 * @param version
+	 *            the version to set
 	 */
 	public void setVersion(String version) {
 		this.version = version;
 	}
-
-	
-
 
 }

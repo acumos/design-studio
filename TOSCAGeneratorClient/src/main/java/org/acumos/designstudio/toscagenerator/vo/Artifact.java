@@ -46,11 +46,17 @@ public class Artifact {
 	/**
 	 * 
 	 * @param name
+	 *            Artfact name
 	 * @param extension
+	 *            File extension
 	 * @param solutionID
+	 *            Solution ID
 	 * @param version
+	 *            Version string
 	 * @param payloadURI
+	 *            Payload URI
 	 * @param length
+	 *            Content length
 	 */
 	public Artifact(String name, String extension, String solutionID, String version, String payloadURI, int length) {
 		this.name = name;
@@ -128,7 +134,7 @@ public class Artifact {
 
 	/*
 	 * @Override public String toString(){ return "{name :" + name + ",type :" +
-	 * type + ",solutionID :" + solutionID + ",version :" + version +
-	 * ",nexusURI :" + nexusURI +",payloadURI :" + payloadURI +"}"; }
+	 * type + ",solutionID :" + solutionID + ",version :" + version + ",nexusURI :"
+	 * + nexusURI +",payloadURI :" + payloadURI +"}"; }
 	 */
 }

@@ -41,8 +41,10 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	public static EELFLogger debugLogger = EELFManager.getInstance().getDebugLogger();
 	// Usage of the audit and metrics loggers is required in certain
 	// environments
-	public static EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
-	public static EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+	// public static EELFLogger auditLogger =
+	// EELFManager.getInstance().getAuditLogger();
+	// public static EELFLogger metricsLogger =
+	// EELFManager.getInstance().getMetricsLogger();
 
 	private static final String MDC_CLASS_NAME = "ClassName";
 	private String className;
@@ -51,6 +53,7 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param className
+	 *            Class name
 	 */
 	public EELFLoggerDelegator(String className) {
 		super(className);
@@ -60,18 +63,20 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param clazz
-	 * @return
+	 *            Class
+	 * @return Logger for specified class
 	 */
 	public static EELFLoggerDelegator getLogger(Class<?> clazz) {
 		return getLogger(clazz.getName());
 	}
 
 	/**
-	 * Gets a logger for the specified class name. If the logger does not
-	 * already exist in the map, this creates a new logger.
+	 * Gets a logger for the specified class name. If the logger does not already
+	 * exist in the map, this creates a new logger.
 	 * 
 	 * @param className
-	 * @return
+	 *            Class name
+	 * @return Logger for specified class
 	 */
 	public static EELFLoggerDelegator getLogger(String className) {
 		if (className == null || className == "")
@@ -88,7 +93,9 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	 * Logs a message at the lowest level: trace.
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 */
 	public void trace(EELFLogger logger, String msg) {
 		if (logger.isTraceEnabled()) {
@@ -101,8 +108,11 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 * @param arguments
+	 *            Values to interpolate
 	 */
 	public void trace(EELFLogger logger, String msg, Object... arguments) {
 		if (logger.isTraceEnabled()) {
@@ -115,8 +125,11 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 * @param th
+	 *            Throwable to log
 	 */
 	public void trace(EELFLogger logger, String msg, Throwable th) {
 		if (logger.isTraceEnabled()) {
@@ -129,7 +142,9 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 */
 	public void debug(EELFLogger logger, String msg) {
 		if (logger.isDebugEnabled()) {
@@ -142,8 +157,11 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 * @param arguments
+	 *            Values to interpolate
 	 */
 	public void debug(EELFLogger logger, String msg, Object... arguments) {
 		if (logger.isDebugEnabled()) {
@@ -156,8 +174,11 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 * @param th
+	 *            Throwable to log
 	 */
 	public void debug(EELFLogger logger, String msg, Throwable th) {
 		if (logger.isDebugEnabled()) {
@@ -170,7 +191,9 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 */
 	public void info(EELFLogger logger, String msg) {
 		MDC.put(MDC_CLASS_NAME, className);
@@ -181,8 +204,11 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 * @param arguments
+	 *            Values to interpolate
 	 */
 	public void info(EELFLogger logger, String msg, Object... arguments) {
 		MDC.put(MDC_CLASS_NAME, className);
@@ -193,8 +219,11 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 * @param th
+	 *            Throwable to log
 	 */
 	public void info(EELFLogger logger, String msg, Throwable th) {
 		MDC.put(MDC_CLASS_NAME, className);
@@ -205,7 +234,9 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 */
 	public void warn(EELFLogger logger, String msg) {
 		MDC.put(MDC_CLASS_NAME, className);
@@ -216,8 +247,11 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 * @param arguments
+	 *            Values to interpolate
 	 */
 	public void warn(EELFLogger logger, String msg, Object... arguments) {
 		MDC.put(MDC_CLASS_NAME, className);
@@ -228,8 +262,11 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 * @param th
+	 *            Throwable to log
 	 */
 	public void warn(EELFLogger logger, String msg, Throwable th) {
 		MDC.put(MDC_CLASS_NAME, className);
@@ -240,7 +277,9 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 */
 	public void error(EELFLogger logger, String msg) {
 		MDC.put(MDC_CLASS_NAME, className);
@@ -251,8 +290,11 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 * @param arguments
+	 *            Values to interpolate
 	 */
 	public void error(EELFLogger logger, String msg, Object... arguments) {
 		MDC.put(MDC_CLASS_NAME, className);
@@ -263,8 +305,11 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	/**
 	 * 
 	 * @param logger
+	 *            EELFLogger
 	 * @param msg
+	 *            Message to log
 	 * @param th
+	 *            Throwable to log
 	 */
 	public void error(EELFLogger logger, String msg, Throwable th) {
 		MDC.put(MDC_CLASS_NAME, className);

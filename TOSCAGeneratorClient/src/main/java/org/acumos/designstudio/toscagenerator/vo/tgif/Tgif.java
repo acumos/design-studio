@@ -27,18 +27,17 @@ import java.io.Serializable;
  * 
  *
  */
-public class Tgif implements Serializable{
-	
+public class Tgif implements Serializable {
+
 	private static final long serialVersionUID = 2032008896009138659L;
-	
-	
+
 	private Self self;
 	private Stream streams;
 	private Service services;
 	private Parameter[] parameters;
 	private Auxiliary auxiliary;
 	private Artifact[] artifacts;
-	
+
 	public Tgif() {
 		super();
 	}
@@ -46,11 +45,17 @@ public class Tgif implements Serializable{
 	/**
 	 * 
 	 * @param self
+	 *            Self
 	 * @param streams
+	 *            Stream
 	 * @param services
+	 *            Service
 	 * @param parameters
+	 *            Array of Parameter objects
 	 * @param auxiliary
+	 *            Auxiliary
 	 * @param artifacts
+	 *            Array of Artifact
 	 */
 	public Tgif(Self self, Stream streams, Service services, Parameter[] parameters, Auxiliary auxiliary,
 			Artifact[] artifacts) {
@@ -71,7 +76,8 @@ public class Tgif implements Serializable{
 	}
 
 	/**
-	 * @param self the self to set
+	 * @param self
+	 *            the self to set
 	 */
 	public void setSelf(Self self) {
 		this.self = self;
@@ -85,7 +91,8 @@ public class Tgif implements Serializable{
 	}
 
 	/**
-	 * @param streams the streams to set
+	 * @param streams
+	 *            the streams to set
 	 */
 	public void setStreams(Stream streams) {
 		this.streams = streams;
@@ -99,7 +106,8 @@ public class Tgif implements Serializable{
 	}
 
 	/**
-	 * @param services the services to set
+	 * @param services
+	 *            the services to set
 	 */
 	public void setServices(Service services) {
 		this.services = services;
@@ -113,7 +121,8 @@ public class Tgif implements Serializable{
 	}
 
 	/**
-	 * @param parameters the parameters to set
+	 * @param parameters
+	 *            the parameters to set
 	 */
 	public void setParameters(Parameter[] parameters) {
 		this.parameters = parameters;
@@ -127,7 +136,8 @@ public class Tgif implements Serializable{
 	}
 
 	/**
-	 * @param auxilary the auxilary to set
+	 * @param auxiliary
+	 *            the auxiliary to set
 	 */
 	public void setAuxiliary(Auxiliary auxiliary) {
 		this.auxiliary = auxiliary;
@@ -141,12 +151,11 @@ public class Tgif implements Serializable{
 	}
 
 	/**
-	 * @param artifacts the artifacts to set
+	 * @param artifacts
+	 *            the artifacts to set
 	 */
 	public void setArtifacts(Artifact[] artifacts) {
 		this.artifacts = artifacts;
 	}
-	
-	
-	
+
 }

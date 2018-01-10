@@ -26,9 +26,9 @@ package org.acumos.designstudio.toscagenerator.util;
  *
  */
 public class ConfigurationProperties {
-	
+
 	private static ConfigurationProperties configurationProperties;
-	
+
 	private String toscaOutputFolder;
 	private String toscaGeneratorEndPointURL;
 	private String nexusEndPointURL;
@@ -38,7 +38,7 @@ public class ConfigurationProperties {
 	private String cmnDataSvcEndPoinURL;
 	private String cmnDataSvcUser;
 	private String cmnDataSvcPwd;
-	
+
 	/**
 	 * 
 	 * @param toscaOutputFolder
@@ -66,41 +66,48 @@ public class ConfigurationProperties {
 		this.cmnDataSvcPwd = cmnDataSvcPwd;
 	}
 
+	private ConfigurationProperties() {
 
-	private ConfigurationProperties(){
-		
 	}
 
 	/**
 	 * 
 	 * @param toscaOutputFolder
+	 *            Output folder
 	 * @param toscaGeneratorEndPointURL
+	 *            Generator URL
 	 * @param nexusEndPointURL
+	 *            Nexus URL
 	 * @param nexusUserName
+	 *            Nexus user name
 	 * @param nexusPassword
+	 *            Nexus password
 	 * @param nexusGroupId
+	 *            Nexus group ID
 	 * @param cmnDataSvcEndPoinURL
+	 *            Data service URL
 	 * @param cmnDataSvcUser
+	 *            Data service user name
 	 * @param cmnDataSvcPwd
+	 *            Data service password
 	 */
 	public static void init(String toscaOutputFolder, String toscaGeneratorEndPointURL, String nexusEndPointURL,
 			String nexusUserName, String nexusPassword, String nexusGroupId, String cmnDataSvcEndPoinURL,
 			String cmnDataSvcUser, String cmnDataSvcPwd) {
-		if(configurationProperties == null){
-			configurationProperties = new ConfigurationProperties( toscaOutputFolder,  toscaGeneratorEndPointURL,  nexusEndPointURL,
-					 nexusUserName,  nexusPassword,  nexusGroupId,  cmnDataSvcEndPoinURL,
-					 cmnDataSvcUser,  cmnDataSvcPwd);
+		if (configurationProperties == null) {
+			configurationProperties = new ConfigurationProperties(toscaOutputFolder, toscaGeneratorEndPointURL,
+					nexusEndPointURL, nexusUserName, nexusPassword, nexusGroupId, cmnDataSvcEndPoinURL, cmnDataSvcUser,
+					cmnDataSvcPwd);
 		}
 	}
-	
+
 	/**
 	 * 
-	 * @return
+	 * @return Static instance of ConfigurationProperties
 	 */
-	public static ConfigurationProperties getConfigurationProperties(){
+	public static ConfigurationProperties getConfigurationProperties() {
 		return configurationProperties;
 	}
-
 
 	/**
 	 * @return the toscaOutputFolder
@@ -109,14 +116,12 @@ public class ConfigurationProperties {
 		return toscaOutputFolder;
 	}
 
-
 	/**
 	 * @return the toscaGeneratorEndPointURL
 	 */
 	public String getToscaGeneratorEndPointURL() {
 		return toscaGeneratorEndPointURL;
 	}
-
 
 	/**
 	 * @return the nexusEndPointURL
@@ -125,14 +130,12 @@ public class ConfigurationProperties {
 		return nexusEndPointURL;
 	}
 
-
 	/**
 	 * @return the nexusUserName
 	 */
 	public String getNexusUserName() {
 		return nexusUserName;
 	}
-
 
 	/**
 	 * @return the nexusPassword
@@ -141,14 +144,12 @@ public class ConfigurationProperties {
 		return nexusPassword;
 	}
 
-
 	/**
 	 * @return the nexusGroupId
 	 */
 	public String getNexusGroupId() {
 		return nexusGroupId;
 	}
-
 
 	/**
 	 * @return the cmnDataSvcEndPoinURL
@@ -157,7 +158,6 @@ public class ConfigurationProperties {
 		return cmnDataSvcEndPoinURL;
 	}
 
-
 	/**
 	 * @return the cmnDataSvcUser
 	 */
@@ -165,14 +165,11 @@ public class ConfigurationProperties {
 		return cmnDataSvcUser;
 	}
 
-
 	/**
 	 * @return the cmnDataSvcPwd
 	 */
 	public String getCmnDataSvcPwd() {
 		return cmnDataSvcPwd;
 	}
-	
-	
-	
+
 }

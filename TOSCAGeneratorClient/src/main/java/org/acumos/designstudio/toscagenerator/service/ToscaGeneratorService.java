@@ -59,10 +59,14 @@ public class ToscaGeneratorService {
 	/**
 	 * 
 	 * @param solutionID
+	 *            solution ID
 	 * @param version
+	 *            version
 	 * @param response
-	 * @return
+	 *            JSON to parse
+	 * @return List of Artifact
 	 * @throws AcumosException
+	 *             On failure
 	 */
 	public List<Artifact> decryptAndWriteTofile(String solutionID, String version, String response)
 			throws AcumosException {
@@ -109,10 +113,14 @@ public class ToscaGeneratorService {
 	/**
 	 * 
 	 * @param solutionID
+	 *            solution ID
 	 * @param version
+	 *            version
 	 * @param toscaFiles
-	 * @return
+	 *            List of TOSCA file artifacts
+	 * @return List of artifacts
 	 * @throws AcumosException
+	 *             on failure
 	 */
 	public List<Artifact> uploadFilesToRepository(String solutionID, String version, List<Artifact> toscaFiles)
 			throws AcumosException {
@@ -157,11 +165,16 @@ public class ToscaGeneratorService {
 	/**
 	 * 
 	 * @param modelMetaData
-	 * @return
+	 *            Model metadata
+	 * @return TOSCA models
 	 * @throws MalformedURLException
+	 *             On bad URL
 	 * @throws IOException
+	 *             On failure to read
 	 * @throws ProtocolException
+	 *             on HTTP failure
 	 * @throws AcumosException
+	 *             On other failure
 	 */
 	public String getToscaModels(String modelMetaData)
 			throws MalformedURLException, IOException, ProtocolException, AcumosException {
@@ -182,12 +195,11 @@ public class ToscaGeneratorService {
 			os.flush();
 
 			/*
-			 * if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
-			 * throw new RuntimeException("Failed : HTTP error code : " +
-			 * conn.getResponseCode()); }
+			 * if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) { throw new
+			 * RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()); }
 			 */
 
-			 br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+			br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
 			String line;
 			sb = new StringBuilder();
@@ -203,7 +215,7 @@ public class ToscaGeneratorService {
 			throw new ServiceException("Exception Occured  getToscaModels()", Properties.getConnectionErrorCode(),
 					Properties.getConnectionErrorDesc(), ex.getCause());
 		} finally {
-			if(null != br){
+			if (null != br) {
 				br.close();
 			}
 		}
@@ -214,10 +226,15 @@ public class ToscaGeneratorService {
 	/**
 	 * 
 	 * @param solutionId
+	 *            Solution ID
 	 * @param solutionRevisionId
+	 *            Revision ID
 	 * @param ownerID
+	 *            User ID
 	 * @param toscaFiles
+	 *            List of TOSCA file artifacts
 	 * @throws AcumosException
+	 *             On failure
 	 */
 	public void postArtifact(String solutionId, String solutionRevisionId, String ownerID, List<Artifact> toscaFiles)
 			throws AcumosException {

@@ -27,32 +27,29 @@ import java.io.Serializable;
  * 
  *
  */
-public class Stream implements Serializable{
-	
-	
+public class Stream implements Serializable {
+
 	private static final long serialVersionUID = -2733793486307877528L;
-	
-	
+
 	private String[] subscribes;
 	private String[] publishes;
-	
-	public Stream(){
+
+	public Stream() {
 		super();
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param subscribes
+	 *            Array of String
 	 * @param publishes
+	 *            Array of String
 	 */
 	public Stream(String[] subscribes, String[] publishes) {
 		super();
 		this.subscribes = subscribes;
 		this.publishes = publishes;
 	}
-
-
 
 	/**
 	 * @return the subscribes
@@ -62,7 +59,8 @@ public class Stream implements Serializable{
 	}
 
 	/**
-	 * @param subscribes the subscribes to set
+	 * @param subscribes
+	 *            the subscribes to set
 	 */
 	public void setSubscribes(String[] subscribes) {
 		this.subscribes = subscribes;
@@ -76,12 +74,11 @@ public class Stream implements Serializable{
 	}
 
 	/**
-	 * @param publishes the publishes to set
+	 * @param publishes
+	 *            the publishes to set
 	 */
 	public void setPublishes(String[] publishes) {
 		this.publishes = publishes;
 	}
-	
-	
-	
+
 }

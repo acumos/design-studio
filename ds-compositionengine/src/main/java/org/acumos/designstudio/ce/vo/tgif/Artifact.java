@@ -27,7 +27,7 @@ import java.io.Serializable;
  * 
  *
  */
-public class Artifact implements Serializable{
+public class Artifact implements Serializable {
 
 	/**
 	 * 
@@ -35,15 +35,17 @@ public class Artifact implements Serializable{
 	private static final long serialVersionUID = 1L;
 	public String uri;
 	public String type;
-	
-	public Artifact(){
-		
+
+	public Artifact() {
+
 	}
-	
+
 	/**
 	 * 
 	 * @param uri
+	 *            URI
 	 * @param type
+	 *            Type
 	 */
 	public Artifact(String uri, String type) {
 		super();
@@ -59,7 +61,8 @@ public class Artifact implements Serializable{
 	}
 
 	/**
-	 * @param uri the uri to set
+	 * @param uri
+	 *            the uri to set
 	 */
 	public void setUri(String uri) {
 		this.uri = uri;
@@ -73,11 +76,11 @@ public class Artifact implements Serializable{
 	}
 
 	/**
-	 * @param type the type to set
+	 * @param type
+	 *            the type to set
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
-	
-	
+
 }

@@ -82,25 +82,22 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(CompositeSolutionServiceImpl.class);
 
 	@Autowired
-	Properties props;
+	private Properties props;
 
 	@Autowired
-	ConfigurationProperties confprops;
+	private ConfigurationProperties confprops;
 
 	@Autowired
-	CommonDataServiceRestClientImpl cdmsClient;
+	private CommonDataServiceRestClientImpl cdmsClient;
 
 	@Autowired
-	SolutionServiceImpl solutionServiceImpl;
+	private NexusArtifactClient nexusArtifactClient;
 
 	@Autowired
-	NexusArtifactClient nexusArtifactClient;
-	
-	@Autowired
-	GenericDataMapperServiceImpl gdmService;
+	private GenericDataMapperServiceImpl gdmService;
 
 	@Override
-	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException{
+	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException {
 
 		String result = "";
 		String error = "{\"errorCode\" : \"%s\", \"errorDescription\" : \"%s\"}";
@@ -141,7 +138,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					try {
 						result = insertCompositeSolution(dscs);
 					} catch (IOException e) {
-						logger.error(EELFLoggerDelegator.errorLogger, "--- IOException in insertCompositeSolution ---",e);
+						logger.error(EELFLoggerDelegator.errorLogger, "--- IOException in insertCompositeSolution ---",
+								e);
 					}
 				}
 			} else {
@@ -155,7 +153,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			try {
 				result = updateCompositeSolution(dscs);
 			} catch (IOException e) {
-				logger.error(EELFLoggerDelegator.errorLogger, "--- Exception in updateCompositeSolution ----",e);
+				logger.error(EELFLoggerDelegator.errorLogger, "--- Exception in updateCompositeSolution ----", e);
 			}
 			logger.debug(EELFLoggerDelegator.debugLogger,
 					"Ended implementation of Case 2 : cid is null and SolutionId is present");
@@ -168,7 +166,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- saveCompositeSolution() End --------");
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @param dscs
@@ -234,7 +232,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			if (null == cdump) {
 				logger.debug(EELFLoggerDelegator.debugLogger,
 						"-------Error : Cdump file not found for Solution ID :  " + mlpSolution.getSolutionId());
-			}else {
+			} else {
 				cdump.setCname(dscs.getSolutionName());
 				cdump.setVersion(dscs.getVersion());
 				cdump.setSolutionId(mlpSolution.getSolutionId());
@@ -299,7 +297,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			mlpArtifact.setSize(cdumpArtifact.getContentLength());
 
 			mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
-			
+
 			// 5. associate articat to the solutionRevisionArtifact.
 			logger.debug(EELFLoggerDelegator.debugLogger,
 					"-------6. Successfully created the artifact for the cdumpfile for the solution : "
@@ -327,14 +325,16 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				+ "\" }";
 
 	}
-	
+
 	/**
 	 * 
 	 * @param dscs
-	 * @return
+	 *            DSCompositeSolution
+	 * @return Success or error message
 	 * @throws AcumosException
+	 *             On failure
 	 * @throws IOException
-	 * @throws JSONException
+	 *             On failure
 	 */
 	public String updateCompositeSolution(DSCompositeSolution dscs) throws AcumosException, IOException {
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- updateCompositeSolution() Begin --------");
@@ -361,7 +361,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				});
 
 				if (null != mlpSolutionList && !mlpSolutionList.isEmpty()) {
-					// 4. get the first solutionRevision and check the solution version with input solution version
+					// 4. get the first solutionRevision and check the solution version with input
+					// solution version
 					if (mlpSolutionList.get(0).getVersion().equals(dscs.getVersion())) {
 						logger.debug(EELFLoggerDelegator.debugLogger, "Upadating Existing Solution");
 						result = updateExistingSolution(mlpSolutionList.get(0), mlpSolution, dscs);
@@ -392,13 +393,16 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							result = updateSolnWithNewVersion(mlpSolution, dscs);
 						}
 					}
-				} else { //This means no version available for the solution as result for delete solution. So add new version to the existing solution. 
-					
-					logger.debug(EELFLoggerDelegator.debugLogger, "No version found, so adding new version to the Solution");
+				} else { // This means no version available for the solution as result for delete
+							// solution. So add new version to the existing solution.
+
+					logger.debug(EELFLoggerDelegator.debugLogger,
+							"No version found, so adding new version to the Solution");
 					result = updateSolnWithNewVersion(mlpSolution, dscs);
 				}
 			} else {
-				// New Case: When user tries to update the existting solution with a different name
+				// New Case: When user tries to update the existting solution with a different
+				// name
 				// Update the dscs with the new values
 				dscs.setcId(dscs.getSolutionId());
 				dscs.setSolutionId(null);
@@ -413,23 +417,27 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- updateCompositeSolution() End --------");
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @param mlpSR
+	 *            MLPSolutionRevision
 	 * @param mlpSolution
+	 *            MLPSolution
 	 * @param dscs
-	 * @return
-	 * @throws JSONException
+	 *            DSCompositeSolution
+	 * @return Success or error
 	 * @throws IOException
+	 *             On error
 	 * @throws AcumosException
+	 *             On error
 	 */
 	public String updateExistingSolution(MLPSolutionRevision mlpSR, MLPSolution mlpSolution, DSCompositeSolution dscs)
 			throws IOException, AcumosException {
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- updateExistingSolution() Start --------");
 		String result = "";
 		Date currentDate = new Date();
-		
+
 		// 5.1 read the cdump file from the outputfolder
 		String path = DSUtil.readCdumpPath(dscs.getAuthor(), confprops.getToscaOutputFolder());
 
@@ -441,8 +449,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		if (null == cdump) {
 			logger.debug(EELFLoggerDelegator.debugLogger,
 					"-------Error : Cdump file not found for Solution ID :  " + mlpSolution.getSolutionId());
-		}
-		else {
+		} else {
 			// 5.2 Update the cdump file with mtime
 			cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
 			Gson gson = new Gson();
@@ -452,7 +459,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					path, payload.length());
 			logger.debug(EELFLoggerDelegator.debugLogger,
 					"-------4. Successfully updated the Cdump file for solution ID : " + mlpSolution.getSolutionId());
-			// 5.3 upload the cdump file in Nexus Repositry. (file name should be the same as previous one).
+			// 5.3 upload the cdump file in Nexus Repositry. (file name should be the same
+			// as previous one).
 			uploadFilesToRepository(mlpSolution.getSolutionId(), dscs.getVersion(), cdumpArtifact);
 
 			// Fetch the existing artifact
@@ -479,7 +487,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					break;
 				}
 			}
-			// 5.4 update the solutionRevisoin (i.e., to update the modified date of the solutionrevision)
+			// 5.4 update the solutionRevisoin (i.e., to update the modified date of the
+			// solutionrevision)
 			mlpSR.setModified(currentDate);
 			cdmsClient.updateSolutionRevision(mlpSR);
 
@@ -490,22 +499,25 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- updateExistingSolution() End --------");
 		return result;
 	}
-	
+
 	/**
-	 * 
 	 * @param mlpSolution
+	 *            MLPSolution
 	 * @param dscs
-	 * @return
+	 *            DSCompositeSolution
+	 * @return Success or error
 	 * @throws IOException
+	 *             On error
 	 * @throws AcumosException
+	 *             On error
 	 */
 	public String updateSolnWithNewVersion(MLPSolution mlpSolution, DSCompositeSolution dscs)
 			throws IOException, AcumosException {
-		
-		//Set solution active to true
+
+		// Set solution active to true
 		mlpSolution.setActive(true);
 		cdmsClient.updateSolution(mlpSolution);
-		
+
 		// 6. Case 3 - update the solution with new version
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- updateSolnWithNewVersion() Start --------");
 		String result = "";
@@ -523,8 +535,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		// 6.1 update the cdump file with cname = solution name and version = version
 		cdump.setCname(dscs.getSolutionName());
 		cdump.setVersion(dscs.getVersion());
-		
-		// 6.2 Create new SolutionRevision using CDS : inputSolutionId, version : this will return the solutionrevisionid
+
+		// 6.2 Create new SolutionRevision using CDS : inputSolutionId, version : this
+		// will return the solutionrevisionid
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		try {
 			mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
@@ -553,7 +566,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				path, payload.length());
 		logger.debug(EELFLoggerDelegator.debugLogger,
 				"------- Successfully updated the Cdump file for solution ID : " + mlpSolution.getSolutionId());
-		// 5.3 upload the cdump file in Nexus Repositry. : this will return the nexus URI
+		// 5.3 upload the cdump file in Nexus Repositry. : this will return the nexus
+		// URI
 
 		try {
 			uploadFilesToRepository(mlpSolution.getSolutionId(), dscs.getVersion(), cdumpArtifact);
@@ -617,7 +631,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- updateSolnWithNewVersion() End --------");
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @param solutionID
@@ -631,7 +645,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		UploadArtifactInfo artifactInfo = null;
 		try {
 
-			// 1. group id ,2. artifact name, 3. version, 4. extension i.e., packaging, 5. size of content, 6. actual file input stream.
+			// 1. group id ,2. artifact name, 3. version, 4. extension i.e., packaging, 5.
+			// size of content, 6. actual file input stream.
 			fileInputStream = new FileInputStream(a.getPayloadURI());
 			artifactInfo = nexusArtifactClient.uploadArtifact(confprops.getNexusgroupid(),
 					a.getSolutionID() + "_" + a.getType(), a.getVersion(), a.getExtension(), a.getContentLength(),
@@ -657,13 +672,13 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			boolean solutionFound = false;
 			if (null != mlpSolution) {
 				List<MLPSolutionRevision> mlpSolutionRevisions = cdmsClient.getSolutionRevisions(solutionId);
-				
-				//Check the size of mlpSolutionRevisions
-				if(mlpSolutionRevisions.size() == 1){
+
+				// Check the size of mlpSolutionRevisions
+				if (mlpSolutionRevisions.size() == 1) {
 					mlpSolution.setActive(false);
 					cdmsClient.updateSolution(mlpSolution);
 				}
-				
+
 				for (MLPSolutionRevision mlpSolRevision : mlpSolutionRevisions) {
 					// 2. match the Author with the input userId.
 					if (mlpSolRevision.getVersion().equals(version) && mlpSolRevision.getOwnerId().equals(userId)) {
@@ -673,9 +688,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								revisionId);
 
 						for (MLPArtifact mlpArtifact : mlpArtifacts) {
-							//if (mlpArtifact.getArtifactTypeCode().equals("CD")) {
-								// write the above statement as below then Sonar will not give any warning
-								if("CD".equals(mlpArtifact.getArtifactTypeCode())){
+							// if (mlpArtifact.getArtifactTypeCode().equals("CD")) {
+							// write the above statement as below then Sonar will not give any warning
+							if ("CD".equals(mlpArtifact.getArtifactTypeCode())) {
 								String artifactId = mlpArtifact.getArtifactId();
 								// Delete SolutionRevisionArtifact
 								cdmsClient.dropSolutionRevisionArtifact(solutionId, revisionId, artifactId);
@@ -745,7 +760,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			}
 		} catch (Exception e) {
 			result = String.format(resultTemplate, false, "Cannot Close the Composite Solution");
-			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in closeCompositeSolution() -----",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in closeCompositeSolution() -----", e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------ closeCompositeSolution() : End -------");
 		return result;
@@ -784,7 +799,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			String jsonInString = gson.toJson(cdump);
 			DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "------ Exception in clearCompositeSolution() ------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "------ Exception in clearCompositeSolution() ------", e);
 			result = String.format(resultTemplate, false, "");
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------ clearCompositeSolution() : End -------");
@@ -918,7 +933,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				}
 				// 3. get the Relations(Links) from cdump file and collect the
 				// SourceNodeId and TargetNodeId and add those to set
-				logger.debug("3. get the Relations(Links) from cdump file and collect the SourceNodeId and TargetNodeId and add those to set");
+				logger.debug(
+						"3. get the Relations(Links) from cdump file and collect the SourceNodeId and TargetNodeId and add those to set");
 				List<Relations> relationsList = cdump.getRelations();
 				HashSet<String> set = new HashSet<>();
 				if (relationsList != null) {
@@ -929,8 +945,10 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							set.add(rhs.getTargetNodeId());
 						}
 					}
-					// 4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.
-					logger.debug("4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.");
+					// 4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId)
+					// are there or not.
+					logger.debug(
+							"4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.");
 					if (CollectionUtils.isEqualCollection(idList, set)) {
 						// 5. Checking the Composite Solution Nodes and Relations are connected or not.
 						logger.debug("5. Checking the Composite Solution Nodes and Relations are connected or not.");
@@ -963,8 +981,10 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								}
 							}
 							bluePrint.setInput_operation_signatures(iosList);
-							// 8. Get the nodes from Cdump file & set the required details in the blueprint nodes
-							logger.debug("8. Get the nodes from Cdump file & set the required details in the blueprint nodes");
+							// 8. Get the nodes from Cdump file & set the required details in the blueprint
+							// nodes
+							logger.debug(
+									"8. Get the nodes from Cdump file & set the required details in the blueprint nodes");
 							List<Nodes> cdumpNodes = cdump.getNodes();
 							String nodeName = "";
 							String nodeId = "";
@@ -980,7 +1000,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							DataMap dataMap = null;
 							Property[] properties = null;
 							String gdm = "GDM";
-							
 
 							// 9. Extract NodeId, NodeName,NodeSolutionId,NodeVersion
 							logger.debug("9. Extract NodeId, NodeName,NodeSolutionId,NodeVersion");
@@ -996,42 +1015,45 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								logger.debug("11. Get the MlpSolutionRevisions from CDMSClient for the NodeSolutionId");
 								mlpSolRevision = getSolutionRevisions(nodeSolutionId, nodeVersion, mlpSolRevision);
 								boolean isGDM = false;
-								//get the properties from Nodes
+								// get the properties from Nodes
 								properties = n.getProperties();
 								// check whether properties are exits or not
 								logger.debug("check whether properties are exits or not");
-								if(null != properties && properties.length > 0){
-										propLength = properties.length;
-										for(int i = 0 ; i < propLength; i++){
-											dataMap = properties[i].getData_map();
-											if(null!=dataMap){
-												if(null != gdm){
-													logger.debug("GDM present");
-													isGDM = true;
-												}
-												break;
+								if (null != properties && properties.length > 0) {
+									propLength = properties.length;
+									for (int i = 0; i < propLength; i++) {
+										dataMap = properties[i].getData_map();
+										if (null != dataMap) {
+											if (null != gdm) {
+												logger.debug("GDM present");
+												isGDM = true;
 											}
+											break;
 										}
-									
+									}
+
 								}
-								logger.debug("GDM Found : "+ isGDM);
-								if(isGDM){
-									//For Generic Data Mapper, get the dockerImageUrl by deploying the GDM
-									//Construct the image for the Generic Data mapper
-									logger.debug("For Generic Data Mapper, get the dockerImageUrl by deploying the GDM Construct the image for the Generic Data mapper");
+								logger.debug("GDM Found : " + isGDM);
+								if (isGDM) {
+									// For Generic Data Mapper, get the dockerImageUrl by deploying the GDM
+									// Construct the image for the Generic Data mapper
+									logger.debug(
+											"For Generic Data Mapper, get the dockerImageUrl by deploying the GDM Construct the image for the Generic Data mapper");
 									dockerImageURL = gdmService.createDeployGDM(cdump, userId);
-									if(null == dockerImageURL){
+									if (null == dockerImageURL) {
 										logger.error(EELFLoggerDelegator.errorLogger,
 												"---------Error : Issue in createDeployGDM() : Failed to create the Solution Artifact ----------");
-										logger.debug("---------Error : Issue in createDeployGDM() : Failed to create the Solution Artifact ----------");
+										logger.debug(
+												"---------Error : Issue in createDeployGDM() : Failed to create the Solution Artifact ----------");
 										throw new ServiceException("---  Issue in createDeployGDM() ----", "333",
 												"Issue while crearting and deploying GDM image");
 									}
-								}
-								else {
-									//Else for basic models, upload the image and get the uri
-									// 12. Get the list of artifact from CDMSClient which will return the DockerImageUrl
-									logger.debug("12. Get the list of artifact from CDMSClient which will return the DockerImageUrl");
+								} else {
+									// Else for basic models, upload the image and get the uri
+									// 12. Get the list of artifact from CDMSClient which will return the
+									// DockerImageUrl
+									logger.debug(
+											"12. Get the list of artifact from CDMSClient which will return the DockerImageUrl");
 									dockerImageURL = getDockerImageURL(nodeSolutionId, mlpSolRevision);
 								}
 								// 13. Set the values in the bluePrint Node
@@ -1045,8 +1067,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								logger.debug("14. Add the nodedetails to bluepring nodes list");
 								bpnodes.add(bpnode);
 							}
-							 
-														
+
 							bluePrint.setNodes(bpnodes);
 							// 15. Write Data to bluePrint file and construct the name of the file
 							logger.debug("15. Write Data to bluePrint file and construct the name of the file");
@@ -1083,7 +1104,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								logger.debug("21. Creating the Artifact from CDMSClient.");
 								mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
 
-								logger.debug("-------Successfully created the artifact for the BluePrint for the solution : "
+								logger.debug(
+										"-------Successfully created the artifact for the BluePrint for the solution : "
 												+ solutionId + " artifact ID : " + mlpArtifact.getArtifactId());
 
 								// 22. Get the SolutionRevisions from CDMSClient.
@@ -1091,7 +1113,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								mlpSolRevisions = cdmsClient.getSolutionRevisions(solutionId);
 								MLPSolutionRevision compositeSolutionRevision = null;
 								// 23. Iterate over MLPSolutionRevisions and get the CompositeSolutionRevision.
-								logger.debug("23. Iterate over MLPSolutionRevisions and get the CompositeSolutionRevision.");
+								logger.debug(
+										"23. Iterate over MLPSolutionRevisions and get the CompositeSolutionRevision.");
 								for (MLPSolutionRevision solRev : mlpSolRevisions) {
 									if (solRev.getVersion().equals(version)) {
 										compositeSolutionRevision = solRev;
@@ -1106,7 +1129,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								logger.debug(EELFLoggerDelegator.debugLogger,
 										"------- Successfully associated the Solution Revision Artifact for solution ID  : "
 												+ solutionId);
-								
+
 							} catch (Exception e) {
 								logger.error(EELFLoggerDelegator.errorLogger,
 										"---------Error : Exception in validateCompositeSolution() : Failed to create the Solution Artifact ----------",
@@ -1130,7 +1153,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			}
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					"------- Exception in validateCompositeSolution() in Service -------",e);
+					"------- Exception in validateCompositeSolution() in Service -------", e);
 			logger.error("------------Exception Message : " + e.getMessage());
 		}
 		logger.debug("---- validateCompositeSolution() in Service ------ : End ");
@@ -1209,14 +1232,16 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		}
 		return dependsOnList;
 	}
-	
-	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient){
+
+	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
 		cdmsClient = commonDataServiceRestClient;
 	}
-	public void getNexusClient(NexusArtifactClient nexusArtifactClient1,ConfigurationProperties confprops1,org.acumos.designstudio.ce.util.Properties properties){
+
+	public void getNexusClient(NexusArtifactClient nexusArtifactClient1, ConfigurationProperties confprops1,
+			org.acumos.designstudio.ce.util.Properties properties) {
 		confprops = confprops1;
 		props = properties;
 		nexusArtifactClient = nexusArtifactClient1;
-    }
+	}
 
 }

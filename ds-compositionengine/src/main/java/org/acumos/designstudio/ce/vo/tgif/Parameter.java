@@ -27,8 +27,8 @@ import java.io.Serializable;
  * 
  *
  */
-public class Parameter implements Serializable{
-	
+public class Parameter implements Serializable {
+
 	/**
 	 * 
 	 */
@@ -36,15 +36,19 @@ public class Parameter implements Serializable{
 	private String name;
 	private String value;
 	private String description;
-	
-	public Parameter(){
-		
+
+	public Parameter() {
+
 	}
+
 	/**
 	 * 
 	 * @param name
+	 *            Parameter name
 	 * @param value
+	 *            Parameter value
 	 * @param description
+	 *            Parameter desc
 	 */
 	public Parameter(String name, String value, String description) {
 		super();
@@ -61,7 +65,8 @@ public class Parameter implements Serializable{
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -75,7 +80,8 @@ public class Parameter implements Serializable{
 	}
 
 	/**
-	 * @param value the value to set
+	 * @param value
+	 *            the value to set
 	 */
 	public void setValue(String value) {
 		this.value = value;
@@ -89,11 +95,11 @@ public class Parameter implements Serializable{
 	}
 
 	/**
-	 * @param description the description to set
+	 * @param description
+	 *            the description to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
+
 }

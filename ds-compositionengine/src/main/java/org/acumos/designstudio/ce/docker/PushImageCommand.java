@@ -31,7 +31,9 @@ import com.github.dockerjava.core.command.PushImageResultCallback;
 /**
  * This command pulls Docker image from a repository.
  *
- * @see https://docs.docker.com/reference/api/docker_remote_api_v1.13/#push-an-image-on-the-registry
+ * @see <A HREF=
+ *      "https://docs.docker.com/reference/api/docker_remote_api_v1.13/#push-an-image-on-the-registry">Docker
+ *      push</A>
  */
 public class PushImageCommand extends DockerCommand {
 	private final String image;
@@ -43,12 +45,14 @@ public class PushImageCommand extends DockerCommand {
 	/**
 	 * 
 	 * @param image
+	 *            Image to push
 	 * @param tag
+	 *            Tag to use
 	 * @param registry
+	 *            Docker registry
 	 */
-	
 	public PushImageCommand(String image, String tag, String registry) {
-		//DockerRegistryEndpoint dockerRegistryEndpoint
+		// DockerRegistryEndpoint dockerRegistryEndpoint
 		this.image = image;
 		this.tag = tag;
 		this.registry = registry;

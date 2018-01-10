@@ -44,11 +44,13 @@ public class ArtfactDetailsController {
 	/**
 	 * 
 	 * @param userId
+	 *            User ID
 	 * @param solutionId
+	 *            Solution ID
 	 * @param version
-	 * @return
+	 *            Version
+	 * @return TOSCA details
 	 */
-
 	@ApiOperation(value = "Gets TOSCA details for specified solutionId and version")
 	@RequestMapping(value = "/fetchJsonTOSCA", method = RequestMethod.GET, produces = "text/plain")
 	@ResponseBody
@@ -64,20 +66,21 @@ public class ArtfactDetailsController {
 				result = "Failed to fetch the TOSCA details for specified solutionId and version";
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in fetchJsonTOSCA() -------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in fetchJsonTOSCA() -------", e);
 			result = e.getMessage();
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- fetchJsonTOSCA() ------- : End");
 		return result;
 	}
-	
 
 	/**
-	 * 
 	 * @param userId
+	 *            User ID
 	 * @param solutionId
+	 *            Solution ID
 	 * @param version
-	 * @return
+	 *            Version
+	 * @return Protobuf file details
 	 */
 	@ApiOperation(value = "Get the profobuf file details for specified solutionID and version")
 	@RequestMapping(value = "/fetchProtoBufJSON", method = RequestMethod.GET, produces = "text/plain")
@@ -99,7 +102,7 @@ public class ArtfactDetailsController {
 				resultTemplate = String.format(resultTemplate, result, false, "Unable to read protoBufFile");
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in fetchProtoBufJSON() -------",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in fetchProtoBufJSON() -------", e);
 			resultTemplate = String.format(resultTemplate, null, false, e.getMessage());
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger,

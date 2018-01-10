@@ -29,52 +29,57 @@ import org.json.simple.JSONArray;
  * 
  *
  */
-public class Request implements Serializable{
+public class Request implements Serializable {
 	private static final long serialVersionUID = 8483844197295612388L;
-	
+
 	private JSONArray format;
 	private String version;
-	
-	
-	public Request(){
-		
+
+	public Request() {
+
 	}
-	
+
 	/**
 	 * 
 	 * @param format
+	 *            JSON Array
 	 * @param version
+	 *            Version
 	 */
 	public Request(JSONArray format, String version) {
 		super();
 		this.format = format;
 		this.version = version;
 	}
+
 	/**
 	 * @return the format
 	 */
 	public JSONArray getFormat() {
 		return format;
 	}
+
 	/**
-	 * @param format the format to set
+	 * @param format
+	 *            the format to set
 	 */
 	public void setFormat(JSONArray format) {
 		this.format = format;
 	}
+
 	/**
 	 * @return the version
 	 */
 	public String getVersion() {
 		return version;
 	}
+
 	/**
-	 * @param version the version to set
+	 * @param version
+	 *            the version to set
 	 */
 	public void setVersion(String version) {
 		this.version = version;
 	}
-
-	
 
 }

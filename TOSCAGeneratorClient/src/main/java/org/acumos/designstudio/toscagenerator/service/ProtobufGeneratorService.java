@@ -85,13 +85,16 @@ public class ProtobufGeneratorService {
 	/**
 	 * 
 	 * @param solutionId
+	 *            solution ID
 	 * @param version
+	 *            version
 	 * @param localMetadataFile
-	 * @return
-	 * @throws ServiceException
+	 * metadata file
+	 * @return Protobuf JSON
+	 * @throws ServiceException On failure
 	 */
 	public String createProtoJson(String solutionId, String version, File localMetadataFile) throws ServiceException {
-		logger.debug("-------------- CreateProtoJson() strated ---------------");
+		logger.debug("-------------- CreateProtoJson() started ---------------");
 		protoBufClass = new ProtoBufClass();
 		messageBodyList = new ArrayList<>();
 		listOfInputAndOutputMessage = new ArrayList<>();
@@ -309,9 +312,8 @@ public class ProtobufGeneratorService {
 				 * int openCurlybacketPosition; String messageValue = "";
 				 */
 				/*
-				 * openCurlybacketPosition = line.indexOf("{"); messageValue =
-				 * line.substring(8, openCurlybacketPosition);
-				 * messageBody.setMessageName(messageValue.trim());
+				 * openCurlybacketPosition = line.indexOf("{"); messageValue = line.substring(8,
+				 * openCurlybacketPosition); messageBody.setMessageName(messageValue.trim());
 				 */
 				String[] fields = line.split(" ");
 				messageBody.setMessageName(fields[1]);
@@ -374,9 +376,8 @@ public class ProtobufGeneratorService {
 			 * String servicesName = ""; int openCurlybacketPosition;
 			 */
 			/*
-			 * openCurlybacketPosition = line.indexOf("{"); servicesName =
-			 * line.substring(8, openCurlybacketPosition);
-			 * service.setName(servicesName.trim());
+			 * openCurlybacketPosition = line.indexOf("{"); servicesName = line.substring(8,
+			 * openCurlybacketPosition); service.setName(servicesName.trim());
 			 */
 			String[] fields = line.split(" ");
 			service.setName(fields[1]);

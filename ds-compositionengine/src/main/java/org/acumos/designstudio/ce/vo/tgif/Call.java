@@ -27,8 +27,8 @@ import java.io.Serializable;
  * 
  *
  */
-public class Call implements Serializable{
-	
+public class Call implements Serializable {
+
 	/**
 	 * 
 	 */
@@ -36,16 +36,19 @@ public class Call implements Serializable{
 	private String config_key;
 	private Request request;
 	private Response response;
-	
-	
-	public Call(){
-		
+
+	public Call() {
+
 	}
+
 	/**
 	 * 
 	 * @param config_key
+	 *            Config key
 	 * @param request
+	 *            Request
 	 * @param response
+	 *            Response
 	 */
 	public Call(String config_key, Request request, Response response) {
 		super();
@@ -53,45 +56,50 @@ public class Call implements Serializable{
 		this.request = request;
 		this.response = response;
 	}
+
 	/**
 	 * @return the config_key
 	 */
 	public String getConfig_key() {
 		return config_key;
 	}
+
 	/**
-	 * @param config_key the config_key to set
+	 * @param config_key
+	 *            the config_key to set
 	 */
 	public void setConfig_key(String config_key) {
 		this.config_key = config_key;
 	}
+
 	/**
 	 * @return the request
 	 */
 	public Request getRequest() {
 		return request;
 	}
+
 	/**
-	 * @param request the request to set
+	 * @param request
+	 *            the request to set
 	 */
 	public void setRequest(Request request) {
 		this.request = request;
 	}
+
 	/**
 	 * @return the response
 	 */
 	public Response getResponse() {
 		return response;
 	}
+
 	/**
-	 * @param response the response to set
+	 * @param response
+	 *            the response to set
 	 */
 	public void setResponse(Response response) {
 		this.response = response;
 	}
-	
-	
-	
-	
-	
+
 }
