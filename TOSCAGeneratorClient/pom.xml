@@ -5,24 +5,32 @@
 	<artifactId>TOSCAModelGeneratorClient</artifactId>
 	<version>0.0.22-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Acumos Design Studio TOSCAModelGeneratorClient</name>
+	<name>Design Studio TOSCAModelGeneratorClient</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<springframework.version>4.2.0.RELEASE</springframework.version>
 		<!-- Jenkins invokes mvn with argument -Dbuild.number=${BUILD_NUMBER} -->
 		<build.number>0</build.number>
-		<!-- URL is overridden by Jenkins "CognitaSettings" -->
-		<acumos.nexus.url>Set by Jenkins</acumos.nexus.url>
-		<acumos.nexus.snapshot.path>Set by Jenkins</acumos.nexus.snapshot.path>
-		<acumos.nexus.release.path>Set by Jenkins</acumos.nexus.release.path>
+		<!-- For distributionManagement section -->
+		<acumos.nexus.url>https://nexus.acumos.org</acumos.nexus.url>
 	</properties>
 
 	<dependencies>
 		<dependency>
+			<groupId>org.acumos.common-dataservice</groupId>
+			<artifactId>cmn-data-svc-client</artifactId>
+			<version>1.12.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.acumos.portal-marketplace</groupId>
+			<artifactId>acumos-nexus-client</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -36,38 +44,23 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.5.2</version>
 		</dependency>
-
-
 		<dependency>
-			<groupId>org.acumos</groupId>
-			<artifactId>acumos-nexus-client</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-
 			<!-- Dependencies for SLF4J Loggers Starts -->
-
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.7</version>
 		</dependency>
-
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.0.1</version>
 		</dependency>
-
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
 			<version>1.0.1</version>
 		</dependency>
-
 		<!-- Dependencies for SLF4J Loggers End -->
-
-
-
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -80,7 +73,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
@@ -92,7 +84,6 @@
 			<artifactId>jackson-core</artifactId>
 			<version>2.7.5</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -104,42 +95,18 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
-
-
-		<dependency>
-			<groupId>org.acumos.common-dataservice</groupId>
-			<artifactId>cmn-data-svc-client</artifactId>
-			<version>1.10.1-SNAPSHOT</version>
-		</dependency>
-
-
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.8.0</version>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- <dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>2.0.73-beta</version>
-		</dependency> -->
-		<dependency>
 			<groupId>com.att.eelf</groupId>
 			<artifactId>eelf-core</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-
-
 	</dependencies>
-
 	<build>
-
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -165,25 +132,31 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<!-- add build information to manifest -->
+			<!-- add build information to manifest. Java provides access to the implementation 
+				version for a package, so cram the build number into there. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.5</version>
 				<configuration>
 					<archive>
 						<manifest>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 						</manifest>
 						<manifestEntries>
-							<Build-Number>${project.version}.${build.number}</Build-Number>
-							<Build-Time>${maven.build.timestamp}</Build-Time>
+							<Implementation-Version>${project.version}-b${build.number}</Implementation-Version>
 						</manifestEntries>
 					</archive>
+					<!-- exclude logback.xml -->
+					<excludes>
+						<exclude>**/logback.xml</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -202,9 +175,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-deploy-plugin</artifactId> 
-				<version>${maven-deploy-plugin.version}</version> <configuration> <skip>true</skip> 
-				</configuration> </plugin> -->
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
@@ -222,7 +192,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.6.201602180812</version>
+				<version>0.7.9</version>
 				<executions>
 					<execution>
 						<id>default-prepare-agent</id>
@@ -242,28 +212,20 @@
 
 		</plugins>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>NexusClient</id>
-			<url>${acumos.nexus.url}/${acumos.nexus.snapshot.path}</url>
-		</repository>
-		<repository>
-			<id>acumos-repository-releases</id>
-			<url>${acumos.nexus.url}/${acumos.nexus.release.path}</url>
-		</repository>
-
-	</repositories>
-
+	<!-- The client jar must be deployed to Nexus. The IDs must match Jenkins 
+		settings for credentials. -->
 	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<url>${acumos.nexus.url}/content/repositories/releases</url>
+		</repository>
 		<snapshotRepository>
-			<!-- must match ID in Jenkins settings -->
-			<id>acumos-nexus</id>
-			<name>acumos-repository-snapshots</name>
-			<url>${acumos.nexus.url}/${acumos.nexus.snapshot.path}</url>
+			<id>snapshots</id>
+			<url>${acumos.nexus.url}/content/repositories/snapshots</url>
 		</snapshotRepository>
+		<site>
+			<id>acumos-site</id>
+			<url>dav:${acumos.nexus.url}/content/sites/site/${project.groupId}/${project.artifactId}/${project.version}</url>
+		</site>
 	</distributionManagement>
-
-
-
 </project>

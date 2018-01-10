@@ -29,7 +29,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public abstract class AcumosException extends Exception {
-	
+
+	private static final long serialVersionUID = 5967973881519668649L;
+
 	private static final Logger logger = LoggerFactory.getLogger(AcumosException.class);
 
 	private  transient Object param;
