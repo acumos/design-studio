@@ -130,8 +130,7 @@ public class ProtobufGeneratorService {
 					ex);
 			throw new ServiceException(ex.getMessage(), ex.getErrorCode(), ex.getErrorDesc(), ex.getCause());
 
-		} 
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			logger.error(
 					" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------",
 					ex);
@@ -483,166 +482,174 @@ public class ProtobufGeneratorService {
 					}
 					List<MessageargumentList> parentmessageNamemessageargumentList = destinationMessageBody.get(j)
 							.getMessageargumentList();
-
-					for (int k = 0; k < parentmessageNamemessageargumentList.size(); k++) {
-						String type = parentmessageNamemessageargumentList.get(k).getType();
-						if (!basicProtobufTypesList.contains(type) && type.equals(sourceMessageName)) {
-							isSubMessageFound = true;
-							MessageBody expendedmessageBody = null;
-							List<MessageargumentList> messageargumentListInstanceList = null;
-							String message = "";
-							if (expendedmessageBodyList != null && !expendedmessageBodyList.isEmpty()) {
-								for (int ei = 0; ei < expendedmessageBodyList.size(); ei++) {
-									expendedmessageBody = expendedmessageBodyList.get(ei);
-									message = expendedmessageBody.getMessageName();
-									if (message == destinationMessageBody.get(j).getMessageName()) {
-										messageargumentListInstanceList = expendedmessageBody.getMessageargumentList();
-										break;
-									} else {
-										messageargumentListInstanceList = new ArrayList<MessageargumentList>();
-										expendedmessageBody = new MessageBody();
-									}
-
-								}
-							} else {
-								messageargumentListInstanceList = new ArrayList<MessageargumentList>();
-								expendedmessageBody = new MessageBody();
-							}
-							if (expendedChildmessageBodyList.contains(destinationMessageName)) {
-								MessageargumentList messageargumentListInstance = new MessageargumentList();
-								ComplexType complexType = null;
-								for (MessageBody messageBody0 : expendedmessageBodyList) {
-									List<MessageargumentList> list = messageBody0.getMessageargumentList();
-									MessageargumentList messageArgumentList = null;
-									int messageArgumentListIndex = 0;
-									for (int jj = 0; jj < list.size(); jj++) {
-										messageArgumentList = messageBody0.getMessageargumentList().get(jj);
-										if (messageArgumentList.getComplexType() != null) {
-											complexType = messageArgumentList.getComplexType();
-											messageArgumentListIndex = jj;
+					if (null != parentmessageNamemessageargumentList
+							&& !parentmessageNamemessageargumentList.isEmpty()) {
+						for (int k = 0; k < parentmessageNamemessageargumentList.size(); k++) {
+							String type = parentmessageNamemessageargumentList.get(k).getType();
+							if (!basicProtobufTypesList.contains(type) && type.equals(sourceMessageName)) {
+								isSubMessageFound = true;
+								MessageBody expendedmessageBody = null;
+								List<MessageargumentList> messageargumentListInstanceList = null;
+								String message = "";
+								if (expendedmessageBodyList != null && !expendedmessageBodyList.isEmpty()) {
+									for (int ei = 0; ei < expendedmessageBodyList.size(); ei++) {
+										expendedmessageBody = expendedmessageBodyList.get(ei);
+										message = expendedmessageBody.getMessageName();
+										if (message == destinationMessageBody.get(j).getMessageName()) {
+											messageargumentListInstanceList = expendedmessageBody
+													.getMessageargumentList();
+											break;
+										} else {
+											messageargumentListInstanceList = new ArrayList<MessageargumentList>();
+											expendedmessageBody = new MessageBody();
 										}
-									}
-									// MessageargumentList messageArgumentList =
-									// messageBody0.getMessageargumentList().get(0);
 
-									// complexType =
-									// messageArgumentList.getComplexType();
-									List<MessageargumentList> complexMessageargumentList = complexType
-											.getMessageargumentList();
-									ComplexType complexTypeObject = null;
-									for (int ii = 0; ii < complexMessageargumentList.size(); ii++) {
-										MessageargumentList MessageargumentList = complexMessageargumentList.get(ii);
-										if (MessageargumentList.getType().equals(sourceMessageName)) {
-											String parentTag = MessageargumentList.getTag();
-											List<MessageargumentList> comlpexmessageargumentList20 = new ArrayList<MessageargumentList>();
-											complexTypeObject = new ComplexType();
-											for (int l = 0; l < messageargumentList.size(); l++) {
-												MessageargumentList messageargumentList12 = (MessageargumentList) messageargumentList
-														.get(l);
-												MessageargumentList complexMessageargumentInstance = new MessageargumentList();
-												complexMessageargumentInstance.setRole(messageargumentList12.getRole());
-												complexMessageargumentInstance.setType(messageargumentList12.getType());
-												complexMessageargumentInstance.setName(messageargumentList12.getName());
-												complexMessageargumentInstance
-														.setTag(parentTag + "." + messageargumentList12.getTag());
-												comlpexmessageargumentList20.add(complexMessageargumentInstance);
+									}
+								} else {
+									messageargumentListInstanceList = new ArrayList<MessageargumentList>();
+									expendedmessageBody = new MessageBody();
+								}
+								if (expendedChildmessageBodyList.contains(destinationMessageName)) {
+									MessageargumentList messageargumentListInstance = new MessageargumentList();
+									ComplexType complexType = null;
+									for (MessageBody messageBody0 : expendedmessageBodyList) {
+										List<MessageargumentList> list = messageBody0.getMessageargumentList();
+										MessageargumentList messageArgumentList = null;
+										int messageArgumentListIndex = 0;
+										for (int jj = 0; jj < list.size(); jj++) {
+											messageArgumentList = messageBody0.getMessageargumentList().get(jj);
+											if (messageArgumentList.getComplexType() != null) {
+												complexType = messageArgumentList.getComplexType();
+												messageArgumentListIndex = jj;
 											}
-											complexTypeObject.setMessageName(sourceMessageName);
-											complexTypeObject.setMessageargumentList(comlpexmessageargumentList20);
-											messageargumentListInstance.setRole(MessageargumentList.getRole());
-											messageargumentListInstance.setType(MessageargumentList.getType());
-											messageargumentListInstance.setComplexType(complexTypeObject);
-											messageargumentListInstance.setName(MessageargumentList.getName());
-											messageargumentListInstance.setTag(MessageargumentList.getTag());
-											complexMessageargumentList.set(ii, messageargumentListInstance);
-											complexType.setMessageargumentList(complexMessageargumentList);
-											messageArgumentList.setComplexType(complexType);
-											messageBody0.getMessageargumentList().set(messageArgumentListIndex,
-													messageArgumentList);
+										}
+										// MessageargumentList
+										// messageArgumentList =
+										// messageBody0.getMessageargumentList().get(0);
+
+										// complexType =
+										// messageArgumentList.getComplexType();
+										List<MessageargumentList> complexMessageargumentList = complexType
+												.getMessageargumentList();
+										ComplexType complexTypeObject = null;
+										for (int ii = 0; ii < complexMessageargumentList.size(); ii++) {
+											MessageargumentList MessageargumentList = complexMessageargumentList
+													.get(ii);
+											if (MessageargumentList.getType().equals(sourceMessageName)) {
+												String parentTag = MessageargumentList.getTag();
+												List<MessageargumentList> comlpexmessageargumentList20 = new ArrayList<MessageargumentList>();
+												complexTypeObject = new ComplexType();
+												for (int l = 0; l < messageargumentList.size(); l++) {
+													MessageargumentList messageargumentList12 = (MessageargumentList) messageargumentList
+															.get(l);
+													MessageargumentList complexMessageargumentInstance = new MessageargumentList();
+													complexMessageargumentInstance
+															.setRole(messageargumentList12.getRole());
+													complexMessageargumentInstance
+															.setType(messageargumentList12.getType());
+													complexMessageargumentInstance
+															.setName(messageargumentList12.getName());
+													complexMessageargumentInstance
+															.setTag(parentTag + "." + messageargumentList12.getTag());
+													comlpexmessageargumentList20.add(complexMessageargumentInstance);
+												}
+												complexTypeObject.setMessageName(sourceMessageName);
+												complexTypeObject.setMessageargumentList(comlpexmessageargumentList20);
+												messageargumentListInstance.setRole(MessageargumentList.getRole());
+												messageargumentListInstance.setType(MessageargumentList.getType());
+												messageargumentListInstance.setComplexType(complexTypeObject);
+												messageargumentListInstance.setName(MessageargumentList.getName());
+												messageargumentListInstance.setTag(MessageargumentList.getTag());
+												complexMessageargumentList.set(ii, messageargumentListInstance);
+												complexType.setMessageargumentList(complexMessageargumentList);
+												messageArgumentList.setComplexType(complexType);
+												messageBody0.getMessageargumentList().set(messageArgumentListIndex,
+														messageArgumentList);
+
+											}
 
 										}
 
 									}
 
-								}
+								} else {
+									expendedmessageBody.setMessageName(destinationMessageBody.get(j).getMessageName());
+									MessageargumentList messageargumentListInstance = new MessageargumentList();
+									MessageargumentList messageargumentListInstanceSympletype = null;
+									List<MessageargumentList> messageargumentListInstanceSympletypePreList = new ArrayList<MessageargumentList>();
+									List<MessageargumentList> messageargumentListInstanceSympletypePostList = new ArrayList<MessageargumentList>();
+									int simpleTypePreIndex = k;
+									int simpleTypePostIndex = k + 1;
+									if (simpleTypePreIndex > 0) {
+										for (int kk = 0; kk < simpleTypePreIndex; kk++) {
+											messageargumentListInstanceSympletype = new MessageargumentList();
+											messageargumentListInstanceSympletype
+													.setRole(parentmessageNamemessageargumentList.get(kk).getRole());
+											messageargumentListInstanceSympletype
+													.setType(parentmessageNamemessageargumentList.get(kk).getType());
+											messageargumentListInstanceSympletype
+													.setName(parentmessageNamemessageargumentList.get(kk).getName());
+											messageargumentListInstanceSympletype
+													.setTag(parentmessageNamemessageargumentList.get(kk).getTag());
+											messageargumentListInstanceSympletypePreList
+													.add(messageargumentListInstanceSympletype);
+										}
 
-							} else {
-								expendedmessageBody.setMessageName(destinationMessageBody.get(j).getMessageName());
-								MessageargumentList messageargumentListInstance = new MessageargumentList();
-								MessageargumentList messageargumentListInstanceSympletype = null;
-								List<MessageargumentList> messageargumentListInstanceSympletypePreList = new ArrayList<MessageargumentList>();
-								List<MessageargumentList> messageargumentListInstanceSympletypePostList = new ArrayList<MessageargumentList>();
-								int simpleTypePreIndex = k;
-								int simpleTypePostIndex = k + 1;
-								if (simpleTypePreIndex > 0) {
-									for (int kk = 0; kk < simpleTypePreIndex; kk++) {
-										messageargumentListInstanceSympletype = new MessageargumentList();
-										messageargumentListInstanceSympletype
-												.setRole(parentmessageNamemessageargumentList.get(kk).getRole());
-										messageargumentListInstanceSympletype
-												.setType(parentmessageNamemessageargumentList.get(kk).getType());
-										messageargumentListInstanceSympletype
-												.setName(parentmessageNamemessageargumentList.get(kk).getName());
-										messageargumentListInstanceSympletype
-												.setTag(parentmessageNamemessageargumentList.get(kk).getTag());
-										messageargumentListInstanceSympletypePreList
-												.add(messageargumentListInstanceSympletype);
+									}
+									List<MessageargumentList> postList = parentmessageNamemessageargumentList
+											.subList(simpleTypePostIndex, parentmessageNamemessageargumentList.size());
+
+									messageargumentListInstance
+											.setRole(parentmessageNamemessageargumentList.get(k).getRole());
+									messageargumentListInstance
+											.setType(parentmessageNamemessageargumentList.get(k).getType());
+									String parentTag = parentmessageNamemessageargumentList.get(k).getTag();
+
+									ComplexType complexType = new ComplexType();
+
+									complexType.setMessageName(sourceMessageName);
+									for (int l = 0; l < messageargumentList.size(); l++) {
+										MessageargumentList messageargumentList12 = (MessageargumentList) messageargumentList
+												.get(l);
+										MessageargumentList complexMessageargumentInstance = new MessageargumentList();
+										complexMessageargumentInstance.setRole(messageargumentList12.getRole());
+										complexMessageargumentInstance.setType(messageargumentList12.getType());
+										complexMessageargumentInstance.setName(messageargumentList12.getName());
+										complexMessageargumentInstance
+												.setTag(parentTag + "." + messageargumentList12.getTag());
+										comlpexmessageargumentList.add(complexMessageargumentInstance);
+
+									}
+									complexType.setMessageargumentList(comlpexmessageargumentList);
+									messageargumentListInstance.setComplexType(complexType);
+									messageargumentListInstance
+											.setName(parentmessageNamemessageargumentList.get(k).getName());
+									messageargumentListInstance
+											.setTag(parentmessageNamemessageargumentList.get(k).getTag());
+									if (messageargumentListInstanceList != null
+											&& messageargumentListInstanceList.size() != 0) {
+										messageargumentListInstanceList.add(messageargumentListInstance);
+										expendedmessageBody.setMessageargumentList(messageargumentListInstanceList);
+									} else {
+										messageargumentListInstanceList
+												.addAll(messageargumentListInstanceSympletypePreList);
+										messageargumentListInstanceList.add(messageargumentListInstance);
+										messageargumentListInstanceList
+												.addAll(messageargumentListInstanceSympletypePostList);
+										expendedmessageBody.setMessageargumentList(messageargumentListInstanceList);
+									}
+									expendedChildmessageBodyList.add(sourceMessageBody.get(i).getMessageName());
+									if (message == destinationMessageBody.get(j).getMessageName()) {
+
+									} else {
+										expendedmessageBodyList.add(expendedmessageBody);
 									}
 
 								}
-								List<MessageargumentList> postList = parentmessageNamemessageargumentList
-										.subList(simpleTypePostIndex, parentmessageNamemessageargumentList.size());
-
-								messageargumentListInstance
-										.setRole(parentmessageNamemessageargumentList.get(k).getRole());
-								messageargumentListInstance
-										.setType(parentmessageNamemessageargumentList.get(k).getType());
-								String parentTag = parentmessageNamemessageargumentList.get(k).getTag();
-
-								ComplexType complexType = new ComplexType();
-
-								complexType.setMessageName(sourceMessageName);
-								for (int l = 0; l < messageargumentList.size(); l++) {
-									MessageargumentList messageargumentList12 = (MessageargumentList) messageargumentList
-											.get(l);
-									MessageargumentList complexMessageargumentInstance = new MessageargumentList();
-									complexMessageargumentInstance.setRole(messageargumentList12.getRole());
-									complexMessageargumentInstance.setType(messageargumentList12.getType());
-									complexMessageargumentInstance.setName(messageargumentList12.getName());
-									complexMessageargumentInstance
-											.setTag(parentTag + "." + messageargumentList12.getTag());
-									comlpexmessageargumentList.add(complexMessageargumentInstance);
-
-								}
-								complexType.setMessageargumentList(comlpexmessageargumentList);
-								messageargumentListInstance.setComplexType(complexType);
-								messageargumentListInstance
-										.setName(parentmessageNamemessageargumentList.get(k).getName());
-								messageargumentListInstance
-										.setTag(parentmessageNamemessageargumentList.get(k).getTag());
-								if (messageargumentListInstanceList != null
-										&& messageargumentListInstanceList.size() != 0) {
-									messageargumentListInstanceList.add(messageargumentListInstance);
-									expendedmessageBody.setMessageargumentList(messageargumentListInstanceList);
-								} else {
-									messageargumentListInstanceList
-											.addAll(messageargumentListInstanceSympletypePreList);
-									messageargumentListInstanceList.add(messageargumentListInstance);
-									messageargumentListInstanceList
-											.addAll(messageargumentListInstanceSympletypePostList);
-									expendedmessageBody.setMessageargumentList(messageargumentListInstanceList);
-								}
-								expendedChildmessageBodyList.add(sourceMessageBody.get(i).getMessageName());
-								if (message == destinationMessageBody.get(j).getMessageName()) {
-
-								} else {
-									expendedmessageBodyList.add(expendedmessageBody);
-								}
-
+								break;
+							} else {
+								isSubMessageFound = false;
 							}
-							break;
-						} else {
-							isSubMessageFound = false;
 						}
 					}
 					if (isSubMessageFound) {

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>TOSCAModelGeneratorClient</artifactId>
-	<version>0.0.22-SNAPSHOT</version>
+	<version>0.0.23-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Acumos Design Studio TOSCAModelGeneratorClient</name>
 
