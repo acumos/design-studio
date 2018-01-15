@@ -523,7 +523,7 @@ public class SolutionController {
 	 * @return
 	 */
 	@ApiOperation(value = "Clear Composite Solution Operation")
-	@RequestMapping(value = "/clearCompositeSolution ", method = RequestMethod.POST)
+	@RequestMapping(value = "/clearCompositeSolution", method = RequestMethod.POST)
 	@ResponseBody
 	public String clearCompositeSolution(@RequestParam(value = "userId", required = true) String userId,
 			@RequestParam(value = "solutionId", required = false) String solutionId,
