@@ -4,7 +4,7 @@
 
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>ds-compositionengine</artifactId>
-	<version>0.19.1</version>
+	<version>0.19.2</version>
 	<packaging>jar</packaging>
 	<name>Design Studio Composition Engine</name>
 
