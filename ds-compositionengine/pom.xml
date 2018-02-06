@@ -4,7 +4,7 @@
 
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>ds-compositionengine</artifactId>
-	<version>0.19.2</version>
+	<version>0.19.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Design Studio Composition Engine</name>
 
@@ -250,7 +250,7 @@
 									<inline>
 										<files>
 											<file>
-												<source>target/gdmservice-0.0.1-SNAPSHOT.jar</source>
+												<source>target/gdmservice-0.0.1.jar</source>
 												<outputDirectory>.</outputDirectory>
 											</file>
 											<file>
