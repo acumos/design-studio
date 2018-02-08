@@ -117,7 +117,18 @@ public class Properties implements Serializable {
 	private String gdmJarName;
 	
 	
+	@Value("${solutionResultsetSize}")
+	private int solutionResultsetSize;
 	
+	
+	
+	/**
+	 * @return the solutionResultsetSize
+	 */
+	public int getSolutionResultsetSize() {
+		return solutionResultsetSize;
+	}
+
 	/**
 	 * @return the gdmJarName
 	 */

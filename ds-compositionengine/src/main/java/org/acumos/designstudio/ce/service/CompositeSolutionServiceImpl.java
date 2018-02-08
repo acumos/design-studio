@@ -42,6 +42,8 @@ import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolution;
 import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.cds.domain.MLPUser;
+import org.acumos.cds.transport.RestPageRequest;
+import org.acumos.cds.transport.RestPageResponse;
 import org.acumos.designstudio.cdump.Cdump;
 import org.acumos.designstudio.cdump.DataMap;
 import org.acumos.designstudio.cdump.Nodes;
@@ -118,7 +120,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				Boolean solutionsExists = false;
 				Map<String, Object> queryParameters = new HashMap<>();
 				queryParameters.put("name", dscs.getSolutionName());
-				List<MLPSolution> mlpSolutions = cdmsClient.searchSolutions(queryParameters, false);
+				//Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
+				RestPageResponse<MLPSolution> pageResponse = cdmsClient.searchSolutions(queryParameters, false, new RestPageRequest(0,props.getSolutionResultsetSize()));
+				List<MLPSolution> mlpSolutions = pageResponse.getContent();
 				List<MLPSolutionRevision> mlpSolnRevision;
 				if (null != mlpSolutions && !mlpSolutions.isEmpty()) {
 					for (MLPSolution mlpSol : mlpSolutions) {
@@ -816,7 +820,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			Map<String, Object> queryParameters = new HashMap<>();
 			queryParameters.put("active", Boolean.TRUE);
 			queryParameters.put("toolkitTypeCode", props.getToolKit());
-			mlpSolutions = cdmsClient.searchSolutions(queryParameters, false);
+			//Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
+			RestPageResponse<MLPSolution> pageResponse = cdmsClient.searchSolutions(queryParameters, false, new RestPageRequest(0,props.getSolutionResultsetSize()));
+			mlpSolutions  = pageResponse.getContent();
 			String solutionId = "";
 			DSSolution dssolution = null;
 			List<DSSolution> dsSolutions = new ArrayList<>();
