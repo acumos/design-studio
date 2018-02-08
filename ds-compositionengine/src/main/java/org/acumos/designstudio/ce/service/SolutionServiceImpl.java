@@ -37,6 +37,8 @@ import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolution;
 import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.cds.domain.MLPUser;
+import org.acumos.cds.transport.RestPageRequest;
+import org.acumos.cds.transport.RestPageResponse;
 import org.acumos.designstudio.cdump.Cdump;
 import org.acumos.designstudio.cdump.DataMap;
 import org.acumos.designstudio.cdump.DataMapInputField;
@@ -112,7 +114,9 @@ public class SolutionServiceImpl implements ISolutionService {
 
 			Map<String, Object> queryParameters = new HashMap<>();
 			queryParameters.put("active", Boolean.TRUE);
-			mlpSolutionsList = cmnDataService.searchSolutions(queryParameters, false);
+			//Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
+			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false, new RestPageRequest(0,props.getSolutionResultsetSize()));
+			mlpSolutionsList = pageResponse.getContent();
 			logger.debug(EELFLoggerDelegator.debugLogger, "------ The Date Format : " + confprops.getDateFormat());
 			if (null == mlpSolutionsList) {
 				logger.debug(EELFLoggerDelegator.debugLogger,
@@ -771,7 +775,9 @@ public class SolutionServiceImpl implements ISolutionService {
 		try {
 			Map<String, Object> queryParameters = new HashMap<>();
 			queryParameters.put("active", Boolean.TRUE);
-			mlpSolutions = cmnDataService.searchSolutions(queryParameters, false);
+			//Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
+			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false, new RestPageRequest(0,props.getSolutionResultsetSize()));
+			mlpSolutions = pageResponse.getContent();
 			MatchingModel matchingModel = null;
 			List<MLPSolutionRevision> mlpSolRevisions;
 			String solutionId = null;
