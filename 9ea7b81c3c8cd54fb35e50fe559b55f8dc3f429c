@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a9ec127_d9f7d2c9",
+        "filename": "TOSCAGeneratorClient/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-08T17:12:31Z",
+      "side": 1,
+      "message": "Use the acumos-nexus-client at release version 2.0.0.  The -SNAPSHOT version was dropped when the release version was issued.",
+      "revId": "9ea7b81c3c8cd54fb35e50fe559b55f8dc3f429c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c25e448a_5f76310e",
+        "filename": "ds-compositionengine/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-08T17:12:31Z",
+      "side": 1,
+      "message": "Use the 2.0.0 release version; the -SNAPSHOT version was dropped when the release version was issued",
+      "revId": "9ea7b81c3c8cd54fb35e50fe559b55f8dc3f429c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
