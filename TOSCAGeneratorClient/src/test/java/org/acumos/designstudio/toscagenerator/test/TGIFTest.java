@@ -38,7 +38,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
 
-
 import com.google.gson.Gson;
 
 /**
@@ -49,93 +48,120 @@ import com.google.gson.Gson;
 public class TGIFTest {
 	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(TGIFTest.class);
 
+	/**
+	 * The test case is used to test the representation of TGIF.json in the
+	 * desired format.TGIF.json consist of name, version, description,
+	 * component_type under self, streams,parameters,auxiliary,artifacts. It
+	 * defines the services, called and provided by a model. The json file is
+	 * used by ds-composition engine to represent a model.
+	 * 
+	 */
+
 	@Test
 	public void testTGIF() throws Exception {
 
 		Tgif tgif = new Tgif();
 
 		Self selfObj = new Self();
-		
+
 		selfObj.setVersion("1.1.1");
 		selfObj.setName("Gen");
 		selfObj.setDescription("Tgif file test");
 		selfObj.setComponent_type("Docker");
-		
+
 		tgif.setSelf(selfObj);
 
 		Stream stream = new Stream();
 		String[] subscribes = new String[1];
 		String[] publishes = new String[1];
-		
+
 		stream.setSubscribes(subscribes);
 		stream.setPublishes(publishes);
-		
+
 		tgif.setStreams(stream);
-		
+
 		Service service = new Service();
 		Call[] callList = getCallDetails();
 		Provide[] provideList = getProvide();
 		service.setCalls(callList);
 		service.setProvides(provideList);
-		
+
 		tgif.setServices(service);
 
-		assertNotNull(tgif);		
+		assertNotNull(tgif);
 		Gson gson = new Gson();
 		String tgifoJsonString = gson.toJson(tgif);
-		logger.debug(EELFLoggerDelegator.debugLogger, "result " +  tgifoJsonString);
+		logger.debug(EELFLoggerDelegator.debugLogger, "result " + tgifoJsonString);
 
 	}
-	private Call[] getCallDetails() throws ParseException{
+
+	/**
+	 * The method is used while creating TGIF.json so as to show to what all
+	 * models a given model can connect to input port based on the matching
+	 * messageargument . These are later on shown as input messages on the input
+	 * port of the model.The file is used by ds-composition engine to represent
+	 * a model.
+	 * 
+	 */
+	private Call[] getCallDetails() throws ParseException {
 		Call call = new Call();
 		call.setConfig_key("config_key");
-		
+
 		Request request = new Request();
 		String jsonString = "[{\"messageName\": \"Prediction\",\"messageargumentList\": [{\"name\": \"myRow\",\"role\": \"repeated\",\"tag\": \"1\",\"type\": \"int64\"}]}]";
-		
-		Object object=null;
-		JSONArray arrayObj=null;
-		JSONParser jsonParser=new JSONParser();
-		object=jsonParser.parse(jsonString);
-		arrayObj=(JSONArray) object;
-		
+
+		Object object = null;
+		JSONArray arrayObj = null;
+		JSONParser jsonParser = new JSONParser();
+		object = jsonParser.parse(jsonString);
+		arrayObj = (JSONArray) object;
+
 		request.setFormat(arrayObj);
 		request.setVersion("");
-		
+
 		call.setRequest(request);
-		
+
 		Response response = new Response();
 		response.setFormat(new org.json.simple.JSONArray());
 		response.setVersion("");
-		
+
 		call.setResponse(response);
-		Call[] callList = {call};
+		Call[] callList = { call };
 		return callList;
 	}
-	private Provide[] getProvide() throws ParseException{
+
+	/**
+	 * The method is used while creating TGIF.json so as to show to what all
+	 * models a given model can connect to its output port based on the matching
+	 * messageargument. These are later on shown as output messages on the
+	 * output port of the model.The file is used by ds-composition engine to
+	 * represent a model.
+	 * 
+	 */
+	private Provide[] getProvide() throws ParseException {
 		Provide provide = new Provide();
 		provide.setRoute("transform");
-		
+
 		Request request = new Request();
 		String jsonString = "[{\"messageName\": \"Prediction\",\"messageargumentList\": [{\"name\": \"myRow\",\"role\": \"repeated\",\"tag\": \"1\",\"type\": \"int64\"}]}]";
-		
-		Object object=null;
-		JSONArray arrayObj=null;
-		JSONParser jsonParser=new JSONParser();
-		object=jsonParser.parse(jsonString);
-		arrayObj=(JSONArray) object;
-		
+
+		Object object = null;
+		JSONArray arrayObj = null;
+		JSONParser jsonParser = new JSONParser();
+		object = jsonParser.parse(jsonString);
+		arrayObj = (JSONArray) object;
+
 		request.setFormat(arrayObj);
 		request.setVersion("");
-		
+
 		provide.setRequest(request);
-		
+
 		Response response = new Response();
 		response.setFormat(new org.json.simple.JSONArray());
 		response.setVersion("");
-		
+
 		provide.setResponse(response);
-		Provide[] provideList = {provide};
+		Provide[] provideList = { provide };
 		return provideList;
 	}
 

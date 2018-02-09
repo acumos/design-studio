@@ -43,29 +43,34 @@ import org.junit.Test;
 public class GetMatchingModelTest {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(GetMatchingModelTest.class);
 	private String url = "";
-	private String user ="";
+	private String user = "";
 	private String pass = "";
 	ICommonDataServiceRestClient cmnDataService = null;
 	NexusArtifactClient nexusArtifactClient = null;
-	
+
 	public static Properties CONFIG = new Properties();
-	
+
 	@Before
 	/**
+	 * This method is used to set default values for the instance of
+	 * ICommonDataServiceRestClient and NexusArtifactClient by passing common
+	 * data service and nexus url, username and password respectively
 	 * 
 	 * @throws Exception
 	 */
 	public void createClient() throws Exception {
-	    CONFIG.load(GetMatchingModelTest.class.getResourceAsStream("/application.properties"));
+		CONFIG.load(GetMatchingModelTest.class.getResourceAsStream("/application.properties"));
 		url = CONFIG.getProperty("cmndatasvc.cmndatasvcendpoinurlTest");
 		user = CONFIG.getProperty("cmndatasvc.cmndatasvcuserTest");
 		pass = CONFIG.getProperty("cmndatasvc.cmndatasvcpwdTest");
 		nexusArtifactClient = getNexusClient();
 		cmnDataService = CommonDataServiceRestClientImpl.getInstance(url.toString(), user, pass);
 	}
-	
-	
+
 	/**
+	 * This method is used to set default values for the instance of
+	 * NexusArtifactClient by passing RepositoryLocation object which will
+	 * accept nexus url, username and password
 	 * 
 	 * @return
 	 */
@@ -82,26 +87,37 @@ public class GetMatchingModelTest {
 		}
 		return nexusArtifactClient;
 	}
+
+	/**
+	 * The test case is used to search and enlist the models that are compatible
+	 * to connect to the selected port(input / output) of a model. The test case
+	 * uses getMatchingModels method which consumes userId, portType,
+	 * protobufJsonString and returns the list of matching models in string
+	 * format. ds-composition engine utilizes these models to be dragged and
+	 * connect to the desired matching port of the selected model.
+	 * 
+	 * @throws JSONException
+	 */
 	@Test
-	public void getMatchingModels() throws JSONException{
-		
-		SolutionServiceImpl solutionServiceImpl= new SolutionServiceImpl();
+	public void getMatchingModels() throws JSONException {
+
+		SolutionServiceImpl solutionServiceImpl = new SolutionServiceImpl();
 		String userId = "";
 		String portType = "output";
 		String protobufJsonString = "[{\"role\":\"repeated\",\"tag\":\"1\",\"type\":\"string\"},{\"role\":\"repeated\",\"tag\":\"2\",\"type\":\"string\"}]";
-		try{
+		try {
 			solutionServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
 			solutionServiceImpl.getNexusClient(nexusArtifactClient, null, null);
 			JSONArray protobufJsonString1 = new JSONArray(protobufJsonString);
-			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType, protobufJsonString1);
+			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,
+					protobufJsonString1);
 			assertNotNull(getMatchingModelsResult);
 			logger.debug(EELFLoggerDelegator.debugLogger, getMatchingModelsResult);
-		}catch(JSONException je){
+		} catch (JSONException je) {
 			logger.error(EELFLoggerDelegator.errorLogger, je.getMessage());
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			logger.error(EELFLoggerDelegator.errorLogger, ex.getMessage());
 		}
-		
-		
+
 	}
 }

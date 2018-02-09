@@ -64,6 +64,9 @@ public class VOTest  {
 	public static Properties CONFIG = new Properties();
 	@Before
 	/**
+	 * This method is used to set default values for the instance of
+	 * ICommonDataServiceRestClient and NexusArtifactClient by passing common
+	 * data service and nexus url, username and password respectively
 	 * 
 	 * @throws Exception
 	 */
@@ -74,6 +77,11 @@ public class VOTest  {
 	}
 	
 	@Test
+	/**
+	 * The test case is used to test the representation of TGIF Artifact in the
+	 * desired format.
+	 * 
+	 */
 	public void testTgifArtifact(){
 		Artifact arti = new Artifact();
 		arti.setType("docker image");
@@ -87,6 +95,11 @@ public class VOTest  {
 	}
 	
 	@Test
+	/**
+	 * The test case is used to test the representation of VO Artifact in the
+	 * desired format.
+	 * 
+	 */
 	public void testVOArtifact(){
 		org.acumos.designstudio.ce.vo.Artifact artifact = new org.acumos.designstudio.ce.vo.Artifact();
 		artifact.setContentLength(100);
@@ -115,6 +128,11 @@ public class VOTest  {
 	}
 	
 	@Test
+	/**
+	 * The test case is used to test the representation of TGIF Auxiliary in the
+	 * desired format.
+	 * 
+	 */
 	public void testTgifAuxiliary(){
 		Auxiliary aux = new Auxiliary();
 		aux.setTemp("Temp");
@@ -125,6 +143,11 @@ public class VOTest  {
 	}
 	
 	@Test
+	/**
+	 * The test case is used to test the representation of VO BluePrint in the
+	 * desired format.
+	 * 
+	 */
 	public void testVOBluePrint(){
 		BluePrint bp = new BluePrint();
 		
@@ -187,6 +210,11 @@ public class VOTest  {
 	
 
 	@Test
+	/**
+	 * The test case is used to test the representation of TGIF Call in the
+	 * desired format.
+	 * 
+	 */
 	public void testTgifCall(){
 		Call call = new Call();
 		call.setConfig_key("transform");
@@ -220,6 +248,11 @@ public class VOTest  {
 	}
 	
 	@Test
+	/**
+	 * The test case is used to test the representation of TGIF Parameter in the
+	 * desired format.
+	 * 
+	 */
 	public void testTgifParameter(){
 		String s1 = "module.arg.model";
 		String s2 = "TGIF";
@@ -235,6 +268,11 @@ public class VOTest  {
 	}
 	
 	@Test
+	/**
+	 * The test case is used to test the representation of TGIF Provide in the
+	 * desired format.
+	 * 
+	 */
 	public void testTgifProvide(){
 		Provide provide = new Provide();
 		
@@ -264,6 +302,11 @@ public class VOTest  {
 	}
 	
 	@Test
+	/**
+	 * The test case is used to test the representation of Cdump Capability in the
+	 * desired format.
+	 * 
+	 */
 	public void testCdumpCapability(){
 		String s1 = "123456";
 		String s2 = "ReqCapability";
@@ -276,6 +319,11 @@ public class VOTest  {
 	}
 	
 	@Test
+	/**
+	 * The test case is used to test the representation of DSSolution in the
+	 * desired format.
+	 * 
+	 */
 	public void testDSSolution(){
 		String s1 = "1";
 		String s2 = "1";
@@ -326,6 +374,11 @@ public class VOTest  {
 	}
 	
 	@Test
+	/**
+	 * The test case is used to set the Util Configuration Properties in the
+	 * ConfigurationProperties class
+	 * 
+	 */
 	public void testUtilConfigurationProperties(){
 		ConfigurationProperties confProps = new ConfigurationProperties();
 		confProps.getCmndatasvcendpoinurl();

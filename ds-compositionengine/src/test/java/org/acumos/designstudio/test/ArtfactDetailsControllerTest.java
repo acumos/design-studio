@@ -48,7 +48,7 @@ public class ArtfactDetailsControllerTest {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ArtfactDetailsControllerTest.class);
 	public static Properties CONFIG = new Properties();
 	RepositoryLocation repositoryLocation = null;
-	String solutionId = "010646b2-0298-4d25-9571-b775c3737bb6"; 
+	String solutionId = "010646b2-0298-4d25-9571-b775c3737bb6";
 	String version = "1";
 	String userId = "e57490ed-8462-4a77-ab39-157138dfbda8";
 	String artifactType = "TG";
@@ -65,21 +65,29 @@ public class ArtfactDetailsControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to fetch the TGIF.json for a model by using a
+	 * method readArtifact which consumes userId, solutionId, version,
+	 * artifactType as parameters and fetches TGIF.json in a string
+	 * format.TGIF.json consist of name, version, description, component_type
+	 * under self, streams,parameters,auxiliary,artifacts. It also defines the
+	 * services, called and provided by a model at the input and output port
+	 * respectively. The file is used by ds-composition engine to represent a
+	 * model.
 	 * 
 	 * @throws Exception
 	 */
-public void fetchJsonTOSCA() throws Exception {
+	public void fetchJsonTOSCA() throws Exception {
 		try {
-				String resultStatment = "{\"self\":{\"version\":\"1\",\"name\":\"CPM1\",\"description\":\"\",\"component_type\":\"Docker\"},\"streams\":{},\"services\":{\"calls\":[{\"config_key\":\"transform\",\"request\":{\"format\":[{\"messageName\":\"DataFrame\",\"messageargumentList\":[{\"role\":\"repeated\",\"complexType\":{\"messageName\":\"DataFrameRow\",\"messageargumentList\":[{\"role\":\"\",\"name\":\"sepal_len\",\"tag\":\"1.1\",\"type\":\"string\"},{\"role\":\"\",\"name\":\"sepal_wid\",\"tag\":\"1.2\",\"type\":\"int32\"},{\"role\":\"\",\"complexType\":{\"messageName\":\"SubFrameRow\",\"messageargumentList\":[{\"role\":\"repeated\",\"name\":\"row_1\",\"tag\":\"1.3.1\",\"type\":\"string\"},{\"role\":\"repeated\",\"name\":\"row_2\",\"tag\":\"1.3.2\",\"type\":\"string\"}]},\"name\":\"petal_len\",\"tag\":\"1.3\",\"type\":\"SubFrameRow\"},{\"role\":\"\",\"name\":\"petal_wid\",\"tag\":\"1.4\",\"type\":\"string\"}]},\"name\":\"rows\",\"tag\":\"1\",\"type\":\"DataFrameRow\"},{\"role\":\"repeated\",\"complexType\":{\"messageName\":\"MyFrameRow\",\"messageargumentList\":[{\"role\":\"repeated\",\"name\":\"row_1\",\"tag\":\"2.1\",\"type\":\"int64\"},{\"role\":\"repeated\",\"name\":\"row_2\",\"tag\":\"2.2\",\"type\":\"string\"}]},\"name\":\"myRow\",\"tag\":\"2\",\"type\":\"MyFrameRow\"}]}],\"version\":\"\"},\"response\":{\"format\":[],\"version\":\"\"}}],\"provides\":[{\"route\":\"transform\",\"request\":{\"format\":[{\"messageName\":\"Prediction\",\"messageargumentList\":[{\"role\":\"repeated\",\"name\":\"myRow\",\"tag\":\"1\",\"type\":\"int64\"}]}],\"version\":\"\"},\"response\":{\"format\":[],\"version\":\"\"}}]},\"parameters\":[],\"auxiliary\":{},\"artifacts\":[]}";
-				when(acumosCatalogServiceImpl.readArtifact(userId, solutionId, version, artifactType)).thenReturn(resultStatment);
-				String results = acumosCatalogServiceImpl.readArtifact(userId, solutionId, version, artifactType);
-				assertNotNull(results);
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-		 }catch (ServiceException e) {
+			String resultStatment = "{\"self\":{\"version\":\"1\",\"name\":\"CPM1\",\"description\":\"\",\"component_type\":\"Docker\"},\"streams\":{},\"services\":{\"calls\":[{\"config_key\":\"transform\",\"request\":{\"format\":[{\"messageName\":\"DataFrame\",\"messageargumentList\":[{\"role\":\"repeated\",\"complexType\":{\"messageName\":\"DataFrameRow\",\"messageargumentList\":[{\"role\":\"\",\"name\":\"sepal_len\",\"tag\":\"1.1\",\"type\":\"string\"},{\"role\":\"\",\"name\":\"sepal_wid\",\"tag\":\"1.2\",\"type\":\"int32\"},{\"role\":\"\",\"complexType\":{\"messageName\":\"SubFrameRow\",\"messageargumentList\":[{\"role\":\"repeated\",\"name\":\"row_1\",\"tag\":\"1.3.1\",\"type\":\"string\"},{\"role\":\"repeated\",\"name\":\"row_2\",\"tag\":\"1.3.2\",\"type\":\"string\"}]},\"name\":\"petal_len\",\"tag\":\"1.3\",\"type\":\"SubFrameRow\"},{\"role\":\"\",\"name\":\"petal_wid\",\"tag\":\"1.4\",\"type\":\"string\"}]},\"name\":\"rows\",\"tag\":\"1\",\"type\":\"DataFrameRow\"},{\"role\":\"repeated\",\"complexType\":{\"messageName\":\"MyFrameRow\",\"messageargumentList\":[{\"role\":\"repeated\",\"name\":\"row_1\",\"tag\":\"2.1\",\"type\":\"int64\"},{\"role\":\"repeated\",\"name\":\"row_2\",\"tag\":\"2.2\",\"type\":\"string\"}]},\"name\":\"myRow\",\"tag\":\"2\",\"type\":\"MyFrameRow\"}]}],\"version\":\"\"},\"response\":{\"format\":[],\"version\":\"\"}}],\"provides\":[{\"route\":\"transform\",\"request\":{\"format\":[{\"messageName\":\"Prediction\",\"messageargumentList\":[{\"role\":\"repeated\",\"name\":\"myRow\",\"tag\":\"1\",\"type\":\"int64\"}]}],\"version\":\"\"},\"response\":{\"format\":[],\"version\":\"\"}}]},\"parameters\":[],\"auxiliary\":{},\"artifacts\":[]}";
+			when(acumosCatalogServiceImpl.readArtifact(userId, solutionId, version, artifactType))
+					.thenReturn(resultStatment);
+			String results = acumosCatalogServiceImpl.readArtifact(userId, solutionId, version, artifactType);
+			assertNotNull(results);
+			logger.debug(EELFLoggerDelegator.debugLogger, results);
+		} catch (ServiceException e) {
 			logger.error(EELFLoggerDelegator.errorLogger, "CDUMP file not created", e);
 			throw e;
 		}
 	}
-
 
 }

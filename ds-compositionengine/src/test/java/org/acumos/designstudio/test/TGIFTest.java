@@ -51,6 +51,14 @@ public class TGIFTest {
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
 
 	@Test
+	/**
+	 * The test case is used to test the representation of TGIF.json in the
+	 * desired format.TGIF.json consist of name, version, description,
+	 * component_type under self, streams,parameters,auxiliary,artifacts. It
+	 * defines the services, called and provided by a model. The json file is
+	 * used by ds-composition engine to represent a model.
+	 * 
+	 */
 	public void testTGIF() throws Exception {
 
 		Tgif tgif = new Tgif();

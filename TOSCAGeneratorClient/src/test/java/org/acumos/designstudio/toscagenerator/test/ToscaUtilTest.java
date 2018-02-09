@@ -35,7 +35,7 @@ import org.junit.Test;
 public class ToscaUtilTest {
 	
 	/**
-	 * 
+	 * The method is used to write the protobuf data to a local.
 	 * @throws Exception
 	 */
 	@Test
@@ -50,7 +50,7 @@ public class ToscaUtilTest {
 		
 	}
 	/**
-	 * 
+	 * The method is used to read any local file.
 	 * @throws Exception
 	 */
 	@Test
@@ -65,7 +65,7 @@ public class ToscaUtilTest {
 		
 	}
 	/**
-	 * 
+	 * The method is used to read any local json file.
 	 * @throws Exception
 	 */
 	@Test

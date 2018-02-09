@@ -90,7 +90,7 @@ import com.google.gson.Gson;
 public class SolutionControllerTest {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(SolutionControllerTest.class);
 	private String url = "";
-	private String user ="";
+	private String user = "";
 	private String pass = "";
 	private NexusArtifactClient nexusArtifactClient = null;
 	private ICommonDataServiceRestClient cmnDataService;
@@ -106,11 +106,14 @@ public class SolutionControllerTest {
 
 	@Before
 	/**
+	 * This method is used to set default values for the instance of
+	 * ICommonDataServiceRestClient and NexusArtifactClient by passing common
+	 * data service and nexus url, username and password respectively
 	 * 
 	 * @throws Exception
 	 */
 	public void createClient() throws Exception {
-	    CONFIG.load(SolutionControllerTest.class.getResourceAsStream("/application.properties"));
+		CONFIG.load(SolutionControllerTest.class.getResourceAsStream("/application.properties"));
 		url = CONFIG.getProperty("cmndatasvc.cmndatasvcendpoinurlTest");
 		user = CONFIG.getProperty("cmndatasvc.cmndatasvcuserTest");
 		pass = CONFIG.getProperty("cmndatasvc.cmndatasvcpwdTest");
@@ -120,9 +123,9 @@ public class SolutionControllerTest {
 
 	@Mock
 	ConfigurationProperties confprops;
-	
+
 	@Mock
-    CommonDataServiceRestClientImpl cmnDataService1;
+	CommonDataServiceRestClientImpl cmnDataService1;
 
 	@Mock
 	org.acumos.designstudio.ce.util.Properties props;
@@ -144,6 +147,11 @@ public class SolutionControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to create a new composite solution. The test case
+	 * uses createNewCompositeSolution method which consumes userId and returns
+	 * cid(generated as UUID) and creation time in a string format which is then
+	 * stored in CDUMP.json.The file is used by ds-composition engine to
+	 * represent a composite solution made by connecting models.
 	 * 
 	 * @throws Exception
 	 */
@@ -163,18 +171,23 @@ public class SolutionControllerTest {
 				logger.debug(EELFLoggerDelegator.debugLogger, emptyCdumpJson);
 				response = "{\"cid\":\"" + sessionId + "\",\"success\":\"true\",\"errorMessage\":\"\"}";
 			} else {
-				response = "{\"cid\":\"" + sessionId+ "\",\"success\":\"false\",\"errorMessage\":\"User Id Required\"}";
+				response = "{\"cid\":\"" + sessionId
+						+ "\",\"success\":\"false\",\"errorMessage\":\"User Id Required\"}";
 				logger.debug(EELFLoggerDelegator.debugLogger, response);
 				throw new ServiceException("Unable to create new CDUMP file");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,"------- Exception Occured in createNewCompositeSolution() --------");
+			logger.error(EELFLoggerDelegator.errorLogger,
+					"------- Exception Occured in createNewCompositeSolution() --------");
 			throw e;
 		}
 	}
 
 	@Test
 	/**
+	 * The test case is used to add node(a model)to create composite solution.
+	 * The test case uses addNode method which consumes userId, solutionId,
+	 * version, cid, node and returns the node data stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
@@ -249,7 +262,7 @@ public class SolutionControllerTest {
 		data.setPy("100");
 		data.setRadius("100");
 		node.setNdata(data);
-		
+
 		assertNotNull(node);
 		assertNotNull(req);
 		assertNotNull(reqCap);
@@ -257,8 +270,8 @@ public class SolutionControllerTest {
 		assertEquals("Node1", node.getName());
 		assertEquals("1", cap.getId());
 		assertEquals("ReqName", req.getName());
-		assertEquals("200",data.getNtype());
-		
+		assertEquals("200", data.getNtype());
+
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.addNode(userId, null, null, sessionId, node);
 		assertNotNull(result);
@@ -267,6 +280,9 @@ public class SolutionControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to add node(a model)to create composite solution.
+	 * The test case uses addNode method which consumes userId, solutionId,
+	 * version, cid, node and returns the node data stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
@@ -341,7 +357,7 @@ public class SolutionControllerTest {
 		data.setPy("100");
 		data.setRadius("100");
 		node.setNdata(data);
-		
+
 		assertNotNull(node);
 		assertNotNull(req);
 		assertNotNull(reqCap);
@@ -349,8 +365,8 @@ public class SolutionControllerTest {
 		assertEquals("Node2", node.getName());
 		assertEquals("1", cap.getId());
 		assertEquals("ReqName", req.getName());
-		assertEquals("200",data.getNtype());
-		
+		assertEquals("200", data.getNtype());
+
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.addNode(userId, null, null, sessionId, node);
 		assertNotNull(result);
@@ -359,6 +375,9 @@ public class SolutionControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to add node(a model)to create composite solution.
+	 * The test case uses addNode method which consumes userId, solutionId,
+	 * version, cid, node and returns the node data stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
@@ -433,7 +452,7 @@ public class SolutionControllerTest {
 		data.setPy("100");
 		data.setRadius("100");
 		node.setNdata(data);
-		
+
 		assertNotNull(node);
 		assertNotNull(req);
 		assertNotNull(reqCap);
@@ -441,8 +460,8 @@ public class SolutionControllerTest {
 		assertEquals("DM", node.getName());
 		assertEquals("1", cap.getId());
 		assertEquals("ReqName", req.getName());
-		assertEquals("200",data.getNtype());
-		
+		assertEquals("200", data.getNtype());
+
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.addNode(userId, null, null, sessionId, node);
 		assertNotNull(result);
@@ -451,6 +470,9 @@ public class SolutionControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to add node(a model)to create composite solution.
+	 * The test case uses addNode method which consumes userId, solutionId,
+	 * version, cid, node and returns the node data stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
@@ -525,7 +547,7 @@ public class SolutionControllerTest {
 		data.setPy("100");
 		data.setRadius("100");
 		node.setNdata(data);
-		
+
 		assertNotNull(node);
 		assertNotNull(req);
 		assertNotNull(reqCap);
@@ -533,8 +555,8 @@ public class SolutionControllerTest {
 		assertEquals("Node9", node.getName());
 		assertEquals("1", cap.getId());
 		assertEquals("ReqName", req.getName());
-		assertEquals("200",data.getNtype());
-		
+		assertEquals("200", data.getNtype());
+
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.addNode(userId, null, null, sessionId, node);
 		assertNotNull(result);
@@ -543,125 +565,154 @@ public class SolutionControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to link two models to create composite solution.
+	 * The test case uses addLink method which consumes userId, solutionId,
+	 * version, linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
+	 * targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cid,
+	 * property and updates the relation between the source and target node
+	 * stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
 	public void linkShouldGetAddedBetweenModels() throws Exception {
-			Property property = new Property();
-			assertNull(property.getData_map());
-			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			boolean result = solutionService.addLink(userId, null, null, "Node1 to Node2", "101", "Node1", "1", "Node2","2", "Req2", "Cap2", sessionId, property);
-			assertTrue(result);
+		Property property = new Property();
+		assertNull(property.getData_map());
+		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+		boolean result = solutionService.addLink(userId, null, null, "Node1 to Node2", "101", "Node1", "1", "Node2",
+				"2", "Req2", "Cap2", sessionId, property);
+		assertTrue(result);
 	}
 
 	@Test
 	/**
+	 * The test case is used to link Input port of DM to model to create
+	 * composite solution. The test case uses addLink method which consumes
+	 * userId, solutionId, version, linkName, linkId, sourceNodeName,
+	 * sourceNodeId, targetNodeName, targetNodeId, sourceNodeRequirement,
+	 * targetNodeCapabilityName, cid, property and updates the relation between
+	 * the source and target node stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
 	public void linkShouldGetAddedBetweenInputOfDMtoModel() throws Exception {
-			Property property = new Property();
-			DataMap data_map = new DataMap();
-			MapInputs[] map_inputs = new MapInputs[1];
-			MapInputs map_inputsObj = new MapInputs();
-			MapOutput[] map_outputs = new MapOutput[0];
-			DataMapInputField[] input_fields = new DataMapInputField[1];
-			DataMapInputField input_fieldsobj = new DataMapInputField();
-			input_fieldsobj.setTag("1");
-			input_fieldsobj.setRole("repeated");
-			input_fieldsobj.setName("name");
-			input_fieldsobj.setType("int32");
-			input_fieldsobj.setMapped_to_message("");
-			input_fieldsobj.setMapped_to_field("");
-			input_fields[0] = input_fieldsobj;
-			map_inputsObj.setMessage_name("Prediction");
-			map_inputsObj.setInput_fields(input_fields);
-			map_inputs[0] = map_inputsObj;
-			data_map.setMap_inputs(map_inputs);
-			data_map.setMap_outputs(map_outputs);
-			property.setData_map(data_map);
-			
-			assertNotNull(property);
-			assertNotNull(data_map);
-			assertNotNull(input_fieldsobj);
-			assertNotNull(map_inputsObj);
-			assertEquals("1", input_fieldsobj.getTag());
-			assertEquals("Prediction",map_inputsObj.getMessage_name());
-			assertTrue(map_inputs.length == 1);
-			
-			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			boolean result = solutionService.addLink(userId, null, null, "Node1 to DM", "202", "Node1", "1", "DM", "3","Req2", "Cap2", sessionId, property);
-			assertTrue(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, "true");
+		Property property = new Property();
+		DataMap data_map = new DataMap();
+		MapInputs[] map_inputs = new MapInputs[1];
+		MapInputs map_inputsObj = new MapInputs();
+		MapOutput[] map_outputs = new MapOutput[0];
+		DataMapInputField[] input_fields = new DataMapInputField[1];
+		DataMapInputField input_fieldsobj = new DataMapInputField();
+		input_fieldsobj.setTag("1");
+		input_fieldsobj.setRole("repeated");
+		input_fieldsobj.setName("name");
+		input_fieldsobj.setType("int32");
+		input_fieldsobj.setMapped_to_message("");
+		input_fieldsobj.setMapped_to_field("");
+		input_fields[0] = input_fieldsobj;
+		map_inputsObj.setMessage_name("Prediction");
+		map_inputsObj.setInput_fields(input_fields);
+		map_inputs[0] = map_inputsObj;
+		data_map.setMap_inputs(map_inputs);
+		data_map.setMap_outputs(map_outputs);
+		property.setData_map(data_map);
+
+		assertNotNull(property);
+		assertNotNull(data_map);
+		assertNotNull(input_fieldsobj);
+		assertNotNull(map_inputsObj);
+		assertEquals("1", input_fieldsobj.getTag());
+		assertEquals("Prediction", map_inputsObj.getMessage_name());
+		assertTrue(map_inputs.length == 1);
+
+		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+		boolean result = solutionService.addLink(userId, null, null, "Node1 to DM", "202", "Node1", "1", "DM", "3",
+				"Req2", "Cap2", sessionId, property);
+		assertTrue(result);
+		logger.debug(EELFLoggerDelegator.debugLogger, "true");
 	}
 
 	@Test
 	/**
+	 * The test case is used to link output port of DM to a model to create
+	 * composite solution. The test case uses addLink method which consumes
+	 * userId, solutionId, version, linkName, linkId, sourceNodeName,
+	 * sourceNodeId, targetNodeName, targetNodeId, sourceNodeRequirement,
+	 * targetNodeCapabilityName, cid, property and updates the relation between
+	 * the source and target node stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
 	public void linkShouldGetAddedBetweenOuputOfDMtoModel() throws Exception {
-			Property property = new Property();
-			DataMap data_map = new DataMap();
-			MapInputs[] map_inputs = new MapInputs[0];
-			MapOutput[] map_outputs = new MapOutput[1];
-			MapOutput map_outputsObj = new MapOutput();
-			DataMapOutputField[] output_fields = new DataMapOutputField[1];
-			DataMapOutputField output_fieldsObj = new DataMapOutputField();
-			output_fieldsObj.settag("1");
-			output_fieldsObj.setrole("repeated");
-			output_fieldsObj.setname("name");
-			output_fieldsObj.settype("int32");
-			output_fields[0] = output_fieldsObj;
-			map_outputsObj.setOutput_fields(output_fields);
-			map_outputsObj.setMessage_name("Classification");
-			map_outputs[0] = map_outputsObj;
-			data_map.setMap_inputs(map_inputs);
-			data_map.setMap_outputs(map_outputs);
-			property.setData_map(data_map);
-			
-			assertNotNull(property);
-			assertNotNull(data_map);
-			assertNotNull(output_fieldsObj);
-			assertNotNull(map_outputsObj);
-			assertEquals("1",output_fieldsObj.gettag());
-			assertEquals("Classification",map_outputsObj.getMessage_name());
-			assertTrue(output_fields.length == 1);
-			
-			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			boolean result = solutionService.addLink(userId, null, null, "DM to Node2", "303", "DM", "3", "Model 2","2", "Req2", "Cap2", sessionId, property);
-			assertTrue(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, "true" + result);
-		}
-	
+		Property property = new Property();
+		DataMap data_map = new DataMap();
+		MapInputs[] map_inputs = new MapInputs[0];
+		MapOutput[] map_outputs = new MapOutput[1];
+		MapOutput map_outputsObj = new MapOutput();
+		DataMapOutputField[] output_fields = new DataMapOutputField[1];
+		DataMapOutputField output_fieldsObj = new DataMapOutputField();
+		output_fieldsObj.settag("1");
+		output_fieldsObj.setrole("repeated");
+		output_fieldsObj.setname("name");
+		output_fieldsObj.settype("int32");
+		output_fields[0] = output_fieldsObj;
+		map_outputsObj.setOutput_fields(output_fields);
+		map_outputsObj.setMessage_name("Classification");
+		map_outputs[0] = map_outputsObj;
+		data_map.setMap_inputs(map_inputs);
+		data_map.setMap_outputs(map_outputs);
+		property.setData_map(data_map);
+
+		assertNotNull(property);
+		assertNotNull(data_map);
+		assertNotNull(output_fieldsObj);
+		assertNotNull(map_outputsObj);
+		assertEquals("1", output_fieldsObj.gettag());
+		assertEquals("Classification", map_outputsObj.getMessage_name());
+		assertTrue(output_fields.length == 1);
+
+		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+		boolean result = solutionService.addLink(userId, null, null, "DM to Node2", "303", "DM", "3", "Model 2", "2",
+				"Req2", "Cap2", sessionId, property);
+		assertTrue(result);
+		logger.debug(EELFLoggerDelegator.debugLogger, "true" + result);
+	}
+
 	@Test
 	/**
+	 * The test case is used to modify node(a model)in a composite solution. The
+	 * test case uses modifyNode method which consumes userId, solutionId,
+	 * version, cid, nodeId, nodeName, ndata, fieldmap and returns the modified
+	 * node data stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
 	public void modifyNode() throws Exception {
 		String ndata = "{\"ntype\":\"500\",\"px\":\"500\",\"py\":\"500\",\"radius\":\"500\",\"fixed\":false}";
-			FieldMap fieldMap = new FieldMap();
-			fieldMap.setInput_field_message_name("Prediction");
-			fieldMap.setInput_field_tag_id("1");
-			fieldMap.setMap_action("Add");
-			fieldMap.setOutput_field_message_name("Classification");
-			fieldMap.setOutput_field_tag_id("2");
-			
-			assertNotNull(fieldMap);
-			assertEquals("Prediction",fieldMap.getInput_field_message_name());
-			assertEquals("1",fieldMap.getInput_field_tag_id());
-			assertEquals("Add",fieldMap.getMap_action());
-			assertEquals("Classification",fieldMap.getOutput_field_message_name());
-			
-			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			String result = solutionService.modifyNode(userId, null, null, sessionId, "1", "Node1", ndata, fieldMap);
-			assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, result);
+		FieldMap fieldMap = new FieldMap();
+		fieldMap.setInput_field_message_name("Prediction");
+		fieldMap.setInput_field_tag_id("1");
+		fieldMap.setMap_action("Add");
+		fieldMap.setOutput_field_message_name("Classification");
+		fieldMap.setOutput_field_tag_id("2");
+
+		assertNotNull(fieldMap);
+		assertEquals("Prediction", fieldMap.getInput_field_message_name());
+		assertEquals("1", fieldMap.getInput_field_tag_id());
+		assertEquals("Add", fieldMap.getMap_action());
+		assertEquals("Classification", fieldMap.getOutput_field_message_name());
+
+		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+		String result = solutionService.modifyNode(userId, null, null, sessionId, "1", "Node1", ndata, fieldMap);
+		assertNotNull(result);
+		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
 
 	@Test
 	/**
+	 * The test case is used to modify node(a model)in a composite solution. The
+	 * test case uses modifyNode method which consumes userId, solutionId,
+	 * version, cid, nodeId, nodeName, ndata, fieldmap and returns the modified
+	 * node data stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
@@ -677,54 +728,70 @@ public class SolutionControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to modify DM node(a model)in a composite solution.
+	 * The test case uses modifyNode method which consumes userId, solutionId,
+	 * version, cid, nodeId, nodeName, ndata, fieldmap and returns the modified
+	 * node data stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
 	public void modifyNode2() throws Exception {
 		String ndata = "{\"ntype\":\"500\",\"px\":\"500\",\"py\":\"500\",\"radius\":\"500\",\"fixed\":false}";
-			FieldMap fieldMap = new FieldMap();
-			fieldMap.setInput_field_message_name("Prediction");
-			fieldMap.setInput_field_tag_id("1");
-			fieldMap.setMap_action("Add");
-			fieldMap.setOutput_field_message_name("Classification");
-			fieldMap.setOutput_field_tag_id("2");
-			
-			assertNotNull(fieldMap);
-			assertEquals("Prediction",fieldMap.getInput_field_message_name());
-			assertEquals("Classification",fieldMap.getOutput_field_message_name());
-			
-			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			String result = solutionService.modifyNode(userId, null, null, sessionId, "8", "Node8", ndata, fieldMap);
-			assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, result);
+		FieldMap fieldMap = new FieldMap();
+		fieldMap.setInput_field_message_name("Prediction");
+		fieldMap.setInput_field_tag_id("1");
+		fieldMap.setMap_action("Add");
+		fieldMap.setOutput_field_message_name("Classification");
+		fieldMap.setOutput_field_tag_id("2");
+
+		assertNotNull(fieldMap);
+		assertEquals("Prediction", fieldMap.getInput_field_message_name());
+		assertEquals("Classification", fieldMap.getOutput_field_message_name());
+
+		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+		String result = solutionService.modifyNode(userId, null, null, sessionId, "8", "Node8", ndata, fieldMap);
+		assertNotNull(result);
+		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
 
 	@Test
 	/**
+	 * The test case is used to modify link in a composite solution. The test
+	 * case uses modifyLink method which consumes userId, solutionId, version,
+	 * linkId, linkName and updates the relation between the source and target
+	 * node stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
 	public void modifyLink() throws Exception {
-			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			String result = solutionService.modifyLink(userId, sessionId, null, null, "101", "Link2");
-			assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, result);
+		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+		String result = solutionService.modifyLink(userId, sessionId, null, null, "101", "Link2");
+		assertNotNull(result);
+		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
 
 	@Test
 	/**
+	 * The test case is used to modify link in a composite solution. The test
+	 * case uses modifyLink method which consumes userId, solutionId, version,
+	 * linkId, linkName and updates the relation between the source and target
+	 * node stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
 	public void modifyLink1() throws Exception {
-			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			String result = solutionService.modifyLink(userId, sessionId, null, null, "606", "Link9");
-			assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, result);
+		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+		String result = solutionService.modifyLink(userId, sessionId, null, null, "606", "Link9");
+		assertNotNull(result);
+		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
 
 	@Test
 	/**
+	 * The test case is used to delete a link between the two models.The test
+	 * case uses deleteLink method which consumes cid, solutionId, version,
+	 * linkId and updates CDUMP.json by deleting relation between the source and
+	 * target nodes
 	 * 
 	 * @throws Exception
 	 */
@@ -745,6 +812,10 @@ public class SolutionControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to delete a link between the Model and DM.The test
+	 * case uses deleteLink method which consumes cid, solutionId, version,
+	 * linkId and updates CDUMP.json by deleting relation between the source and
+	 * target nodes
 	 * 
 	 * @throws Exception
 	 */
@@ -765,6 +836,10 @@ public class SolutionControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to delete a link between the DM and Model.The test
+	 * case uses deleteLink method which consumes cid, solutionId, version,
+	 * linkId and updates CDUMP.json by deleting relation between the source and
+	 * target nodes
 	 * 
 	 * @throws Exception
 	 */
@@ -785,6 +860,10 @@ public class SolutionControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to delete a link between the two nodes.The test
+	 * case uses deleteLink method which consumes cid, solutionId, version,
+	 * linkId and updates CDUMP.json by deleting relation between the source and
+	 * target nodes
 	 * 
 	 * @throws Exception
 	 */
@@ -805,6 +884,10 @@ public class SolutionControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to delete a node.The test case uses deleteNode
+	 * method which consumes userId, solutionId, version, cid, nodeId and
+	 * updates CDUMP.json by deleting the node and its relation with other
+	 * nodes.
 	 * 
 	 * @throws Exception
 	 */
@@ -825,6 +908,10 @@ public class SolutionControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to delete a node.The test case uses deleteNode
+	 * method which consumes userId, solutionId, version, cid, nodeId and
+	 * updates CDUMP.json by deleting the node and its relation with other
+	 * nodes.
 	 * 
 	 * @throws Exception
 	 */
@@ -844,6 +931,10 @@ public class SolutionControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to delete a node.The test case uses deleteNode
+	 * method which consumes userId, solutionId, version, cid, nodeId and
+	 * updates CDUMP.json by deleting the node and its relation with other
+	 * nodes.
 	 * 
 	 * @throws Exception
 	 */
@@ -863,21 +954,30 @@ public class SolutionControllerTest {
 
 	@Test
 	/**
+	 * The test case is used to validate the composite solution and create a
+	 * Blueprint.josn file to be used by end user.The test case uses
+	 * validateCompositeSolution method which consumes userId solutionName,
+	 * solutionId, version and returns success message as well as stores the
+	 * bluprint.josn file in nexus repository and creates an artifact of the
+	 * type "BP" against the passed solutionId and version in the database
 	 * 
 	 * @throws Exception
 	 */
 	public void validateCompositeSolution() throws Exception {
-			CompositeSolutionServiceImpl csimpl = new CompositeSolutionServiceImpl();
-			csimpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
-			csimpl.getNexusClient(nexusArtifactClient, confprops, properties);
-			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			String result = csimpl.validateCompositeSolution(userId, "NewModel", "solutionId", "1.0.0");
-			assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, result);
+		CompositeSolutionServiceImpl csimpl = new CompositeSolutionServiceImpl();
+		csimpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		csimpl.getNexusClient(nexusArtifactClient, confprops, properties);
+		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+		String result = csimpl.validateCompositeSolution(userId, "NewModel", "solutionId", "1.0.0");
+		assertNotNull(result);
+		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
 
 	@Test
 	/**
+	 * The test case is used to clear the composite solution.The test case uses
+	 * clearCompositeSolution method which consumes userId, solutionId,
+	 * solutionVersion, cid and returns success message as true
 	 * 
 	 * @throws Exception
 	 */
@@ -896,12 +996,16 @@ public class SolutionControllerTest {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,"------- Exception Occured in clearCompositeSolution() --------", e);
+			logger.error(EELFLoggerDelegator.errorLogger,
+					"------- Exception Occured in clearCompositeSolution() --------", e);
 		}
 	}
 
 	@Test
 	/**
+	 * The test case is used to close the composite solution.The test case uses
+	 * closeCompositeSolution method which consumes userId, solutionId,
+	 * solutionVersion, cid and returns success message as true
 	 * 
 	 * @throws Exception
 	 */
@@ -916,11 +1020,20 @@ public class SolutionControllerTest {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,"------- Exception Occured in closeCompositeSolution() --------", e);
+			logger.error(EELFLoggerDelegator.errorLogger,
+					"------- Exception Occured in closeCompositeSolution() --------", e);
 		}
 	}
 
 	@Test
+	/**
+	 * The test case is used to save the composite solution and store it in
+	 * nexus repository as well as the database. The test case uses
+	 * saveCompositeSolution method which consumes DSCompositeSolution object
+	 * and returns solutionId and version or error message in string format
+	 * 
+	 * @throws JSONException
+	 */
 	public void saveCompositeSolution() throws JSONException {
 
 		CompositeSolutionServiceImpl compositeServiceImpl = new CompositeSolutionServiceImpl();
@@ -1033,11 +1146,21 @@ public class SolutionControllerTest {
 	}
 
 	@Test
-	public void deleteCompositeSolution() throws Exception{
-		try{
+	/**
+	 * The test case is used to delete the composite solution from nexus
+	 * repository as well as the database.The test case uses
+	 * deleteCompositeSolution method which consumes userId, solutionId, version
+	 * and returns success message as true.
+	 * 
+	 * @throws Exception
+	 */
+	public void deleteCompositeSolution() throws Exception {
+		try {
 			boolean isSolutionDeleted = false;
 			String userId = "e57490ed-8462-4a77-ab39-157138dfbda8";
-			String solutionId = "710d881b-e926-4412-831c-10b0bf04c354yyy"; // correct solutionId 710d881b-e926-4412-831c-10b0bf04c354
+			String solutionId = "710d881b-e926-4412-831c-10b0bf04c354yyy"; // correct
+																			// solutionId
+																			// 710d881b-e926-4412-831c-10b0bf04c354
 			String version = "1.0.0";
 			CompositeSolutionServiceImpl iCompositeSolutionService = new CompositeSolutionServiceImpl();
 			iCompositeSolutionService.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
@@ -1051,6 +1174,16 @@ public class SolutionControllerTest {
 	}
 
 	@Test
+	/**
+	 * The test case is used to search and enlist the models that are compatible
+	 * to connect to the selected port(input / output) of a model. The test case
+	 * uses getMatchingModels method which consumes userId, portType,
+	 * protobufJsonString and returns the list of matching models in string
+	 * format. ds-composition engine utilizes these models to be dragged and
+	 * connect to the desired matching port of the selected model.
+	 * 
+	 * @throws JSONException
+	 */
 	public void getMatchingModels() {
 		SolutionServiceImpl solutionServiceImpl = new SolutionServiceImpl();
 		solutionServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
@@ -1060,7 +1193,8 @@ public class SolutionControllerTest {
 		String protobufJsonString = "[{\"role\":\"repeated\",\"tag\":\"1\",\"type\":\"string\"},{\"role\":\"repeated\",\"tag\":\"2\",\"type\":\"string\"}]";
 		try {
 			JSONArray protobufJsonString1 = new JSONArray(protobufJsonString);
-			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,protobufJsonString1);
+			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,
+					protobufJsonString1);
 			Assert.assertNotNull(getMatchingModelsResult);
 			logger.info("getMatchingModelsResult {}", getMatchingModelsResult);
 			logger.debug(EELFLoggerDelegator.debugLogger, getMatchingModelsResult);
@@ -1072,6 +1206,16 @@ public class SolutionControllerTest {
 	}
 
 	@Test
+	/**
+	 * The test case is used to search and enlist the models that are compatible
+	 * to connect to the selected port(input / output) of a model. The test case
+	 * uses getMatchingModels method which consumes userId, portType,
+	 * protobufJsonString and returns the list of matching models in string
+	 * format. ds-composition engine utilizes these models to be dragged and
+	 * connect to the desired matching port of the selected model.
+	 * 
+	 * @throws JSONException
+	 */
 	public void getMatchingModels1() {
 		SolutionServiceImpl solutionServiceImpl = new SolutionServiceImpl();
 		solutionServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
@@ -1081,7 +1225,8 @@ public class SolutionControllerTest {
 		String protobufJsonString = "[{\"role\":\"repeated\",\"tag\":\"1\",\"type\":\"string\"},{\"role\":\"repeated\",\"tag\":\"2\",\"type\":\"string\"}]";
 		try {
 			JSONArray protobufJsonString1 = new JSONArray(protobufJsonString);
-			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,protobufJsonString1);
+			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,
+					protobufJsonString1);
 			Assert.assertNotNull(getMatchingModelsResult);
 			logger.debug(EELFLoggerDelegator.debugLogger, getMatchingModelsResult);
 		} catch (JSONException je) {
@@ -1093,102 +1238,137 @@ public class SolutionControllerTest {
 	}
 
 	@Test
+	/**
+	 * The test case is used to read the composite solution by fetching the uri
+	 * using cds and calling nexus API to get the CDUMP.json.The test case uses
+	 * readCompositeSolutionGraph method which consumes userId, solutionID,
+	 * version and returns the list of matching models in string format.
+	 * 
+	 * @throws Exception
+	 */
 	public void readCompositeSolutionGraph() {
-			String sId = "040fe8f7-14f7-45e1-b46d-2de505e9d52d";
-			String version = "1.0.0";
-			when(props.getArtifactTypeCode()).thenReturn("CD");
-			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
-			solutionService.getNexusClient(nexusArtifactClient, confprops, props);
-			String result = solutionService.readCompositeSolutionGraph(userId, sId, version);
-			Assert.assertNotNull(result);
-			logger.info("readCompositeSolutionGraph {}", result);
+		String sId = "040fe8f7-14f7-45e1-b46d-2de505e9d52d";
+		String version = "1.0.0";
+		when(props.getArtifactTypeCode()).thenReturn("CD");
+		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+		solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		solutionService.getNexusClient(nexusArtifactClient, confprops, props);
+		String result = solutionService.readCompositeSolutionGraph(userId, sId, version);
+		Assert.assertNotNull(result);
+		logger.info("readCompositeSolutionGraph {}", result);
 	}
 
 	@Test
-    public void getSolutionsReturnEmptySolList() throws Exception {
-           SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-           sdf.format(new Date());
-           when(confprops.getDateFormat()).thenReturn(sdf.format(new Date()));
-           when(props.getCompositSolutiontoolKitTypeCode()).thenReturn("CP");
-           when(props.getPublicAccessTypeCode()).thenReturn("PB");
-           when(props.getPrivateAccessTypeCode()).thenReturn("PV");
-           when(props.getOrganizationAccessTypeCode()).thenReturn("OR");
-           // solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl)cmnDataService);
-           Map<String, Object> queryParameters = new HashMap<>();
-           queryParameters.put("active", Boolean.TRUE);
-           when(cmnDataService1.searchSolutions(queryParameters, false)).thenReturn(new ArrayList<MLPSolution>());
-           String result = solutionService.getSolutions(userId);
-           assertNotNull(result);
-    }
-
-    @Test
-    public void getSolutionsReturnNoSolution() throws Exception {
-           SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-           sdf.format(new Date());
-           when(confprops.getDateFormat()).thenReturn(sdf.format(new Date()));
-           when(props.getCompositSolutiontoolKitTypeCode()).thenReturn("CP");
-           when(props.getPublicAccessTypeCode()).thenReturn("PB");
-           when(props.getPrivateAccessTypeCode()).thenReturn("PV");
-           when(props.getOrganizationAccessTypeCode()).thenReturn("OR");
-           // solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl)
-           // cmnDataService);
-           Map<String, Object> queryParameters = new HashMap<>();
-           queryParameters.put("active", Boolean.TRUE);
-           when(cmnDataService1.searchSolutions(queryParameters, false)).thenReturn(null);
-           String result = solutionService.getSolutions(userId);
-           assertNotNull(result);
-    }
-    
-    @Test
-    public void getSolutionsReturnSolution() throws Exception {
-           SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-           sdf.format(new Date());
-           // solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl)
-           // cmnDataService);
-           Map<String, Object> queryParameters = new HashMap<>();
-           queryParameters.put("active", Boolean.TRUE);
-
-           ArrayList<MLPSolution> mlpSolList = new ArrayList<MLPSolution>();
-           MLPSolution image_classifier = new MLPSolution();
-           image_classifier.setSolutionId("1cb9e77e-43dd-4add-bf29-648f2420c621");
-           image_classifier.setName("image_classifier");
-           image_classifier.setProvider(null);
-           image_classifier.setToolkitTypeCode("SK");
-           image_classifier.setModelTypeCode("CL");
-           image_classifier.setDescription("image_classifier");
-           image_classifier.setAccessTypeCode("PB");
-           image_classifier.setOwnerId("c4e4d366-8ed8-40e1-b61e-1e103de9699b");
-           assertNotNull(image_classifier);
-           mlpSolList.add(image_classifier);
-
-           MLPUser user = new MLPUser();
-           user.setFirstName("Test");
-           user.setLastName("Dev");
-           assertNotNull(user);
-           ArrayList<MLPSolutionRevision> mlpSolRevList = new ArrayList<MLPSolutionRevision>();
-           MLPSolutionRevision mlpSolRev = new MLPSolutionRevision();
-           mlpSolRev.setRevisionId("84874435-d103-44c1-9451-d2b660fae766");
-           mlpSolRev.setVersion("1");
-           mlpSolRev.setCreated(new Date());
-           assertNotNull(mlpSolRev);
-           mlpSolRevList.add(mlpSolRev);
-
-           when(confprops.getDateFormat()).thenReturn(sdf.format(new Date()));
-           when(props.getCompositSolutiontoolKitTypeCode()).thenReturn("CP");
-           when(props.getPublicAccessTypeCode()).thenReturn("PB");
-           when(props.getPrivateAccessTypeCode()).thenReturn("PV");
-           when(props.getOrganizationAccessTypeCode()).thenReturn("OR");
-           when(cmnDataService1.getSolutionRevisions(image_classifier.getSolutionId())).thenReturn(mlpSolRevList);
-           when(cmnDataService1.searchSolutions(queryParameters, false)).thenReturn(mlpSolList);
-           when(cmnDataService1.getUser("c4e4d366-8ed8-40e1-b61e-1e103de9699b")).thenReturn(user);
-           String result = solutionService.getSolutions("c4e4d366-8ed8-40e1-b61e-1e103de9699b");
-
-           assertNotNull(result);
-    }
-
+	/**
+	 * The test case is used to get the empty list of solutions by passing the
+	 * userid which don't have any solution created for it's profile.
+	 * 
+	 * @throws Exception
+	 */
+	public void getSolutionsReturnEmptySolList() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		sdf.format(new Date());
+		when(confprops.getDateFormat()).thenReturn(sdf.format(new Date()));
+		when(props.getCompositSolutiontoolKitTypeCode()).thenReturn("CP");
+		when(props.getPublicAccessTypeCode()).thenReturn("PB");
+		when(props.getPrivateAccessTypeCode()).thenReturn("PV");
+		when(props.getOrganizationAccessTypeCode()).thenReturn("OR");
+		// solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl)cmnDataService);
+		Map<String, Object> queryParameters = new HashMap<>();
+		queryParameters.put("active", Boolean.TRUE);
+		when(cmnDataService1.searchSolutions(queryParameters, false)).thenReturn(new ArrayList<MLPSolution>());
+		String result = solutionService.getSolutions(userId);
+		assertNotNull(result);
+	}
 
 	@Test
+	/**
+	 * The test case is used to get no solutions by passing userid which don't
+	 * have any solution created for it's profile.The test case uses
+	 * getSolutions method which consumes userId and returns the list of
+	 * solutions in string format.
+	 * 
+	 * @throws Exception
+	 */
+	public void getSolutionsReturnNoSolution() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		sdf.format(new Date());
+		when(confprops.getDateFormat()).thenReturn(sdf.format(new Date()));
+		when(props.getCompositSolutiontoolKitTypeCode()).thenReturn("CP");
+		when(props.getPublicAccessTypeCode()).thenReturn("PB");
+		when(props.getPrivateAccessTypeCode()).thenReturn("PV");
+		when(props.getOrganizationAccessTypeCode()).thenReturn("OR");
+		// solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl)
+		// cmnDataService);
+		Map<String, Object> queryParameters = new HashMap<>();
+		queryParameters.put("active", Boolean.TRUE);
+		when(cmnDataService1.searchSolutions(queryParameters, false)).thenReturn(null);
+		String result = solutionService.getSolutions(userId);
+		assertNotNull(result);
+	}
+
+	@Test
+	/**
+	 * The test case is used to get the list of all the solutions that belongs
+	 * to the user from the databaseThe test case uses getSolutions method which
+	 * consumes userId and returns the list of solutions in string format.
+	 * 
+	 * @throws Exception
+	 */
+	public void getSolutionsReturnSolution() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		sdf.format(new Date());
+		// solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl)
+		// cmnDataService);
+		Map<String, Object> queryParameters = new HashMap<>();
+		queryParameters.put("active", Boolean.TRUE);
+
+		ArrayList<MLPSolution> mlpSolList = new ArrayList<MLPSolution>();
+		MLPSolution image_classifier = new MLPSolution();
+		image_classifier.setSolutionId("1cb9e77e-43dd-4add-bf29-648f2420c621");
+		image_classifier.setName("image_classifier");
+		image_classifier.setProvider(null);
+		image_classifier.setToolkitTypeCode("SK");
+		image_classifier.setModelTypeCode("CL");
+		image_classifier.setDescription("image_classifier");
+		image_classifier.setAccessTypeCode("PB");
+		image_classifier.setOwnerId("c4e4d366-8ed8-40e1-b61e-1e103de9699b");
+		assertNotNull(image_classifier);
+		mlpSolList.add(image_classifier);
+
+		MLPUser user = new MLPUser();
+		user.setFirstName("Test");
+		user.setLastName("Dev");
+		assertNotNull(user);
+		ArrayList<MLPSolutionRevision> mlpSolRevList = new ArrayList<MLPSolutionRevision>();
+		MLPSolutionRevision mlpSolRev = new MLPSolutionRevision();
+		mlpSolRev.setRevisionId("84874435-d103-44c1-9451-d2b660fae766");
+		mlpSolRev.setVersion("1");
+		mlpSolRev.setCreated(new Date());
+		assertNotNull(mlpSolRev);
+		mlpSolRevList.add(mlpSolRev);
+
+		when(confprops.getDateFormat()).thenReturn(sdf.format(new Date()));
+		when(props.getCompositSolutiontoolKitTypeCode()).thenReturn("CP");
+		when(props.getPublicAccessTypeCode()).thenReturn("PB");
+		when(props.getPrivateAccessTypeCode()).thenReturn("PV");
+		when(props.getOrganizationAccessTypeCode()).thenReturn("OR");
+		when(cmnDataService1.getSolutionRevisions(image_classifier.getSolutionId())).thenReturn(mlpSolRevList);
+		when(cmnDataService1.searchSolutions(queryParameters, false)).thenReturn(mlpSolList);
+		when(cmnDataService1.getUser("c4e4d366-8ed8-40e1-b61e-1e103de9699b")).thenReturn(user);
+		String result = solutionService.getSolutions("c4e4d366-8ed8-40e1-b61e-1e103de9699b");
+
+		assertNotNull(result);
+	}
+
+	@Test
+	/**
+	 * The test case is used to get the list of public or private or
+	 * organization or all composite solutions accessible by user.The test case uses
+	 * getCompositeSolutions method which consumes userId,visibilityLevel and returns the list of
+	 * composite solutions in string format.
+	 * 
+	 */
 	public void getCompositeSolutions() {
 		try {
 			String visibilityLevel = "PR";
@@ -1207,6 +1387,13 @@ public class SolutionControllerTest {
 		}
 	}
 
+	/**
+	 * This method is used to set default values for the instance of
+	 * NexusArtifactClient by passing RepositoryLocation object which will
+	 * accept nexus url, username and password.
+	 * 
+	 * @return reference of NexusArtifactClient
+	 */
 	private NexusArtifactClient getNexusClient() {
 		try {
 			RepositoryLocation repositoryLocation = new RepositoryLocation();

@@ -50,10 +50,20 @@ public class ToscaGeneratorServiceTest {
 	@Mock
 	private ICommonDataServiceRestClient cmnDataService;
 
-
+	/**
+	 * The test case is used to create TGIF.json by using a method generateTOSCA
+	 * which consumes userId, solutionID, version, solutionRevisionID,
+	 * localProtoFile, localMetaDataFile as parameters and generates TGIF data
+	 * in a string format which is then stored in TGIF.json. The file is used by
+	 * ds-composition engine to represent a model.
+	 * 
+	 * @exception org.acumos.designstudio.toscagenerator.exceptionhandler.AcumosException
+	 *                Handles the all the custom exception occurred in or passed
+	 *                to controller class.
+	 */
 	@Test
 	public void testCountTransport() throws Exception {
-		
+
 		try {
 			ToscaGeneratorClient mockito = mock(ToscaGeneratorClient.class);
 			logger.info("Toscagenerator client start");

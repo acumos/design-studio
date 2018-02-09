@@ -51,25 +51,33 @@ public class DSCompositionEngineTest {
 	private String pass = "";
 	public static Properties CONFIG = new Properties();
 	ICommonDataServiceRestClient client = null;
-	
+
 	@Before
 	/**
+	 * This method is used to set default values for the instance of
+	 * ICommonDataServiceRestClient and NexusArtifactClient by passing common
+	 * data service and nexus url, username and password respectively
 	 * 
 	 * @throws Exception
 	 */
 	public void createClient() throws Exception {
 		CONFIG.load(SolutionControllerTest.class.getResourceAsStream("/application.properties"));
-		
+
 		url = CONFIG.getProperty("cmndatasvc.cmndatasvcendpoinurlTest");
 		user = CONFIG.getProperty("cmndatasvc.cmndatasvcuserTest");
 		pass = CONFIG.getProperty("cmndatasvc.cmndatasvcpwdTest");
 		client = CommonDataServiceRestClientImpl.getInstance(url.toString(), user, pass);
 	}
 
-	/*@Test
-	*//**
+	/**
 	 * 
-	 *//*
+	 * The test case is used to get the list of all the active solutions that
+	 * belongs to the user from the database.
+	 * 
+	 * @throws Exception
+	 */
+	/*
+	@Test
 	public void testGetSolutions() {
 		String result = "[";
 		List<MLPSolution> mlpSolutions = null;
@@ -86,11 +94,14 @@ public class DSCompositionEngineTest {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		if (null == mlpSolutions) {
 			assertNull(mlpSolutions);
-			logger.debug(EELFLoggerDelegator.debugLogger,"------- CommonDataService returned null Solution list--------");
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					"------- CommonDataService returned null Solution list--------");
 		} else if (mlpSolutions.isEmpty()) {
-			logger.debug(EELFLoggerDelegator.debugLogger,"------- CommonDataService returned empty Solution list--------");
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					"------- CommonDataService returned empty Solution list--------");
 		} else {
-			logger.debug(EELFLoggerDelegator.debugLogger,"------- CommonDataService returned Solution list of size : " + mlpSolutions.size());
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					"------- CommonDataService returned Solution list of size : " + mlpSolutions.size());
 			mlpSolRevisions = new ArrayList<MLPSolutionRevision>();
 			for (MLPSolution mlpsol : mlpSolutions) {
 				solutionId = mlpsol.getSolutionId();
@@ -100,11 +111,15 @@ public class DSCompositionEngineTest {
 				MLPUser user = cmnDataService.getUser(userId);
 				String userName = user.getFirstName() + " " + user.getLastName();
 				if (null == mlpSolRevisions) {
-					logger.debug(EELFLoggerDelegator.debugLogger,"------- CommonDataService returned null SolutionRevision list--------");
+					logger.debug(EELFLoggerDelegator.debugLogger,
+							"------- CommonDataService returned null SolutionRevision list--------");
 				} else if (mlpSolRevisions.isEmpty()) {
-					logger.debug(EELFLoggerDelegator.debugLogger,"------- CommonDataService returned empty SolutionRevision list--------");
+					logger.debug(EELFLoggerDelegator.debugLogger,
+							"------- CommonDataService returned empty SolutionRevision list--------");
 				} else {
-					logger.debug(EELFLoggerDelegator.debugLogger,"------- CommonDataService returned SolutionRevision list of size : "+ mlpSolRevisions.size());
+					logger.debug(EELFLoggerDelegator.debugLogger,
+							"------- CommonDataService returned SolutionRevision list of size : "
+									+ mlpSolRevisions.size());
 					for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
 						dssolution = new DSSolution();
 						dssolution.setSolutionId(mlpsol.getSolutionId());

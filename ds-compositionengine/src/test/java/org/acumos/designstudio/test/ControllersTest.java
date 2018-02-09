@@ -58,6 +58,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import com.jayway.jsonpath.InvalidJsonException;
+
 /**
  * 
  * 
@@ -81,14 +82,21 @@ public class ControllersTest {
 	ICompositeSolutionService compositeServiceImpl;
 	@Mock
 	org.acumos.designstudio.ce.util.Properties props;
+
 	@Test
 	/**
+	 * The test case is used to create a new composite solution. The test case
+	 * uses createNewCompositeSolution method which consumes userId and returns
+	 * cid(generated as UUID) and creation time in a string format which is then
+	 * stored in CDUMP.json.The file is used by ds-composition engine to
+	 * represent a composite solution made by connecting models.
 	 * 
 	 * @throws Exception
 	 */
 	public void createNewCompositeSolution() throws Exception {
 		try {
-			when(solutionService.createNewCompositeSolution(userId)).thenReturn("{\"cid\":\"5e12e047-08b6-4c6e-aa13-e5bf4f1ea4b1\",\"success\":\"true\",\"errorMessage\":\"\"}");
+			when(solutionService.createNewCompositeSolution(userId)).thenReturn(
+					"{\"cid\":\"5e12e047-08b6-4c6e-aa13-e5bf4f1ea4b1\",\"success\":\"true\",\"errorMessage\":\"\"}");
 			String results = solutionController.createNewCompositeSolution(userId);
 			assertNotNull(results);
 			if (results.contains("true")) {
@@ -104,6 +112,9 @@ public class ControllersTest {
 
 	@Test
 	/**
+	 * The test case is used to add node(a model)to create composite solution.
+	 * The test case uses addNode method which consumes userId, solutionId,
+	 * version, cid, node and returns the node data which is stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
@@ -179,15 +190,16 @@ public class ControllersTest {
 			data.setPy("100");
 			data.setRadius("100");
 			node.setNdata(data);
-			
+
 			assertNotNull(data);
 			assertNotNull(node);
 			assertNotNull(msg);
 			assertEquals("200", data.getNtype());
 			assertEquals("1", node.getNodeId());
 			assertEquals("DataFrame", msg.getMessageName());
-			
-			when(solutionService.addNode(userId, null, null, sessionId, node)).thenReturn("{\"success\" : \"true\", \"errorDescription\" : \"\"}");
+
+			when(solutionService.addNode(userId, null, null, sessionId, node))
+					.thenReturn("{\"success\" : \"true\", \"errorDescription\" : \"\"}");
 			String results = solutionController.addNode(userId, null, null, sessionId, node);
 			logger.debug(EELFLoggerDelegator.debugLogger, results);
 		} catch (InvalidJsonException e) {
@@ -197,14 +209,22 @@ public class ControllersTest {
 
 	@Test
 	/**
+	 * The test case is used to link two nodes to create composite solution. The
+	 * test case uses addLink method which consumes userId, solutionId, version,
+	 * linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
+	 * targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cid,
+	 * property and updates the relation between the source and target node
+	 * stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
 	public void addLink() throws Exception {
 		try {
 			Property property = new Property();
-			when(solutionService.addLink(userId, null, null, "Model to Model", "101", "Model 1", "1", "Model 2", "2", "sourceNodeRequirement", "targetNodeCapabilityName", sessionId, null)).thenReturn(true);
-			String results = solutionController.addLink(userId, null, null, "Model to Model", "101", "Model 1", "1","Model 2", "2", "sourceNodeRequirement", "targetNodeCapabilityName", sessionId, property);
+			when(solutionService.addLink(userId, null, null, "Model to Model", "101", "Model 1", "1", "Model 2", "2",
+					"sourceNodeRequirement", "targetNodeCapabilityName", sessionId, null)).thenReturn(true);
+			String results = solutionController.addLink(userId, null, null, "Model to Model", "101", "Model 1", "1",
+					"Model 2", "2", "sourceNodeRequirement", "targetNodeCapabilityName", sessionId, property);
 			assertNotNull(results);
 			logger.debug(EELFLoggerDelegator.debugLogger, results);
 			if (results.contains("true")) {
@@ -220,6 +240,12 @@ public class ControllersTest {
 
 	@Test
 	/**
+	 * The test case is used to link two nodes to create composite solution. The
+	 * test case uses addLink method which consumes userId, solutionId, version,
+	 * linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
+	 * targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cid,
+	 * property and updates the relation between the source and target node
+	 * stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
@@ -245,17 +271,19 @@ public class ControllersTest {
 			data_map.setMap_inputs(map_inputs);
 			data_map.setMap_outputs(map_outputs);
 			property.setData_map(data_map);
-			
+
 			assertNotNull(property);
 			assertNotNull(data_map);
 			assertNotNull(map_inputsObj);
 			assertNotNull(input_fieldsobj);
 			assertTrue(map_inputs.length == 1);
 			assertEquals("1", input_fieldsobj.getTag());
-			assertEquals("Prediction",map_inputsObj.getMessage_name());
-			
-			when(solutionService.addLink(userId, null, null, "Model to DM", "201", "Model 1", "1", "DM", "3","sourceNodeRequirement", "targetNodeCapabilityName", sessionId, null)).thenReturn(false);
-			String results = solutionController.addLink(userId, null, null, "Model to Model", "101", "Model 1", "1","Model 2", "2", "sourceNodeRequirement", "targetNodeCapabilityName", sessionId, property);
+			assertEquals("Prediction", map_inputsObj.getMessage_name());
+
+			when(solutionService.addLink(userId, null, null, "Model to DM", "201", "Model 1", "1", "DM", "3",
+					"sourceNodeRequirement", "targetNodeCapabilityName", sessionId, null)).thenReturn(false);
+			String results = solutionController.addLink(userId, null, null, "Model to Model", "101", "Model 1", "1",
+					"Model 2", "2", "sourceNodeRequirement", "targetNodeCapabilityName", sessionId, property);
 			assertNotNull(results);
 			if (results.contains("false")) {
 				logger.debug(EELFLoggerDelegator.debugLogger, results);
@@ -269,6 +297,10 @@ public class ControllersTest {
 
 	@Test
 	/**
+	 * The test case is used to delete a node.The test case uses deleteNode
+	 * method which consumes userId, solutionId, version, cid, nodeId and
+	 * updates CDUMP.json by deleting the node and its relation with other
+	 * nodes.
 	 * 
 	 * @throws Exception
 	 */
@@ -284,12 +316,17 @@ public class ControllersTest {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteNode() testcase: CDUMP file not found",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteNode() testcase: CDUMP file not found",
+					e);
 		}
 	}
 
 	@Test
 	/**
+	 * The test case is used to delete a node.The test case uses deleteNode
+	 * method which consumes userId, solutionId, version, cid, nodeId and
+	 * updates CDUMP.json by deleting the node and its relation with other
+	 * nodes.
 	 * 
 	 * @throws Exception
 	 */
@@ -305,12 +342,17 @@ public class ControllersTest {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteNode1() testcase: CDUMP file not found",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteNode1() testcase: CDUMP file not found",
+					e);
 		}
 	}
 
 	@Test
 	/**
+	 * The test case is used to delete a link between the two nodes.The test
+	 * case uses deleteLink method which consumes cid, solutionId, version,
+	 * linkId and updates CDUMP.json by deleting relation between the source and
+	 * target nodes
 	 * 
 	 * @throws Exception
 	 */
@@ -325,18 +367,21 @@ public class ControllersTest {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteLink() testcase: CDUMP file not found",e);
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteLink() testcase: CDUMP file not found",
+					e);
 		}
 	}
 
 	@Test
 	/**
+	 * The test case is used to clear the composite solution.
 	 * 
 	 * @throws Exception
 	 */
 	public void clearCompositeSolution() throws Exception {
 		try {
-			when(compositeServiceImpl.clearCompositeSolution(userId, null, "1.0.0", sessionId)).thenReturn("Grapg cleared");
+			when(compositeServiceImpl.clearCompositeSolution(userId, null, "1.0.0", sessionId))
+					.thenReturn("Grapg cleared");
 			String results = solutionController.clearCompositeSolution(userId, null, "1.0.0", sessionId);
 			assertNotNull(results);
 			if (results.contains("cleared")) {
@@ -345,18 +390,21 @@ public class ControllersTest {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,"Exception in clearCompositeSolution() testcase: CDUMP file not found", e);
+			logger.error(EELFLoggerDelegator.errorLogger,
+					"Exception in clearCompositeSolution() testcase: CDUMP file not found", e);
 		}
 	}
 
 	@Test
 	/**
+	 * The test case is used to close the composite solution.
 	 * 
 	 * @throws Exception
 	 */
 	public void closeCompositeSolution() throws Exception {
 		try {
-			when(compositeServiceImpl.closeCompositeSolution(userId, null, "1.0.0", sessionId)).thenReturn("Graph closed");
+			when(compositeServiceImpl.closeCompositeSolution(userId, null, "1.0.0", sessionId))
+					.thenReturn("Graph closed");
 			String results = solutionController.closeCompositeSolution(userId, null, "1.0.0", sessionId);
 			assertNotNull(results);
 			if (results.contains("closed")) {
@@ -365,12 +413,15 @@ public class ControllersTest {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,"Exception in closeCompositeSolution() testcase: CDUMP file not found", e);
+			logger.error(EELFLoggerDelegator.errorLogger,
+					"Exception in closeCompositeSolution() testcase: CDUMP file not found", e);
 		}
 	}
 
 	@Test
 	/**
+	 * The test case is used to delete the composite solution from nexus
+	 * repository as well as the database
 	 * 
 	 * @throws Exception
 	 */
@@ -381,13 +432,16 @@ public class ControllersTest {
 			assertNotNull(results);
 			logger.debug(EELFLoggerDelegator.debugLogger, results);
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,"Exception in deleteCompositeColution() testcase: Not deleted", e);
+			logger.error(EELFLoggerDelegator.errorLogger,
+					"Exception in deleteCompositeColution() testcase: Not deleted", e);
 			throw e;
 		}
 	}
 
 	@Test
 	/**
+	 * The test case is used to delete the composite solution from nexus
+	 * repository as well as the database
 	 * 
 	 * @throws Exception
 	 */
@@ -409,6 +463,8 @@ public class ControllersTest {
 
 	@Test
 	/**
+	 * The test case is used to get the list of public or private or
+	 * organization or all composite solutions accessible by user
 	 * 
 	 * @throws Exception
 	 */
@@ -429,12 +485,15 @@ public class ControllersTest {
 
 	@Test
 	/**
+	 * The test case is used to get the list of all the solutions that belongs
+	 * to the user from the database
 	 * 
 	 * @throws Exception
 	 */
 	public void getSolutions() throws Exception {
 		try {
-			when(solutionService.getSolutions(userId)).thenReturn("{\"items\" : [{\"solutionId\":\"1c1d1316-6884-4574-a8fc-749de037b965\", \"solutionName\":\"AlarmGenerator\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"null\", \"description\":\"AlarmGenerator\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-15-17-34-57-000\", \"icon\":\"null\"},{\"solutionId\":\"264aca36-4fa8-4885-bcd3-7661bb9de54b\", \"solutionName\":\"Predictor-DM\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"PR\", \"description\":\"Predictor-DM\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-16-09-22-000\", \"icon\":\"null\"},{\"solutionId\":\"4f151b2d-52a9-4cbd-b80c-131d52fbaab9\", \"solutionName\":\"Classifier\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"CL\", \"description\":\"Classifier\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-15-52-07-000\", \"icon\":\"null\"},{\"solutionId\":\"51120ed4-73de-4d1b-b34c-e86cd6d30da7\", \"solutionName\":\"Classifier-R\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"CL\", \"description\":\"Classifier-R\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-15-56-32-000\", \"icon\":\"null\"},{\"solutionId\":\"54edb103-83ec-40ad-a357-a7060a2778cf\", \"solutionName\":\"Aggregator\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"DT\", \"description\":\"Aggregator\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-15-18-33-40-000\", \"icon\":\"null\"},{\"solutionId\":\"7266d859-458d-464b-9d6e-4461f94835dd\", \"solutionName\":\"GenDataMapper\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"DT\", \"description\":\"GenDataMapper\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-12-00-33-000\", \"icon\":\"null\"},{\"solutionId\":\"b027f1d8-b61c-4484-bd9a-c81fe40245d1\", \"solutionName\":\"Predictor\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"PR\", \"description\":\"Predictor\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-16-07-00-000\", \"icon\":\"null\"},{\"solutionId\":\"b1d60b2a-16dd-4464-bd0e-3692a377a546\", \"solutionName\":\"DataMapper\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"DT\", \"description\":\"Cell_Tower-SFO\", \"visibilityLevel\":\"PR\", \"created\":\"2017-11-16-08-36-38-000\", \"icon\":\"null\"},{\"solutionId\":\"cbaf417b-5442-4873-bdec-914b55fe7f9a\", \"solutionName\":\"Classifier-DM\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"CL\", \"description\":\"Classifier-DM\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-16-03-30-000\", \"icon\":\"null\"},{\"solutionId\":\"dd01f926-eae2-4d2e-bcfd-80430490c2e2\", \"solutionName\":\"Predictor-R\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"PR\", \"description\":\"Predictor-R\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-15-59-58-000\", \"icon\":\"null\"}]}");
+			when(solutionService.getSolutions(userId)).thenReturn(
+					"{\"items\" : [{\"solutionId\":\"1c1d1316-6884-4574-a8fc-749de037b965\", \"solutionName\":\"AlarmGenerator\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"null\", \"description\":\"AlarmGenerator\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-15-17-34-57-000\", \"icon\":\"null\"},{\"solutionId\":\"264aca36-4fa8-4885-bcd3-7661bb9de54b\", \"solutionName\":\"Predictor-DM\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"PR\", \"description\":\"Predictor-DM\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-16-09-22-000\", \"icon\":\"null\"},{\"solutionId\":\"4f151b2d-52a9-4cbd-b80c-131d52fbaab9\", \"solutionName\":\"Classifier\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"CL\", \"description\":\"Classifier\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-15-52-07-000\", \"icon\":\"null\"},{\"solutionId\":\"51120ed4-73de-4d1b-b34c-e86cd6d30da7\", \"solutionName\":\"Classifier-R\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"CL\", \"description\":\"Classifier-R\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-15-56-32-000\", \"icon\":\"null\"},{\"solutionId\":\"54edb103-83ec-40ad-a357-a7060a2778cf\", \"solutionName\":\"Aggregator\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"DT\", \"description\":\"Aggregator\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-15-18-33-40-000\", \"icon\":\"null\"},{\"solutionId\":\"7266d859-458d-464b-9d6e-4461f94835dd\", \"solutionName\":\"GenDataMapper\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"DT\", \"description\":\"GenDataMapper\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-12-00-33-000\", \"icon\":\"null\"},{\"solutionId\":\"b027f1d8-b61c-4484-bd9a-c81fe40245d1\", \"solutionName\":\"Predictor\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"PR\", \"description\":\"Predictor\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-16-07-00-000\", \"icon\":\"null\"},{\"solutionId\":\"b1d60b2a-16dd-4464-bd0e-3692a377a546\", \"solutionName\":\"DataMapper\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"DT\", \"description\":\"Cell_Tower-SFO\", \"visibilityLevel\":\"PR\", \"created\":\"2017-11-16-08-36-38-000\", \"icon\":\"null\"},{\"solutionId\":\"cbaf417b-5442-4873-bdec-914b55fe7f9a\", \"solutionName\":\"Classifier-DM\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"CL\", \"description\":\"Classifier-DM\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-16-03-30-000\", \"icon\":\"null\"},{\"solutionId\":\"dd01f926-eae2-4d2e-bcfd-80430490c2e2\", \"solutionName\":\"Predictor-R\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"PR\", \"description\":\"Predictor-R\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-15-59-58-000\", \"icon\":\"null\"}]}");
 			String results = solutionController.getSolutions(userId);
 			assertNotNull(results);
 			if (results.contains("solutionId")) {
@@ -450,6 +509,10 @@ public class ControllersTest {
 
 	@Test
 	/**
+	 * The test case is used to modify node(a model)in a composite solution. The
+	 * test case uses modifyNode method which consumes userId, solutionId,
+	 * version, cid, nodeId, nodeName, ndata, fieldmap and returns the modified
+	 * node data stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
@@ -462,12 +525,14 @@ public class ControllersTest {
 			fieldMap.setMap_action("Add");
 			fieldMap.setOutput_field_message_name("Classification");
 			fieldMap.setOutput_field_tag_id("2");
-			
+
 			assertNotNull(fieldMap);
 			assertEquals("Prediction", fieldMap.getInput_field_message_name());
-			
-			when(solutionService.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata, fieldMap)).thenReturn("Node Modified");
-			String results = solutionController.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata,fieldMap);
+
+			when(solutionService.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata, fieldMap))
+					.thenReturn("Node Modified");
+			String results = solutionController.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata,
+					fieldMap);
 			assertNotNull(results);
 			if (results.contains("Modified")) {
 				logger.debug(EELFLoggerDelegator.debugLogger, results);
@@ -481,12 +546,17 @@ public class ControllersTest {
 
 	@Test
 	/**
+	 * The test case is used to modify link in a composite solution. The test
+	 * case uses modifyLink method which consumes userId, solutionId, version,
+	 * linkId, linkName and updates the relation between the source and target
+	 * node stored in CDUMP.json.
 	 * 
 	 * @throws Exception
 	 */
 	public void modifyLink() throws Exception {
 		try {
-			when(solutionService.modifyLink(userId, sessionId, null, null, "202", "Model to DM")).thenReturn("Link Modified");
+			when(solutionService.modifyLink(userId, sessionId, null, null, "202", "Model to DM"))
+					.thenReturn("Link Modified");
 			String results = solutionController.modifyLink(userId, sessionId, null, null, "202", "Model to DM");
 			assertNotNull(results);
 			if (results.contains("Modified")) {
@@ -501,35 +571,38 @@ public class ControllersTest {
 
 	@Test
 	/**
+	 * The test case is used to save the composite solution and store it in nexus
+	 * repository as well as the database
 	 * 
 	 * @throws Exception
 	 */
 	public void saveCompositeSolution() throws Exception {
-			DSCompositeSolution dscs = new DSCompositeSolution();
-			dscs.setAuthor(userId);
-			dscs.setSolutionName("solutionName");
-			dscs.setSolutionId("solutionId");
-			dscs.setVersion("version");
-			dscs.setOnBoarder(userId);
-			dscs.setDescription("description");
-			dscs.setProvider("Test");
-			dscs.setToolKit("CP");
-			dscs.setVisibilityLevel("PV");
-			dscs.setcId(sessionId);
-			dscs.setIgnoreLesserVersionConflictFlag(true);
-			assertNotNull(dscs);
-			assertEquals("solutionName", dscs.getSolutionName());
-			when(props.getProvider()).thenReturn("Test");
-			when(props.getToolKit()).thenReturn("CP");
-			when(props.getVisibilityLevel()).thenReturn("PV");
-			when(compositeServiceImpl.saveCompositeSolution(dscs)).thenReturn("Solution saved : " + sessionId);
-			HttpServletRequest request = null;
-			Object results = solutionController.saveCompositeSolution(request, userId, "Test", "1.0.0", null, "Test",sessionId, true);
-			assertNotNull(dscs);
-			assertEquals("CP", dscs.getToolKit());
-			assertEquals("PV", dscs.getVisibilityLevel());
-			assertEquals("description", dscs.getDescription());
-			logger.debug(EELFLoggerDelegator.debugLogger, "results");
+		DSCompositeSolution dscs = new DSCompositeSolution();
+		dscs.setAuthor(userId);
+		dscs.setSolutionName("solutionName");
+		dscs.setSolutionId("solutionId");
+		dscs.setVersion("version");
+		dscs.setOnBoarder(userId);
+		dscs.setDescription("description");
+		dscs.setProvider("Test");
+		dscs.setToolKit("CP");
+		dscs.setVisibilityLevel("PV");
+		dscs.setcId(sessionId);
+		dscs.setIgnoreLesserVersionConflictFlag(true);
+		assertNotNull(dscs);
+		assertEquals("solutionName", dscs.getSolutionName());
+		when(props.getProvider()).thenReturn("Test");
+		when(props.getToolKit()).thenReturn("CP");
+		when(props.getVisibilityLevel()).thenReturn("PV");
+		when(compositeServiceImpl.saveCompositeSolution(dscs)).thenReturn("Solution saved : " + sessionId);
+		HttpServletRequest request = null;
+		Object results = solutionController.saveCompositeSolution(request, userId, "Test", "1.0.0", null, "Test",
+				sessionId, true);
+		assertNotNull(dscs);
+		assertEquals("CP", dscs.getToolKit());
+		assertEquals("PV", dscs.getVisibilityLevel());
+		assertEquals("description", dscs.getDescription());
+		logger.debug(EELFLoggerDelegator.debugLogger, "results");
 	}
 
 }
