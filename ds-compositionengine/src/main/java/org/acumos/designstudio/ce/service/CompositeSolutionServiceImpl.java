@@ -1232,6 +1232,39 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		}
 		return dependsOnList;
 	}
+	@Override
+	public String setProbeIndicator(String userId, String solutionId, String version, String cid,
+			String probeIndicator) {
+		logger.debug(EELFLoggerDelegator.debugLogger, "------ setProbeIndicator() in CompositeSolutionServiceImpl : Begin---------- ");
+        String id = "";
+		Gson gson = new Gson();
+		String result = "";
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+            if (null != cid && null == solutionId) {
+				id = cid;
+			} else if (null == cid) {
+				id = solutionId;
+			}
+			String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
+			String cdumpFileName = "acumos-cdump" + "-" + id + ".json";
+			Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName)), Cdump.class);
+			cdump.setProbeIndicator(probeIndicator);
+            try {
+				String jsonInString = gson.toJson(cdump);
+				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
+				result = "{\"success\" : \"true\", \"errorDescription\" : \"\"}";
+			}catch (JsonIOException e) {
+				result = "{\"success\" : \"false\", \"errorDescription\" : \"There is some issue to set prob indicator value,please check the log file\"}";
+				logger.error(EELFLoggerDelegator.errorLogger, "------Exception in setProbeIndicator() ----------", e);
+			}
+		} catch (Exception e) {
+			result = "{\"success\" : \"false\", \"errorDescription\" : \"There is some issue to set prob indicator value,please check the log file\"}";
+			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception Occured in setProbeIndicator() ------", e);
+		}
+        logger.debug(EELFLoggerDelegator.debugLogger, "------ setProbeIndicator() in CompositeSolutionServiceImpl : End---------- ");
+		return result;
+	}
 
 	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
 		cdmsClient = commonDataServiceRestClient;
