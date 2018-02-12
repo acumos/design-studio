@@ -33,6 +33,7 @@ public class Cdump implements Serializable{
 	private String solutionId;
 	private String ctime;
 	private String mtime;
+	private String probeIndicator;
 	private java.util.List<Nodes> nodes;
 	private java.util.List<Relations> relations;
 	public String getCname() {
@@ -83,5 +84,12 @@ public class Cdump implements Serializable{
 	public void setRelations(java.util.List<Relations> relations) {
 		this.relations = relations;
 	}
+	public String getProbeIndicator() {
+		return probeIndicator;
+	}
+	public void setProbeIndicator(String probeIndicator) {
+		this.probeIndicator = probeIndicator;
+	}
+	
 	
 }
