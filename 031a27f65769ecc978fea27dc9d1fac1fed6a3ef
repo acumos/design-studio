@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "acb46f8d_1efb72c0",
+        "filename": "TOSCAGeneratorClient/pom.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-13T16:19:00Z",
+      "side": 1,
+      "message": "If you want 1.13.0, use the release version.\n\nIf you want 1.13.1, the only one is SNAPSHOT.",
+      "revId": "031a27f65769ecc978fea27dc9d1fac1fed6a3ef",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19064c2d_b7d93c0d",
+        "filename": "ds-compositionengine/pom.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-13T16:19:00Z",
+      "side": 1,
+      "message": "This should be the 2.0.0 release version.  There are no new features in 2.0.1.",
+      "revId": "031a27f65769ecc978fea27dc9d1fac1fed6a3ef",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "40329045_435cda08",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/SolutionControllerTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-13T16:19:00Z",
+      "side": 1,
+      "message": "Failed to resolve conflicts - this will not compile",
+      "revId": "031a27f65769ecc978fea27dc9d1fac1fed6a3ef",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
