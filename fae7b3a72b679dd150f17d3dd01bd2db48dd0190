@@ -1,0 +1,180 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "00ae44ab_63d81371",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/BaseOperationSignature.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T14:02:21Z",
+      "side": 1,
+      "message": "Please add license header",
+      "revId": "fae7b3a72b679dd150f17d3dd01bd2db48dd0190",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad1152e0_c56768ce",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/BaseOperationSignature.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T14:02:21Z",
+      "side": 1,
+      "message": "Please remove @author.  Never add this to open-source headers.",
+      "revId": "fae7b3a72b679dd150f17d3dd01bd2db48dd0190",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "598c511e_c41e9fc3",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/Container.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T14:02:21Z",
+      "side": 1,
+      "message": "Add license header",
+      "revId": "fae7b3a72b679dd150f17d3dd01bd2db48dd0190",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2cda181e_87cec8cb",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/Container.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T14:02:21Z",
+      "side": 1,
+      "message": "Remove @author",
+      "revId": "fae7b3a72b679dd150f17d3dd01bd2db48dd0190",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e24d65a_180b8a6a",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/NodeOperationSignature.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T14:02:21Z",
+      "side": 1,
+      "message": "Add license header",
+      "revId": "fae7b3a72b679dd150f17d3dd01bd2db48dd0190",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93c83ee0_1f9195f3",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/NodeOperationSignature.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T14:02:21Z",
+      "side": 1,
+      "message": "Remove @author",
+      "revId": "fae7b3a72b679dd150f17d3dd01bd2db48dd0190",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "229809a0_291e7b19",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/OperationSignatureList.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T14:02:21Z",
+      "side": 1,
+      "message": "Add license header",
+      "revId": "fae7b3a72b679dd150f17d3dd01bd2db48dd0190",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1231b77b_970d7431",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/OperationSignatureList.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T14:02:21Z",
+      "side": 1,
+      "message": "Remove @author",
+      "range": {
+        "startLine": 10,
+        "startChar": 10,
+        "endLine": 10,
+        "endChar": 11
+      },
+      "revId": "fae7b3a72b679dd150f17d3dd01bd2db48dd0190",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4693e8a8_d0fbe991",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/ProbeIndicator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T14:02:21Z",
+      "side": 1,
+      "message": "Add license header",
+      "revId": "fae7b3a72b679dd150f17d3dd01bd2db48dd0190",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "458c4366_c70628ca",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/ProbeIndicator.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T14:02:21Z",
+      "side": 1,
+      "message": "Remove @author",
+      "revId": "fae7b3a72b679dd150f17d3dd01bd2db48dd0190",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
