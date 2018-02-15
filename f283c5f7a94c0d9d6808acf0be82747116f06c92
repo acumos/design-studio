@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4166bc1_91db04ff",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/BaseOperationSignature.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T16:58:36Z",
+      "side": 1,
+      "message": "Please add license header",
+      "revId": "f283c5f7a94c0d9d6808acf0be82747116f06c92",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "490069ec_e0bd8252",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/Container.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T16:58:36Z",
+      "side": 1,
+      "message": "Pleaes add license header",
+      "revId": "f283c5f7a94c0d9d6808acf0be82747116f06c92",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8be44eeb_e4a63d66",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/NodeOperationSignature.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T16:58:36Z",
+      "side": 1,
+      "message": "Please add license header",
+      "revId": "f283c5f7a94c0d9d6808acf0be82747116f06c92",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1015cd36_8ab21b7a",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/OperationSignatureList.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T16:58:36Z",
+      "side": 1,
+      "message": "Please add license header",
+      "revId": "f283c5f7a94c0d9d6808acf0be82747116f06c92",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b31d9aa0_acde4cc0",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/ProbeIndicator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-15T16:58:36Z",
+      "side": 1,
+      "message": "Please add license header",
+      "revId": "f283c5f7a94c0d9d6808acf0be82747116f06c92",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
