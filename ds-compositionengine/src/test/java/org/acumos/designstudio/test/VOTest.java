@@ -23,23 +23,21 @@
  */
 package org.acumos.designstudio.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.designstudio.cdump.Capability;
-import org.acumos.designstudio.ce.exceptionhandler.DAOException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.DSSolution;
+import org.acumos.designstudio.ce.vo.blueprint.BaseOperationSignature;
 import org.acumos.designstudio.ce.vo.blueprint.BluePrint;
-import org.acumos.designstudio.ce.vo.blueprint.Depends_On;
-import org.acumos.designstudio.ce.vo.blueprint.InputOperationSignatures;
+import org.acumos.designstudio.ce.vo.blueprint.Container;
 import org.acumos.designstudio.ce.vo.blueprint.Node;
-import org.acumos.designstudio.ce.vo.blueprint.OperationSignature;
 import org.acumos.designstudio.ce.vo.tgif.Artifact;
 import org.acumos.designstudio.ce.vo.tgif.Auxiliary;
 import org.acumos.designstudio.ce.vo.tgif.Call;
@@ -169,33 +167,25 @@ public class VOTest  {
 		bp.setNodes(nodeList);
 		bp.getNodes();
 		
-		Depends_On don = new Depends_On();
-		don.setName("BluePrint");
-		don.getName();
+		Container con = new Container();
+		con.setContainer_name("BluePrint");
+		con.getContainer_name();
 		
-		OperationSignature osig = new OperationSignature();
-		osig.setOperation("transform");
-		osig.getOperation();
+		BaseOperationSignature bos = new BaseOperationSignature();
+		bos.setOperation_name("transform");
+		bos.getOperation_name();
 		
-		don.setOperation_signature(osig);
-		don.getOperation_signature();
+		con.setOperation_signature(bos);
+		con.getOperation_signature();
 		
 		
-		List<Depends_On> donList = new ArrayList<>();
-		donList.add(don);
+		List<Container> donList = new ArrayList<>();
+		donList.add(con);
 		
-		n.setDepends_on(donList);
-		n.getDepends_on();
+		n.setContainer_name("Aggregate");
 		
-		InputOperationSignatures ios = new InputOperationSignatures();
-		ios.setOperation("Auxialiary");
-		ios.getOperation();
 		
-		List<InputOperationSignatures> iosList = new ArrayList<>();
-		iosList.add(ios);
 		
-		bp.setInput_operation_signatures(iosList);
-		bp.getInput_operation_signatures();
 		logger.debug(EELFLoggerDelegator.debugLogger, bp.toString());
 		
 		assertNotNull(bp);
@@ -204,8 +194,7 @@ public class VOTest  {
 		assertNotNull(n);
 		assertEquals("BPDI", n.getImage());
 
-		assertNotNull(don);
-		assertEquals("BluePrint", don.getName());
+		assertNotNull(con);
 	}
 	
 

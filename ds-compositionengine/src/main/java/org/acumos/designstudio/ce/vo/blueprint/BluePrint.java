@@ -38,8 +38,25 @@ public class BluePrint implements Serializable {
 
 	private String name;
 	private String version;
-	private List<InputOperationSignatures> input_operation_signatures;
+	private List<Container> input_ports;
 	private List<Node> nodes;
+	private List<ProbeIndicator> probeIndocator;
+	
+	
+	
+	/**
+	 * @return the input_ports
+	 */
+	public List<Container> getInput_ports() {
+		return input_ports;
+	}
+	/**
+	 * @param input_ports the input_ports to set
+	 */
+	public void setInput_ports(List<Container> input_ports) {
+		this.input_ports = input_ports;
+	}
+	
 	/**
 	 * @return the name
 	 */
@@ -66,18 +83,6 @@ public class BluePrint implements Serializable {
 	}
 	
 	/**
-	 * @return the input_operation_signatures
-	 */
-	public List<InputOperationSignatures> getInput_operation_signatures() {
-		return input_operation_signatures;
-	}
-	/**
-	 * @param input_operation_signatures the input_operation_signatures to set
-	 */
-	public void setInput_operation_signatures(List<InputOperationSignatures> input_operation_signatures) {
-		this.input_operation_signatures = input_operation_signatures;
-	}
-	/**
 	 * @return the nodes
 	 */
 	public List<Node> getNodes() {
@@ -89,5 +94,19 @@ public class BluePrint implements Serializable {
 	public void setNodes(List<Node> nodes) {
 		this.nodes = nodes;
 	}
+	/**
+	 * @return the probeIndocator
+	 */
+	public List<ProbeIndicator> getProbeIndocator() {
+		return probeIndocator;
+	}
+	/**
+	 * @param probeIndocator the probeIndocator to set
+	 */
+	public void setProbeIndocator(List<ProbeIndicator> probeIndocator) {
+		this.probeIndocator = probeIndocator;
+	}
+	
+	
 
 }
