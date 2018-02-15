@@ -5,15 +5,8 @@ package org.acumos.designstudio.ce.vo.blueprint;
 
 import java.io.Serializable;
 
-/**
- * @author RP00490596
- *
- */
 public class Container implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7033995176723370491L;
 
 	private String container_name;

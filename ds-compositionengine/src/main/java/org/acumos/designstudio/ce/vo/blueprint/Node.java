@@ -26,16 +26,10 @@ package org.acumos.designstudio.ce.vo.blueprint;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * 
- *
- */
 public class Node implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6799798022353553155L;
+	
 	private String container_name;
 	private String node_type;
 	private String image;

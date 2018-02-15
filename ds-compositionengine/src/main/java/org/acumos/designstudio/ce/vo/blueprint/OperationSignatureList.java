@@ -6,14 +6,8 @@ package org.acumos.designstudio.ce.vo.blueprint;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * @author RP00490596
- *
- */
 public class OperationSignatureList implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 7663725728196793021L;
 
 	private NodeOperationSignature operation_signature;
