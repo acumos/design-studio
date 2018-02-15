@@ -997,6 +997,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 									logger.debug(EELFLoggerDelegator.debugLogger, "Opearion : " + opearion);
 									bos.setOperation_name(opearion);
 									container.setOperation_signature(bos);
+									String containerName = rltn.getTargetNodeName();
+									container.setContainer_name(containerName);
 									containerList.add(container);
 								}
 							}
@@ -1078,37 +1080,41 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								String protoUri = n.getProtoUri();
 								bpnode.setProto_uri(protoUri); 
 								
-								
 								List<Capabilities> capabilities = Arrays.asList(n.getCapabilities());
 								String nodeOperationName = null;
 								List<Container> containerLst = new ArrayList<Container>();
-								for(Capabilities c :capabilities ){
-									osll = new OperationSignatureList();
-									
-									nos = new NodeOperationSignature();
+								
+								//Get the connected port 
+								String connectedPort = getConnectedPort(cdump.getRelations(), n.getNodeId());
+								
+								for(Capabilities c : capabilities ){
 									nodeOperationName = c.getTarget().getId();
-									nos.setOperation_name(nodeOperationName);
-									//set input_message_name
-									nos.setInput_message_name(c.getTarget().getName()[0].getMessageName());  
-									//NodeOperationSignature input_message_name should have been array, as operation can have multiple input messages.  
-									//Its seems to be some gap
-									
-									//set output_message_name
-									nos.setOutput_message_name(getOutputMessage(n.getRequirements(), nodeOperationName));
-									
-									//Set NodeOperationSignature as operation_signature
-									osll.setOperation_signature(nos);
-									
-									//set List<Container> connected_to
-									containerLst = getRelations(cdump, nodeId);
-									osll.setConnected_to(containerLst);
-									
-									oslList.add(osll);
+									if(nodeOperationName.equals(connectedPort)){
+										osll = new OperationSignatureList();
+										nos = new NodeOperationSignature();
+										
+										nos.setOperation_name(nodeOperationName);
+										//set input_message_name
+										nos.setInput_message_name(c.getTarget().getName()[0].getMessageName());  
+										//NodeOperationSignature input_message_name should have been array, as operation can have multiple input messages.  
+										//Its seems to be some gap
+										
+										//set output_message_name
+										nos.setOutput_message_name(getOutputMessage(n.getRequirements(), nodeOperationName));
+										
+										//Set NodeOperationSignature as operation_signature
+										osll.setOperation_signature(nos);
+										
+										//set List<Container> connected_to
+										containerLst = getRelations(cdump, nodeId);
+										osll.setConnected_to(containerLst);
+										oslList.add(osll);
+									}
 								}
 								bpnode.setOperation_signature_list(oslList);
 
 								// 14. Add the nodedetails to bluepring nodes list
-								logger.debug("14. Add the nodedetails to bluepring nodes list");
+								logger.debug("14. Add the nodedetails to blueprint nodes list");
 								bpnodes.add(bpnode);
 							}
 
@@ -1223,6 +1229,29 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param requirements
+	 * @param nodeName
+	 * @return
+	 */
+	private String getConnectedPort(List<Relations> requirements, String nodeId){
+		String result = null;
+		if(null != nodeId && nodeId.trim() != ""){
+			for(Relations r : requirements) {
+				if(nodeId.equals(r.getSourceNodeId())){
+					result = r.getSourceNodeRequirement().replace("+", "%PLUS%");
+					result = result.split("%PLUS%")[0];
+					break;
+				} else if(nodeId.equals(r.getTargetNodeId())){
+					result = r.getTargetNodeCapability().replace("+", "%PLUS%");
+					result = result.split("%PLUS%")[0];
+					break;
+				}
+			}
+		}
+		return result;
+	}
 	/**
 	 * @param nodeSolutionId
 	 * @param dockerImageURL
