@@ -37,6 +37,7 @@ public class Nodes implements Serializable {
 	private String nodeId;
 	private String nodeSolutionId;
 	private String nodeVersion;
+	private String protoUri;
 	private Requirements[] requirements;
 	private Property[] properties;
 	private Capabilities[] capabilities;
@@ -198,5 +199,20 @@ public class Nodes implements Serializable {
 	 */
 	public void setType(Type type) {
 		this.type = type;
+	}
+	
+	/**
+	 * @return the protoUri
+	 */
+	public String getProtoUri() {
+		return protoUri;
+	}
+
+	/**
+	 * @param protoUri
+	 *            the protoUri to set
+	 */
+	public void setProtoUri(String protoUri) {
+		this.protoUri = protoUri;
 	}
 }

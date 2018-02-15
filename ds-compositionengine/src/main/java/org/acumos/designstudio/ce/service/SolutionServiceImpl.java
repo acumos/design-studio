@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
@@ -49,6 +50,7 @@ import org.acumos.designstudio.cdump.Ndata;
 import org.acumos.designstudio.cdump.Nodes;
 import org.acumos.designstudio.cdump.Property;
 import org.acumos.designstudio.cdump.Relations;
+import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.DSUtil;
@@ -320,6 +322,7 @@ public class SolutionServiceImpl implements ISolutionService {
 					node1.setNdata(node.getNdata());
 					node1.setNodeSolutionId(node.getNodeSolutionId());
 					node1.setNodeVersion(node.getNodeVersion());
+					node1.setProtoUri(getProtoUrl(id, version,props.getProtoArtifactType()));
 					if (node.getProperties() == null) {
 						node1.setProperties(propertyarray);
 					} else {
@@ -347,7 +350,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				node1.setNdata(node.getNdata());
 				node1.setNodeSolutionId(node.getNodeSolutionId());
 				node1.setNodeVersion(node.getNodeVersion());
-
+				node1.setProtoUri(getProtoUrl(id, version,props.getProtoArtifactType()));
 				if (node.getProperties() == null) {
 					node1.setProperties(propertyarray);
 				} else {
@@ -1281,6 +1284,90 @@ public class SolutionServiceImpl implements ISolutionService {
 		confprops = confprops1;
 		props = properties;
 		nexusArtifactClient = nexusArtifactClient1;
+	}
+	
+	/**
+	 * @param solutionId
+	 * @param version
+	 * @param artifactType
+	 * @return nexusURI
+	 * @throws AcumosException
+	 * Use for getting the nexusURI for solution.
+	 */
+	public String getProtoUrl(String solutionId, String version, String artifactType)
+			throws AcumosException {
+		logger.debug(EELFLoggerDelegator.debugLogger, "--------getProtoUrl()-------- : Begin");
+
+		String nexusURI = "";
+		List<MLPSolutionRevision> mlpSolutionRevisionList = null;
+		String solutionRevisionId = null;
+		ByteArrayOutputStream byteArrayOutputStream = null;
+		List<MLPArtifact> mlpArtifactList;
+		try {
+			// 1. Get the list of SolutionRevision for the solutionId.
+			try {
+				mlpSolutionRevisionList = cmnDataService.getSolutionRevisions(solutionId);
+			} catch (Exception e) {
+				logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getSolutionRevisions() ----------", e);
+			}
+			 
+			// 2. Match the version with the SolutionRevision and get the
+			// solutionRevisionId.
+			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
+				solutionRevisionId = mlpSolutionRevisionList.stream().filter(mlp -> mlp.getVersion().equals(version))
+						.findFirst().get().getRevisionId();
+				logger.debug(EELFLoggerDelegator.debugLogger,
+						"------ SolutionRevisonId for Version : " + solutionRevisionId + " -------");
+			}
+		} catch (NoSuchElementException | NullPointerException e) {
+			logger.error(EELFLoggerDelegator.errorLogger,
+					"---------Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id----------",
+					e);
+			throw new NoSuchElementException("Failed to fetch the Solution Revision Id of the solutionId for the user");
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger,
+					"---------Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id----------",
+					e);
+			throw new ServiceException("Failed to fetch the Solution Revision Id for the solutionId " + solutionId);
+		}
+
+		if (null != solutionRevisionId) {
+			// 3. Get the list of Artifiact for the SolutionId and SolutionRevisionId.
+			mlpArtifactList = getListOfArtifacts(solutionId, solutionRevisionId);
+			
+			if (null != mlpArtifactList && !mlpArtifactList.isEmpty()) {
+				try {
+					nexusURI = mlpArtifactList.stream()
+							.filter(mlpArt -> mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType)).findFirst()
+							.get().getUri();
+					logger.debug(EELFLoggerDelegator.debugLogger, "------ Nexus URI : " + nexusURI + " -------");
+				} catch (NoSuchElementException | NullPointerException e) {
+					logger.error(EELFLoggerDelegator.errorLogger,
+							"---------Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType----------",
+							e);
+					throw new NoSuchElementException(
+							"Could not search the artifact URI for artifactType " + artifactType);
+				} catch (Exception e) {
+					logger.error(EELFLoggerDelegator.errorLogger,
+							"---------Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType----------",
+							e);
+					throw new ServiceException(
+							" --------------- Exception Occured decryptAndWriteTofile() --------------", "501",
+							"Could not search the artifact URI for artifactType " + artifactType, e.getCause());
+				} finally {
+					try {
+						if (byteArrayOutputStream != null) {
+							byteArrayOutputStream.close();
+						}
+					} catch (IOException e) {
+						logger.error(EELFLoggerDelegator.errorLogger,
+								"Error : Exception in getProtoUrl() : Failed to close the byteArrayOutputStream", e);
+					}
+				}
+			}
+		}
+		logger.debug(EELFLoggerDelegator.debugLogger, "--------getProtoUrl()-------- : End");
+		return nexusURI;
 	}
 
 }
