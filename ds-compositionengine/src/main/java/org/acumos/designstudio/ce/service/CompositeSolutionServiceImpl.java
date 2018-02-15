@@ -997,6 +997,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 									logger.debug(EELFLoggerDelegator.debugLogger, "Opearion : " + opearion);
 									bos.setOperation_name(opearion);
 									container.setOperation_signature(bos);
+									String containerName = rltn.getTargetNodeName();
+									container.setContainer_name(containerName);
 									containerList.add(container);
 								}
 							}
@@ -1082,9 +1084,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								List<Capabilities> capabilities = Arrays.asList(n.getCapabilities());
 								String nodeOperationName = null;
 								List<Container> containerLst = new ArrayList<Container>();
-								for(Capabilities c :capabilities ){
+								for(Capabilities c : capabilities ){
 									osll = new OperationSignatureList();
-									
 									nos = new NodeOperationSignature();
 									nodeOperationName = c.getTarget().getId();
 									nos.setOperation_name(nodeOperationName);
