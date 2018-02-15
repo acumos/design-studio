@@ -116,8 +116,10 @@ public class SolutionServiceImpl implements ISolutionService {
 
 			Map<String, Object> queryParameters = new HashMap<>();
 			queryParameters.put("active", Boolean.TRUE);
-			//Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
-			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false, new RestPageRequest(0,props.getSolutionResultsetSize()));
+			// Code changes are to match the change in the CDS API Definition
+			// searchSolution in version 1.13.x
+			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
+					new RestPageRequest(0, props.getSolutionResultsetSize()));
 			mlpSolutionsList = pageResponse.getContent();
 			logger.debug(EELFLoggerDelegator.debugLogger, "------ The Date Format : " + confprops.getDateFormat());
 			if (null == mlpSolutionsList) {
@@ -138,7 +140,8 @@ public class SolutionServiceImpl implements ISolutionService {
 				String pbAccessTypeCode = props.getPublicAccessTypeCode();
 				String prAccessTypeCode = props.getPrivateAccessTypeCode();
 				String orAccessTypeCode = props.getOrganizationAccessTypeCode();
-				// For each solution where toolkittypeCode is not null and not equal to "CP".
+				// For each solution where toolkittypeCode is not null and not
+				// equal to "CP".
 				for (MLPSolution mlpsolution : mlpSolutionsList) {
 					if (mlpsolution.getToolkitTypeCode() != null
 							&& (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
@@ -322,7 +325,8 @@ public class SolutionServiceImpl implements ISolutionService {
 					node1.setNdata(node.getNdata());
 					node1.setNodeSolutionId(node.getNodeSolutionId());
 					node1.setNodeVersion(node.getNodeVersion());
-					node1.setProtoUri(getProtoUrl(id, version,props.getProtoArtifactType()));
+					node1.setProtoUri(
+							getProtoUrl(node.getNodeSolutionId(), node.getNodeVersion(), props.getProtoArtifactType()));
 					if (node.getProperties() == null) {
 						node1.setProperties(propertyarray);
 					} else {
@@ -350,7 +354,8 @@ public class SolutionServiceImpl implements ISolutionService {
 				node1.setNdata(node.getNdata());
 				node1.setNodeSolutionId(node.getNodeSolutionId());
 				node1.setNodeVersion(node.getNodeVersion());
-				node1.setProtoUri(getProtoUrl(id, version,props.getProtoArtifactType()));
+				node1.setProtoUri(
+						getProtoUrl(node.getNodeSolutionId(), node.getNodeVersion(), props.getProtoArtifactType()));
 				if (node.getProperties() == null) {
 					node1.setProperties(propertyarray);
 				} else {
@@ -569,7 +574,8 @@ public class SolutionServiceImpl implements ISolutionService {
 						if (null != relations && !relations.isEmpty()) {
 							// iterate through relation
 							for (Relations relation : relations) {
-								// check if the relation contains the specified nodeId
+								// check if the relation contains the specified
+								// nodeId
 								if (relation.getSourceNodeId().equals(nodeId)) {
 									relation.setSourceNodeName(nodeName);
 								} else if (relation.getTargetNodeId().equals(nodeId)) {
@@ -601,7 +607,9 @@ public class SolutionServiceImpl implements ISolutionService {
 										if (null != mapInputs && mapInputs.length != 0) {
 											// iterate through mapinputs
 											for (MapInputs mapInput : mapInputs) {
-												// Check if the input message name matches with the provided input
+												// Check if the input message
+												// name matches with the
+												// provided input
 												// meassage name
 												if (mapInput.getMessage_name()
 														.equals(fieldmap.getInput_field_message_name())) {
@@ -610,24 +618,41 @@ public class SolutionServiceImpl implements ISolutionService {
 															.getInput_fields();
 													if (null != dataMapInputFieldList
 															&& dataMapInputFieldList.length != 0) {
-														// iterate through dataMapInput fields
+														// iterate through
+														// dataMapInput fields
 														for (DataMapInputField dataMapInputField : dataMapInputFieldList) {
-															// check if the output/destination tag id is already linked
-															// to any source node
-															// remove the destination node from the object
+															// check if the
+															// output/destination
+															// tag id is already
+															// linked
+															// to any source
+															// node
+															// remove the
+															// destination node
+															// from the object
 															if (dataMapInputField.getMapped_to_field()
 																	.equals(fieldmap.getOutput_field_tag_id())) {
 
-																// delete the mapping if any
+																// delete the
+																// mapping if
+																// any
 																dataMapInputField.setMapped_to_message("");
 																dataMapInputField.setMapped_to_field("");
 															}
-															// check if the input/source tag id matches with the
-															// provided input/source tag id
+															// check if the
+															// input/source tag
+															// id matches with
+															// the
+															// provided
+															// input/source tag
+															// id
 															if (dataMapInputField.getTag()
 																	.equals(fieldmap.getInput_field_tag_id())) {
 
-																// update the object with the latest mapping
+																// update the
+																// object with
+																// the latest
+																// mapping
 																dataMapInputField.setMapped_to_message(
 																		fieldmap.getOutput_field_message_name());
 																dataMapInputField.setMapped_to_field(
@@ -778,8 +803,10 @@ public class SolutionServiceImpl implements ISolutionService {
 		try {
 			Map<String, Object> queryParameters = new HashMap<>();
 			queryParameters.put("active", Boolean.TRUE);
-			//Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
-			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false, new RestPageRequest(0,props.getSolutionResultsetSize()));
+			// Code changes are to match the change in the CDS API Definition
+			// searchSolution in version 1.13.x
+			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
+					new RestPageRequest(0, props.getSolutionResultsetSize()));
 			mlpSolutions = pageResponse.getContent();
 			MatchingModel matchingModel = null;
 			List<MLPSolutionRevision> mlpSolRevisions;
@@ -1079,7 +1106,8 @@ public class SolutionServiceImpl implements ISolutionService {
 				updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName, targetNodeId,
 						sourceNodeRequirement, targetNodeCapabilityName, cdump);
 				addedLink = true;
-			} else { // set properties field of DM + update relations list, if link is b/w Model &
+			} else { // set properties field of DM + update relations list, if
+						// link is b/w Model &
 						// Data Mapper
 
 				nodesList = cdump.getNodes();
@@ -1110,7 +1138,8 @@ public class SolutionServiceImpl implements ISolutionService {
 								break;
 
 							} else {
-								// set map_outputs of data_map under properties field of DM
+								// set map_outputs of data_map under properties
+								// field of DM
 								if (property.getData_map().getMap_inputs().length == 0) {
 
 									propertyarray[0].getData_map()
@@ -1122,7 +1151,8 @@ public class SolutionServiceImpl implements ISolutionService {
 									break;
 								}
 
-								// set map_inputs of data_map under properties field of DM
+								// set map_inputs of data_map under properties
+								// field of DM
 								if (property.getData_map().getMap_outputs().length == 0) {
 									propertyarray[0].getData_map()
 											.setMap_inputs(property.getData_map().getMap_inputs());
@@ -1218,7 +1248,8 @@ public class SolutionServiceImpl implements ISolutionService {
 				} else {
 					Iterator<Relations> relationsItr = relationsList.iterator();
 
-					// Identify link to delete + Data mapper node to delete it's properties field
+					// Identify link to delete + Data mapper node to delete it's
+					// properties field
 					while (relationsItr.hasNext()) {
 						Relations relation = relationsItr.next();
 						if (relation.getLinkId().equals(linkId)) {
@@ -1285,32 +1316,31 @@ public class SolutionServiceImpl implements ISolutionService {
 		props = properties;
 		nexusArtifactClient = nexusArtifactClient1;
 	}
-	
+
 	/**
 	 * @param solutionId
 	 * @param version
 	 * @param artifactType
 	 * @return nexusURI
 	 * @throws AcumosException
-	 * Use for getting the nexusURI for solution.
+	 *             Use for getting the nexusURI for solution.
 	 */
-	public String getProtoUrl(String solutionId, String version, String artifactType)
-			throws AcumosException {
+	public String getProtoUrl(String solutionId, String version, String artifactType) throws AcumosException {
 		logger.debug(EELFLoggerDelegator.debugLogger, "--------getProtoUrl()-------- : Begin");
 
 		String nexusURI = "";
 		List<MLPSolutionRevision> mlpSolutionRevisionList = null;
 		String solutionRevisionId = null;
-		ByteArrayOutputStream byteArrayOutputStream = null;
 		List<MLPArtifact> mlpArtifactList;
 		try {
 			// 1. Get the list of SolutionRevision for the solutionId.
 			try {
 				mlpSolutionRevisionList = cmnDataService.getSolutionRevisions(solutionId);
 			} catch (Exception e) {
-				logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getSolutionRevisions() ----------", e);
+				logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getSolutionRevisions() ----------",
+						e);
 			}
-			 
+
 			// 2. Match the version with the SolutionRevision and get the
 			// solutionRevisionId.
 			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
@@ -1332,11 +1362,13 @@ public class SolutionServiceImpl implements ISolutionService {
 		}
 
 		if (null != solutionRevisionId) {
-			// 3. Get the list of Artifiact for the SolutionId and SolutionRevisionId.
+			// 3. Get the list of Artifiact for the SolutionId and
+			// SolutionRevisionId.
 			mlpArtifactList = getListOfArtifacts(solutionId, solutionRevisionId);
-			
+
 			if (null != mlpArtifactList && !mlpArtifactList.isEmpty()) {
 				try {
+					// 3. Get the nexus URI for the SolutionId
 					nexusURI = mlpArtifactList.stream()
 							.filter(mlpArt -> mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType)).findFirst()
 							.get().getUri();
@@ -1354,15 +1386,6 @@ public class SolutionServiceImpl implements ISolutionService {
 					throw new ServiceException(
 							" --------------- Exception Occured decryptAndWriteTofile() --------------", "501",
 							"Could not search the artifact URI for artifactType " + artifactType, e.getCause());
-				} finally {
-					try {
-						if (byteArrayOutputStream != null) {
-							byteArrayOutputStream.close();
-						}
-					} catch (IOException e) {
-						logger.error(EELFLoggerDelegator.errorLogger,
-								"Error : Exception in getProtoUrl() : Failed to close the byteArrayOutputStream", e);
-					}
 				}
 			}
 		}
