@@ -35,10 +35,12 @@ public class Node implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6799798022353553155L;
 	private String container_name;
+	private String node_type;
 	private String image;
-	private List<Depends_On> depends_on;
+	private String proto_uri;
+	private List<OperationSignatureList> operation_signature_list;
 
 	
 	/**
@@ -71,18 +73,50 @@ public class Node implements Serializable {
 	}
 
 	/**
-	 * @return the depends_on
+	 * @return the node_type
 	 */
-	public List<Depends_On> getDepends_on() {
-		return depends_on;
+	public String getNode_type() {
+		return node_type;
 	}
 
 	/**
-	 * @param depends_on the depends_on to set
+	 * @param node_type the node_type to set
 	 */
-	public void setDepends_on(List<Depends_On> depends_on) {
-		this.depends_on = depends_on;
+	public void setNode_type(String node_type) {
+		this.node_type = node_type;
 	}
+
+	/**
+	 * @return the proto_uri
+	 */
+	public String getProto_uri() {
+		return proto_uri;
+	}
+
+	/**
+	 * @param proto_uri the proto_uri to set
+	 */
+	public void setProto_uri(String proto_uri) {
+		this.proto_uri = proto_uri;
+	}
+
+	/**
+	 * @return the operation_signature_list
+	 */
+	public List<OperationSignatureList> getOperation_signature_list() {
+		return operation_signature_list;
+	}
+
+	/**
+	 * @param operation_signature_list the operation_signature_list to set
+	 */
+	public void setOperation_signature_list(List<OperationSignatureList> operation_signature_list) {
+		this.operation_signature_list = operation_signature_list;
+	}
+	
+
+	
+	
 	
 
 
