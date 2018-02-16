@@ -18,22 +18,12 @@
  * ===============LICENSE_END=========================================================
  */
 
-/**
- * 
- */
 package org.acumos.designstudio.ce.vo.blueprint;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * 
- *
- */
 public class BluePrint implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private String name;
