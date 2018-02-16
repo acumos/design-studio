@@ -997,7 +997,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 									logger.debug(EELFLoggerDelegator.debugLogger, "Opearion : " + opearion);
 									bos.setOperation_name(opearion);
 									container.setOperation_signature(bos);
-									String containerName = rltn.getTargetNodeName();
+									String containerName = rltn.getSourceNodeName();
 									container.setContainer_name(containerName);
 									containerList.add(container);
 								}
@@ -1006,22 +1006,20 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							// 8. Get the nodes from Cdump file & set the required details in the blueprint nodes
 							logger.debug("8. Get the nodes from Cdump file & set the required details in the blueprint nodes");
 							List<Nodes> cdumpNodes = cdump.getNodes();
+							List<Node> bpnodes = new ArrayList<>();
+							List<MLPSolutionRevision> mlpSolRevisions = null;
+							MLPSolutionRevision mlpSolRevision = null;
 							String nodeName = "";
 							String nodeId = "";
 							String nodeSolutionId = "";
 							String nodeVersion = "";
-							List<OperationSignatureList> oslList = new ArrayList<>();
-							OperationSignatureList osll = null;
-							NodeOperationSignature nos = null;
 							String dockerImageURL = null;
 							Node bpnode = null;
-							List<Node> bpnodes = new ArrayList<>();
-							List<MLPSolutionRevision> mlpSolRevisions = null;
-							MLPSolutionRevision mlpSolRevision = null;
 							int propLength = 0;
 							DataMap dataMap = null;
 							Property[] properties = null;
 							String gdm = "GDM";
+							
 
 							// 9. Extract NodeId, NodeName,NodeSolutionId,NodeVersion
 							logger.debug("9. Extract NodeId, NodeName,NodeSolutionId,NodeVersion");
@@ -1080,9 +1078,14 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								String protoUri = n.getProtoUri();
 								bpnode.setProto_uri(protoUri); 
 								
+								//Set operation_signature_list
 								List<Capabilities> capabilities = Arrays.asList(n.getCapabilities());
 								String nodeOperationName = null;
 								List<Container> containerLst = new ArrayList<Container>();
+								
+								List<OperationSignatureList> oslList = new ArrayList<>();
+								OperationSignatureList osll = null;
+								NodeOperationSignature nos = null;
 								
 								//Get the connected port 
 								String connectedPort = getConnectedPort(cdump.getRelations(), n.getNodeId());
