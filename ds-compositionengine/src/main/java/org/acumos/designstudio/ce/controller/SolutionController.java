@@ -678,7 +678,7 @@ public class SolutionController {
 	public Object setProbeIndicator(HttpServletRequest request,
 			@RequestParam(value = "userId", required = true) String userId,
 			@RequestParam(value = "solutionId", required = false) String solutionId,
-			@RequestParam(value = "version", required = true) String version,
+			@RequestParam(value = "version", required = false) String version,
 			@RequestParam(value = "cid", required = false) String cid,
 			@RequestParam(value = "probeIndicator", required = true) String probeIndicator
 			)
