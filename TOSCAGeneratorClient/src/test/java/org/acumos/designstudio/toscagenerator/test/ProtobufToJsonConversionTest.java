@@ -20,14 +20,14 @@
 
 package org.acumos.designstudio.toscagenerator.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
 import org.acumos.designstudio.toscagenerator.service.ProtobufGeneratorService;
+import org.acumos.designstudio.toscagenerator.util.EELFLoggerDelegator;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ProtobufToJsonConversionTest {
-	private static final Logger logger = LoggerFactory.getLogger(ProtobufToJsonConversionTest.class);
+	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ProtobufToJsonConversionTest.class);
 
 	/**
 	 * The test case is used to create protoBuf.json by using a method
@@ -70,9 +70,9 @@ public class ProtobufToJsonConversionTest {
 		assertNotNull(clasProto3);
 		assertNotNull(predProto4);
 
-		logger.debug("Aggregator Result :" + aggrProto1);
-		logger.debug("Alarm Generator Result :" + alarmgenProto2);
-		logger.debug("Classifier Result :" + clasProto3);
-		logger.debug("Predictor Result :" + predProto4);
+		logger.debug(EELFLoggerDelegator.debugLogger, "Aggregator Result :" + aggrProto1);
+		logger.debug(EELFLoggerDelegator.debugLogger, "Alarm Generator Result :" + alarmgenProto2);
+		logger.debug(EELFLoggerDelegator.debugLogger, "Classifier Result :" + clasProto3);
+		logger.debug(EELFLoggerDelegator.debugLogger, "Predictor Result :" + predProto4);
 	}
 }

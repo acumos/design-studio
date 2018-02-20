@@ -20,8 +20,7 @@
 
 package org.acumos.designstudio.toscagenerator.exceptionhandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.acumos.designstudio.toscagenerator.util.EELFLoggerDelegator;
 
 public abstract class CustomException extends Exception {
 	/**
@@ -29,7 +28,7 @@ public abstract class CustomException extends Exception {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LoggerFactory.getLogger(CustomException.class);
+	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(CustomException.class);
 
 	// TODO : for showing the multiple exception on UI level
 	private Object param;
@@ -58,7 +57,7 @@ public abstract class CustomException extends Exception {
 
 	public CustomException(String message, String errorCode, String errorDesc) {
 		super(message);
-		logger.debug(message);
+		logger.debug(EELFLoggerDelegator.debugLogger,message);
 		this.errorCode = errorCode;
 		this.errorDesc = errorDesc;
 	}

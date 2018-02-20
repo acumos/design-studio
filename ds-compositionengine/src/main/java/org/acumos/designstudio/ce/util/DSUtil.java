@@ -60,7 +60,7 @@ public class DSUtil {
 	 *             On failure to read
 	 */
 	public static String readFile(String filePath) throws IOException {
-		logger.debug(EELFLoggerDelegator.debugLogger, "-----------  readFile() started --------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, "  readFile() started ");
 		FileReader fr = new FileReader(filePath);
 		BufferedReader br = new BufferedReader(fr);
 		try {
@@ -72,7 +72,7 @@ public class DSUtil {
 				sb.append("\n");
 				line = br.readLine();
 			}
-			logger.debug(EELFLoggerDelegator.debugLogger, "----------- readFile() ended ------------");
+			logger.debug(EELFLoggerDelegator.debugLogger, " readFile() ended ");
 			return sb.toString();
 		} finally {
 			fr.close();
@@ -92,7 +92,7 @@ public class DSUtil {
 	 *            Data to write
 	 */
 	public static void writeDataToFile(String path, String fileName, String extension, String data) {
-		logger.debug("-------------- writeDataToFile() started --------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " writeDataToFile() started ");
 		PrintWriter writer = null;
 		String completeFileName = path + fileName;
 		if (null != extension && !extension.trim().equals("")) {
@@ -102,10 +102,10 @@ public class DSUtil {
 			writer = new PrintWriter(completeFileName, "UTF-8");
 			writer.write(data);
 
-			logger.debug("-------------- writeDataToFile() ended -------------");
+			logger.debug(EELFLoggerDelegator.debugLogger, " writeDataToFile() ended ");
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					" --------------- Exception Occured   writeDataToFile() ----------------" + fileName, e);
+					" Exception Occured   writeDataToFile() " + fileName, e);
 		} finally {
 			if (null != writer) {
 				writer.close();
@@ -129,15 +129,15 @@ public class DSUtil {
 				schema.validate(new JSONObject(josnString)); // throws a ValidationException if this object is invalid
 			} catch (JSONException e) {
 				logger.error(EELFLoggerDelegator.errorLogger,
-						" --------------- Exception Occured   isValidJsonSchema() ----------------", e);
+						"Exception Occured   isValidJsonSchema() ", e);
 				return false;
 			}
 		} catch (IOException e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					" --------------- Exception Occured   isValidJsonSchema() ----------------", e);
+					"Exception Occured   isValidJsonSchema() ", e);
 		} catch (Exception ex) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					" --------------- Exception Occured   isValidJsonSchema() ----------------", ex);
+					"Exception Occured   isValidJsonSchema() ", ex);
 		}
 		return true;
 	}
@@ -242,14 +242,14 @@ public class DSUtil {
 			mapper.readTree(requirements);
 		} catch (Exception ex) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					" --------------- Exception Occured   isValidJsonSchemaContents_List() ----------------", ex);
+					" Exception Occured   isValidJsonSchemaContents_List() ", ex);
 			sb.append("requirements ");
 		}
 		try {
 			mapper.readTree(capabilities);
 		} catch (Exception ex) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					" --------------- Exception Occured   isValidJsonSchemaContents_List() ----------------", ex);
+					" Exception Occured   isValidJsonSchemaContents_List() ", ex);
 			sb.append("capabilities");
 		}
 		return sb.toString();
@@ -267,7 +267,7 @@ public class DSUtil {
 			mapper.readTree(relationship);
 		} catch (Exception ex) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					" --------------- Exception Occured   isValidJsonaddLink() ----------------", ex);
+					" Exception Occured   isValidJsonaddLink() ", ex);
 			err = "relationship";
 		}
 		return err;
@@ -285,7 +285,7 @@ public class DSUtil {
 			return true;
 		} catch (IOException e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					" --------------- Exception Occured   isValidJsonaddLink() ----------------", e);
+					" Exception Occured   isValidJsonaddLink() ", e);
 			return false;
 		}
 	}
@@ -299,7 +299,7 @@ public class DSUtil {
 	 * @throws Exception On failure
 	 */
 	public static int runCommand(String cmd) throws Exception {
-		logger.debug("Exec: " + cmd);
+		logger.debug(EELFLoggerDelegator.debugLogger, "Exec: " + cmd);
 		Process p = null;
 		int exitVal = 1;
 		try {
@@ -308,18 +308,18 @@ public class DSUtil {
 			// get the error stream of the process and print it
 			InputStream error = p.getErrorStream();
 			for (int i = 0; i < error.available(); i++) {
-				logger.debug("" + error.read());
+				logger.debug(EELFLoggerDelegator.debugLogger, "" + error.read());
 			}
 
 			exitVal = p.waitFor();
-			logger.debug("Exit Value: " + exitVal);
+			logger.debug(EELFLoggerDelegator.debugLogger, "Exit Value: " + exitVal);
 		} catch (Throwable t) {
-			logger.error(" --------------- Exception Occured   runCommand() ----------------", t);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured   runCommand() ", t);
 			StringWriter stack = new StringWriter();
 			t.printStackTrace(new PrintWriter(stack));
-			logger.debug(stack.toString());
+			logger.debug(EELFLoggerDelegator.debugLogger, stack.toString());
 			logger.error(EELFLoggerDelegator.errorLogger,
-					" --------------- Exception Occured   runCommand() ----------------", t);
+					" Exception Occured   runCommand() ", t);
 		}
 		return exitVal;
 	}

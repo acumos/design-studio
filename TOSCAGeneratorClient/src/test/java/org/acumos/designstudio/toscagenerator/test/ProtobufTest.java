@@ -117,7 +117,7 @@ public class ProtobufTest {
 		Gson gson = new Gson();
 		String protoBufToJsonString = gson.toJson(protoBufInstance);
 		assertNotNull(protoBufToJsonString);
-		logger.info("protoBufToJsonString" + protoBufToJsonString);
+		logger.info(EELFLoggerDelegator.applicationLogger, "protoBufToJsonString" + protoBufToJsonString);
 
 	}
 }

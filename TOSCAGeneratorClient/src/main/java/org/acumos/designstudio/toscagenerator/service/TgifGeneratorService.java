@@ -24,6 +24,7 @@ import java.util.Iterator;
 
 import org.acumos.designstudio.toscagenerator.exceptionhandler.AcumosException;
 import org.acumos.designstudio.toscagenerator.exceptionhandler.ServiceException;
+import org.acumos.designstudio.toscagenerator.util.EELFLoggerDelegator;
 import org.acumos.designstudio.toscagenerator.util.Properties;
 import org.acumos.designstudio.toscagenerator.util.ToscaUtil;
 import org.acumos.designstudio.toscagenerator.vo.Artifact;
@@ -40,8 +41,6 @@ import org.acumos.designstudio.toscagenerator.vo.tgif.Tgif;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -51,7 +50,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class TgifGeneratorService {
 
-	private static final Logger logger = LoggerFactory.getLogger(TgifGeneratorService.class);
+	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(TgifGeneratorService.class);
 
 	/**
 	 * 
@@ -66,7 +65,7 @@ public class TgifGeneratorService {
 	 *             On failure
 	 */
 	public Artifact createTgif1(String solutionID, String version, String modelMetaData) throws AcumosException {
-		logger.debug("--------  createTgif() Started ------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, "  createTgif() Started ");
 		Artifact result = null;
 		String path = Properties.getTempFolderPath(solutionID, version);
 		JSONParser parser = new JSONParser();
@@ -78,11 +77,11 @@ public class TgifGeneratorService {
 			result = new Artifact("tgif", "json", solutionID, version, path, jsonString.length());
 
 		} catch (Exception e) {
-			logger.error("------------- Exception Occured  createTgif() -------------", e);
-			throw new ServiceException(" --------------- Exception Occured decryptAndWriteTofile() --------------",
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured  createTgif() ", e);
+			throw new ServiceException(" Exception Occured decryptAndWriteTofile() ",
 					Properties.getDecryptionErrorCode(), Properties.getDecryptionErrorDesc(), e.getCause());
 		}
-		logger.debug("--------  createTgif() End ------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, "  createTgif() End ");
 		return result;
 	}
 
@@ -102,7 +101,7 @@ public class TgifGeneratorService {
 	 */
 	public Artifact createTgif(String solutionID, String version, String protobuf, String metaData)
 			throws AcumosException {
-		logger.debug("--------  createTgif() Started ------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, "  createTgif() Started ");
 		Artifact result = null;
 		String path = Properties.getTempFolderPath(solutionID, version);
 		JSONParser parser = new JSONParser();
@@ -119,20 +118,20 @@ public class TgifGeneratorService {
 			jsonString = mapper.writeValueAsString(tgif);
 			jsonString = jsonString.replace("[null]", "[]");
 			jsonString = jsonString.replace("null", "{}");
-			logger.debug("Generated TGIF.json : " + jsonString);
+			logger.debug(EELFLoggerDelegator.debugLogger, "Generated TGIF.json : " + jsonString);
 			ToscaUtil.writeDataToFile(path, "TGIF", "json", jsonString);
 			result = new Artifact("TGIF", "json", solutionID, version, path, jsonString.length());
 
 		} catch (Exception e) {
-			logger.error("------------- Exception Occured in createTgif() -------------", e);
-			logger.error("metaData : " + metaData);
-			logger.error("protobuf : " + protobuf);
-			logger.error("tgif : " + jsonString);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured in createTgif() ", e);
+			logger.error(EELFLoggerDelegator.errorLogger, "metaData : " + metaData);
+			logger.error(EELFLoggerDelegator.errorLogger, "protobuf : " + protobuf);
+			logger.error(EELFLoggerDelegator.errorLogger, "tgif : " + jsonString);
 			throw new ServiceException(
-					" --------------- Exception Occurred parsing either metaData or protobuf --------------",
+					" Exception Occurred parsing either metaData or protobuf ",
 					Properties.getDecryptionErrorCode(), "Error creating TGIF details", e.getCause());
 		}
-		logger.debug("--------  createTgif() End ------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, "  createTgif() End ");
 		return result;
 	}
 
@@ -144,7 +143,7 @@ public class TgifGeneratorService {
 	 * @return
 	 */
 	private Tgif populateTgif(String version, JSONObject metaDataJson, JSONObject protobufJson) {
-		logger.debug("--------  populateTgif() Begin ------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, "  populateTgif() Begin ");
 
 		@SuppressWarnings("unchecked")
 		String solutionName = metaDataJson.getOrDefault("name", "Key not found").toString();
@@ -175,7 +174,7 @@ public class TgifGeneratorService {
 
 		Tgif result = new Tgif(self, streams, services, parameters, auxiliary, artifacts);
 
-		logger.debug("--------  populateTgif() End ------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, "  populateTgif() End ");
 		return result;
 	}
 
@@ -325,7 +324,7 @@ public class TgifGeneratorService {
 			message = (JSONObject) itr.next();
 			messageName = (String) message.get("messageName");
 			if (messageName.equals(msgName)) {
-				logger.debug("message : " + message.toJSONString());
+				logger.debug(EELFLoggerDelegator.debugLogger, "message : " + message.toJSONString());
 				break;
 			}
 		}

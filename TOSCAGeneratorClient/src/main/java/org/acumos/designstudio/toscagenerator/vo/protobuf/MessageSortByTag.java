@@ -20,8 +20,7 @@
 
 package org.acumos.designstudio.toscagenerator.vo.protobuf;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.acumos.designstudio.toscagenerator.util.EELFLoggerDelegator;
 
 /**
  * 
@@ -29,12 +28,12 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class MessageSortByTag implements SortComparator {
-	private static final Logger logger = LoggerFactory.getLogger(MessageSortByTag.class);
+	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(MessageSortByTag.class);
 	public int compare(MessageargumentList firstObject, MessageargumentList secondObject) {
 		try{
             return firstObject.getTag().compareTo(secondObject.getTag());
 		}catch(Exception ex){
-			logger.error("compare failed"+ex);
+			logger.error(EELFLoggerDelegator.errorLogger, "compare failed"+ex);
 			return 0;
 		}
 	}

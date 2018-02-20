@@ -18,42 +18,53 @@
   ===============LICENSE_END=========================================================
   -->
 
-<configuration>
-	<timestamp key="byDay" datePattern="yyyyMMdd'T'HHmmss" />
-	
-  <property name="componentName" value="logs"></property>
-  <property name="logDirectory" value="${componentName}" />
-  
-  <property name="generalLogName" value="ToscaGenerator" />
-  
-  <property name="defaultPattern"
-		value="%date{ISO8601}|%X{RequestId}|%X{ServiceInstanceId}|%thread|%X{VirtualServerName}|%X{ServiceName}|%X{InstanceUUID}|%.-5level|%c|%X{AlertSeverity}|%X{ClassName}|%X{Timer}| %msg%n" />
+<configuration scan="true" scanPeriod="3 seconds" debug="false">
+	<property name="componentName" value="TOSCAModelGeneratorClient"></property>
 
+	<property name="logDirPrefix" value="logs"></property>
+
+	<property name="logDirectory" value="${logDirPrefix}/${componentName}" />
+	<!-- Can easily relocate debug logs by modifying this path. -->
+	<property name="debugLogDirectory" value="${logDirPrefix}/${componentName}" />
+
+	<!-- log file names -->
+	<property name="generalLogName" value="application" />
+ 	<property name="errorLogName" value="error" />
+	<property name="debugLogName" value="debug" />
+
+	<property name="defaultPattern" value="%date{ISO8601}|%X{RequestId}|%X{ServiceInstanceId}|%thread|%X{VirtualServerName}|%X{ServiceName}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Timer}| %msg%n" />
+    <property name="debugLoggerPattern" value="%date{ISO8601}|%X{RequestId}|%X{ServiceInstanceId}|%thread|%X{VirtualServerName}|%X{ServiceName}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Timer}| %msg%n" />
+    <property name="debugAccessPattern" value="%date{ISO8601}|%X{contextName}|%X{user}|%thread|%.-5level|%X{AlertSeverity}|%X{ClassName}| %msg%n" />  
+  
+	<!-- Example evaluator filter applied against console appender -->
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>INFO</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>
-		</filter>
 		<encoder>
-			<!-- <pattern>%d %-4relative [%thread] %-5level %c - %msg %n </pattern> -->
 			<pattern>${defaultPattern}</pattern>
 		</encoder>
 	</appender>
-	
-	<appender name="FILE"
+
+	<appender name="ACCESS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logDirectory}/access.log</file>
+         <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>access.log.%d{yyyy-MM-dd}.log</FileNamePattern>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>${debugAccessPattern}</pattern>
+        </encoder>
+    </appender>
+    
+	<appender name="EELF"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${logDirectory}/${generalLogName}.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 			<fileNamePattern>${logDirectory}/${generalLogName}.%i.log.zip
 			</fileNamePattern>
 			<minIndex>1</minIndex>
-			<maxIndex>10</maxIndex>
-			<!-- <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> -->
-			<!-- <fileNamePattern>${logDirectory}/${generalLogName}.%d{yyyy-MM-dd-HH-mm}.log.
-			</fileNamePattern> -->
-			<!-- <maxHistory>10</maxHistory> -->
-			
+			<maxIndex>9</maxIndex>
 		</rollingPolicy>
 		<triggeringPolicy
 			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
@@ -63,19 +74,83 @@
 			<pattern>${defaultPattern}</pattern>
 		</encoder>
 	</appender>
-	
-	<!-- <appender name="FILE" class="ch.qos.logback.core.FileAppender">ToscaGenerator
-	<file>./logs/ToscaGenerator.log</file>
-	<append>true</append>
-	<encoder>
-		<pattern>%d %-4relative [%thread] %-5level  %c  - %msg %n </pattern>
-	</encoder>
-	</appender> -->
 
-	<root level="debug">
-		<appender-ref ref="FILE" />
+	<appender name="asyncEELF" class="ch.qos.logback.classic.AsyncAppender">
+		<queueSize>256</queueSize>
+		<appender-ref ref="EELF" />
+	</appender>
+
+	 <appender name="EELFError"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logDirectory}/${errorLogName}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${logDirectory}/${errorLogName}.%i.log.zip
+			</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>9</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>5MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>${defaultPattern}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="asyncEELFError" class="ch.qos.logback.classic.AsyncAppender">
+		<queueSize>256</queueSize>
+		<appender-ref ref="EELFError" />
+	</appender>
+
+	<appender name="EELFDebug"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${debugLogDirectory}/${debugLogName}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${debugLogDirectory}/${debugLogName}.%i.log.zip
+			</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>9</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>5MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>${debugLoggerPattern}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="asyncEELFDebug" class="ch.qos.logback.classic.AsyncAppender">
+		<queueSize>256</queueSize>
+		<appender-ref ref="EELFDebug" />
+		<includeCallerData>true</includeCallerData>
+	</appender>
+
+	<!-- ============================================================================ -->
+	<!-- EELF loggers -->
+	<!-- ============================================================================ -->
+	<logger name="com.att.eelf" level="debug" additivity="false">
+		<appender-ref ref="asyncEELF" />
+	</logger>
+
+	 <logger name="com.att.eelf.error" level="info" additivity="false">
+		<appender-ref ref="asyncEELFError" />
+	</logger>
+
+	<logger name="com.att.eelf.debug" level="debug" additivity="false">
+		<appender-ref ref="asyncEELFDebug" />
+	</logger>
+
+	<logger name="com.att.eelf.security" level="info" additivity="false">
+        <appender-ref ref="ACCESS_FILE" />        
+  	</logger>
+  
+	<root level="info">
+		<appender-ref ref="asyncEELF" />
 		<appender-ref ref="STDOUT" />
 	</root>
+
 
 </configuration>
 

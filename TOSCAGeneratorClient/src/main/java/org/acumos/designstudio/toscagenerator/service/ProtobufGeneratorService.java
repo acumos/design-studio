@@ -32,6 +32,7 @@ import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import org.acumos.designstudio.toscagenerator.exceptionhandler.ServiceException;
+import org.acumos.designstudio.toscagenerator.util.EELFLoggerDelegator;
 import org.acumos.designstudio.toscagenerator.util.Properties;
 import org.acumos.designstudio.toscagenerator.vo.protobuf.ComplexType;
 import org.acumos.designstudio.toscagenerator.vo.protobuf.InputMessage;
@@ -43,8 +44,6 @@ import org.acumos.designstudio.toscagenerator.vo.protobuf.OutputMessage;
 import org.acumos.designstudio.toscagenerator.vo.protobuf.ProtoBufClass;
 import org.acumos.designstudio.toscagenerator.vo.protobuf.SortComparator;
 import org.acumos.designstudio.toscagenerator.vo.protobuf.SortFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,7 +61,7 @@ public class ProtobufGeneratorService {
 	boolean isItMessage = false;
 	int servicesLineCount = 0;
 
-	private static final Logger logger = LoggerFactory.getLogger(ProtobufGeneratorService.class);
+	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ProtobufGeneratorService.class);
 	// Protobuf's variable declaration section started
 	final Pattern pattern = Pattern.compile("\\((.*?)\\)");
 	private List<MessageargumentList> messageargumentList = null;
@@ -94,7 +93,7 @@ public class ProtobufGeneratorService {
 	 * @throws ServiceException On failure
 	 */
 	public String createProtoJson(String solutionId, String version, File localMetadataFile) throws ServiceException {
-		logger.debug("-------------- CreateProtoJson() started ---------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " CreateProtoJson() started ");
 		protoBufClass = new ProtoBufClass();
 		messageBodyList = new ArrayList<>();
 		listOfInputAndOutputMessage = new ArrayList<>();
@@ -116,26 +115,26 @@ public class ProtobufGeneratorService {
 				protoBufClass.setListOfMessages(expendedmessageBodyList);
 				Gson gson1 = new Gson();
 				protoBufToJsonString = gson1.toJson(protoBufClass);
-				// System.out.println("protoBufToJsonString----------------" +
+				// System.out.println("protoBufToJsonString" +
 				// protoBufToJsonString);
 			} catch (Exception ex) {
-				logger.error(" --------------- Exception Occured  constructSubMessageBody() ---------", ex);
+				logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured  constructSubMessageBody() ", ex);
 				ex.printStackTrace();
 			}
 			isMessage = false;
 			isItservice = false;
 			isItMessage = false;
 			servicesLineCount = 0;
-			logger.debug("-------------- CreateProtoJson() end ---------------");
+			logger.debug(EELFLoggerDelegator.debugLogger, " CreateProtoJson() end ");
 		} catch (ServiceException ex) {
-			logger.error(
-					" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------",
+			logger.error(EELFLoggerDelegator.errorLogger,
+					" Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json",
 					ex);
 			throw new ServiceException(ex.getMessage(), ex.getErrorCode(), ex.getErrorDesc(), ex.getCause());
 
 		} catch (Exception ex) {
-			logger.error(
-					" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------",
+			logger.error(EELFLoggerDelegator.errorLogger, 
+					" Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json",
 					ex);
 
 		} finally {
@@ -145,8 +144,8 @@ public class ProtobufGeneratorService {
 				if (fr != null)
 					fr.close();
 			} catch (IOException ex) {
-				logger.error(
-						" --------------- Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json--------------",
+				logger.error(EELFLoggerDelegator.errorLogger, 
+						" Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json",
 						ex);
 			}
 		}
@@ -177,7 +176,7 @@ public class ProtobufGeneratorService {
 			// start package
 
 			if (line.startsWith("message")) {
-				logger.debug("-------------- costructMessage() strated ---------------");
+				logger.debug(EELFLoggerDelegator.debugLogger, " costructMessage() strated ");
 				isMessage = false;
 				messageBody = new MessageBody();
 
@@ -190,11 +189,11 @@ public class ProtobufGeneratorService {
 				messageBodyList.add(messageBody);
 				protoBufClass.setListOfMessages(messageBodyList);
 				isMessage = false;
-				logger.debug("-------------- costructMessage() end ---------------");
+				logger.debug(EELFLoggerDelegator.debugLogger, " costructMessage() end ");
 			}
 
 			if (line.startsWith("service")) {
-				logger.debug("-------------- constructService() started ---------------");
+				logger.debug(EELFLoggerDelegator.debugLogger, " constructService() started ");
 				service = new org.acumos.designstudio.toscagenerator.vo.protobuf.Service();
 				service = constructService(line, service);
 
@@ -229,11 +228,11 @@ public class ProtobufGeneratorService {
 				}
 			} else if (isItservice && line.contains("}") && !line.isEmpty()) {
 				isItservice = false;
-				logger.debug("-------------- constructService() end ---------------");
+				logger.debug(EELFLoggerDelegator.debugLogger, " constructService() end ");
 			}
 		} catch (Exception ex) {
-			logger.error(" --------------- Exception Occured  parseLine() --------------", ex);
-			throw new ServiceException(" --------------- Exception Occured while parsing protobuf --------------",
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured  parseLine() ", ex);
+			throw new ServiceException(" Exception Occured while parsing protobuf ",
 					Properties.getDecryptionErrorCode(), "Error while parsing protoBuf file", ex.getCause());
 		}
 
@@ -245,7 +244,7 @@ public class ProtobufGeneratorService {
 	 * @return
 	 */
 	private String constructSyntax(String line) {
-		logger.debug("-------------- constructSyntax() strated ---------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " constructSyntax() strated ");
 		String removequotes = "";
 		try {
 			if (line.startsWith("syntax")) {
@@ -255,9 +254,9 @@ public class ProtobufGeneratorService {
 				removequotes = trimString.replaceAll("^\"|\"$", "");
 			}
 		} catch (Exception ex) {
-			logger.error(" --------------- Exception Occured  constructSyntax() --------------", ex);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured  constructSyntax() ", ex);
 		}
-		logger.debug("-------------- constructSyntax() end ---------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " constructSyntax() end ");
 		return removequotes;
 
 	}
@@ -268,9 +267,9 @@ public class ProtobufGeneratorService {
 	 * @return
 	 */
 	private String constructPackage(String line) {
-		logger.debug("-------------- constructPackage() strated ---------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " constructPackage() strated ");
 		String[] fields = line.split(" ");
-		logger.debug("-------------- constructPackage() end ---------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " constructPackage() end ");
 		return fields[1].replace(";", "");
 
 	}
@@ -358,7 +357,7 @@ public class ProtobufGeneratorService {
 				isMessage = true;
 			}
 		} catch (Exception ex) {
-			logger.error(" --------------- Exception Occured  costructMessage() --------------", ex);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured  costructMessage() ", ex);
 		}
 		return messageBody;
 	}
@@ -387,7 +386,7 @@ public class ProtobufGeneratorService {
 				isItservice = true;
 			}
 		} catch (Exception ex) {
-			logger.error(" --------------- Exception Occured  constructService() --------------", ex);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured  constructService() ", ex);
 		}
 		return service;
 
@@ -399,7 +398,7 @@ public class ProtobufGeneratorService {
 	 * @return
 	 */
 	private List<InputMessage> constructInputMessage(String inputParameterString) {
-		logger.debug("-------------- constructInputMessage() strated ---------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " constructInputMessage() strated ");
 		listOfInputMessages = new ArrayList<InputMessage>();
 		try {
 
@@ -411,9 +410,9 @@ public class ProtobufGeneratorService {
 				listOfInputAndOutputMessage.add(inputMessage.getInputMessageName());
 			}
 		} catch (Exception ex) {
-			logger.error(" --------------- Exception Occured  constructInputMessage() --------------", ex);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured  constructInputMessage() ", ex);
 		}
-		logger.debug("-------------- constructInputMessage() end ---------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " constructInputMessage() end ");
 		return listOfInputMessages;
 
 	}
@@ -424,7 +423,7 @@ public class ProtobufGeneratorService {
 	 * @return
 	 */
 	private List<OutputMessage> constructOutputMessage(String outPutParameterString) {
-		logger.debug("-------------- constructOutputMessage() strated ---------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " constructOutputMessage() strated ");
 		listOfOputPutMessages = new ArrayList<OutputMessage>();
 		try {
 			String[] outPutParameterArray = outPutParameterString.split(",");
@@ -435,9 +434,9 @@ public class ProtobufGeneratorService {
 				listOfInputAndOutputMessage.add(outputMessage.getOutPutMessageName());
 			}
 		} catch (Exception ex) {
-			logger.error("-------------- constructOutputMessage() end ---------------", ex);
+			logger.error(EELFLoggerDelegator.errorLogger, " constructOutputMessage() end ", ex);
 		}
-		logger.debug("-------------- constructOutputMessage() end ---------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " constructOutputMessage() end ");
 		return listOfOputPutMessages;
 	}
 
@@ -447,7 +446,7 @@ public class ProtobufGeneratorService {
 	 * @return
 	 */
 	private List<MessageBody> constructSubMessageBody(String protoBufToJsonString) throws Exception {
-		logger.debug("-------------- constructconstructSubMessageBody() strated ---------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " constructconstructSubMessageBody() strated ");
 		List<MessageBody> expendedmessageBodyList = new ArrayList<MessageBody>();
 		try {
 			// private List<MessageBody> duplicateexpendedmessageBodyList = new
@@ -681,10 +680,10 @@ public class ProtobufGeneratorService {
 				}
 			}
 		} catch (Exception ex) {
-			logger.error("-------------- constructconstructSubMessageBody() end ---------------" + ex);
+			logger.error(EELFLoggerDelegator.errorLogger, " constructconstructSubMessageBody() end " + ex);
 			ex.printStackTrace();
 		}
-		logger.debug("-------------- constructconstructSubMessageBody() end ---------------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " constructconstructSubMessageBody() end ");
 		return expendedmessageBodyList;
 	}
 

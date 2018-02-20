@@ -20,9 +20,8 @@
 
 package org.acumos.designstudio.toscagenerator.exceptionhandler;
 
+import org.acumos.designstudio.toscagenerator.util.EELFLoggerDelegator;
 import org.acumos.designstudio.toscagenerator.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -33,7 +32,7 @@ public class ServiceException extends AcumosException {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LoggerFactory.getLogger(ServiceException.class);
+	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ServiceException.class);
 
 	public static final String CONNECTION_ERROR_CODE = Properties.getConnectionErrorCode();
 	public static final String CONNECTION_ERROR_DESC = Properties.getConnectionErrorDesc();
@@ -72,7 +71,7 @@ public class ServiceException extends AcumosException {
 	}
 
 	public static void main(String[] args) {
-		logger.debug(ServiceException.CONNECTION_ERROR_CODE);
+		logger.debug(EELFLoggerDelegator.debugLogger, ServiceException.CONNECTION_ERROR_CODE);
 	}
 
 }

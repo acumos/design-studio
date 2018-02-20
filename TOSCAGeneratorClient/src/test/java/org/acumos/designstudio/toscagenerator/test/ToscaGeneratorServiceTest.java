@@ -28,14 +28,13 @@ import java.util.Properties;
 
 import org.acumos.cds.client.ICommonDataServiceRestClient;
 import org.acumos.designstudio.toscagenerator.ToscaGeneratorClient;
+import org.acumos.designstudio.toscagenerator.util.EELFLoggerDelegator;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ToscaGeneratorServiceTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(ToscaGeneratorServiceTest.class);
+	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ToscaGeneratorServiceTest.class);
 
 	private String metaDataFile = "./metadata.json";
 	private String protoDataFile = "./aggregator-proto.proto";
@@ -66,17 +65,17 @@ public class ToscaGeneratorServiceTest {
 
 		try {
 			ToscaGeneratorClient mockito = mock(ToscaGeneratorClient.class);
-			logger.info("Toscagenerator client start");
+			logger.info(EELFLoggerDelegator.applicationLogger, "Toscagenerator client start");
 			File localMetaDataFile = new File(metaDataFile);
 			File localProtoFile = new File(protoDataFile);
 			when(mockito.generateTOSCA(userId, solutionID, version, solutionRevisionID, localProtoFile,
 					localMetaDataFile)).thenReturn("Success");
-			logger.info("result : " + result);
+			logger.info(EELFLoggerDelegator.applicationLogger, "result : " + result);
 		} catch (Exception ex) {
-			logger.error("------------ Exception Occured  generateTOSCA() ----------- ", ex);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured  generateTOSCA() ", ex);
 			throw ex;
 		}
-		logger.info("Toscagenerator client end");
+		logger.info(EELFLoggerDelegator.applicationLogger, "Toscagenerator client end");
 	}
 
 }
