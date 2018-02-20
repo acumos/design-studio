@@ -57,14 +57,14 @@ public class Application {
 		if (springApplicationJson != null && springApplicationJson.contains("{")) {
 			final ObjectMapper mapper = new ObjectMapper();
 			JsonNode rootNode = mapper.readTree(springApplicationJson);
-			logger.info("main: successfully parsed configuration from environment {}", CONFIG_ENV_VAR_NAME);
+			logger.info(EELFLoggerDelegator.applicationLogger, "main: successfully parsed configuration from environment {}", CONFIG_ENV_VAR_NAME);
 			JsonNode toscaNode = rootNode.path("tosca");
 			String path = toscaNode.path("outputfolder").asText();
-			logger.info("main: Cleaning output folder {}", path);
+			logger.info(EELFLoggerDelegator.applicationLogger, "main: Cleaning output folder {}", path);
 			DSUtil.rmdir(new File(path));
-			logger.info("main: output folder is cleaned successfully {}", path);
+			logger.info(EELFLoggerDelegator.applicationLogger, "main: output folder is cleaned successfully {}", path);
 		} else {
-			logger.warn("main: no configuration found in environment {}", CONFIG_ENV_VAR_NAME);
+			logger.warn(EELFLoggerDelegator.applicationLogger, "main: no configuration found in environment {}", CONFIG_ENV_VAR_NAME);
 		}
 		// Clean the output Folder :
 

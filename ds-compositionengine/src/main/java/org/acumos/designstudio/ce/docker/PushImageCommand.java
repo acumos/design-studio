@@ -20,6 +20,7 @@
 
 package org.acumos.designstudio.ce.docker;
 
+import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.apache.commons.lang.StringUtils;
 
 import com.github.dockerjava.api.DockerClient;
@@ -88,7 +89,7 @@ public class PushImageCommand extends DockerCommand {
 
 			@Override
 			public void onError(Throwable throwable) {
-				logger.error("Failed to push image:" + throwable.getMessage());
+				logger.error(EELFLoggerDelegator.errorLogger, "Failed to push image:" + throwable.getMessage());
 				super.onError(throwable);
 			}
 		};

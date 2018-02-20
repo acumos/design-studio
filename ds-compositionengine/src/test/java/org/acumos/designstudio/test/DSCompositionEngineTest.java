@@ -95,13 +95,13 @@ public class DSCompositionEngineTest {
 		if (null == mlpSolutions) {
 			assertNull(mlpSolutions);
 			logger.debug(EELFLoggerDelegator.debugLogger,
-					"------- CommonDataService returned null Solution list--------");
+					" CommonDataService returned null Solution list");
 		} else if (mlpSolutions.isEmpty()) {
 			logger.debug(EELFLoggerDelegator.debugLogger,
-					"------- CommonDataService returned empty Solution list--------");
+					" CommonDataService returned empty Solution list");
 		} else {
 			logger.debug(EELFLoggerDelegator.debugLogger,
-					"------- CommonDataService returned Solution list of size : " + mlpSolutions.size());
+					" CommonDataService returned Solution list of size : " + mlpSolutions.size());
 			mlpSolRevisions = new ArrayList<MLPSolutionRevision>();
 			for (MLPSolution mlpsol : mlpSolutions) {
 				solutionId = mlpsol.getSolutionId();
@@ -112,13 +112,13 @@ public class DSCompositionEngineTest {
 				String userName = user.getFirstName() + " " + user.getLastName();
 				if (null == mlpSolRevisions) {
 					logger.debug(EELFLoggerDelegator.debugLogger,
-							"------- CommonDataService returned null SolutionRevision list--------");
+							" CommonDataService returned null SolutionRevision list");
 				} else if (mlpSolRevisions.isEmpty()) {
 					logger.debug(EELFLoggerDelegator.debugLogger,
-							"------- CommonDataService returned empty SolutionRevision list--------");
+							" CommonDataService returned empty SolutionRevision list");
 				} else {
 					logger.debug(EELFLoggerDelegator.debugLogger,
-							"------- CommonDataService returned SolutionRevision list of size : "
+							" CommonDataService returned SolutionRevision list of size : "
 									+ mlpSolRevisions.size());
 					for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
 						dssolution = new DSSolution();

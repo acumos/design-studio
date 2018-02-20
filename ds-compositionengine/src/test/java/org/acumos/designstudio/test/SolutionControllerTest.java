@@ -186,7 +186,7 @@ public class SolutionControllerTest {
 			}
 		} catch (ServiceException e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					"------- Exception Occured in createNewCompositeSolution() --------");
+					" Exception Occured in createNewCompositeSolution() ");
 			throw e;
 		}
 	}
@@ -1005,7 +1005,7 @@ public class SolutionControllerTest {
 			}
 		} catch (FileNotFoundException e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					"------- Exception Occured in clearCompositeSolution() --------", e);
+					" Exception Occured in clearCompositeSolution() ", e);
 		}
 	}
 
@@ -1029,7 +1029,7 @@ public class SolutionControllerTest {
 			}
 		} catch (FileNotFoundException e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					"------- Exception Occured in closeCompositeSolution() --------", e);
+					" Exception Occured in closeCompositeSolution() ", e);
 		}
 	}
 
@@ -1175,7 +1175,7 @@ public class SolutionControllerTest {
 			iCompositeSolutionService.getNexusClient(nexusArtifactClient, confprops1, properties);
 			isSolutionDeleted = iCompositeSolutionService.deleteCompositeSolution(userId, solutionId, version);
 			//assertTrue(isSolutionDeleted);
-			logger.info("deleteCompositeSolution {}", isSolutionDeleted);
+			logger.info(EELFLoggerDelegator.applicationLogger, "deleteCompositeSolution {}", isSolutionDeleted);
 		} catch (AcumosException ex) {
 			logger.error(EELFLoggerDelegator.errorLogger, ex.getMessage());
 		}
@@ -1204,7 +1204,7 @@ public class SolutionControllerTest {
 			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,
 					protobufJsonString1);
 			Assert.assertNotNull(getMatchingModelsResult);
-			logger.info("getMatchingModelsResult {}", getMatchingModelsResult);
+			logger.info(EELFLoggerDelegator.applicationLogger, "getMatchingModelsResult {}", getMatchingModelsResult);
 			logger.debug(EELFLoggerDelegator.debugLogger, getMatchingModelsResult);
 		} catch (JSONException je) {
 			logger.error(EELFLoggerDelegator.errorLogger, je.getMessage());
@@ -1263,7 +1263,7 @@ public class SolutionControllerTest {
 		solutionService.getNexusClient(nexusArtifactClient, confprops, props);
 		String result = solutionService.readCompositeSolutionGraph(userId, sId, version);
 		Assert.assertNotNull(result);
-		logger.info("readCompositeSolutionGraph {}", result);
+		logger.info(EELFLoggerDelegator.applicationLogger, "readCompositeSolutionGraph {}", result);
 	}
 
 	@Test
@@ -1375,7 +1375,7 @@ public class SolutionControllerTest {
 			String result = compositeService.getCompositeSolutions(userId, visibilityLevel);
 			Assert.assertNotNull(result);
 			System.out.println(result);
-			logger.info("getCompositeSolutions {}", result);
+			logger.info(EELFLoggerDelegator.applicationLogger, "getCompositeSolutions {}", result);
 		} catch (AcumosException e) {
 			logger.error(EELFLoggerDelegator.errorLogger, e.getMessage());
 		}

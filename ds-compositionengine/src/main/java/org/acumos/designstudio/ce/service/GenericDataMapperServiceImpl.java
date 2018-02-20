@@ -88,12 +88,12 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		String dockerImageURI = null;
 		boolean result = false;
 		logger.debug(EELFLoggerDelegator.debugLogger, "createDeployGDM() : Begin");
-		logger.debug("------ createDeployGDM() : Begin -------");
+		logger.debug(EELFLoggerDelegator.debugLogger," createDeployGDM() : Begin ");
 		//1. Create Proto buf file for cdump 
 		result = createProtobufFile(cdump, userId);
 		
 		if(result){
-			logger.debug("-------- 1. Protobuf File created ");
+			logger.debug(EELFLoggerDelegator.debugLogger," 1. Protobuf File created ");
 			//2. generate and compile the java code as per the protobuf file.
 			result = generateProtoJavaCode(userId);
 		} else {
@@ -103,7 +103,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		}
 		
 		if(result){
-			logger.debug("-------- 2. generate and compile the java code as per the protobuf file. ");
+			logger.debug(EELFLoggerDelegator.debugLogger," 2. generate and compile the java code as per the protobuf file. ");
 			//3. Generate the MappingDetails as per the cdump.
 			result = generateMappingDetails(cdump);
 		} else {
@@ -114,7 +114,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		
 		String jarPath = null;
 		if(result){
-			logger.debug("-------- 3. Generated the MappingDetails as per the cdump.");
+			logger.debug(EELFLoggerDelegator.debugLogger," 3. Generated the MappingDetails as per the cdump.");
 			//4. Create new the GDMJar 
 			jarPath = createNewGDMJar(userId);
 		} else {
@@ -124,7 +124,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		}
 		
 		if(null != jarPath){
-			logger.debug("-------- 4. Created new the GDMJar");
+			logger.debug(EELFLoggerDelegator.debugLogger," 4. Created new the GDMJar");
 			//5. Create Docker Image
 			String dockerFolder = jarPath.substring(0,jarPath.lastIndexOf("/")+1).trim();
 			String jarName = jarPath.substring(jarPath.lastIndexOf("/")+1).trim();
@@ -135,14 +135,14 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			throw new ServiceException("Not able to create Generic Data Mapper Jar", props.getSolutionErrorCode(),
 					"Not able to create Generic Data Mapper Jar");
 		}
-		logger.debug("------ createDeployGDM() : End -------");
+		logger.debug(EELFLoggerDelegator.debugLogger," createDeployGDM() : End ");
 		logger.debug(EELFLoggerDelegator.debugLogger, "createDeployGDM() : End");
 		return dockerImageURI;
 	}
 
 	private String createNewGDMJar(String userId) throws ServiceException {
 		logger.debug(EELFLoggerDelegator.debugLogger, "createNewGDMJar() : Begin");
-		logger.debug("------ createNewGDMJar() : Begin -------");
+		logger.debug(EELFLoggerDelegator.debugLogger," createNewGDMJar() : Begin ");
 		
 		String result = null;
 		path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
@@ -230,7 +230,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			}
          }
 		logger.debug(EELFLoggerDelegator.debugLogger, "createNewGDMJar() : End ");
-		logger.debug( "------ createNewGDMJar() : End -------");
+		logger.debug(EELFLoggerDelegator.debugLogger," createNewGDMJar() : End ");
 		return result;
 	}
 	
@@ -395,20 +395,19 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error(e.getMessage());
+			logger.error(EELFLoggerDelegator.errorLogger, e.getMessage());
 			e.printStackTrace();
 		}
 
 		if (exitVal != 0){
-			logger.error("Failed to construct jar");
+			logger.error(EELFLoggerDelegator.errorLogger, "Failed to construct jar");
 		}
 		
 	}
 	
 	
 	private boolean generateMappingDetails(Cdump cdump) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "generateMappingDetails() : Begin ");
-		logger.debug("------ generateMappingDetails() : Begin -------");
+		logger.debug(EELFLoggerDelegator.debugLogger," generateMappingDetails() : Begin ");
 		
 		boolean result = false;
 		List<Nodes> nodes = null;
@@ -439,15 +438,13 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			DSUtil.writeDataToFile(targetPath, props.getFieldMapping(), "json", payload);
 			result = true;
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "generateMappingDetails() : End ");
-		logger.debug("------ generateMappingDetails() : End -------");
+		logger.debug(EELFLoggerDelegator.debugLogger," generateMappingDetails() : End ");
 		return result;
 	}
 	
 	private boolean generateProtoJavaCode(String userId) {
 		
-		logger.debug(EELFLoggerDelegator.debugLogger, "generateProtoJavaCode() : Begin ");
-		logger.debug("------ generateProtoJavaCode() : Begin -------");
+		logger.debug(EELFLoggerDelegator.debugLogger," generateProtoJavaCode() : Begin ");
 		
 		path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 		
@@ -456,30 +453,29 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		String cmd;
 		int exitVal = -1;
 
-		cmd = "protoc -I=" + path + " --java_out=" + path + " " + path + protobufFileName + ".proto";
+		cmd = "protoc -I=" + path + "java_out=" + path + " " + path + protobufFileName + ".proto";
 
 		try {
 			exitVal = DSUtil.runCommand(cmd);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error(e.getMessage());
+			logger.error(EELFLoggerDelegator.errorLogger, e.getMessage());
 			e.printStackTrace();
 		}
 
 		if (exitVal != 0){
-			logger.debug("Failed to generate java code");
+			logger.debug(EELFLoggerDelegator.debugLogger,"Failed to generate java code");
 		}
 		else {
-			logger.debug("----------------Compiling java code-----------");
+			logger.debug(EELFLoggerDelegator.debugLogger,"Compiling java code");
 			result = compileProtoJavaCode();
 			if(result){
 				//DSUtil.rmdir(new File(path+"org/"));
 			}
 		}
 		
-		logger.debug(EELFLoggerDelegator.debugLogger, "generateProtoJavaCode() : End ");
-		logger.debug("------ generateProtoJavaCode() : End -------");
+		logger.debug(EELFLoggerDelegator.debugLogger," generateProtoJavaCode() : End ");
 		
 		return result;
 		
@@ -489,7 +485,6 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	private boolean compileProtoJavaCode() {
 		
 		logger.debug(EELFLoggerDelegator.debugLogger, "compileProtoJavaCode() : Begin ");
-		logger.debug( "------ compileProtoJavaCode() : Begin -------");
 		
 		boolean result = false;
 		//String buildPath;
@@ -510,36 +505,36 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		
 		File libDir = new File(confprops.getLib());
 		if(libDir.exists() && libDir.isDirectory()){
-			logger.debug("------- libDir found ------");
+			logger.debug(EELFLoggerDelegator.debugLogger," libDir found ");
 			File[] files = libDir.listFiles();
 			for(int i =0 ; i < files.length ; i++){
-				logger.debug(files[i].getName() + " is : " + (files[i].isDirectory()? "Dir" : "File"));
+				logger.debug(EELFLoggerDelegator.debugLogger,files[i].getName() + " is : " + (files[i].isDirectory()? "Dir" : "File"));
 			}
 		} else {
-			logger.debug("------- libDir not found ------");
+			logger.debug(EELFLoggerDelegator.debugLogger," libDir not found ");
 		}
 		File protobufJar = new File(protobufjarpath);
 		if(protobufJar.exists() && protobufJar.isFile()){
-			logger.debug("------- protobuf jar found ------");
+			logger.debug(EELFLoggerDelegator.debugLogger," protobuf jar found ");
 		} else {
-			logger.debug("------- protobuf jar not found ------");
+			logger.debug(EELFLoggerDelegator.debugLogger," protobuf jar not found ");
 		}
 		
 		File dataVOjava = new File(path + packagepath + className + ".java");
 		if(dataVOjava.exists() && dataVOjava.isFile()){
-			logger.debug("------- java class found ------");
+			logger.debug(EELFLoggerDelegator.debugLogger," java class found ");
 		} else {
-			logger.debug("------- java class not found ------");
+			logger.debug(EELFLoggerDelegator.debugLogger," java class not found ");
 		}
 		
 		if(targetDir.exists() && targetDir.isDirectory()){
-			logger.debug("------- targetDir exists ------");
+			logger.debug(EELFLoggerDelegator.debugLogger," targetDir exists ");
 		} else {
-			logger.debug("------- targetDir does not exists ------");
+			logger.debug(EELFLoggerDelegator.debugLogger," targetDir does not exists ");
 		}
 		
 		cmd = "/usr/bin/javac -cp " + protobufjarpath + " " + path + packagepath + className + ".java"
-				+ " -d " + targetPath;
+				+ "d " + targetPath;
 
 		try {
 			exitVal = DSUtil.runCommand(cmd);
@@ -550,21 +545,19 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			System.out.println(e.getMessage());
 		}
 		if (exitVal != 0){
-			logger.debug("Proto Code Compilation Failed...");
+			logger.debug(EELFLoggerDelegator.debugLogger,"Proto Code Compilation Failed...");
 		} else {
-			logger.debug("Proto Code compilation Successfull...");
+			logger.debug(EELFLoggerDelegator.debugLogger,"Proto Code compilation Successfull...");
 			result = true;
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "compileProtoJavaCode() : End ");
-		logger.debug("------ compileProtoJavaCode() : End -------");
+		logger.debug(EELFLoggerDelegator.debugLogger," compileProtoJavaCode() : End ");
 		
 		return result;
 	}
 	
 	private boolean createProtobufFile(Cdump cdump, String userId) throws ServiceException {
 		//Get file from resources folder
-		logger.debug(EELFLoggerDelegator.debugLogger, "createProtobufFile() : Begin");
-		logger.debug("------ createProtobufFile() : Begin -------");
+		logger.debug(EELFLoggerDelegator.debugLogger," createProtobufFile() : Begin ");
 		boolean result = false;
 		StringBuilder inputMessage = new StringBuilder();
 		StringBuilder outputMessage = new StringBuilder();
@@ -649,7 +642,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 				
 			} else {
 				logger.error(EELFLoggerDelegator.errorLogger, "Exception in createProtobufFile()");
-				throw new ServiceException("---  Exception in createProtobufFile() ----", props.getSolutionErrorCode(),
+				throw new ServiceException("  Exception in createProtobufFile() ", props.getSolutionErrorCode(),
 						"No Generic Data Mapper found");
 			}
 		} catch (FileNotFoundException e) {
@@ -679,8 +672,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			}
 							
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "createProtobufFile() : End ");
-		logger.debug("------ createProtobufFile() : End -------");
+		logger.debug(EELFLoggerDelegator.debugLogger," createProtobufFile() : End ");
 		return result;
 	}
 	
@@ -690,8 +682,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	 * @param tagId
 	 */
 	private String createUploadDockerImage(String userId, String dockerFolder, String jarName, String tagId) throws ServiceException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " createUploadDockerImage() : Begin ");
-		logger.debug("------ createUploadDockerImage() : Begin -------");
+		logger.debug(EELFLoggerDelegator.debugLogger," createUploadDockerImage() : Begin ");
 		
 		String result = null;
 		
@@ -720,22 +711,21 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 					imageTagName, tagId, true, false);
 			tagImageCommand.setClient(dockerClient);
 			tagImageCommand.execute();
-			logger.debug("Docker image tagging completed successfully");
+			logger.debug(EELFLoggerDelegator.debugLogger,"Docker image tagging completed successfully");
 
-			logger.debug("Starting pushing with Imagename:" + imageTagName + " and version : " + tagId
+			logger.debug(EELFLoggerDelegator.debugLogger,"Starting pushing with Imagename:" + imageTagName + " and version : " + tagId
 					+ " in nexus");
 			PushImageCommand pushImageCmd = new PushImageCommand(imageTagName, tagId, "");
 			pushImageCmd.setClient(dockerClient);
 			pushImageCmd.execute();
 
-            logger.debug("image : " + imageTagName + ":" + tagId + " uploaded successfully");
+            logger.debug(EELFLoggerDelegator.debugLogger,"image : " + imageTagName + ":" + tagId + " uploaded successfully");
             result  = imageTagName + ":" + tagId;
             System.out.println("Image URL : " + result);
 		} finally {
 			
 		}
-        logger.debug(EELFLoggerDelegator.debugLogger, " createUploadDockerImage() : End");
-        logger.debug("------ createUploadDockerImage() : End -------");
+        logger.debug(EELFLoggerDelegator.debugLogger," createUploadDockerImage() : End ");
         
         return result;
 	}
@@ -746,7 +736,6 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	private void createDockerFile(String userId, String jarName) throws ServiceException {
 		//ClassLoader classLoader = getClass().getClassLoader();
 		logger.debug(EELFLoggerDelegator.debugLogger, " createDockerFile() : Begin ");
-		logger.debug("------ createDockerFile() : Begin -------");
 		
 		Scanner scanner = null;
 		InputStream inputStream = null;
@@ -759,7 +748,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			dockerfile = dockerfile.replace("gdmservice", jarName);
 			path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 			DSUtil.writeDataToFile(path, "Dockerfile", null, dockerfile);
-			logger.debug("------ Docker File created successfully. " + dockerfile);
+			logger.debug(EELFLoggerDelegator.debugLogger," Docker File created successfully. " + dockerfile);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -779,8 +768,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 				e.printStackTrace();
 		}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " createDockerFile() : End ");
-		logger.debug("------ createDockerFile() : End -------");
+		logger.debug(EELFLoggerDelegator.debugLogger," createDockerFile() : End ");
 		
 	}
 	
@@ -831,12 +819,12 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error(e.getMessage());
+			logger.error(EELFLoggerDelegator.errorLogger, e.getMessage());
 			e.printStackTrace();
 		}
 
 		if (exitVal != 0){
-			logger.debug("Failed to generate jar");
+			logger.debug(EELFLoggerDelegator.debugLogger,"Failed to generate jar");
 		}
 		
 	}
