@@ -69,7 +69,7 @@ public class TGIFTest {
 		selfObj.setName("name");
 		selfObj.setVersion("version");
 		Self selfObj1 = new Self("version", "name", "description", "component_type");
-		logger.debug(EELFLoggerDelegator.debugLogger, "result " +  selfObj1);
+		logger.debug(EELFLoggerDelegator.debugLogger, "result  {} ",  selfObj1);
 		tgif.setSelf(selfObj);
 		selfObj.getComponent_type();
 		selfObj.getDescription();
@@ -82,13 +82,13 @@ public class TGIFTest {
 		stream.setSubscribes(subscribes);
 		stream.setPublishes(publishes);
 		Stream stream1 = new Stream(subscribes, publishes);
-		logger.debug(EELFLoggerDelegator.debugLogger, "result " +  stream1);
+		logger.debug(EELFLoggerDelegator.debugLogger, "result  {} ",  stream1);
 		tgif.setStreams(stream);
 		stream.getPublishes();
 		stream.getSubscribes();
 
 		Request request1 = new Request(new org.json.simple.JSONArray(), "version");
-		logger.debug(EELFLoggerDelegator.debugLogger, "result " +  request1);
+		logger.debug(EELFLoggerDelegator.debugLogger, "result  {} ",  request1);
 		Request request = new Request();
 		request.setFormat(new org.json.simple.JSONArray());
 		request.setVersion("version");
@@ -96,7 +96,7 @@ public class TGIFTest {
 		request.getFormat();
 
 		Response response1 = new Response(new org.json.simple.JSONArray(), "version");
-		logger.debug(EELFLoggerDelegator.debugLogger, "result " +  response1);
+		logger.debug(EELFLoggerDelegator.debugLogger, "result  {} ",  response1);
 		Response response = new Response();
 		response.setFormat(new org.json.simple.JSONArray());
 		response.setVersion("version");
@@ -108,7 +108,7 @@ public class TGIFTest {
 		call.setRequest(request);
 		call.setResponse(response);
 		Call call1 = new Call("config_key", request, response);
-		logger.debug(EELFLoggerDelegator.debugLogger, "result " +  call1);
+		logger.debug(EELFLoggerDelegator.debugLogger, "result  {} ",  call1);
 		call.getConfig_key();
 		call.getRequest();
 		call.getResponse();
@@ -118,7 +118,7 @@ public class TGIFTest {
 		provider.setResponse(response);
 		provider.setRoute("route");
 		Provide provider1 = new Provide("route", request, response);
-		logger.debug(EELFLoggerDelegator.debugLogger, "result " +  provider1);
+		logger.debug(EELFLoggerDelegator.debugLogger, "result  {} ",  provider1);
 		provider.getRequest();
 		provider.getResponse();
 		provider.getRoute();
@@ -131,7 +131,7 @@ public class TGIFTest {
 		service.setCalls(callArray);
 		service.setProvides(provideArray);
 		Service service1 = new Service(callArray, provideArray);
-		logger.debug(EELFLoggerDelegator.debugLogger, "result " +  service1);
+		logger.debug(EELFLoggerDelegator.debugLogger, "result  {} ",  service1);
 		service.getCalls();
 		service.getProvides();
 		tgif.setServices(service);
@@ -142,7 +142,7 @@ public class TGIFTest {
 		parameter.setName("name");
 		parameter.setValue("value");
 		Parameter parameter1 = new Parameter("name", "value", "description");
-		logger.debug(EELFLoggerDelegator.debugLogger, "result " +  parameter1);
+		logger.debug(EELFLoggerDelegator.debugLogger, "result  {} ",  parameter1);
 		parameterArray[0] = parameter;
 		parameter.getDescription();
 		parameter.getName();
@@ -156,7 +156,7 @@ public class TGIFTest {
 
 		Artifact[] artifactArray = new Artifact[1];
 		Artifact artifact1 = new Artifact("type", "uri");
-		logger.debug(EELFLoggerDelegator.debugLogger, "result " +  artifact1);
+		logger.debug(EELFLoggerDelegator.debugLogger, "result  {} ",  artifact1);
 		Artifact artifact = new Artifact();
 		artifact.setType("type");
 		artifact.setUri("uri");
@@ -166,7 +166,7 @@ public class TGIFTest {
 		tgif.setArtifacts(artifactArray);
 
 		Tgif tgif1 = new Tgif(selfObj, stream, service, parameterArray, auxiliary, artifactArray);
-		logger.debug(EELFLoggerDelegator.debugLogger, "result " +  tgif1);
+		logger.debug(EELFLoggerDelegator.debugLogger, "result  {} ",  tgif1);
 		tgif.getArtifacts();
 		tgif.getAuxiliary();
 		tgif.getParameters();

@@ -58,7 +58,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 
 	@Override
 	public String fetchJsonTOSCA(String solutionId, String version) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "--------fetchJsonTOSCA()-------- : Begin");
+		logger.debug(EELFLoggerDelegator.debugLogger, "fetchJsonTOSCA() : Begin");
 
 		String result = "";
 		String error = "{\"errorCode\" : \"%s\", \"errorDescription\" : \"%s\"}";
@@ -76,17 +76,16 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
 				solutionRevisionId = mlpSolutionRevisionList.stream().filter(mlp -> mlp.getVersion().equals(version))
 						.findFirst().get().getRevisionId();
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						"------ SolutionRevisonId for Version : " + solutionRevisionId);
+				logger.debug(EELFLoggerDelegator.debugLogger," SolutionRevisonId for Version :  {} ", solutionRevisionId);
 			} else {
 				result = String.format(error, "501", "Failed to fetch the Solution Revision List");
 			}
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					"---------Error : Exception in fetchJsonTOSCA() : Failed to fetch the Solution Revision List----------",
+					"Error : Exception in fetchJsonTOSCA() : Failed to fetch the Solution Revision List",
 					e);
 			result = String.format(error, "501",
-					"Failed to fetch the Solution Revision List for the version" + version);
+					"Failed to fetch the Solution Revision List for the version {} ", version);
 		}
 
 		if (null != solutionRevisionId) {
@@ -100,12 +99,11 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 					nexusURI = mlpArtifactList.stream()
 							.filter(mlpArt -> mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType)).findFirst()
 							.get().getUri();
-					logger.debug(EELFLoggerDelegator.debugLogger, "------ Nexus URI : " + nexusURI);
+					logger.debug(EELFLoggerDelegator.debugLogger, " Nexus URI :  {} ", nexusURI);
 
 					if (null != nexusURI) {
 						byteArrayOutputStream = getPayload(nexusURI);
-						logger.debug(EELFLoggerDelegator.debugLogger,
-								"------ Response in String Format : " + byteArrayOutputStream.toString() + " -------");
+						logger.debug(EELFLoggerDelegator.debugLogger," Response in String Format : {}" , byteArrayOutputStream.toString() );
 						result = byteArrayOutputStream.toString();
 					} else {
 						result = String.format(error, "504",
@@ -113,7 +111,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 					}
 				} catch (Exception e) {
 					logger.error(EELFLoggerDelegator.errorLogger,
-							"---------Error : Exception in fetchJsonTOSCA() : Failed to fetch the Solution Revision List----------",
+							"Error : Exception in fetchJsonTOSCA() : Failed to fetch the Solution Revision List",
 							e);
 					result = String.format(error, "504",
 							"Could not search the artifact URI for artifactType TG" + artifactType);
@@ -137,7 +135,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 			result = String.format(error, "502",
 					"Failed to fetch the solutionRevisionId for " + solutionId + " with version " + version);
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "--------fetchJsonTOSCA()-------- : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, "fetchJsonTOSCA() : End");
 		return result;
 	}
 
@@ -147,14 +145,14 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 	 * @return
 	 */
 	private List<MLPSolutionRevision> getSolutionRevisionsList(String solutionId) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- getSolutionRevisions() : Begin ----------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " getSolutionRevisions() : Begin ");
 		List<MLPSolutionRevision> solRevisionsList = null;
 		try {
 			solRevisionsList = cmnDataService.getSolutionRevisions(solutionId);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getSolutionRevisions() ----------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutionRevisions() ", e);
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- getSolutionRevisions() : End ----------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " getSolutionRevisions() : End ");
 		return solRevisionsList;
 	}
 
@@ -169,7 +167,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 		try {
 			mlpArtifactsList = cmnDataService.getSolutionRevisionArtifacts(solutionId, solutionRevisionId);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getListOfArtifacts() ----------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getListOfArtifacts() ", e);
 		}
 		return mlpArtifactsList;
 
@@ -186,7 +184,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 		try {
 			outputStream = nexusArtifactClient.getArtifact(uri);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------- Exception in getListOfArtifacts() ----------", ex);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getListOfArtifacts() ", ex);
 		}
 		return outputStream;
 	}
@@ -194,7 +192,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 	@Override
 	public String readArtifact(String userId, String solutionId, String version, String artifactType)
 			throws AcumosException {
-		logger.debug(EELFLoggerDelegator.debugLogger, "--------readArtifact()-------- : Begin");
+		logger.debug(EELFLoggerDelegator.debugLogger, "readArtifact() : Begin");
 
 		String result = "";
 
@@ -213,16 +211,16 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 						// && mlp.getOwnerId().equalsIgnoreCase(userId))
 						.findFirst().get().getRevisionId();
 				logger.debug(EELFLoggerDelegator.debugLogger,
-						"------ SolutionRevisonId for Version : " + solutionRevisionId + " -------");
+						" SolutionRevisonId for Version :  {} ", solutionRevisionId );
 			}
 		} catch (NoSuchElementException | NullPointerException e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					"---------Error : Exception in readArtifact() : Failed to fetch the Solution Revision Id----------",
+					"Error : Exception in readArtifact() : Failed to fetch the Solution Revision Id",
 					e);
 			throw new NoSuchElementException("Failed to fetch the Solution Revision Id of the solutionId for the user");
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
-					"---------Error : Exception in readArtifact() : Failed to fetch the Solution Revision Id----------",
+					"Error : Exception in readArtifact() : Failed to fetch the Solution Revision Id",
 					e);
 			throw new ServiceException("Failed to fetch the Solution Revision Id for the solutionId " + solutionId);
 		}
@@ -236,26 +234,26 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 					nexusURI = mlpArtifactList.stream()
 							.filter(mlpArt -> mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType)).findFirst()
 							.get().getUri();
-					logger.debug(EELFLoggerDelegator.debugLogger, "------ Nexus URI : " + nexusURI + " -------");
+					logger.debug(EELFLoggerDelegator.debugLogger, " Nexus URI :  {} ", nexusURI );
 
 					if (null != nexusURI) {
 						byteArrayOutputStream = getPayload(nexusURI);
 						logger.debug(EELFLoggerDelegator.debugLogger,
-								"------ Response in String Format : " + byteArrayOutputStream.toString() + " -------");
+								" Response in String Format :  {} ", byteArrayOutputStream.toString() );
 						result = byteArrayOutputStream.toString();
 					}
 				} catch (NoSuchElementException | NullPointerException e) {
 					logger.error(EELFLoggerDelegator.errorLogger,
-							"---------Error : Exception in readArtifact() : Failed to fetch the artifact URI for artifactType----------",
+							"Error : Exception in readArtifact() : Failed to fetch the artifact URI for artifactType",
 							e);
 					throw new NoSuchElementException(
 							"Could not search the artifact URI for artifactType " + artifactType);
 				} catch (Exception e) {
 					logger.error(EELFLoggerDelegator.errorLogger,
-							"---------Error : Exception in readArtifact() : Failed to fetch the artifact URI for artifactType----------",
+							"Error : Exception in readArtifact() : Failed to fetch the artifact URI for artifactType",
 							e);
 					throw new ServiceException(
-							" --------------- Exception Occured decryptAndWriteTofile() --------------", "501",
+							"  Exception Occured decryptAndWriteTofile() ", "501",
 							"Could not search the artifact URI for artifactType " + artifactType, e.getCause());
 				} finally {
 					try {
@@ -269,7 +267,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 				}
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "--------readArtifact()-------- : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, "readArtifact() : End");
 		return result;
 	}
 

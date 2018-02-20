@@ -70,9 +70,4 @@ public class ServiceException extends AcumosException {
 	public ServiceException(String message, String errorCode, String errorDesc, Throwable cause, Object param) {
 		super(message, errorCode, errorDesc, cause, param);
 	}
-
-	public static void main(String[] args) {
-		logger.debug(ServiceException.CONNECTION_ERROR_CODE);
-	}
-
 }

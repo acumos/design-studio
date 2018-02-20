@@ -23,6 +23,7 @@ package org.acumos.designstudio.ce.service;
 import org.acumos.designstudio.cdump.FieldMap;
 import org.acumos.designstudio.cdump.Nodes;
 import org.acumos.designstudio.cdump.Property;
+import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.json.JSONArray;
 
@@ -30,13 +31,13 @@ public interface ISolutionService {
 
 	public String getSolutions(String userId) throws ServiceException;
 
-	public String createNewCompositeSolution(String userId);
+	public String createNewCompositeSolution(String userId) throws AcumosException;
 
 	public boolean addLink(String userId, String solutionId, String version, String linkName, String linkId,
 			String sourceNodeName, String sourceNodeId, String targetNodeName, String targetNodeId,
 			String sourceNodeRequirement, String targetNodeCapabilityName, String cid, Property propertieValues);
 
-	public String readCompositeSolutionGraph(String userId, String solutionID, String version);
+	public String readCompositeSolutionGraph(String userId, String solutionID, String version) throws AcumosException;
 
 	public String modifyNode(String userId, String solutionId, String version, String cid, String nodeId,
 			String nodeName, String ndata, FieldMap field_map);
@@ -44,7 +45,7 @@ public interface ISolutionService {
 	public String modifyLink(String userId, String cid, String solutionId, String version, String linkId,
 			String linkName);
 
-	public boolean deleteNode(String userId, String solutionId, String version, String cid, String nodeId);
+	public boolean deleteNode(String userId, String solutionId, String version, String cid, String nodeId) throws AcumosException;
 
 	public boolean deleteLink(String userId, String solutionId, String version, String cid, String linkId);
 
