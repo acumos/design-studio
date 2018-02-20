@@ -95,17 +95,17 @@ public class SolutionController {
 		String resultTemplate = "{\"items\" : %s}";
 		String error = "{errorCode : \"%s\", errorDescription : \"%s\"}";
 		try {
-			logger.debug(EELFLoggerDelegator.debugLogger, "------- getSolutions() Begin --------");
+			logger.debug(EELFLoggerDelegator.debugLogger, " getSolutions() Begin ");
 			result = solutionService.getSolutions(userId);
 			result = String.format(resultTemplate, result);
 		} catch (AcumosException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in getSolutions() -------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutions() ", e);
 			result = String.format(error, e.getErrorCode(), e.getErrorDesc());
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception in getSolutions()------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getSolutions()", e);
 			result = String.format(error, props.getSolutionErrorCode(), props.getSolutionErrorDesc());
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- getSolutions() End --------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " getSolutions() End ");
 		return result;
 	}
 
@@ -124,7 +124,7 @@ public class SolutionController {
 
 		String result = "";
 		String error = "{\"errorCode\" : \"%s\", \"errorDescription\" : \"%s\"}";
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- saveCompositeSolution() Begin --------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " saveCompositeSolution() Begin ");
 
 		DSCompositeSolution dscs = new DSCompositeSolution();
 
@@ -143,7 +143,7 @@ public class SolutionController {
 
 			// 1. JSON Validation
 			if (DSUtil.isValidJSON(dscs.toJsonString())) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "------- SuccessFully validated inputJson --------");
+				logger.debug(EELFLoggerDelegator.debugLogger, " SuccessFully validated inputJson ");
 				// 2. Mandatory Value validation
 				String isValidmsg = checkMandatoryFieldsforSave(dscs);
 
@@ -151,7 +151,7 @@ public class SolutionController {
 					result = String.format(error, "603", isValidmsg);
 				} else {
 					logger.debug(EELFLoggerDelegator.debugLogger,
-							"------- SuccessFully validated mandatory fields --------");
+							" SuccessFully validated mandatory fields ");
 					result = compositeServiceImpl.saveCompositeSolution(dscs);
 				}
 			} else {
@@ -159,14 +159,14 @@ public class SolutionController {
 			}
 
 		} catch (AcumosException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in getSolutions() -------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutions() ", e);
 			result = String.format(error, e.getErrorCode(), e.getErrorDesc());
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception in getSolutions()------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutions() ", e);
 			result = String.format(error, props.getCompositionSolutionErrorCode(),
 					props.getCompositionSolutionErrorDesc());
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- saveCompositeSolution() End --------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " saveCompositeSolution() End ");
 		return result;
 	}
 
@@ -197,14 +197,14 @@ public class SolutionController {
 	@RequestMapping(value = "/createNewCompositeSolution", method = RequestMethod.POST)
 	public String createNewCompositeSolution(@RequestParam(value = "userId", required = true) String userId) {
 		String results = "";
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- createNewCompositeSolution() ------- : Begin");
+		logger.debug(EELFLoggerDelegator.debugLogger, " createNewCompositeSolution()  : Begin");
 		try {
 			results = solutionService.createNewCompositeSolution(userId);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  createNewCompositeSolution() -------",
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in  createNewCompositeSolution() ",
 					e);
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- createNewCompositeSolution() ------- : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, " createNewCompositeSolution()  : End");
 		return results;
 	}
 
@@ -215,7 +215,7 @@ public class SolutionController {
 			@RequestParam(value = "version", required = false) String version,
 			@RequestParam(value = "cid", required = false) String cid, @RequestBody @Valid Nodes node) {
 		String results = "";
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- addNode() ------- : Begin");
+		logger.debug(EELFLoggerDelegator.debugLogger, " addNode()  : Begin");
 		try {
 
 			boolean validNode = validateNode(node);
@@ -229,9 +229,9 @@ public class SolutionController {
 				results = "{\"error\": \"JSON schema not valid, Please check the input JSON\"}";
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  addNode() -------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in  addNode() ", e);
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- addNode() ------- : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, " addNode()  : End");
 		return results;
 
 	}
@@ -288,9 +288,15 @@ public class SolutionController {
 	public String readCompositeSolutionGraph(@RequestParam(value = "userId", required = true) String userId,
 			@RequestParam(value = "solutionId", required = true) String solutionId,
 			@RequestParam(value = "version", required = true) String version) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- fetchJsonTOSCA() ------- : Begin");
-		String result = solutionService.readCompositeSolutionGraph(userId, solutionId, version);
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- fetchJsonTOSCA() ------- : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, " fetchJsonTOSCA()  : Begin");
+		String result;
+		try {
+			result = solutionService.readCompositeSolutionGraph(userId, solutionId, version);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Failed to read the ComposietSolution", e);
+			result = "";
+		}
+		logger.debug(EELFLoggerDelegator.debugLogger, " fetchJsonTOSCA()  : End");
 		return result;
 	}
 
@@ -329,13 +335,13 @@ public class SolutionController {
 			@RequestParam(value = "ndata", required = false) String ndata,
 			@RequestBody(required = false) FieldMap fieldmap) {
 		String result = null;
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- modifyNode() ------- : Begin");
+		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : Begin");
 		try {
 			result = solutionService.modifyNode(userId, solutionId, version, cid, nodeId, nodeName, ndata, fieldmap);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  modifyNode() -------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in  modifyNode() ", e);
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- modifyNode() ------- : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : End");
 		return result;
 	}
 
@@ -349,13 +355,13 @@ public class SolutionController {
 			@RequestParam(value = "linkid", required = true) String linkId,
 			@RequestParam(value = "linkname", required = true) String linkName) {
 		String result = null;
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- modifyLink() ------- : Begin");
+		logger.debug(EELFLoggerDelegator.debugLogger, " modifyLink()  : Begin");
 		try {
 			result = solutionService.modifyLink(userId, cid, solutionId, version, linkId, linkName);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  modifyLink() -------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in  modifyLink() ", e);
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- modifyLink() ------- : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, " modifyLink()  : End");
 		return result;
 	}
 
@@ -367,7 +373,7 @@ public class SolutionController {
 			@RequestParam(value = "version", required = true) String version) {
 		String resultTemplate = "{\"success\":\"%s\",\"errorMessage\":\"%s\"}";
 		String result = "";
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- deleteCompositeSolution() ------- : Begin");
+		logger.debug(EELFLoggerDelegator.debugLogger, " deleteCompositeSolution()  : Begin");
 
 		try {
 
@@ -378,10 +384,10 @@ public class SolutionController {
 				result = String.format(resultTemplate, "true", "");
 			}
 		} catch (Exception e) {
-			logger.debug(EELFLoggerDelegator.debugLogger, "-------Exception in  deleteCompositeSolution() -------", e);
+			logger.debug(EELFLoggerDelegator.debugLogger, "Exception in  deleteCompositeSolution() ", e);
 			result = String.format(resultTemplate, "false", "Exception : Requested Solution Not Found");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- deleteCompositeSolution() ------- : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, " deleteCompositeSolution()  : End");
 		return result;
 	}
 
@@ -392,7 +398,7 @@ public class SolutionController {
 			@RequestParam(value = "version", required = false) String version,
 			@RequestParam(value = "cid", required = false) String cid,
 			@RequestParam(value = "nodeId", required = true) String nodeId) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- deleteNode() in SolutionController Begin --------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " deleteNode() in SolutionController Begin ");
 		String result = "";
 		String resultTemplate = "{\"success\":\"%s\", \"errorMessage\":\"%s\"}";
 		if (null == userId && null == nodeId) {
@@ -407,10 +413,10 @@ public class SolutionController {
 				}
 			} catch (Exception e) {
 				logger.error(EELFLoggerDelegator.errorLogger,
-						"------- Exception in deleteNode() in SolutionController -------", e);
+						" Exception in deleteNode() in SolutionController ", e);
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- deleteNode() in SolutionController Ends --------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " deleteNode() in SolutionController Ends ");
 		return result;
 	}
 
@@ -421,14 +427,14 @@ public class SolutionController {
 			@RequestParam(value = "solutionId", required = false) String solutionId,
 			@RequestParam(value = "solutionVersion", required = false) String solutionVersion,
 			@RequestParam(value = "cid", required = false) String cid) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "------ closeCompositeSolution(): Begin -----");
+		logger.debug(EELFLoggerDelegator.debugLogger, " closeCompositeSolution(): Begin ");
 		String result = "";
 		try {
 			result = compositeServiceImpl.closeCompositeSolution(userId, solutionId, solutionVersion, cid);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in closeCompositeSolution() -----", e);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in closeCompositeSolution() ", e);
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------ closeCompositeSolution(): End -----");
+		logger.debug(EELFLoggerDelegator.debugLogger, " closeCompositeSolution(): End ");
 		return result;
 	}
 
@@ -439,14 +445,14 @@ public class SolutionController {
 			@RequestParam(value = "solutionId", required = false) String solutionId,
 			@RequestParam(value = "solutionVersion", required = false) String solutionVersion,
 			@RequestParam(value = "cid", required = false) String cid) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "------ clearCompositeSolution(): Begin -----");
+		logger.debug(EELFLoggerDelegator.debugLogger, " clearCompositeSolution(): Begin ");
 		String result = "";
 		try {
 			result = compositeServiceImpl.clearCompositeSolution(userId, solutionId, solutionVersion, cid);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in clearCompositeSolution() -----", e);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in clearCompositeSolution() ", e);
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------ clearCompositeSolution(): End -----");
+		logger.debug(EELFLoggerDelegator.debugLogger, " clearCompositeSolution(): End ");
 		return result;
 
 	}
@@ -456,7 +462,7 @@ public class SolutionController {
 	@ResponseBody
 	public String getCompositeSolutions(@RequestParam(value = "userId", required = true) String userId,
 			@RequestParam(value = "visibilityLevel", required = true) String visibilityLevel) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- getCompositeSolutions() ------- : Begin");
+		logger.debug(EELFLoggerDelegator.debugLogger, " getCompositeSolutions()  : Begin");
 		String result = "";
 		String resultTemplate = "{\"items\" : %s}";
 		String error = "{errorCode : \"%s\", errorDescription : \"%s\"}";
@@ -465,13 +471,13 @@ public class SolutionController {
 			result = compositeServiceImpl.getCompositeSolutions(userId, visibilityLevel);
 			result = String.format(resultTemplate, result);
 		} catch (AcumosException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in getCompositeSolutions() -----", e);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getCompositeSolutions() ", e);
 			result = String.format(error, e.getErrorCode(), e.getErrorDesc());
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in getCompositeSolutions() -----", e);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getCompositeSolutions()", e);
 			result = String.format(error, "401", "Failed to fetch the list of active Public Composite Solutions");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- getCompositeSolutions() ------- : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, " getCompositeSolutions()  : End");
 		return result;
 	}
 
@@ -484,7 +490,7 @@ public class SolutionController {
 			@RequestParam(value = "cid", required = false) String cid,
 			@RequestParam(value = "portType", required = true) String portType,
 			@RequestParam(value = "protobufJsonString", required = true) JSONArray protobufJsonString) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- getMatchingModels() ------- : Begin");
+		logger.debug(EELFLoggerDelegator.debugLogger, " getMatchingModels()  : Begin");
 		String result = "";
 		String resultTemplate = "{\"success\" : %s,\"matchingModels\" : %s}";
 		String error = "{\"error\" : %s";
@@ -496,10 +502,10 @@ public class SolutionController {
 				result = String.format(resultTemplate, "false", "No matching models found");
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "---- Exception in getMatchingModels() -----", e);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getMatchingModels() ", e);
 			result = String.format(error, e.getMessage());
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- getMatchingModels() ------- : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, " getMatchingModels()  : End");
 		return result;
 	}
 
@@ -511,7 +517,6 @@ public class SolutionController {
 			@RequestParam(value = "solutionId", required = true) String solutionId,
 			@RequestParam(value = "version", required = true) String version) {
 		logger.debug(EELFLoggerDelegator.debugLogger, "validateCompositeSolution() : Begin ");
-		logger.debug("----- validateCompositeSolution() ------- : Begin ");
 		String result = "";
 		try {
 			result = compositeServiceImpl.validateCompositeSolution(userId, solutionName, solutionId, version);
@@ -519,12 +524,10 @@ public class SolutionController {
 		} catch (Exception e) {
 			result = "{\"success\" : \"false\", \"errorDescription\" : \"Failed to Validate Composite Solution\"}";
 			result = String.format(result);
-			logger.debug(EELFLoggerDelegator.errorLogger, "------ Exception in validateCompositeSolution() ------", e);
-			logger.debug("------ Exception in validateCompositeSolution() ------");
+			logger.debug(EELFLoggerDelegator.errorLogger, " Exception in validateCompositeSolution() ", e);
 			e.printStackTrace();
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "validateCompositeSolution() : End ");
-		logger.debug("----- validateCompositeSolution() ------- : End ");
 		return result;
 	}
 
@@ -545,7 +548,7 @@ public class SolutionController {
 			@RequestBody(required = false) @Valid org.acumos.designstudio.cdump.Property property) { // Change in API
 																										// signature
 
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- addLink() ------- : Begin");
+		logger.debug(EELFLoggerDelegator.debugLogger, " addLink()  : Begin");
 
 		String result = null;
 		boolean linkAdded = false;
@@ -574,9 +577,9 @@ public class SolutionController {
 						sourceNodeId);
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception in addLink() ------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in addLink() ", e);
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- addLink() ------- : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, " addLink()  : End");
 		return result;
 	}
 
@@ -587,7 +590,7 @@ public class SolutionController {
 	 */
 	private boolean validateProperty(Property property) {
 
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- validateProperty() ------- : Begin");
+		logger.debug(EELFLoggerDelegator.debugLogger, " validateProperty()  : Begin");
 
 		Gson gson = new Gson();
 		boolean isValid = false;
@@ -636,10 +639,10 @@ public class SolutionController {
 				isValid = true;
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception in validateProperty() ------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in validateProperty() ", e);
 			isValid = false;
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- validateProperty() ------- : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, " validateProperty()  : End");
 		return isValid;
 	}
 
@@ -651,7 +654,7 @@ public class SolutionController {
 			@RequestParam(value = "version", required = false) String version,
 			@RequestParam(value = "linkId", required = true) String linkId) {
 
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- deleteLink() in SolutionController begins --------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " deleteLink() in SolutionController begins -");
 		String result = "";
 		String resultTemplate = "{\"success\":\"%s\", \"errorMessage\":\"%s\"}";
 		if (null == userId && null == linkId) {
@@ -666,10 +669,10 @@ public class SolutionController {
 				}
 			} catch (Exception e) {
 				logger.error(EELFLoggerDelegator.errorLogger,
-						"------- Exception in deleteLink() in SolutionController -------", e);
+						" Exception in deleteLink() in SolutionController ", e);
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- deleteLink() in SolutionController Ends --------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " deleteLink() in SolutionController Ends ");
 		return result;
 	}
 	@ApiOperation(value = "set the ProbeIndicator")
@@ -684,17 +687,17 @@ public class SolutionController {
 			)
 			throws AcumosException {
         String result = "";
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- setProbeIndicator() Begin --------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " setProbeIndicator() Begin ");
         try {
 			result = compositeServiceImpl.setProbeIndicator(userId, solutionId, version, cid,probeIndicator);
 			result = String.format(result);
 		}catch (Exception e) {
 			result = "{\"success\" : \"false\", \"errorDescription\" : \"There is some issue to set prob indicator value,please check the log file\"}";
 			result = String.format(result);
-			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception in setProbeIndicator()------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in setProbeIndicator()", e);
 			
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- setProbeIndicator() End --------");
+		logger.debug(EELFLoggerDelegator.debugLogger, " setProbeIndicator() End ");
 		return result;
 	}
 }
