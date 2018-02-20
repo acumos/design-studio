@@ -83,7 +83,7 @@ public class GetMatchingModelTest {
 			repositoryLocation.setPassword(CONFIG.getProperty("nexus.nexuspasswordTest"));
 			nexusArtifactClient = new NexusArtifactClient(repositoryLocation);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, e.getMessage());
+			logger.error(EELFLoggerDelegator.errorLogger, "", e);
 		}
 		return nexusArtifactClient;
 	}
@@ -114,9 +114,9 @@ public class GetMatchingModelTest {
 			assertNotNull(getMatchingModelsResult);
 			logger.debug(EELFLoggerDelegator.debugLogger, getMatchingModelsResult);
 		} catch (JSONException je) {
-			logger.error(EELFLoggerDelegator.errorLogger, je.getMessage());
+			logger.error(EELFLoggerDelegator.errorLogger, "", je);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger, ex.getMessage());
+			logger.error(EELFLoggerDelegator.errorLogger,"", ex);
 		}
 
 	}
