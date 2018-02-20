@@ -1,0 +1,310 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a33fcc8f_12d0eafe",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/ToscaGeneratorClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "Take advantage of the logger feature {}, avoid string catenation, write it like this:\n\nlogger.debug(EELF.dL, \"message {}\", variable);\n\nThis way if debug is OFF, no StringBuilder() has to be created and used.  \n\nDo you understand what I\u0027m saying here?",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c1e0510_68fc9032",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/exceptionhandler/AcumosException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "Somebody changed this class name - in the original starter project that I provided this was named EELFLoggerDelegate.  Perhaps, possibly, consider restoring the original name so it\u0027s consistent across Acumos projects.",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3b79552_47e9cbfd",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/exceptionhandler/AcumosException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "This is a strange place to call a logger.  Suggest removing.",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bbaa191_7ffa9c04",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/exceptionhandler/CustomException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "Please use a more descriptive name.  Is it a DesignStudio exception?  Is it a DSUserOperationFailed exception?",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f72d8032_624e55bc",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/exceptionhandler/CustomException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "I don\u0027t recommend invoking a logger here.",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88e8aba5_aa7934c9",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/exceptionhandler/ServiceException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "Please remove main() method from this exception",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "437227c9_88407dfc",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ProtobufGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "I recommend the following simple syntax for all exception handler logger invocations:\n\nlogger.error(ELD.errorLogger, \"methodName failed\", ex);\n\nThis line does not report the correct method name.  Using the exact method name will save you time in debugging problems.  \n\nPlease consider it.",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45b57d70_8e0c23bb",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ProtobufGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "No, you have discarded the exception entirely!  No, do not do this!!!",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "023c44d0_36397e2c",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ProtobufGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "Much, much too chatty. Don\u0027t work so hard here.",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46a783db_4a9d1460",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ProtobufGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "Why log \"started\" multiple times? It\u0027s confusing.  Just put that at the top of the method.",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e57be993_b935c2cb",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ProtobufGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "No you have thrown away the exception!  Don\u0027t do this!",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bef6a92_3a90b805",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ProtobufGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "This is method constructOption but the message says constructMessage, that\u0027s confusing and will cost YOU time and effort.",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed79a298_47c95167",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ProtobufGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "No you have discarded the exception!!",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7d43c36_d310f4c8",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ProtobufGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "No you have discarded the exception!!",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "925c7e25_847e75eb",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ProtobufGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "strated or started?",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d539424b_d9b4044c",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ProtobufGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "Remove print stack trace.\n\nSTOP discarding exceptions!!",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1116ee14_a9649857",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/TgifGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "Please see my comments about using {} syntax in the message instead of string catenation",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2c02709_43eb67fa",
+        "filename": "TOSCAGeneratorClient/src/main/resources/logback.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-20T14:11:12Z",
+      "side": 1,
+      "message": "Wait! ToscaGeneratorClient is a LIBRARY.  You must NOT use eelf logger delegate in this project - you must NOT hardwire your library to a logging framework.  Just use slf4j here.",
+      "revId": "8305a5ffd0c64bcfb2235e0cb6ef06e0751763f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
