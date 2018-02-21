@@ -1,0 +1,871 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "992616c4_8ae3c1ae",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/Application.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "You may wish to revert this.  Using just logger.info still yields a compliant-format log message in the application.log file.  But it ALSO appears on stdout at startup, which is valuable.  If you direct to application.log, no message on stdout at startup.",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9a950b4_1a00f7df",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/ArtfactDetailsController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "This sort of logging seems like overkill - if you\u0027re not going to emit any details, why log begin/end?\n\nAlternately, maybe you should use logger.trace, which is the lowest level, instead of logger.debug?  Then you can turn on the begin/end messages by editing logback.xml appropriately.",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "692560c1_ea51d86d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/ArtfactDetailsController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "You don\u0027t have to repeat the class name.  The logger will handle that for you.  Just the method name is enough.",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e63c44e_b8ddb030",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/docker/CreateImageCommand.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Suggest using {} feature, not string catenation",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b6b3357_5d1815c1",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/docker/CreateImageCommand.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Don\u0027t add tabs to logger output",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baafbf06_e26d8516",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/docker/CreateImageCommand.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Must add the exception as the last parameter to the logger.error statement.  Suggest using the method name instead of the meaningless message that\u0027s there now.",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "374c6c46_5a65d607",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/docker/PushImageCommand.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Don\u0027t use string catenation on the throwable, just add it as the last parameter.",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcd4bbbd_459d8de3",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/docker/TagImageCommand.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Suggest using {} instead of string catenation",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "047bed78_b9063c25",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/docker/TagImageCommand.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Log the exception - pass e as the last parameter",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64d92990_f6b09919",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/docker/TagImageCommand.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Should be level warn?",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35f1c06e_119a7096",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/exceptionhandler/AcumosException.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Remove this logger from the constructor.  It\u0027s not good practice.",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67a501eb_3e3b3343",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/AcumosCatalogServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Suggest using {} feature instead of string catenation",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0062d13b_d83f347c",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/AcumosCatalogServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Suggest using logger.trace for begin/end messages.",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "200675de_653dfb54",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Here you have caught and discarded the exception.  I think you need to report failure.  How can your caller know?",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4e3e079_6caac263",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Again you have caught and discarded the exception.  What will the caller see?",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98583479_1f502c54",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "suggest using {} feature instead of string catenation",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a34780f7_6cbec9b9",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "See my previous comments about using POJO objects instead of constructing JSON via string catenation.",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2682e464_df4b69c5",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "this catches and discards the exception - how does your caller know the result?",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b5ac14ad_b3152493",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1326,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "You don\u0027t have to add class name, logger does that for you",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67ab1628_ec869029",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Don\u0027t log the same message twice",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2c5fb2_c28f7e29",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "probably want to include the method name here and below",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0fa9f6f2_8e9b50db",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Don\u0027t log the same message twice",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b69110d_6c17ece5",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "don\u0027t log the same message twice",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "901f5963_725d6ada",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "This catches and discards the exception",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "316a1fe9_fc3c6711",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Don\u0027t use e.getMessage, instead pass e; the logger will then do the right thing",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ed3c1d8_5b6ae9f5",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Please remove, never use e.printStackTrace, you have a logger.",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb90d602_4be66c3d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Why is this commented out?",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc9cdc26_9378a299",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "may want to include method name",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1e6d37f_acfdca9d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "what exception?  This isn\u0027t a catch block?",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77610cd4_f2fd99bf",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Remove printStackTrace",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2c9721ff_f5a1575e",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Remove printStackTrace, add logger invocation",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9a0bb79_4c3b35bc",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "remove code, don\u0027t comment out.  Git remembers everything forever.",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2943182f_9c36d3d7",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Suggest using {} feature instead of string catenation",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35a582ed_2887eff6",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Remove method, don\u0027t comment out.  This has user names, \"ATT\" and other things that should not be in LF/Gerrit.",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfc96530_82774120",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "This catches and discards the exception, will get you in trouble eventually",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d054b3c6_f6d21580",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "This fails to set a result indicating an exception happened",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de6fb18a_5df17426",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "This catches and discards the exception",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a49b1d2_fa8c5573",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "This catches and discards the exception",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "129ce0bc_9473670d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Suggest using one invocation with {} feature instead of 6 invocations with string catenation",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1408975f_a400bac1",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 790,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "This catches and discards",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ec71e730_94e38480",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/DSUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Suggest using java 8 try-with-resources to open a resource and allowing Java to close it automatically\n\nhttps://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d42060e3_30a5336e",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/DSUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Why nest the try?  Why not just catch all exceptions and say false if any are thrown?",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58b17dcc_2fd18c66",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/DSUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Correct method name",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13c184ea_e3952310",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/DSUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Don\u0027t use a string writer NOR a print stack trace here. The logger does this for you automatically when you pass the throwable as the last parameter.  Here you are simply logging the same information twice, and the second time (yours) it\u0027s much harder to read.",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "47130835_e83bc7dd",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/DSCompositionEngineTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "This is all commented out - remove",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba496957_5ab2dc0f",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/SolutionControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "add the exception as the last parameter to the logger",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b2cc456_1951fb62",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/SolutionControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1180,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "add method name and pass ex as the last parameter, not ex.getMessage()",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "582f7278_6fe7a7c1",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/SolutionControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1210,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "add method name and pass ex as the last parameter, not ex.getMessage()",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56d06c84_c79bb60d",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/SolutionControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1212,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "If your catch clauses are identical, then there\u0027s no need to separate the try for different exception types",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05ad5b63_733b7149",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/SolutionControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1377,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Remove ALL system.out.println() calls.  Search the code!",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b228fad5_adab47fe",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/SolutionControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1378,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T13:24:49Z",
+      "side": 1,
+      "message": "Should be level debug",
+      "revId": "0e94e3cc20b03045892e1570af7f6b0b5171e1f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
