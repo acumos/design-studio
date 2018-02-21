@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "92e08138_b6e56315",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-21T10:22:24Z",
+      "side": 1,
+      "message": "Why do you build JSON by hand? Why not use a two-field POJO and let Spring/Jackson serialize the object for you? So much less work, much greater consistency across methods, reduces chances to make errors, etc.",
+      "revId": "cadb71edf47825b1add95c8cef4397c6365021d5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
