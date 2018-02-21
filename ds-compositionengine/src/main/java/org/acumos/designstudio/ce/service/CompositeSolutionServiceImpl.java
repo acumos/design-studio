@@ -1345,7 +1345,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
             try {
 				String jsonInString = gson.toJson(cdump);
 				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
-				result = "{\"success\" : \"true\", \"errorDescription\" : \"\"}";
+				result = "{\"success\":\"" + probeIndicator + "\",\"errorMessage\":\"\"}";
 			}catch (JsonIOException e) {
 				result = "{\"success\" : \"false\", \"errorDescription\" : \"There is some issue to set prob indicator value,please check the log file\"}";
 				logger.error(EELFLoggerDelegator.errorLogger, "------Exception in setProbeIndicator() ----------", e);
