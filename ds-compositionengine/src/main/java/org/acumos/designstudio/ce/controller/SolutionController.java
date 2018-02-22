@@ -677,27 +677,22 @@ public class SolutionController {
 	}
 	@ApiOperation(value = "set the ProbeIndicator")
 	@RequestMapping(value = "/setProbeIndicator", method = RequestMethod.POST)
-	@ResponseBody
-	public Object setProbeIndicator(HttpServletRequest request,
+	public @ResponseBody SuccessErrorMessage setProbeIndicator(HttpServletRequest request,
 			@RequestParam(value = "userId", required = true) String userId,
 			@RequestParam(value = "solutionId", required = false) String solutionId,
-			@RequestParam(value = "version", required = false) String version,
+			@RequestParam(value = "version", required = true) String version,
 			@RequestParam(value = "cid", required = false) String cid,
 			@RequestParam(value = "probeIndicator", required = true) String probeIndicator
 			)
 			throws AcumosException {
-        String result = "";
-		logger.debug(EELFLoggerDelegator.debugLogger, " setProbeIndicator() Begin ");
+        SuccessErrorMessage successErrorMessage = null;
+		logger.debug(EELFLoggerDelegator.debugLogger, "------- setProbeIndicator() Begin --------");
         try {
-			result = compositeServiceImpl.setProbeIndicator(userId, solutionId, version, cid,probeIndicator);
-			result = String.format(result);
+        	successErrorMessage = compositeServiceImpl.setProbeIndicator(userId, solutionId, version, cid,probeIndicator);
 		}catch (Exception e) {
-			result = "{\"success\" : \"false\", \"errorDescription\" : \"There is some issue to set prob indicator value,please check the log file\"}";
-			result = String.format(result);
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in setProbeIndicator()", e);
-			
+			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception in setProbeIndicator()------", e);
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " setProbeIndicator() End ");
-		return result;
+		logger.debug(EELFLoggerDelegator.debugLogger, "------- setProbeIndicator() End --------");
+		return successErrorMessage;
 	}
 }

@@ -38,5 +38,5 @@ public interface ICompositeSolutionService {
 	
 	public String validateCompositeSolution(String userId, String solutionName, String solutionId, String version) throws AcumosException;
 	
-	public String setProbeIndicator(String userId, String solutionId, String version, String cid,String probeIndicator);
+	public SuccessErrorMessage setProbeIndicator(String userId, String solutionId, String version, String cid,String probeIndicator);
 }
