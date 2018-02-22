@@ -114,7 +114,6 @@ public abstract class AcumosException extends Exception {
 	 */
 	public AcumosException(String message, String errorCode, String errorDesc) {
 		super(message);
-		logger.debug(message);
 		this.errorCode = errorCode;
 		this.errorDesc = errorDesc;
 	}

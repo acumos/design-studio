@@ -57,7 +57,7 @@ public class ArtfactDetailsController {
 	public String fetchJsonTOSCA(@RequestParam(value = "userId", required = true) String userId,
 			@RequestParam(value = "solutionId", required = true) String solutionId,
 			@RequestParam(value = "version", required = true) String version) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- fetchJsonTOSCA() ------- : Begin");
+		logger.debug(EELFLoggerDelegator.debugLogger, "fetchJsonTOSCA() : Begin");
 		String result = "";
 		try {
 			result = iacumosCatalog.readArtifact(userId, solutionId, version, props.getArtifactType().trim());
@@ -66,10 +66,10 @@ public class ArtfactDetailsController {
 				result = "Failed to fetch the TOSCA details for specified solutionId and version";
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in fetchJsonTOSCA() -------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in fetchJsonTOSCA() ", e);
 			result = e.getMessage();
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- fetchJsonTOSCA() ------- : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, "fetchJsonTOSCA() : End");
 		return result;
 	}
 
@@ -89,7 +89,7 @@ public class ArtfactDetailsController {
 			@RequestParam(value = "solutionId", required = true) String solutionId,
 			@RequestParam(value = "version", required = true) String version) {
 		logger.debug(EELFLoggerDelegator.debugLogger,
-				"--------ArtfactDetailsController : fetchProtoBufJSON()-------- : Begin");
+				" fetchProtoBufJSON() : Begin");
 
 		String resultTemplate = "{\"protobuf_json\" : %s,\n \"success\" : \"%s\",\n \"errorMessage\" : \"%s\"}";
 		String result = "";
@@ -102,11 +102,11 @@ public class ArtfactDetailsController {
 				resultTemplate = String.format(resultTemplate, result, false, "Unable to read protoBufFile");
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "------- Exception in fetchProtoBufJSON() -------", e);
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in fetchProtoBufJSON() ", e);
 			resultTemplate = String.format(resultTemplate, null, false, e.getMessage());
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger,
-				"--------ArtfactDetailsController : fetchProtoBufJSON()-------- : End");
+				"fetchProtoBufJSON() : End");
 		return resultTemplate;
 	}
 

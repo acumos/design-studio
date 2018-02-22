@@ -253,7 +253,7 @@ public class VOTest  {
 		Assert.assertEquals(s1, param.getDescription());
 		Assert.assertEquals(s2, param.getName());
 		Assert.assertEquals(s3, param.getValue());
-		logger.debug(EELFLoggerDelegator.debugLogger, "---- " + param.toString());
+		logger.debug(EELFLoggerDelegator.debugLogger,   param.toString());
 	}
 	
 	@Test
@@ -286,7 +286,7 @@ public class VOTest  {
 
 		assertNotNull(provide);
 		assertEquals("IGNORE", provide.getRoute());
-		logger.debug(EELFLoggerDelegator.debugLogger, "---- " + provide.toString());
+		logger.debug(EELFLoggerDelegator.debugLogger,   provide.toString());
 		
 	}
 	
@@ -304,7 +304,7 @@ public class VOTest  {
 		cap.setName(s2);
 		Assert.assertEquals(s1, cap.getId());
 		Assert.assertEquals(s2, cap.getName());
-		logger.debug(EELFLoggerDelegator.debugLogger, "---- " + cap,toString());
+		logger.debug(EELFLoggerDelegator.debugLogger,   cap.toString());
 	}
 	
 	@Test
@@ -329,7 +329,7 @@ public class VOTest  {
 		String s13 = "1";
 		String s14 = "1";
 		DSSolution ds = new DSSolution(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14);
-		logger.debug(EELFLoggerDelegator.debugLogger, "---- " + ds.toString());
+		logger.debug(EELFLoggerDelegator.debugLogger,   ds.toString());
 		DSSolution dss = new DSSolution();
 		dss.setAuthor(s1);
 		Assert.assertEquals(s1, dss.getAuthor());
@@ -359,7 +359,7 @@ public class VOTest  {
 		Assert.assertEquals(s13,dss.getVersion());
 		dss.setVisibilityLevel(s14);
 		Assert.assertEquals(s14,dss.getVisibilityLevel());
-		logger.debug(EELFLoggerDelegator.debugLogger, "---- " + dss.toString());
+		logger.debug(EELFLoggerDelegator.debugLogger,   dss.toString());
 	}
 	
 	@Test
@@ -380,7 +380,7 @@ public class VOTest  {
 		confProps.getNexususername();
 		confProps.getToscaOutputFolder();
 		assertNotNull(confProps);
-		logger.debug(EELFLoggerDelegator.debugLogger, "---- " + confProps.toString());
+		logger.debug(EELFLoggerDelegator.debugLogger,   confProps.toString());
 	}
 	
 
