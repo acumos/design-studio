@@ -62,6 +62,7 @@ import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.Artifact;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
 import org.acumos.designstudio.ce.vo.DSSolution;
+import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 import org.acumos.designstudio.ce.vo.blueprint.BaseOperationSignature;
 import org.acumos.designstudio.ce.vo.blueprint.BluePrint;
 import org.acumos.designstudio.ce.vo.blueprint.Container;
@@ -89,7 +90,7 @@ import com.google.gson.JsonIOException;
 public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(CompositeSolutionServiceImpl.class);
-
+	private static SuccessErrorMessage successErrorMessage = new SuccessErrorMessage();
 	@Autowired
 	private Properties props;
 
@@ -1345,19 +1346,23 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
             try {
 				String jsonInString = gson.toJson(cdump);
 				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
-				result = "{\"success\" : \"true\", \"errorDescription\" : \"\"}";
+				result = getResponseMessageStatus(probeIndicator,"",gson);
 			}catch (JsonIOException e) {
-				result = "{\"success\" : \"false\", \"errorDescription\" : \"There is some issue to set prob indicator value,please check the log file\"}";
+				result = getResponseMessageStatus("false","There is some issue to set prob indicator value,please check the log file",gson);
 				logger.error(EELFLoggerDelegator.errorLogger, "------Exception in setProbeIndicator() ----------", e);
 			}
 		} catch (Exception e) {
-			result = "{\"success\" : \"false\", \"errorDescription\" : \"There is some issue to set prob indicator value,please check the log file\"}";
+			result = getResponseMessageStatus("false","There is some issue to set prob indicator value,please check the log file",gson);
 			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception Occured in setProbeIndicator() ------", e);
 		}
         logger.debug(EELFLoggerDelegator.debugLogger, "------ setProbeIndicator() in CompositeSolutionServiceImpl : End---------- ");
 		return result;
 	}
-
+	private String getResponseMessageStatus(String messagestatus, String messagedescription,Gson gson){
+		successErrorMessage.setSuccess(messagestatus);
+		successErrorMessage.setErrorMessage(messagedescription);
+		return gson.toJson(successErrorMessage);
+	}
 	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
 		cdmsClient = commonDataServiceRestClient;
 	}

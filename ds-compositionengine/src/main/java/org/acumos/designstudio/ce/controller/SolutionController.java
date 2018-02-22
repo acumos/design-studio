@@ -689,10 +689,7 @@ public class SolutionController {
 			result = compositeServiceImpl.setProbeIndicator(userId, solutionId, version, cid,probeIndicator);
 			result = String.format(result);
 		}catch (Exception e) {
-			result = "{\"success\" : \"false\", \"errorDescription\" : \"There is some issue to set prob indicator value,please check the log file\"}";
-			result = String.format(result);
 			logger.error(EELFLoggerDelegator.errorLogger, "----- Exception in setProbeIndicator()------", e);
-			
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- setProbeIndicator() End --------");
 		return result;
