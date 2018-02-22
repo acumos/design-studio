@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c5efd61_81189e67",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/SolutionController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-22T10:31:12Z",
+      "side": 1,
+      "message": "Why use String.format?",
+      "revId": "418e8d27f95b7b080973edf626efa568e3b9c32e",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9725da73_c42d5315",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/SolutionController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 692,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-22T10:31:12Z",
+      "side": 1,
+      "message": "Remove all these ------ prefixes, not helpful, just fills the logs unnecessarily",
+      "revId": "418e8d27f95b7b080973edf626efa568e3b9c32e",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8443d1d_1c70ce63",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-22T10:31:12Z",
+      "side": 1,
+      "message": "Don\u0027t use a static instance, just create as you need it",
+      "revId": "418e8d27f95b7b080973edf626efa568e3b9c32e",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "518b778c_4b9b008f",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1362,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-22T10:31:12Z",
+      "side": 1,
+      "message": "This should be in the convenience constructor\n\nThere\u0027s no need to convert to String.  Spring will do that for you.  You may need to add annotation @ResponseBody to your controller methods.",
+      "revId": "418e8d27f95b7b080973edf626efa568e3b9c32e",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5da158a4_7ad6d479",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/SuccessErrorMessage.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-22T10:31:12Z",
+      "side": 1,
+      "message": "This is a good start.  I suggest adding the no-arg constructor and a convenience constructor so you can build a response in a single line of code.",
+      "revId": "418e8d27f95b7b080973edf626efa568e3b9c32e",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
