@@ -23,6 +23,7 @@ package org.acumos.designstudio.ce.service;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
 import org.json.JSONException;
+import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 
 public interface ICompositeSolutionService {
 
@@ -38,5 +39,5 @@ public interface ICompositeSolutionService {
 	
 	public String validateCompositeSolution(String userId, String solutionName, String solutionId, String version) throws AcumosException;
 	
-	public String setProbeIndicator(String userId, String solutionId, String version, String cid,String probeIndicator);
+	public SuccessErrorMessage setProbeIndicator(String userId, String solutionId, String version, String cid,String probeIndicator);
 }
