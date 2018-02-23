@@ -32,6 +32,7 @@ public class Node implements Serializable {
 	private String image;
 	private String proto_uri;
 	private List<OperationSignatureList> operation_signature_list;
+	private String script;
 
 	
 	/**
@@ -104,11 +105,19 @@ public class Node implements Serializable {
 	public void setOperation_signature_list(List<OperationSignatureList> operation_signature_list) {
 		this.operation_signature_list = operation_signature_list;
 	}
-	
 
-	
-	
-	
+	/**
+	 * @return the script
+	 */
+	public String getScript() {
+		return script;
+	}
 
+	/**
+	 * @param script the script to set
+	 */
+	public void setScript(String script) {
+		this.script = script;
+	}
 
 }

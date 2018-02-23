@@ -76,6 +76,7 @@ import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -931,6 +932,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 		String bluePrintFileName = "";
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.setSerializationInclusion(Include.NON_NULL);
 		try {
 
 			Cdump cdump = null;
@@ -979,7 +981,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							pIndicator.setValue(probeIndicator);
 							List<ProbeIndicator> probeLst = new ArrayList<ProbeIndicator>();
 							probeLst.add(pIndicator);
-							bluePrint.setProbeIndocator(probeLst); // In cdump probeIndicator is a string, in blueprint it should not be an array just a string 
+							bluePrint.setProbeIndicator(probeLst); // In cdump probeIndicator is a string, in blueprint it should not be an array just a string 
 							Set<String> sourceNodeId = new HashSet<>();
 							Set<String> targetNodeId = new HashSet<>();
 							for (Relations rlns : relationsList) {
@@ -1076,6 +1078,17 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								bpnode.setImage(dockerImageURL);
 								String node_type = (null != n.getType().getName()? n.getType().getName().trim() : "");
 								bpnode.setNode_type(node_type); 
+								
+								// Check for the Node type is DataBroker or not
+								if (bpnode.getNode_type().equals("DataBroker")) {
+									Property[] prop = n.getProperties();
+									ArrayList<Property> propslst = new ArrayList<Property> (Arrays.asList(prop));
+									String script = null;
+									for (Property dbprops : propslst) {
+										script = dbprops.getData_broker_map().getScript();
+										bpnode.setScript(script); 
+									}
+								}
 								String protoUri = n.getProtoUri();
 								bpnode.setProto_uri(protoUri); 
 								
@@ -1098,16 +1111,15 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 										nos = new NodeOperationSignature();
 										
 										nos.setOperation_name(nodeOperationName);
-										//set input_message_name
+
 										nos.setInput_message_name(c.getTarget().getName()[0].getMessageName());  
 										//NodeOperationSignature input_message_name should have been array, as operation can have multiple input messages.  
 										//Its seems to be some gap
 										
-										//set output_message_name
 										nos.setOutput_message_name(getOutputMessage(n.getRequirements(), nodeOperationName));
-										//Set NodeOperationSignature as operation_signature
+										
 										osll.setOperation_signature(nos);
-										//set List<Container> connected_to
+										
 										containerLst = getRelations(cdump, nodeId);
 										osll.setConnected_to(containerLst);
 										oslList.add(osll);
@@ -1153,34 +1165,54 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								mlpArtifact.setVersion(version);
 								mlpArtifact.setSize(bluePrintJson.length());
 
-								// 21. Creating the Artifact from CDMSClient.
-								logger.debug(EELFLoggerDelegator.debugLogger,"21. Creating the Artifact from CDMSClient.");
-								mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
-
-								logger.debug(EELFLoggerDelegator.debugLogger,"Successfully created the artifact for the BluePrint for the solution : {0} artifact ID : {1}", solutionId, mlpArtifact.getArtifactId());
-
-								// 22. Get the SolutionRevisions from CDMSClient.
-								logger.debug(EELFLoggerDelegator.debugLogger,"22. Get the SolutionRevisions from CDMSClient.");
+								// 21. Get the SolutionRevisions from CDMSClient.
+								logger.debug(EELFLoggerDelegator.debugLogger,"21. Get the SolutionRevisions from CDMSClient.");
 								mlpSolRevisions = cdmsClient.getSolutionRevisions(solutionId);
 								MLPSolutionRevision compositeSolutionRevision = null;
-								// 23. Iterate over MLPSolutionRevisions and get the CompositeSolutionRevision.
-								logger.debug(EELFLoggerDelegator.debugLogger,"23. Iterate over MLPSolutionRevisions and get the CompositeSolutionRevision.");
+								// 22. Iterate over MLPSolutionRevisions and get the CompositeSolutionRevision.
+								logger.debug(EELFLoggerDelegator.debugLogger,"22. Iterate over MLPSolutionRevisions and get the CompositeSolutionRevision.");
 								for (MLPSolutionRevision solRev : mlpSolRevisions) {
 									if (solRev.getVersion().equals(version)) {
 										compositeSolutionRevision = solRev;
 										break;
 									}
 								}
-								// 24. Associate the SolutionRevisionArtifact for solution ID.
-								logger.debug(EELFLoggerDelegator.debugLogger,"24. Associate the SolutionRevisionArtifact for solution ID.");
-								cdmsClient.addSolutionRevisionArtifact(solutionId,compositeSolutionRevision.getRevisionId(), mlpArtifact.getArtifactId());
+								List<MLPArtifact> mlpArtiLst = cdmsClient.getSolutionRevisionArtifacts(solutionId,compositeSolutionRevision.getRevisionId());
 
-								logger.debug(EELFLoggerDelegator.debugLogger," Successfully associated the Solution Revision Artifact for solution ID  :  {} ", solutionId);
+								// 23. Creating the Artifact from CDMSClient.
+								logger.debug(EELFLoggerDelegator.debugLogger,"23. Creating the Artifact from CDMSClient.");
 
+								boolean bluePrintExists = false;
+								for (MLPArtifact mlpArt : mlpArtiLst) {
+									if (props.getBlueprintArtifactType().equals(mlpArt.getArtifactTypeCode())) {
+										bluePrintExists = true;
+										break;
+									}
+								}
+								logger.debug(EELFLoggerDelegator.debugLogger, " ArtifactFlag for BP : " + bluePrintExists);
+								if (bluePrintExists) {
+
+									// 24. Update the Artifact which is already exists as BP
+									cdmsClient.updateArtifact(mlpArtifact);
+									logger.debug(EELFLoggerDelegator.debugLogger,"24. Updated the ArtifactTypeCode BP which is already exists");
+								} else {
+									mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
+
+									logger.debug(EELFLoggerDelegator.debugLogger,"Successfully created the artifact for the BluePrint for the solution : "
+													+ solutionId + " artifact ID : " + mlpArtifact.getArtifactId());
+
+									// 25. Associate theSolutionRevisionArtifact for solution ID.
+
+									logger.debug(EELFLoggerDelegator.debugLogger,"25. Associate the SolutionRevisionArtifact for solution ID.");
+
+									cdmsClient.addSolutionRevisionArtifact(solutionId,compositeSolutionRevision.getRevisionId(), mlpArtifact.getArtifactId());
+
+									logger.debug(EELFLoggerDelegator.debugLogger," Successfully associated the Solution Revision Artifact for solution ID  : "
+													+ solutionId);
+								}
 							} catch (Exception e) {
 								logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in validateCompositeSolution() : Failed to create the Solution Artifact ",e);
-								throw new ServiceException("  Exception in validateCompositeSolution() ", "333",
-										"Failed to create the Solution Artifact");
+								throw new ServiceException("  Exception in validateCompositeSolution() ", "333","Failed to create the Solution Artifact");
 							}
 							result = "{\"success\" : \"true\", \"errorDescription\" : \"\"}";
 
