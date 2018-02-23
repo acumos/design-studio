@@ -30,7 +30,7 @@ public class BluePrint implements Serializable {
 	private String version;
 	private List<Container> input_ports;
 	private List<Node> nodes;
-	private List<ProbeIndicator> probeIndocator;
+	private List<ProbeIndicator> probeIndicator;
 	
 	
 	
@@ -85,18 +85,16 @@ public class BluePrint implements Serializable {
 		this.nodes = nodes;
 	}
 	/**
-	 * @return the probeIndocator
+	 * @return the probeIndicator
 	 */
-	public List<ProbeIndicator> getProbeIndocator() {
-		return probeIndocator;
+	public List<ProbeIndicator> getProbeIndicator() {
+		return probeIndicator;
 	}
 	/**
-	 * @param probeIndocator the probeIndocator to set
+	 * @param probeIndicator the probeIndicator to set
 	 */
-	public void setProbeIndocator(List<ProbeIndicator> probeIndocator) {
-		this.probeIndocator = probeIndocator;
+	public void setProbeIndicator(List<ProbeIndicator> probeIndicator) {
+		this.probeIndicator = probeIndicator;
 	}
-	
-	
 
 }

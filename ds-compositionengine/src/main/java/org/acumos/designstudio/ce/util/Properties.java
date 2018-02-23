@@ -120,8 +120,18 @@ public class Properties implements Serializable {
 	@Value("${solutionResultsetSize}")
 	private int solutionResultsetSize;
 	
+	@Value("${blueprintArtifactType}")
+	private String blueprintArtifactType;
 	
 	
+	
+	/**
+	 * @return the blueprintArtifactType
+	 */
+	public String getBlueprintArtifactType() {
+		return blueprintArtifactType;
+	}
+
 	/**
 	 * @return the solutionResultsetSize
 	 */
