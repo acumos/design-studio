@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.acumos.designstudio.cdump.Argument;
 import org.acumos.designstudio.cdump.Capabilities;
 import org.acumos.designstudio.cdump.CapabilityTarget;
+import org.acumos.designstudio.cdump.DataBrokerMap;
 import org.acumos.designstudio.cdump.DataMap;
 import org.acumos.designstudio.cdump.DataMapInputField;
 import org.acumos.designstudio.cdump.FieldMap;
@@ -50,6 +51,7 @@ import org.acumos.designstudio.ce.service.ICompositeSolutionService;
 import org.acumos.designstudio.ce.service.SolutionServiceImpl;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
+import org.acumos.designstudio.cdump.DataConnector;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -525,14 +527,20 @@ public class ControllersTest {
 			fieldMap.setMap_action("Add");
 			fieldMap.setOutput_field_message_name("Classification");
 			fieldMap.setOutput_field_tag_id("2");
+			DataBrokerMap databrokerMap = new DataBrokerMap();
+			databrokerMap.setScript("this is the script");
 
+			assertNotNull(databrokerMap);
 			assertNotNull(fieldMap);
 			assertEquals("Prediction", fieldMap.getInput_field_message_name());
 
-			when(solutionService.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata, fieldMap))
+			DataConnector dataConnector = new DataConnector();
+			dataConnector.setDatabrokerMap(databrokerMap);;
+			dataConnector.setFieldMap(fieldMap);
+			when(solutionService.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata, fieldMap, databrokerMap))
 					.thenReturn("Node Modified");
 			String results = solutionController.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata,
-					fieldMap);
+					dataConnector);
 			assertNotNull(results);
 			if (results.contains("Modified")) {
 				logger.debug(EELFLoggerDelegator.debugLogger, results);

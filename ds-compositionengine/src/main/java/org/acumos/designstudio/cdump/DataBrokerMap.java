@@ -22,36 +22,22 @@ package org.acumos.designstudio.cdump;
 
 import java.io.Serializable;
 
-public class Property implements Serializable {
+public class DataBrokerMap implements Serializable{
 
+	private static final long serialVersionUID = -4853419224669616315L;
+	
+	private String script;
 	
 	/**
-	 * 
+	 * @return the script
 	 */
-	private static final long serialVersionUID = -8446568394003104679L;
-	private DataMap data_map;
-	private DataBrokerMap data_broker_map;
-
-	public DataMap getData_map() {
-		return data_map;
+	public String getScript() {
+		return script;
 	}
-
-	public void setData_map(DataMap data_map) {
-		this.data_map = data_map;
-	}
-	
 	/**
-	 * @return the data_broker_map
+	 * @param script the script to set
 	 */
-	public DataBrokerMap getData_broker_map() {
-		return data_broker_map;
+	public void setScript(String script) {
+		this.script = script;
 	}
-
-	/**
-	 * @param data_broker_map the data_broker_map to set
-	 */
-	public void setData_broker_map(DataBrokerMap data_broker_map) {
-		this.data_broker_map = data_broker_map;
-	}
-
 }

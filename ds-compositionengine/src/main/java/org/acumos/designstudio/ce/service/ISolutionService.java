@@ -20,6 +20,7 @@
 
 package org.acumos.designstudio.ce.service;
 
+import org.acumos.designstudio.cdump.DataBrokerMap;
 import org.acumos.designstudio.cdump.FieldMap;
 import org.acumos.designstudio.cdump.Nodes;
 import org.acumos.designstudio.cdump.Property;
@@ -40,7 +41,7 @@ public interface ISolutionService {
 	public String readCompositeSolutionGraph(String userId, String solutionID, String version) throws AcumosException;
 
 	public String modifyNode(String userId, String solutionId, String version, String cid, String nodeId,
-			String nodeName, String ndata, FieldMap field_map);
+			String nodeName, String ndata, FieldMap field_map, DataBrokerMap databrokerMap);
 
 	public String modifyLink(String userId, String cid, String solutionId, String version, String linkId,
 			String linkName);

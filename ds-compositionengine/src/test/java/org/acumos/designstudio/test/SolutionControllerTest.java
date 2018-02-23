@@ -55,6 +55,7 @@ import org.acumos.designstudio.cdump.Argument;
 import org.acumos.designstudio.cdump.Capabilities;
 import org.acumos.designstudio.cdump.CapabilityTarget;
 import org.acumos.designstudio.cdump.Cdump;
+import org.acumos.designstudio.cdump.DataBrokerMap;
 import org.acumos.designstudio.cdump.DataMap;
 import org.acumos.designstudio.cdump.DataMapInputField;
 import org.acumos.designstudio.cdump.DataMapOutputField;
@@ -743,15 +744,18 @@ public class SolutionControllerTest {
 		fieldMap.setMap_action("Add");
 		fieldMap.setOutput_field_message_name("Classification");
 		fieldMap.setOutput_field_tag_id("2");
+		DataBrokerMap databrokerMap = new DataBrokerMap();
+		databrokerMap.setScript("this is the script");
 
 		assertNotNull(fieldMap);
+		assertNotNull(databrokerMap);
 		assertEquals("Prediction", fieldMap.getInput_field_message_name());
 		assertEquals("1", fieldMap.getInput_field_tag_id());
 		assertEquals("Add", fieldMap.getMap_action());
 		assertEquals("Classification", fieldMap.getOutput_field_message_name());
 
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-		String result = solutionService.modifyNode(userId, null, null, sessionId, "1", "Node1", ndata, fieldMap);
+		String result = solutionService.modifyNode(userId, null, null, sessionId, "1", "Node1", ndata, fieldMap, databrokerMap);
 		assertNotNull(result);
 		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
@@ -768,9 +772,12 @@ public class SolutionControllerTest {
 	public void modifyNode1() throws Exception {
 		String ndata = "{\"ntype\":\"500\",\"px\":\"500\",\"py\":\"500\",\"radius\":\"500\",\"fixed\":false}";
 		FieldMap fieldMap = new FieldMap();
+		DataBrokerMap databrokerMap = new DataBrokerMap();
+		databrokerMap.setScript("this is the script");
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		assertNotNull(fieldMap);
-		String result = solutionService.modifyNode(userId, null, null, sessionId, "2", "Node8", ndata, fieldMap);
+		assertNotNull(databrokerMap);
+		String result = solutionService.modifyNode(userId, null, null, sessionId, "2", "Node8", ndata, fieldMap, databrokerMap);
 		assertNotNull(result);
 		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
@@ -792,13 +799,15 @@ public class SolutionControllerTest {
 		fieldMap.setMap_action("Add");
 		fieldMap.setOutput_field_message_name("Classification");
 		fieldMap.setOutput_field_tag_id("2");
-
+		DataBrokerMap databrokerMap = new DataBrokerMap();
+		databrokerMap.setScript("this is the script");
 		assertNotNull(fieldMap);
+		assertNotNull(databrokerMap);
 		assertEquals("Prediction", fieldMap.getInput_field_message_name());
 		assertEquals("Classification", fieldMap.getOutput_field_message_name());
 
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-		String result = solutionService.modifyNode(userId, null, null, sessionId, "8", "Node8", ndata, fieldMap);
+		String result = solutionService.modifyNode(userId, null, null, sessionId, "8", "Node8", ndata, fieldMap, databrokerMap);
 		assertNotNull(result);
 		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}

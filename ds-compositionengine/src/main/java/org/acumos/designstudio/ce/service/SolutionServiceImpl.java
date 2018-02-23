@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,6 +42,7 @@ import org.acumos.cds.domain.MLPUser;
 import org.acumos.cds.transport.RestPageRequest;
 import org.acumos.cds.transport.RestPageResponse;
 import org.acumos.designstudio.cdump.Cdump;
+import org.acumos.designstudio.cdump.DataBrokerMap;
 import org.acumos.designstudio.cdump.DataMap;
 import org.acumos.designstudio.cdump.DataMapInputField;
 import org.acumos.designstudio.cdump.FieldMap;
@@ -68,6 +70,7 @@ import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -531,8 +534,8 @@ public class SolutionServiceImpl implements ISolutionService {
 
 	@Override
 	public String modifyNode(String userId, String solutionId, String version, String cid, String nodeId,
-			String nodeName, String ndata, FieldMap fieldmap) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : Begin");
+			String nodeName, String ndata, FieldMap fieldmap, DataBrokerMap databrokerMap) {
+		logger.debug(EELFLoggerDelegator.debugLogger, "------- modifyNode() ------- : Begin");
 		String results = "";
 		String resultTemplate = "{\"success\" : \"%s\", \"errorDescription\" : \"%s\"}";
 		try {
@@ -554,6 +557,7 @@ public class SolutionServiceImpl implements ISolutionService {
 			String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 			cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
 			mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+			mapper.setSerializationInclusion(Include.NON_NULL);
 			List<Nodes> cdumpNodeList = cdump.getNodes();
 
 			if (null == cdumpNodeList || cdumpNodeList.isEmpty()) {
@@ -588,76 +592,45 @@ public class SolutionServiceImpl implements ISolutionService {
 								}
 							}
 						}
+						Property properties[] = nodesData.getProperties();
 						// to update the datamapper
 						if (null != fieldmap && fieldmap.toString().length() != 0) {
 							logger.debug(EELFLoggerDelegator.debugLogger, "Modifying the mappings for Datamapper ");
-							logger.debug(EELFLoggerDelegator.debugLogger,
-									"===Input_tag_Id=== {} ", fieldmap.getInput_field_tag_id());
-							logger.debug(EELFLoggerDelegator.debugLogger,
-									"===Input_tag_Id=== {} ", fieldmap.getOutput_field_tag_id());
-							logger.debug(EELFLoggerDelegator.debugLogger,
-									"===Input_field_message_name=== {} ", fieldmap.getInput_field_message_name());
-							logger.debug(EELFLoggerDelegator.debugLogger,
-									"===Output_field_message_name=== {} ", fieldmap.getOutput_field_message_name());
-
-							Property properties[] = nodesData.getProperties();
+							logger.debug(EELFLoggerDelegator.debugLogger,"Input_tag_Id {} ", fieldmap.getInput_field_tag_id());
+							logger.debug(EELFLoggerDelegator.debugLogger,"Input_tag_Id {} ", fieldmap.getOutput_field_tag_id());
+							logger.debug(EELFLoggerDelegator.debugLogger,"Input_field_message_name {} ", fieldmap.getInput_field_message_name());
+							logger.debug(EELFLoggerDelegator.debugLogger,"Output_field_message_name {} ", fieldmap.getOutput_field_message_name());
+							
 							if (null != properties && properties.length != 0) {
 								// iterate through each property
 								for (Property props : properties) {
-
 									DataMap datamap = props.getData_map();
 									if (null != datamap && !datamap.toString().isEmpty()) {
 										MapInputs[] mapInputs = datamap.getMap_inputs();
-
 										if (null != mapInputs && mapInputs.length != 0) {
 											// iterate through mapinputs
 											for (MapInputs mapInput : mapInputs) {
-												// Check if the input message
-												// name matches with the
-												// provided input
-												// meassage name
+												// Check if the input message name matches with the provided input meassage name
 												if (mapInput.getMessage_name()
 														.equals(fieldmap.getInput_field_message_name())) {
-
 													DataMapInputField[] dataMapInputFieldList = mapInput
 															.getInput_fields();
 													if (null != dataMapInputFieldList
 															&& dataMapInputFieldList.length != 0) {
-														// iterate through
-														// dataMapInput fields
+														// iterate through dataMapInput fields
 														for (DataMapInputField dataMapInputField : dataMapInputFieldList) {
-															// check if the
-															// output/destination
-															// tag id is already
-															// linked
-															// to any source
-															// node
-															// remove the
-															// destination node
-															// from the object
+															//check if the output/destination tag id is already linked to any source 
+															//node remove the destination node from the object
 															if (dataMapInputField.getMapped_to_field()
 																	.equals(fieldmap.getOutput_field_tag_id())) {
-
-																// delete the
-																// mapping if
-																// any
+																// delete the mapping if any
 																dataMapInputField.setMapped_to_message("");
 																dataMapInputField.setMapped_to_field("");
 															}
-															// check if the
-															// input/source tag
-															// id matches with
-															// the
-															// provided
-															// input/source tag
-															// id
+															// check if the input source tagid matches with the provided input/source tagid
 															if (dataMapInputField.getTag()
 																	.equals(fieldmap.getInput_field_tag_id())) {
-
-																// update the
-																// object with
-																// the latest
-																// mapping
+																// update the object with the latest mapping
 																dataMapInputField.setMapped_to_message(
 																		fieldmap.getOutput_field_message_name());
 																dataMapInputField.setMapped_to_field(
@@ -670,6 +643,34 @@ public class SolutionServiceImpl implements ISolutionService {
 										}
 									}
 								}
+							}
+						} else if (null != databrokerMap && databrokerMap.toString().length() != 0) {
+							Property newProperty = null;
+							Property[] newProperties = null;
+							if(null != properties){
+								newProperty = new Property();
+								newProperty.setData_broker_map(databrokerMap);
+								
+								//check if the databrokerMap already exist. 
+								ArrayList<Property> propertyList = new ArrayList<Property>(Arrays.asList(properties));
+								if(propertyList.size() == 0){ //if the properties is empty then add the new property with databroket map. 
+									propertyList.add(newProperty);
+								} else {
+									for(Property p : propertyList){
+										if(p.getData_broker_map() != null){ //else if databroker map exist and update the same. 
+											p.setData_broker_map(databrokerMap);
+										} else {
+											propertyList.add(newProperty); //else add the new databroker map to non empty properties. 
+										}
+									}
+								}
+								properties = new Property[propertyList.size()];
+								int cnt = 0;
+								for(Property p : propertyList){
+									properties[0] = p;
+									cnt++;
+								}
+								nodesData.setProperties(properties);
 							}
 						}
 						results = String.format(resultTemplate, true, "");
@@ -1122,9 +1123,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName, targetNodeId,
 						sourceNodeRequirement, targetNodeCapabilityName, cdump);
 				addedLink = true;
-			} else { // set properties field of DM + update relations list, if
-						// link is b/w Model &
-						// Data Mapper
+			} else { // set properties field of DM + update relations list, if link is b/w Model & Data Mapper
 
 				nodesList = cdump.getNodes();
 				// Identify Data Mapper node to update

@@ -26,6 +26,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.acumos.designstudio.cdump.DataBrokerMap;
 import org.acumos.designstudio.cdump.DataMap;
 import org.acumos.designstudio.cdump.FieldMap;
 import org.acumos.designstudio.cdump.MapInputs;
@@ -40,6 +41,7 @@ import org.acumos.designstudio.ce.util.DSUtil;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
+import org.acumos.designstudio.cdump.DataConnector;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -333,15 +335,25 @@ public class SolutionController {
 			@RequestParam(value = "nodeid", required = true) String nodeId,
 			@RequestParam(value = "nodename", required = false) String nodeName,
 			@RequestParam(value = "ndata", required = false) String ndata,
-			@RequestBody(required = false) FieldMap fieldmap) {
+			@RequestBody(required = false) DataConnector dataConnector) {
 		String result = null;
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : Begin");
+		FieldMap fieldMap = null;
+		DataBrokerMap databrokerMap = null;
+		logger.debug(EELFLoggerDelegator.debugLogger, "------- modifyNode() ------- : Begin");
 		try {
-			result = solutionService.modifyNode(userId, solutionId, version, cid, nodeId, nodeName, ndata, fieldmap);
+			if(null != dataConnector){
+				if(null != dataConnector.getFieldMap()){
+					fieldMap = dataConnector.getFieldMap();
+				}
+				if(null != dataConnector.getDatabrokerMap()){
+					databrokerMap = dataConnector.getDatabrokerMap();
+				}
+			}
+			result = solutionService.modifyNode(userId, solutionId, version, cid, nodeId, nodeName, ndata, fieldMap, databrokerMap);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in  modifyNode() ", e);
+			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  modifyNode() -------", e);
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, "------- modifyNode() ------- : End");
 		return result;
 	}
 
