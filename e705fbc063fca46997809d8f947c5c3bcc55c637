@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4758416e_1d1604b7",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-02-26T12:43:40Z",
+      "side": 1,
+      "message": "Please follow the formatting, lets keep our code clean",
+      "range": {
+        "startLine": 93,
+        "startChar": 53,
+        "endLine": 93,
+        "endChar": 54
+      },
+      "revId": "e705fbc063fca46997809d8f947c5c3bcc55c637",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "547b17fe_323a8fa9",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1359,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-02-26T12:43:40Z",
+      "side": 1,
+      "message": "Why do we need private method of one statement",
+      "range": {
+        "startLine": 1359,
+        "startChar": 12,
+        "endLine": 1359,
+        "endChar": 31
+      },
+      "revId": "e705fbc063fca46997809d8f947c5c3bcc55c637",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3149d46a_dde70a50",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1359,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-02-26T12:43:40Z",
+      "side": 1,
+      "message": "Please follow the formatting, lets keep our code clean",
+      "range": {
+        "startLine": 1359,
+        "startChar": 12,
+        "endLine": 1359,
+        "endChar": 31
+      },
+      "revId": "e705fbc063fca46997809d8f947c5c3bcc55c637",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a78ed90d_7e1170bd",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/SuccessErrorMessage.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-02-26T12:43:40Z",
+      "side": 1,
+      "message": "Licence information is missing, please include Licence at the top",
+      "range": {
+        "startLine": 5,
+        "startChar": 13,
+        "endLine": 5,
+        "endChar": 32
+      },
+      "revId": "e705fbc063fca46997809d8f947c5c3bcc55c637",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d69d0d7d_05996526",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/SuccessErrorMessage.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-02-26T12:43:40Z",
+      "side": 1,
+      "message": "Please follow the formatting, lets keep our code clean",
+      "range": {
+        "startLine": 10,
+        "startChar": 1,
+        "endLine": 10,
+        "endChar": 8
+      },
+      "revId": "e705fbc063fca46997809d8f947c5c3bcc55c637",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
