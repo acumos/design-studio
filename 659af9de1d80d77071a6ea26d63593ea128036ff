@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72fcb84b_49b18a08",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-26T14:30:49Z",
+      "side": 1,
+      "message": "Please add a sentence or two of overview -- an empty readme is not helpful.  At least point people to the docs/ folder.",
+      "revId": "659af9de1d80d77071a6ea26d63593ea128036ff",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c648c52d_aab7d1fa",
+        "filename": "TOSCAGeneratorClient/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-26T14:30:49Z",
+      "side": 1,
+      "message": "Please add another sentence or two of overview -- Also point people to the docs/ folder.",
+      "revId": "659af9de1d80d77071a6ea26d63593ea128036ff",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0e4fdba_fceef8af",
+        "filename": "docs/release-notes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-26T14:30:49Z",
+      "side": 1,
+      "message": "WHEN will you start populating this file with release details?  This is MONTHS overdue.",
+      "revId": "659af9de1d80d77071a6ea26d63593ea128036ff",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa01375_c7dc5545",
+        "filename": "docs/tutorials/index.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-26T14:30:49Z",
+      "side": 1,
+      "message": "Please add content!",
+      "revId": "659af9de1d80d77071a6ea26d63593ea128036ff",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88514daf_651ffb3d",
+        "filename": "ds-compositionengine/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-02-26T14:30:49Z",
+      "side": 1,
+      "message": "At least point people to the docs/ area",
+      "revId": "659af9de1d80d77071a6ea26d63593ea128036ff",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
