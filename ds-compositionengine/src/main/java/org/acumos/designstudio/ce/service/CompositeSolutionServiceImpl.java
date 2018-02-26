@@ -1185,6 +1185,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								boolean bluePrintExists = false;
 								for (MLPArtifact mlpArt : mlpArtiLst) {
 									if (props.getBlueprintArtifactType().equals(mlpArt.getArtifactTypeCode())) {
+										// update the artifact details with artifactId
+										mlpArtifact.setArtifactId(mlpArt.getArtifactId());
 										bluePrintExists = true;
 										break;
 									}
