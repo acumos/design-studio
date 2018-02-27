@@ -90,7 +90,7 @@ import com.google.gson.JsonIOException;
 public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(CompositeSolutionServiceImpl.class);
-
+    private SuccessErrorMessage successErrorMessage = null;
 	@Autowired
 	private Properties props;
 
@@ -1378,19 +1378,21 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
             try {
 				String jsonInString = gson.toJson(cdump);
 				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
-				result = "{\"success\" : \"true\", \"errorDescription\" : \"\"}";
+				successErrorMessage = getResponseMessageStatus(probeIndicator,"");
 			}catch (JsonIOException e) {
-				result = "{\"success\" : \"false\", \"errorDescription\" : \"There is some issue to set prob indicator value,please check the log file\"}";
+				successErrorMessage = getResponseMessageStatus("false","There is some issue to set prob indicator value,please check the log1 file");
 				logger.error(EELFLoggerDelegator.errorLogger, "Exception in setProbeIndicator() ", e);
 			}
 		} catch (Exception e) {
-			result = "{\"success\" : \"false\", \"errorDescription\" : \"There is some issue to set prob indicator value,please check the log file\"}";
+			successErrorMessage = getResponseMessageStatus("false","There is some issue to set prob indicator value,please check the log file");
 			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured in setProbeIndicator() ", e);
 		}
         logger.debug(EELFLoggerDelegator.debugLogger, " setProbeIndicator() : End ");
 		return result;
 	}
-
+    private SuccessErrorMessage getResponseMessageStatus(String messagestatus, String messagedescription){
+		return new SuccessErrorMessage(messagestatus,messagedescription);
+	}
 	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
 		cdmsClient = commonDataServiceRestClient;
 	}
