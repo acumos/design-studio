@@ -91,8 +91,9 @@ import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(CompositeSolutionServiceImpl.class);
+
         private SuccessErrorMessage successErrorMessage = null;
-	@Autowired
+        @Autowired
 	private Properties props;
 
 	@Autowired
@@ -1393,7 +1394,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
         private SuccessErrorMessage getResponseMessageStatus(String messagestatus, String messagedescription){
 		return new SuccessErrorMessage(messagestatus,messagedescription);
 	}
-	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
+        public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
 		cdmsClient = commonDataServiceRestClient;
 	}
 
