@@ -91,7 +91,11 @@ import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(CompositeSolutionServiceImpl.class);
+<<<<<<< HEAD
         private SuccessErrorMessage successErrorMessage = null;
+=======
+    private SuccessErrorMessage successErrorMessage = null;
+>>>>>>> Fix Set default PROBE indicator value
 	@Autowired
 	private Properties props;
 
@@ -1393,6 +1397,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
         private SuccessErrorMessage getResponseMessageStatus(String messagestatus, String messagedescription){
 		return new SuccessErrorMessage(messagestatus,messagedescription);
 	}
+<<<<<<< HEAD
+=======
+    private SuccessErrorMessage getResponseMessageStatus(String messagestatus, String messagedescription){
+		return new SuccessErrorMessage(messagestatus,messagedescription);
+	}
+>>>>>>> Fix Set default PROBE indicator value
 	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
 		cdmsClient = commonDataServiceRestClient;
 	}
