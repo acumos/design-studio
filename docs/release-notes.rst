@@ -21,6 +21,50 @@ Release Notes
 
 The Design Studio Composition Engine is deployed within a Docker image in the Docker registry.  TOSCAGenerator Client is uploaded in Nexus repository as a jar file.
 
+
+0.0.22-SNAPSHOT, 2017-02-16
+---------------------------
+* Update to use latest version of Common Data Service : 1.13.1.
+* ACUMOS-40 : View the on boarded Data Brokers and Training Clients in the Design Studio Palette under the Data Source drawer
+* ACUMOS-47 EPIC - Create a composite solution with Data Broker, Training Client, and ML Models connected to each other
+* ACUMOS-64 EPIC - Input a set of (multi – line) SQL Query statements or Filesystem scripts in the UI
+* ACUMOS-126 EPIC - To validate the composite solution consisting of Data Broker, Training Client and ML Models
+* ACUMOS-128 EPIC - Include details of Data Broker client in the blueprint
+* ACUMOS-206 EPIC - Log Message Standardization 
+
+
+0.0.21-SNAPSHOT, 2017-02-16
+---------------------------
+* Update to use latest version of Common Data Service : 1.13.0.
+* ACUMOS-130 EPIC - Deploy Link from Design Studio to Market Place – Portal
+* ACUMOSE-189  EPIC – Composite Solution with Probe indicator
+* ACUMOSE-193 EPIC – Blueprint Generation
+
+
+
+0.0.20-SNAPSHOT, 2017-02-14
+---------------------------
+* Update to use latest version of Common Data Service : 1.13.0.
+
+
+0.19.2-SNAPSHOT, 2017-01-23
+---------------------------
+* Update to use latest version of Common Data Service : 1.12.0.
+
+
+0.19.1-SNAPSHOT, 2017-01-15
+---------------------------
+* Update to use latest version of Common Data Service : 1.10.1
+* Fix for CD-1972 : Clear functionality not working as expected w.r.t backend.
+* Enhance the Building Blocks composition capability of the Design Studio
+* Generic Data Mapper to connect two incompatible nodes having same number of fields
+
+
+0.0.19-SNAPSHOT, 2017-01-10
+---------------------------
+* Update to use latest version of Common Data Service : 1.10.1
+
+
 0.0.18-SNAPSHOT, 2017-11-16
 ---------------------------
 * Update to use latest version of Common Data Service
