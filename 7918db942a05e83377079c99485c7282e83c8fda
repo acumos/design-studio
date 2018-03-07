@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2abc1225_4bc33c69",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 951,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-03-07T12:29:31Z",
+      "side": 1,
+      "message": "Pleas keep it as it was earlier, we need to send specific error message to the end user in case of invalid composite solution.",
+      "range": {
+        "startLine": 951,
+        "startChar": 41,
+        "endLine": 951,
+        "endChar": 43
+      },
+      "revId": "7918db942a05e83377079c99485c7282e83c8fda",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fbd5ec1_7d7ba4e9",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 998,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-03-07T12:29:31Z",
+      "side": 1,
+      "message": "make the comment in one line",
+      "range": {
+        "startLine": 998,
+        "startChar": 26,
+        "endLine": 998,
+        "endChar": 38
+      },
+      "revId": "7918db942a05e83377079c99485c7282e83c8fda",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c0b213e_bdbc77aa",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1008,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-03-07T12:29:31Z",
+      "side": 1,
+      "message": "make the comment in one line",
+      "range": {
+        "startLine": 1008,
+        "startChar": 11,
+        "endLine": 1008,
+        "endChar": 16
+      },
+      "revId": "7918db942a05e83377079c99485c7282e83c8fda",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
