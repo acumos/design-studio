@@ -928,319 +928,394 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	}
 
 	@Override
-	public String validateCompositeSolution(String userId, String solutionName, String solutionId, String version) throws AcumosException {
+	public String validateCompositeSolution(String userId, String solutionName, String solutionId, String version)throws AcumosException {
 		String result = "";
 		logger.debug(EELFLoggerDelegator.debugLogger, "validateCompositeSolution() : Begin ");
 		String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
-		String bluePrintFileName = "";
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(Include.NON_NULL);
+		String type = null;
+		String nodeid = null;
+		boolean isDataBroker = false;
 		try {
 
 			Cdump cdump = null;
 			// 1. Read the cdump file
-			logger.debug(EELFLoggerDelegator.debugLogger,"1. Read the cdump file");
+			logger.debug(EELFLoggerDelegator.debugLogger, "1. Read the cdump file");
 			String cdumpFileName = "acumos-cdump" + "-" + solutionId;
 			cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
 			// 2. get the Nodes from the cdump file and collect the nodeId's
 			logger.debug(EELFLoggerDelegator.debugLogger,"2. get the Nodes from the cdump file and collect the nodeId's");
 			List<Nodes> nodes = cdump.getNodes();
-			ArrayList<String> idList = new ArrayList<>();
-			if (nodes != null) {
+			List<Relations> relationsList = cdump.getRelations();
+			// Check for the Nodes and Relations in the CDUMP is empty or not
+			if (null != nodes ) {
+				ArrayList<String> idList = new ArrayList<>();
 				for (Nodes n : nodes) {
 					idList.add(n.getNodeId());
 				}
-				// 3. get the Relations(Links) from cdump file and collect the
-				// SourceNodeId and TargetNodeId and add those to set
+				// 3. get the Relations(Links) from cdump file and collect the SourceNodeId and TargetNodeId and add those to set
 				logger.debug(EELFLoggerDelegator.debugLogger,"3. get the Relations(Links) from cdump file and collect the SourceNodeId and TargetNodeId and add those to set");
-				List<Relations> relationsList = cdump.getRelations();
 				HashSet<String> set = new HashSet<>();
-				if (relationsList != null) {
-					HashSet<Relations> relationsSet = new HashSet<>(relationsList);
-					if (relationsSet != null) {
-						for (Relations rhs : relationsSet) {
-							set.add(rhs.getSourceNodeId());
-							set.add(rhs.getTargetNodeId());
-						}
+				if (null != relationsList) {
+				HashSet<Relations> relationsSet = new HashSet<>(relationsList);
+				if (null != relationsSet) {
+					for (Relations rhs : relationsSet) {
+						set.add(rhs.getSourceNodeId());
+						set.add(rhs.getTargetNodeId());
 					}
-					// 4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.
-					logger.debug(EELFLoggerDelegator.debugLogger,"4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.");
-					if (CollectionUtils.isEqualCollection(idList, set)) {
-						// 5. Checking the Composite Solution Nodes and Relations are connected or not.
-						logger.debug(EELFLoggerDelegator.debugLogger,"5. Checking the Composite Solution Nodes and Relations are connected or not.");
-						if (relationsList.size() >= idList.size() - 1) {
-							// 6. On successful validation generate the BluePrint file
-							logger.debug(EELFLoggerDelegator.debugLogger,"6. On successful validation generate the BluePrint file");
-							BluePrint bluePrint = new BluePrint();
-							// 7. Set the Solution name and version
-							logger.debug(EELFLoggerDelegator.debugLogger,"7. On successful validation generate the BluePrint file");
-							bluePrint.setName(solutionName);
-							bluePrint.setVersion(version);
-							
-							String probeIndicator = null;
-							probeIndicator = cdump.getProbeIndicator();
-							ProbeIndicator pIndicator = new ProbeIndicator();
-							pIndicator.setValue(probeIndicator);
-							List<ProbeIndicator> probeLst = new ArrayList<ProbeIndicator>();
-							probeLst.add(pIndicator);
-							bluePrint.setProbeIndicator(probeLst); // In cdump probeIndicator is a string, in blueprint it should not be an array just a string 
-							Set<String> sourceNodeId = new HashSet<>();
-							Set<String> targetNodeId = new HashSet<>();
-							for (Relations rlns : relationsList) {
-								sourceNodeId.add(rlns.getSourceNodeId());
-								targetNodeId.add(rlns.getTargetNodeId());
-							}
-							sourceNodeId.removeAll(targetNodeId);
-							
-							List<Container> containerList = new ArrayList<Container>();
-							Container container = new Container();
-							BaseOperationSignature bos = new BaseOperationSignature();
-							String opearion = "";
-							for (Relations rltn : relationsList) {
-								if (sourceNodeId.contains(rltn.getSourceNodeId())) {
-									opearion = rltn.getSourceNodeRequirement().replace("+", "%PLUS%");
-									opearion = opearion.split("%PLUS%")[0];
-									logger.debug(EELFLoggerDelegator.debugLogger, "Opearion :  {} ", opearion);
-									bos.setOperation_name(opearion);
-									container.setOperation_signature(bos);
-									String containerName = rltn.getSourceNodeName();
-									container.setContainer_name(containerName);
-									containerList.add(container);
-								}
-							}
-							bluePrint.setInput_ports(containerList);
-							// 8. Get the nodes from Cdump file & set the required details in the blueprint nodes
-							logger.debug(EELFLoggerDelegator.debugLogger,"8. Get the nodes from Cdump file & set the required details in the blueprint nodes");
-							List<Nodes> cdumpNodes = cdump.getNodes();
-							List<Node> bpnodes = new ArrayList<>();
-							List<MLPSolutionRevision> mlpSolRevisions = null;
-							MLPSolutionRevision mlpSolRevision = null;
-							String nodeName = "";
-							String nodeId = "";
-							String nodeSolutionId = "";
-							String nodeVersion = "";
-							String dockerImageURL = null;
-							Node bpnode = null;
-							int propLength = 0;
-							DataMap dataMap = null;
-							Property[] properties = null;
-							String gdm = "GDM";
-							
-
-							// 9. Extract NodeId, NodeName,NodeSolutionId,NodeVersion
-							logger.debug(EELFLoggerDelegator.debugLogger,"9. Extract NodeId, NodeName,NodeSolutionId,NodeVersion");
-							for (Nodes n : cdumpNodes) {
-								nodeName = n.getName(); // TO set in the blue print
-								nodeId = n.getNodeId(); 
-								nodeSolutionId = n.getNodeSolutionId(); // To get the DockerImageUrl
-								nodeVersion = n.getNodeVersion(); // To get the nodeVersion
-								// 11. Get the MlpSolutionRevisions from CDMSClient for the NodeSolutionId
-								logger.debug(EELFLoggerDelegator.debugLogger,"11. Get the MlpSolutionRevisions from CDMSClient for the NodeSolutionId");
-								mlpSolRevision = getSolutionRevisions(nodeSolutionId, nodeVersion, mlpSolRevision);
-								boolean isGDM = false;
-								// get the properties from Nodes
-								properties = n.getProperties();
-								// check whether properties are exits or not
-								logger.debug(EELFLoggerDelegator.debugLogger,"check whether properties are exits or not");
-								if (null != properties && properties.length > 0) {
-									propLength = properties.length;
-									for (int i = 0; i < propLength; i++) {
-										dataMap = properties[i].getData_map();
-										if (null != dataMap) {
-											if (null != gdm) {
-												logger.debug(EELFLoggerDelegator.debugLogger,"GDM present");
-												isGDM = true;
-											}
-											break;
-										}
-									}
-								}
-								logger.debug(EELFLoggerDelegator.debugLogger,"GDM Found :  {} ", isGDM);
-								if (isGDM) {
-									// For Generic Data Mapper, get the dockerImageUrl by deploying the GDM
-									// Construct the image for the Generic Data mapper
-									logger.debug(EELFLoggerDelegator.debugLogger,"For Generic Data Mapper, get the dockerImageUrl by deploying the GDM Construct the image for the Generic Data mapper");
-									dockerImageURL = gdmService.createDeployGDM(cdump, userId);
-									if (null == dockerImageURL) {
-										logger.debug(EELFLoggerDelegator.debugLogger,"Error : Issue in createDeployGDM() : Failed to create the Solution Artifact ");
-										throw new ServiceException("  Issue in createDeployGDM() ", "333",
-												"Issue while crearting and deploying GDM image");
-									}
-								} else {
-									// Else for basic models, upload the image and get the uri
-									// 12. Get the list of artifact from CDMSClient which will return the
-									// DockerImageUrl
-									logger.debug(EELFLoggerDelegator.debugLogger,"12. Get the list of artifact from CDMSClient which will return the DockerImageUrl");
-									dockerImageURL = getDockerImageURL(nodeSolutionId, mlpSolRevision);
-								}
-								// 13. Set the values in the bluePrint Node
-								logger.debug(EELFLoggerDelegator.debugLogger,"13. Set the values in the bluePrint Node");
-								bpnode = new Node();
-								bpnode.setContainer_name(nodeName);
-								bpnode.setImage(dockerImageURL);
-								String node_type = (null != n.getType().getName()? n.getType().getName().trim() : "");
-								bpnode.setNode_type(node_type); 
-								
-								// Check for the Node type is DataBroker or not
-								if (bpnode.getNode_type().equals("DataBroker")) {
-									Property[] prop = n.getProperties();
-									ArrayList<Property> propslst = new ArrayList<Property> (Arrays.asList(prop));
-									String script = null;
-									for (Property dbprops : propslst) {
-										script = dbprops.getData_broker_map().getScript();
-										bpnode.setScript(script); 
-									}
-								}
-								String protoUri = n.getProtoUri();
-								bpnode.setProto_uri(protoUri); 
-								
-								//Set operation_signature_list
-								List<Capabilities> capabilities = Arrays.asList(n.getCapabilities());
-								String nodeOperationName = null;
-								List<Container> containerLst = new ArrayList<Container>();
-								
-								List<OperationSignatureList> oslList = new ArrayList<>();
-								OperationSignatureList osll = null;
-								NodeOperationSignature nos = null;
-								
-								//Get the connected port 
-								String connectedPort = getConnectedPort(cdump.getRelations(), n.getNodeId());
-								
-								for(Capabilities c : capabilities ){
-									nodeOperationName = c.getTarget().getId();
-									if(nodeOperationName.equals(connectedPort)){
-										osll = new OperationSignatureList();
-										nos = new NodeOperationSignature();
-										
-										nos.setOperation_name(nodeOperationName);
-
-										nos.setInput_message_name(c.getTarget().getName()[0].getMessageName());  
-										//NodeOperationSignature input_message_name should have been array, as operation can have multiple input messages.  
-										//Its seems to be some gap
-										
-										nos.setOutput_message_name(getOutputMessage(n.getRequirements(), nodeOperationName));
-										
-										osll.setOperation_signature(nos);
-										
-										containerLst = getRelations(cdump, nodeId);
-										osll.setConnected_to(containerLst);
-										oslList.add(osll);
-									}
-								}
-								bpnode.setOperation_signature_list(oslList);
-
-								// 14. Add the nodedetails to bluepring nodes list
-								logger.debug(EELFLoggerDelegator.debugLogger,"14. Add the nodedetails to blueprint nodes list");
-								bpnodes.add(bpnode);
-							}
-
-							bluePrint.setNodes(bpnodes);
-							
-							// 15. Write Data to bluePrint file and construct the name of the file
-							logger.debug(EELFLoggerDelegator.debugLogger,"15. Write Data to bluePrint file and construct the name of the file");
-							bluePrintFileName = "BluePrint" + "-" + solutionId;
-							// 16. Convert bluePrint to json
-							logger.debug(EELFLoggerDelegator.debugLogger,"16. Convert bluePrint to json");
-							String bluePrintJson = mapper.writeValueAsString(bluePrint);
-							// 17. Create and write details to file
-							logger.debug(EELFLoggerDelegator.debugLogger,"17. Create and write details to file");
-							DSUtil.writeDataToFile(path, bluePrintFileName, "json", bluePrintJson);
-							// 18. Get the Artifact Data
-							logger.debug(EELFLoggerDelegator.debugLogger,"18. Get the Artifact Data");
-							Artifact bluePrintArtifact = new Artifact(bluePrintFileName, "json", solutionId, version,
-									path, bluePrintJson.length());
-							// 19. Upload the file to Nexus
-							logger.debug(EELFLoggerDelegator.debugLogger,"19. Upload the file to Nexus");
-							uploadFilesToRepository(solutionId, version, bluePrintArtifact);
-
-							// 20. Create the MLPArtifact
-							logger.debug(EELFLoggerDelegator.debugLogger,"20. Create the MLPArtifact");
-							MLPArtifact mlpArtifact = null;
-							try {
-								mlpArtifact = new MLPArtifact();
-								mlpArtifact.setArtifactTypeCode("BP");
-								mlpArtifact.setDescription("BluePrint File for : " + solutionName + " for SolutionID : "
-										+ solutionId + " with version : " + version);
-								mlpArtifact.setUri(bluePrintArtifact.getNexusURI());
-								mlpArtifact.setName(bluePrintArtifact.getName());
-								mlpArtifact.setOwnerId(userId);
-								mlpArtifact.setVersion(version);
-								mlpArtifact.setSize(bluePrintJson.length());
-
-								// 21. Get the SolutionRevisions from CDMSClient.
-								logger.debug(EELFLoggerDelegator.debugLogger,"21. Get the SolutionRevisions from CDMSClient.");
-								mlpSolRevisions = cdmsClient.getSolutionRevisions(solutionId);
-								MLPSolutionRevision compositeSolutionRevision = null;
-								// 22. Iterate over MLPSolutionRevisions and get the CompositeSolutionRevision.
-								logger.debug(EELFLoggerDelegator.debugLogger,"22. Iterate over MLPSolutionRevisions and get the CompositeSolutionRevision.");
-								for (MLPSolutionRevision solRev : mlpSolRevisions) {
-									if (solRev.getVersion().equals(version)) {
-										compositeSolutionRevision = solRev;
+				}
+				// 4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.
+				logger.debug(EELFLoggerDelegator.debugLogger,"4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.");
+				if (CollectionUtils.isEqualCollection(idList, set)) {
+					// 5. Checking the Composite Solution Nodes and Relations are connected or not.
+					logger.debug(EELFLoggerDelegator.debugLogger,"5. Checking the Composite Solution Nodes and Relations are connected or not.");
+					if (relationsList.size() >= idList.size() - 1) {
+						//  Validation Case 1. Check Data Broker is present or not
+						logger.debug(EELFLoggerDelegator.debugLogger,"6. Checking Data Broker is present as first node of the solution.");
+						for (Nodes no : nodes) {
+							nodeid = no.getNodeId();
+							type = no.getType().getName();
+							// If node type is DataBroker then check for sourceNodeId of relations which is of different nodeId
+							if ("DataBroker".equals(type)) {
+								// Check whether databroker is first node or not
+								for (Relations rel : relationsList) {
+									if (!nodeid.equals(rel.getTargetNodeId())) {
+										// For DataBroker if the targetNode is not connected to any other nodeId then solution first Node is DataBroker
+										isDataBroker = true;
+										break;
+									} else {
+										// if else databroker is false
 										break;
 									}
 								}
-								List<MLPArtifact> mlpArtiLst = cdmsClient.getSolutionRevisionArtifacts(solutionId,compositeSolutionRevision.getRevisionId());
-
-								// 23. Creating the Artifact from CDMSClient.
-								logger.debug(EELFLoggerDelegator.debugLogger,"23. Creating the Artifact from CDMSClient.");
-
-								boolean bluePrintExists = false;
-								for (MLPArtifact mlpArt : mlpArtiLst) {
-									if (props.getBlueprintArtifactType().equals(mlpArt.getArtifactTypeCode())) {
-										// update the artifact details with artifactId
-										mlpArtifact.setArtifactId(mlpArt.getArtifactId());
-										bluePrintExists = true;
-										break;
-									}
-								}
-								logger.debug(EELFLoggerDelegator.debugLogger, " ArtifactFlag for BP : " + bluePrintExists);
-								if (bluePrintExists) {
-
-									// 24. Update the Artifact which is already exists as BP
-									cdmsClient.updateArtifact(mlpArtifact);
-									logger.debug(EELFLoggerDelegator.debugLogger,"24. Updated the ArtifactTypeCode BP which is already exists");
-								} else {
-									mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
-
-									logger.debug(EELFLoggerDelegator.debugLogger,"Successfully created the artifact for the BluePrint for the solution : "
-													+ solutionId + " artifact ID : " + mlpArtifact.getArtifactId());
-
-									// 25. Associate theSolutionRevisionArtifact for solution ID.
-
-									logger.debug(EELFLoggerDelegator.debugLogger,"25. Associate the SolutionRevisionArtifact for solution ID.");
-
-									cdmsClient.addSolutionRevisionArtifact(solutionId,compositeSolutionRevision.getRevisionId(), mlpArtifact.getArtifactId());
-
-									logger.debug(EELFLoggerDelegator.debugLogger," Successfully associated the Solution Revision Artifact for solution ID  : "
-													+ solutionId);
-								}
-							} catch (Exception e) {
-								logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in validateCompositeSolution() : Failed to create the Solution Artifact ",e);
-								throw new ServiceException("  Exception in validateCompositeSolution() ", "333","Failed to create the Solution Artifact");
+								break;
 							}
-							result = "{\"success\" : \"true\", \"errorDescription\" : \"\"}";
-
+						}
+						if (!isDataBroker) {
+							result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : DataBroker should be first Node. \"}";
 						} else {
-							result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution\"}";
+							// If DataBroker is true then check for one to one mapping for the SourceNodeId and TargetNodeId
+							Set<String> dupSourceNodeSet = new HashSet<String>();
+							Set<String> dupTargetNodeSet = new HashSet<String>();
+							String sourceNodeReq = "";
+							String targetNodeCap = "";
+							boolean isConnectedToMultiple = false;
+							boolean isMultipleInput = false;
+
+							for (Relations rel : relationsList) {
+								//  Validation Case 2. If Duplicate SourceNodeRequirements's are found then solution is Invalid
+								sourceNodeReq = rel.getSourceNodeRequirement().replace("+", "%PLUS%");
+								sourceNodeReq = sourceNodeReq.split("%PLUS%")[0];
+								if (!dupSourceNodeSet.add(sourceNodeReq)) {
+									isConnectedToMultiple = true;
+									break;
+								}
+								//  Validation Case 3. If Duplicate getTargetNodeCapability's are found then solution is Invalid
+								targetNodeCap = rel.getTargetNodeCapability().replace("+", "%PLUS%");
+								targetNodeCap = targetNodeCap.split("%PLUS%")[0];
+								if (!dupTargetNodeSet.add(targetNodeCap)) {
+									isMultipleInput = true;
+									break;
+								}
+							}
+							if (isConnectedToMultiple) {
+								// If Flag is true means duplicate Source or TargetID found then its Invalid Solution and give error message like below
+								result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot be connected to multiple nodes. \"}";
+							} else if (isMultipleInput) {
+								result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot get input from multiple nodes. \"}";
+							} else {
+								// On successful validation generate the BluePrint file
+								logger.debug(EELFLoggerDelegator.debugLogger,"On successful validation generate the BluePrint file.");
+								result = createAndUploadBluePrint(userId, solutionId, solutionName, version, cdump);
+								}
+							}
+						} else {
+							result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : all nodes are not connected\"}";
 						}
 					} else {
-						result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution\"}";
+						result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : nodeId's and relationId are not matching \"}";
 					}
 				} else {
-					result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution\"}";
+					result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : Composite Solution Relations can not be empty\"}";
 				}
 			} else {
-				result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution\"}";
+				result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : Composite Solution cannot be empty\"}";
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger," Exception in validateCompositeSolution() in Service ", e);
-			throw new ServiceException("  Exception in validateCompositeSolution() ", "333",
-					"Failed to create the Solution Artifact");
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in validateCompositeSolution() in Service ", e);
+			throw new ServiceException("  Exception in validateCompositeSolution() ", "333","Failed to create the Solution Artifact");
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, " validateCompositeSolution() in Service  : End ");
 		return result;
 	}
 	
+
+
+	/**
+	 * @return
+	 * @throws ServiceException 
+	 */
+	private String createAndUploadBluePrint(String userId, String solutionId, String solutionName, String version, Cdump cdump) throws ServiceException {
+		String result = "";
+		String bluePrintFileName = "";
+		ObjectMapper mapper = new ObjectMapper();
+		String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
+		logger.debug(EELFLoggerDelegator.debugLogger,"6. On successful validation generate the BluePrint file");
+		BluePrint bluePrint = new BluePrint();
+		// 7. Set the Solution name and version
+		logger.debug(EELFLoggerDelegator.debugLogger,"7. On successful validation generate the BluePrint file");
+		bluePrint.setName(solutionName);
+		bluePrint.setVersion(version);
+		
+		String probeIndicator = null;
+		probeIndicator = cdump.getProbeIndicator();
+		ProbeIndicator pIndicator = new ProbeIndicator();
+		pIndicator.setValue(probeIndicator);
+		List<ProbeIndicator> probeLst = new ArrayList<ProbeIndicator>();
+		probeLst.add(pIndicator);
+		bluePrint.setProbeIndicator(probeLst); // In cdump probeIndicator is a string, in blueprint it should not be an array just a string 
+		Set<String> sourceNodeId = new HashSet<>();
+		Set<String> targetNodeId = new HashSet<>();
+		List<Relations> relationsList = cdump.getRelations();
+		for (Relations rlns : relationsList) {
+			sourceNodeId.add(rlns.getSourceNodeId());
+			targetNodeId.add(rlns.getTargetNodeId());
+		}
+		sourceNodeId.removeAll(targetNodeId);
+		
+		List<Container> containerList = new ArrayList<Container>();
+		Container container = new Container();
+		BaseOperationSignature bos = new BaseOperationSignature();
+		String opearion = "";
+		for (Relations rltn : relationsList) {
+			if (sourceNodeId.contains(rltn.getSourceNodeId())) {
+				opearion = rltn.getSourceNodeRequirement().replace("+", "%PLUS%");
+				opearion = opearion.split("%PLUS%")[0];
+				logger.debug(EELFLoggerDelegator.debugLogger, "Opearion :  {} ", opearion);
+				bos.setOperation_name(opearion);
+				container.setOperation_signature(bos);
+				String containerName = rltn.getSourceNodeName();
+				container.setContainer_name(containerName);
+				containerList.add(container);
+			}
+		}
+		bluePrint.setInput_ports(containerList);
+		// 8. Get the nodes from Cdump file & set the required details in the blueprint nodes
+		logger.debug(EELFLoggerDelegator.debugLogger,"8. Get the nodes from Cdump file & set the required details in the blueprint nodes");
+		List<Nodes> cdumpNodes = cdump.getNodes();
+		List<Node> bpnodes = new ArrayList<>();
+		List<MLPSolutionRevision> mlpSolRevisions = null;
+		MLPSolutionRevision mlpSolRevision = null;
+		String nodeName = "";
+		String nodeId = "";
+		String nodeSolutionId = "";
+		String nodeVersion = "";
+		String dockerImageURL = null;
+		Node bpnode = null;
+		int propLength = 0;
+		DataMap dataMap = null;
+		Property[] properties = null;
+		String gdm = "GDM";
+		
+
+		// 9. Extract NodeId, NodeName,NodeSolutionId,NodeVersion
+		logger.debug(EELFLoggerDelegator.debugLogger,"9. Extract NodeId, NodeName,NodeSolutionId,NodeVersion");
+		for (Nodes n : cdumpNodes) {
+			nodeName = n.getName(); // TO set in the blue print
+			nodeId = n.getNodeId(); 
+			nodeSolutionId = n.getNodeSolutionId(); // To get the DockerImageUrl
+			nodeVersion = n.getNodeVersion(); // To get the nodeVersion
+			// 11. Get the MlpSolutionRevisions from CDMSClient for the NodeSolutionId
+			logger.debug(EELFLoggerDelegator.debugLogger,"11. Get the MlpSolutionRevisions from CDMSClient for the NodeSolutionId");
+			mlpSolRevision = getSolutionRevisions(nodeSolutionId, nodeVersion, mlpSolRevision);
+			boolean isGDM = false;
+			// get the properties from Nodes
+			properties = n.getProperties();
+			// check whether properties are exits or not
+			logger.debug(EELFLoggerDelegator.debugLogger,"check whether properties are exits or not");
+			if (null != properties && properties.length > 0) {
+				propLength = properties.length;
+				for (int i = 0; i < propLength; i++) {
+					dataMap = properties[i].getData_map();
+					if (null != dataMap) {
+						if (null != gdm) {
+							logger.debug(EELFLoggerDelegator.debugLogger,"GDM present");
+							isGDM = true;
+						}
+						break;
+					}
+				}
+			}
+			logger.debug(EELFLoggerDelegator.debugLogger,"GDM Found :  {} ", isGDM);
+			if (isGDM) {
+				// For Generic Data Mapper, get the dockerImageUrl by deploying the GDM
+				// Construct the image for the Generic Data mapper
+				logger.debug(EELFLoggerDelegator.debugLogger,"For Generic Data Mapper, get the dockerImageUrl by deploying the GDM Construct the image for the Generic Data mapper");
+				dockerImageURL = gdmService.createDeployGDM(cdump, userId);
+				if (null == dockerImageURL) {
+					logger.debug(EELFLoggerDelegator.debugLogger,"Error : Issue in createDeployGDM() : Failed to create the Solution Artifact ");
+					throw new ServiceException("  Issue in createDeployGDM() ", "333",
+							"Issue while crearting and deploying GDM image");
+				}
+			} else {
+				// Else for basic models, upload the image and get the uri
+				// 12. Get the list of artifact from CDMSClient which will return the
+				// DockerImageUrl
+				logger.debug(EELFLoggerDelegator.debugLogger,"12. Get the list of artifact from CDMSClient which will return the DockerImageUrl");
+				dockerImageURL = getDockerImageURL(nodeSolutionId, mlpSolRevision);
+			}
+			// 13. Set the values in the bluePrint Node
+			logger.debug(EELFLoggerDelegator.debugLogger,"13. Set the values in the bluePrint Node");
+			bpnode = new Node();
+			bpnode.setContainer_name(nodeName);
+			bpnode.setImage(dockerImageURL);
+			String node_type = (null != n.getType().getName()? n.getType().getName().trim() : "");
+			bpnode.setNode_type(node_type); 
+			
+			// Check for the Node type is DataBroker or not
+			if (bpnode.getNode_type().equals("DataBroker")) {
+				Property[] prop = n.getProperties();
+				ArrayList<Property> propslst = new ArrayList<Property> (Arrays.asList(prop));
+				String script = null;
+				for (Property dbprops : propslst) {
+					script = dbprops.getData_broker_map().getScript();
+					bpnode.setScript(script); 
+				}
+			}
+			String protoUri = n.getProtoUri();
+			bpnode.setProto_uri(protoUri); 
+			
+			//Set operation_signature_list
+			List<Capabilities> capabilities = Arrays.asList(n.getCapabilities());
+			String nodeOperationName = null;
+			List<Container> containerLst = new ArrayList<Container>();
+			
+			List<OperationSignatureList> oslList = new ArrayList<>();
+			OperationSignatureList osll = null;
+			NodeOperationSignature nos = null;
+			
+			//Get the connected port 
+			String connectedPort = getConnectedPort(cdump.getRelations(), n.getNodeId());
+			
+			for(Capabilities c : capabilities ){
+				nodeOperationName = c.getTarget().getId();
+				if(nodeOperationName.equals(connectedPort)){
+					osll = new OperationSignatureList();
+					nos = new NodeOperationSignature();
+					
+					nos.setOperation_name(nodeOperationName);
+
+					nos.setInput_message_name(c.getTarget().getName()[0].getMessageName());  
+					//NodeOperationSignature input_message_name should have been array, as operation can have multiple input messages.  
+					//Its seems to be some gap
+					
+					nos.setOutput_message_name(getOutputMessage(n.getRequirements(), nodeOperationName));
+					
+					osll.setOperation_signature(nos);
+					
+					containerLst = getRelations(cdump, nodeId);
+					osll.setConnected_to(containerLst);
+					oslList.add(osll);
+				}
+			}
+			bpnode.setOperation_signature_list(oslList);
+
+			// 14. Add the nodedetails to bluepring nodes list
+			logger.debug(EELFLoggerDelegator.debugLogger,"14. Add the nodedetails to blueprint nodes list");
+			bpnodes.add(bpnode);
+		}
+
+		bluePrint.setNodes(bpnodes);
+
+		// 20. Create the MLPArtifact
+		logger.debug(EELFLoggerDelegator.debugLogger,"20. Create the MLPArtifact");
+		MLPArtifact mlpArtifact = null;
+		try {
+			
+			// 15. Write Data to bluePrint file and construct the name of the file
+			logger.debug(EELFLoggerDelegator.debugLogger,"15. Write Data to bluePrint file and construct the name of the file");
+			bluePrintFileName = "BluePrint" + "-" + solutionId;
+			// 16. Convert bluePrint to json
+			logger.debug(EELFLoggerDelegator.debugLogger,"16. Convert bluePrint to json");
+			String bluePrintJson = mapper.writeValueAsString(bluePrint);
+			// 17. Create and write details to file
+			logger.debug(EELFLoggerDelegator.debugLogger,"17. Create and write details to file");
+			DSUtil.writeDataToFile(path, bluePrintFileName, "json", bluePrintJson);
+			// 18. Get the Artifact Data
+			logger.debug(EELFLoggerDelegator.debugLogger,"18. Get the Artifact Data");
+			Artifact bluePrintArtifact = new Artifact(bluePrintFileName, "json", solutionId, version,
+					path, bluePrintJson.length());
+			// 19. Upload the file to Nexus
+			logger.debug(EELFLoggerDelegator.debugLogger,"19. Upload the file to Nexus");
+			uploadFilesToRepository(solutionId, version, bluePrintArtifact);
+			
+			mlpArtifact = new MLPArtifact();
+			mlpArtifact.setArtifactTypeCode("BP");
+			mlpArtifact.setDescription("BluePrint File for : " + solutionName + " for SolutionID : "
+					+ solutionId + " with version : " + version);
+			mlpArtifact.setUri(bluePrintArtifact.getNexusURI());
+			mlpArtifact.setName(bluePrintArtifact.getName());
+			mlpArtifact.setOwnerId(userId);
+			mlpArtifact.setVersion(version);
+			mlpArtifact.setSize(bluePrintJson.length());
+
+			// 21. Get the SolutionRevisions from CDMSClient.
+			logger.debug(EELFLoggerDelegator.debugLogger,"21. Get the SolutionRevisions from CDMSClient.");
+			mlpSolRevisions = cdmsClient.getSolutionRevisions(solutionId);
+			MLPSolutionRevision compositeSolutionRevision = null;
+			// 22. Iterate over MLPSolutionRevisions and get the CompositeSolutionRevision.
+			logger.debug(EELFLoggerDelegator.debugLogger,"22. Iterate over MLPSolutionRevisions and get the CompositeSolutionRevision.");
+			for (MLPSolutionRevision solRev : mlpSolRevisions) {
+				if (solRev.getVersion().equals(version)) {
+					compositeSolutionRevision = solRev;
+					break;
+				}
+			}
+			List<MLPArtifact> mlpArtiLst = cdmsClient.getSolutionRevisionArtifacts(solutionId,compositeSolutionRevision.getRevisionId());
+
+			// 23. Creating the Artifact from CDMSClient.
+			logger.debug(EELFLoggerDelegator.debugLogger,"23. Creating the Artifact from CDMSClient.");
+
+			boolean bluePrintExists = false;
+			for (MLPArtifact mlpArt : mlpArtiLst) {
+				if (props.getBlueprintArtifactType().equals(mlpArt.getArtifactTypeCode())) {
+					// update the artifact details with artifactId
+					mlpArtifact.setArtifactId(mlpArt.getArtifactId());
+					bluePrintExists = true;
+					break;
+				}
+			}
+			logger.debug(EELFLoggerDelegator.debugLogger, " ArtifactFlag for BP : " + bluePrintExists);
+			if (bluePrintExists) {
+
+				// 24. Update the Artifact which is already exists as BP
+				cdmsClient.updateArtifact(mlpArtifact);
+				logger.debug(EELFLoggerDelegator.debugLogger,"24. Updated the ArtifactTypeCode BP which is already exists");
+			} else {
+				mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
+
+				logger.debug(EELFLoggerDelegator.debugLogger,"Successfully created the artifact for the BluePrint for the solution : "
+								+ solutionId + " artifact ID : " + mlpArtifact.getArtifactId());
+
+				// 25. Associate theSolutionRevisionArtifact for solution ID.
+
+				logger.debug(EELFLoggerDelegator.debugLogger,"25. Associate the SolutionRevisionArtifact for solution ID.");
+
+				cdmsClient.addSolutionRevisionArtifact(solutionId,compositeSolutionRevision.getRevisionId(), mlpArtifact.getArtifactId());
+
+				logger.debug(EELFLoggerDelegator.debugLogger," Successfully associated the Solution Revision Artifact for solution ID  : "
+								+ solutionId);
+			}
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in validateCompositeSolution() : Failed to create the Solution Artifact ",e);
+			throw new ServiceException("  Exception in validateCompositeSolution() ", "333","Failed to create the Solution Artifact");
+		}
+		result = "{\"success\" : \"true\", \"errorDescription\" : \"\"}";
+
+		return result;
+	}
+
 	/**
 	 * @param requirements
 	 * @param nodeOperationName
