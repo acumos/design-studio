@@ -360,72 +360,114 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String error = "{\"errorCode\" : \"%s\", \"errorDescription\" : \"%s\"}";
 		// 1. get the solution details using CDS : MLPSolution
 		MLPSolution mlpSolution = cdmsClient.getSolution(dscs.getSolutionId());
-
+		MLPSolutionRevision mlpSolutionRevision = null;
 		if (null != mlpSolution) {
+			
+			//PUBLIC composite solution to be edited, but Saved only as a different (non-existing) version or different name
+			//same name or same version can not be save. it will return a error message.
+			
+			if (null != mlpSolution.getAccessTypeCode() && (( "PB".equals(mlpSolution.getAccessTypeCode())) ||("OR".equals(mlpSolution.getAccessTypeCode())))) {
+				List<MLPSolutionRevision> mlpSolnRevision = cdmsClient.getSolutionRevisions(mlpSolution.getSolutionId());
+				if (null != mlpSolnRevision && !mlpSolnRevision.isEmpty()) {
+					for (MLPSolutionRevision mlpSolRev : mlpSolnRevision) {
+						
+						//Start for error list
+						//if model name and version is same then send the error message back to UI.
+						if (mlpSolution.getName().equalsIgnoreCase(dscs.getSolutionName()) && mlpSolRev.getVersion().equalsIgnoreCase(dscs.getVersion())) {
+							result = "{\"duplicateErrorCode\" : \"219\", \"duplicate\" : \"Solution In Public/Company. Please change either solution name, version or both.\"}";
+							break;
+						} else if(mlpSolution.getName().equalsIgnoreCase(dscs.getSolutionName()) && !mlpSolRev.getVersion().equalsIgnoreCase(dscs.getVersion())) {
+							//if model name is same and version is different then create new Revision.
+							mlpSolutionRevision = new MLPSolutionRevision();
+							try {
+								mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
+								mlpSolutionRevision.setDescription(dscs.getDescription());
+								mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+								mlpSolutionRevision.setVersion(dscs.getVersion());
 
-			// 2. check the solution name with input solution name
-			if (mlpSolution.getName().equalsIgnoreCase(dscs.getSolutionName())) {
-
-				// 3. get the list of solutionRevision details using CDS :
-				// MLPSolutionRevison sorted in descending order.
-				List<MLPSolutionRevision> mlpSolutionList = cdmsClient.getSolutionRevisions(dscs.getSolutionId());
-
-				Collections.sort(mlpSolutionList, new Comparator<MLPSolutionRevision>() {
-					@Override
-					public int compare(MLPSolutionRevision s1, MLPSolutionRevision s2) {
-						return s2.getCreated().compareTo(s1.getCreated());
-					}
-				});
-
-				if (null != mlpSolutionList && !mlpSolutionList.isEmpty()) {
-					// 4. get the first solutionRevision and check the solution version with input
-					// solution version
-					if (mlpSolutionList.get(0).getVersion().equals(dscs.getVersion())) {
-						logger.debug(EELFLoggerDelegator.debugLogger, "Upadating Existing Solution");
-						result = updateExistingSolution(mlpSolutionList.get(0), mlpSolution, dscs);
-
-					} else {
-						boolean previousFlag = false;
-						int cnt = 0;// To skip the first solutionRevision
-						for (MLPSolutionRevision mlpSR : mlpSolutionList) {
-							if (cnt > 0) {
-								if (mlpSR.getVersion().equals(dscs.getVersion())) {
-									previousFlag = true;
-
-									if (!dscs.getIgnoreLesserVersionConflictFlag()) {
-
-										result = "{\"alert\": \"" + props.getAskToUpdateExistingCompSolnMsg() + "\" }";
-									} else if (dscs.getIgnoreLesserVersionConflictFlag()) {
-										logger.debug(EELFLoggerDelegator.debugLogger,
-												"Upadating Existing Solution with the previous version");
-										result = updateExistingSolution(mlpSR, mlpSolution, dscs);
-									}
-								}
-							} else {
-								cnt++;
+								mlpSolutionRevision = cdmsClient.createSolutionRevision(mlpSolutionRevision);
+								// new method for save the composite solution, if the version changes.
+								result = insertNewUpdatedCompositeSolution(dscs, mlpSolution, mlpSolutionRevision);
+								logger.debug(EELFLoggerDelegator.debugLogger,
+										"2. Successfully Created the SolutionRevision :  {} ", mlpSolutionRevision.getRevisionId());
+							} catch (Exception e) {
+								logger.error(EELFLoggerDelegator.errorLogger,
+										"Error : Exception in updateCompositeSolution() : Failed to create the Solution Revision",
+										e);
+								throw new ServiceException("  Exception in updateCompositeSolution() ", "222",
+										"Failed to create the Solution");
 							}
-						}
-						if (!previousFlag) {
-							logger.debug(EELFLoggerDelegator.debugLogger, "Upadating Solution with the new version");
-							result = updateSolnWithNewVersion(mlpSolution, dscs);
+						} else if(!mlpSolution.getName().equalsIgnoreCase(dscs.getSolutionName())){
+							//create a new composite solution.
+							result = insertCompositeSolution(dscs);
 						}
 					}
-				} else { // This means no version available for the solution as result for delete
-							// solution. So add new version to the existing solution.
-
-					logger.debug(EELFLoggerDelegator.debugLogger,
-							"No version found, so adding new version to the Solution");
-					result = updateSolnWithNewVersion(mlpSolution, dscs);
 				}
 			} else {
-				// New Case: When user tries to update the existting solution with a different
-				// name
-				// Update the dscs with the new values
-				dscs.setcId(dscs.getSolutionId());
-				dscs.setSolutionId(null);
-				// call the save method to get the normal flow saving a solution
-				result = saveCompositeSolution(dscs);
-
+				// 2. check the solution name with input solution name
+				if (mlpSolution.getName().equalsIgnoreCase(dscs.getSolutionName())) {
+	
+					// 3. get the list of solutionRevision details using CDS :
+					// MLPSolutionRevison sorted in descending order.
+					List<MLPSolutionRevision> mlpSolutionList = cdmsClient.getSolutionRevisions(dscs.getSolutionId());
+	
+					Collections.sort(mlpSolutionList, new Comparator<MLPSolutionRevision>() {
+						@Override
+						public int compare(MLPSolutionRevision s1, MLPSolutionRevision s2) {
+							return s2.getCreated().compareTo(s1.getCreated());
+						}
+					});
+	
+					if (null != mlpSolutionList && !mlpSolutionList.isEmpty()) {
+						// 4. get the first solutionRevision and check the solution version with input
+						// solution version
+						if (mlpSolutionList.get(0).getVersion().equals(dscs.getVersion())) {
+							logger.debug(EELFLoggerDelegator.debugLogger, "Upadating Existing Solution");
+							result = updateExistingSolution(mlpSolutionList.get(0), mlpSolution, dscs);
+	
+						} else {
+							boolean previousFlag = false;
+							int cnt = 0;// To skip the first solutionRevision
+							for (MLPSolutionRevision mlpSR : mlpSolutionList) {
+								if (cnt > 0) {
+									if (mlpSR.getVersion().equals(dscs.getVersion())) {
+										previousFlag = true;
+	
+										if (!dscs.getIgnoreLesserVersionConflictFlag()) {
+	
+											result = "{\"alert\": \"" + props.getAskToUpdateExistingCompSolnMsg() + "\" }";
+										} else if (dscs.getIgnoreLesserVersionConflictFlag()) {
+											logger.debug(EELFLoggerDelegator.debugLogger,
+													"Upadating Existing Solution with the previous version");
+											result = updateExistingSolution(mlpSR, mlpSolution, dscs);
+										}
+									}
+								} else {
+									cnt++;
+								}
+							}
+							if (!previousFlag) {
+								logger.debug(EELFLoggerDelegator.debugLogger, "Upadating Solution with the new version");
+								result = updateSolnWithNewVersion(mlpSolution, dscs);
+							}
+						}
+					} else { // This means no version available for the solution as result for delete
+								// solution. So add new version to the existing solution.
+	
+						logger.debug(EELFLoggerDelegator.debugLogger,
+								"No version found, so adding new version to the Solution");
+						result = updateSolnWithNewVersion(mlpSolution, dscs);
+					}
+				} else {
+					// New Case: When user tries to update the existting solution with a different
+					// name
+					// Update the dscs with the new values
+					dscs.setcId(dscs.getSolutionId());
+					dscs.setSolutionId(null);
+					// call the save method to get the normal flow saving a solution
+					result = saveCompositeSolution(dscs);
+	
+				}
 			}
 		} else {
 
@@ -1482,6 +1524,120 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	
 	public void setGenericDataMapperServiceImpl(GenericDataMapperServiceImpl gdmService){
 		this.gdmService = gdmService;
+	}
+	
+	/**
+	 * 
+	 * @param dscs
+	 * @return
+	 * @throws AcumosException
+	 * @throws IOException
+	 */
+	private String insertNewUpdatedCompositeSolution(DSCompositeSolution dscs, MLPSolution mlpSolution,MLPSolutionRevision mlpSolutionRevision ) throws AcumosException, IOException {
+
+		logger.debug(EELFLoggerDelegator.debugLogger, " insertCompositeSolution() Begin ");
+
+		String path = DSUtil.readCdumpPath(dscs.getAuthor(), confprops.getToscaOutputFolder());
+		String cdumpFileName = "acumos-cdump" + "-" + mlpSolution.getSolutionId(); 
+		String payload = "";
+
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
+			if (null == cdump) {
+				logger.debug(EELFLoggerDelegator.debugLogger,
+						"Error : Cdump file not found for Solution ID :   {} ", mlpSolution.getSolutionId());
+			} else {
+				cdump.setCname(dscs.getSolutionName());
+				cdump.setVersion(dscs.getVersion());
+				cdump.setSolutionId(mlpSolution.getSolutionId());
+				SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
+				cdump.setMtime(sdf.format(new Date()));
+				logger.debug(EELFLoggerDelegator.debugLogger,
+						"3. Successfully read the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
+				Gson gson = new Gson();
+				payload = gson.toJson(cdump);
+				cdumpFileName = "acumos-cdump" + "-" + mlpSolution.getSolutionId();
+				DSUtil.writeDataToFile(path, cdumpFileName, "json", payload);
+			}
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger,
+					"Error : Exception in insertCompositeSolution() : Failed to Find the Cdump File ",
+					e);
+			throw new ServiceException("  Exception in insertCompositeSolution() ", "222",
+					"Failed to create the Solution");
+		}
+
+		Artifact cdumpArtifact = new Artifact(cdumpFileName, "json", mlpSolution.getSolutionId(), dscs.getVersion(),
+				path, payload.length());
+
+		logger.debug(EELFLoggerDelegator.debugLogger,
+				"4. Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
+
+		try {
+			uploadFilesToRepository(mlpSolution.getSolutionId(), dscs.getVersion(), cdumpArtifact);
+			dscs.setCdump(cdumpArtifact);
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					"5. Successfully uploaded the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
+			DSUtil.deleteFile(path.concat("acumos-cdump" + "-" + dscs.getcId()).concat(".json"));
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					"5.1 Successfully deleted the local Cdump file for solution ID : "
+							+ mlpSolution.getSolutionId());
+
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger,
+					"Error : Exception in insertCompositeSolution() : Failed to upload the Cdump File to Nexus ",
+					e);
+			DSUtil.deleteFile(path.concat("acumos-cdump" + "-" + dscs.getcId()).concat(".json"));
+			if (null != mlpSolution.getSolutionId())
+				DSUtil.deleteFile(path.concat(cdumpFileName).concat(".json"));
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					"5.1 Successfully deleted the local Cdump file for solution ID : "
+							+ mlpSolution.getSolutionId());
+			throw new ServiceException("  Exception in insertCompositeSolution() ", "222",
+					"Failed to create the Solution");
+		}
+
+		// 4. create the artifact
+		MLPArtifact mlpArtifact = null;
+		try {
+			mlpArtifact = new MLPArtifact();
+			mlpArtifact.setArtifactTypeCode(props.getArtifactTypeCode());
+			mlpArtifact.setDescription("Cdump File for : " + cdumpArtifact.getName() + " for SolutionID : "
+					+ cdumpArtifact.getSolutionID() + " with version : " + cdumpArtifact.getVersion());
+			mlpArtifact.setUri(cdumpArtifact.getNexusURI());
+			mlpArtifact.setName(cdumpArtifact.getName());
+			mlpArtifact.setOwnerId(dscs.getAuthor());
+			mlpArtifact.setVersion(cdumpArtifact.getVersion());
+			mlpArtifact.setSize(cdumpArtifact.getContentLength());
+
+			mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
+
+			// 5. associate articat to the solutionRevisionArtifact.
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					"6. Successfully created the artifact for the cdumpfile for the solution : {0} artifact ID : {1}" ,mlpSolution.getSolutionId(), mlpArtifact.getArtifactId());
+
+			cdmsClient.addSolutionRevisionArtifact(mlpSolution.getSolutionId(), mlpSolutionRevision.getRevisionId(),
+					mlpArtifact.getArtifactId());
+
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					"7. Successfully associated the Solution Revision Artifact for solution ID  : "
+							+ mlpSolution.getSolutionId());
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger,
+					"Error : Exception in insertCompositeSolution() : Failed to create the Solution Artifact ",
+					e);
+			throw new ServiceException("  Exception in insertCompositeSolution() ", "222",
+					"Failed to create the Solution");
+		}
+
+		// 5. Detete the cdump file
+
+		logger.debug(EELFLoggerDelegator.debugLogger, " insertCompositeSolution() End ");
+
+		return "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \"" + dscs.getVersion()
+				+ "\" }";
+
 	}
 
 }
