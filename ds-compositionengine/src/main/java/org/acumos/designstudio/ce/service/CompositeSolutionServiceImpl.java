@@ -1022,56 +1022,59 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							if ("DataBroker".equals(type)) {
 								// Check whether databroker is first node or not
 								for (Relations rel : relationsList) {
-									if (!nodeid.equals(rel.getTargetNodeId())) {
+									if (nodeid.equals(rel.getTargetNodeId())) {
 										// For DataBroker if the targetNode is not connected to any other nodeId then solution first Node is DataBroker
 										isDataBroker = true;
 										break;
-									} else {
-										// if else databroker is false
-										break;
-									}
+									} 
 								}
 								break;
 							}
 						}
-						if (!isDataBroker) {
+						if (isDataBroker) {
 							result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : DataBroker should be first Node. \"}";
 						} else {
 							// If DataBroker is true then check for one to one mapping for the SourceNodeId and TargetNodeId
-							Set<String> dupSourceNodeSet = new HashSet<String>();
-							Set<String> dupTargetNodeSet = new HashSet<String>();
-							String sourceNodeReq = "";
-							String targetNodeCap = "";
-							boolean isConnectedToMultiple = false;
-							boolean isMultipleInput = false;
-
-							for (Relations rel : relationsList) {
-								//  Validation Case 2. If Duplicate SourceNodeRequirements's are found then solution is Invalid
-								sourceNodeReq = rel.getSourceNodeRequirement().replace("+", "%PLUS%");
-								sourceNodeReq = sourceNodeReq.split("%PLUS%")[0];
-								if (!dupSourceNodeSet.add(sourceNodeReq)) {
-									isConnectedToMultiple = true;
-									break;
-								}
-								//  Validation Case 3. If Duplicate getTargetNodeCapability's are found then solution is Invalid
-								targetNodeCap = rel.getTargetNodeCapability().replace("+", "%PLUS%");
-								targetNodeCap = targetNodeCap.split("%PLUS%")[0];
-								if (!dupTargetNodeSet.add(targetNodeCap)) {
-									isMultipleInput = true;
-									break;
-								}
-							}
-							if (isConnectedToMultiple) {
-								// If Flag is true means duplicate Source or TargetID found then its Invalid Solution and give error message like below
-								result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot be connected to multiple nodes. \"}";
-							} else if (isMultipleInput) {
-								result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot get input from multiple nodes. \"}";
+							
+							// If ouput port for the Node is connected then its same input ports should be connected only if its not the first node.
+							boolean isCorrectPortsConnected = ValidateCorrectPortsConnected(cdump);
+							
+							if(!isCorrectPortsConnected){
+								result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : incorrect ports connected. \"}";
 							} else {
-								// On successful validation generate the BluePrint file
-								logger.debug(EELFLoggerDelegator.debugLogger,"On successful validation generate the BluePrint file.");
-								result = createAndUploadBluePrint(userId, solutionId, solutionName, version, cdump);
+								Set<String> dupSourceNodeSet = new HashSet<String>();
+								Set<String> dupTargetNodeSet = new HashSet<String>();
+								String sourceNodeId = "";
+								String targetNodeId = "";
+								boolean isConnectedToMultiple = false;
+								boolean isMultipleInput = false; 
+
+									for (Relations rel : relationsList) {
+										// Validation Case 2: If Duplicate SourceNodeId's are found then solution is Invalid
+										sourceNodeId = rel.getSourceNodeId();
+										if (!dupSourceNodeSet.add(sourceNodeId)) {
+											isConnectedToMultiple = true;
+											break;
+										}
+										// Validation Case 3: If Duplicate TargetNodeId's are found then solution is Invalid
+										targetNodeId = rel.getTargetNodeId();
+										if (!dupTargetNodeSet.add(targetNodeId)) {
+											isMultipleInput = true;
+											break;
+										}
+									}
+								if (isConnectedToMultiple) {
+									result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot be connected to multiple nodes. \"}";
+								} else if (isMultipleInput) {
+									result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot get input from multiple nodes. \"}";
+								} else {
+									// On successful validation generate the BluePrint file
+									logger.debug(EELFLoggerDelegator.debugLogger,"On successful validation generate the BluePrint file.");
+									result = createAndUploadBluePrint(userId, solutionId, solutionName, version, cdump);
+									}
 								}
 							}
+							
 						} else {
 							result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : all nodes are not connected\"}";
 						}
@@ -1117,31 +1120,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		List<ProbeIndicator> probeLst = new ArrayList<ProbeIndicator>();
 		probeLst.add(pIndicator);
 		bluePrint.setProbeIndicator(probeLst); // In cdump probeIndicator is a string, in blueprint it should not be an array just a string 
-		Set<String> sourceNodeId = new HashSet<>();
-		Set<String> targetNodeId = new HashSet<>();
-		List<Relations> relationsList = cdump.getRelations();
-		for (Relations rlns : relationsList) {
-			sourceNodeId.add(rlns.getSourceNodeId());
-			targetNodeId.add(rlns.getTargetNodeId());
-		}
-		sourceNodeId.removeAll(targetNodeId);
-		
-		List<Container> containerList = new ArrayList<Container>();
-		Container container = new Container();
-		BaseOperationSignature bos = new BaseOperationSignature();
-		String opearion = "";
-		for (Relations rltn : relationsList) {
-			if (sourceNodeId.contains(rltn.getSourceNodeId())) {
-				opearion = rltn.getSourceNodeRequirement().replace("+", "%PLUS%");
-				opearion = opearion.split("%PLUS%")[0];
-				logger.debug(EELFLoggerDelegator.debugLogger, "Opearion :  {} ", opearion);
-				bos.setOperation_name(opearion);
-				container.setOperation_signature(bos);
-				String containerName = rltn.getSourceNodeName();
-				container.setContainer_name(containerName);
-				containerList.add(container);
-			}
-		}
+		List<Container> containerList = getInputPorts(cdump);
 		bluePrint.setInput_ports(containerList);
 		// 8. Get the nodes from Cdump file & set the required details in the blueprint nodes
 		logger.debug(EELFLoggerDelegator.debugLogger,"8. Get the nodes from Cdump file & set the required details in the blueprint nodes");
@@ -1359,6 +1338,38 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	}
 
 	/**
+	 * @param cdump
+	 * @return container List
+	 */
+	private List<Container> getInputPorts(Cdump cdump) {
+		Set<String> sourceNodeId = new HashSet<>();
+		Set<String> targetNodeId = new HashSet<>();
+		List<Relations> relationsList = cdump.getRelations();
+		for (Relations rlns : relationsList) {
+			sourceNodeId.add(rlns.getSourceNodeId());
+			targetNodeId.add(rlns.getTargetNodeId());
+		}
+		sourceNodeId.removeAll(targetNodeId);
+		List<Container> containerList = new ArrayList<Container>();
+		Container container = new Container();
+		BaseOperationSignature bos = new BaseOperationSignature();
+		String opearion = "";
+		for (Relations rltn : relationsList) {
+			if (sourceNodeId.contains(rltn.getSourceNodeId())) {
+				opearion = rltn.getSourceNodeRequirement().replace("+", "%PLUS%");
+				opearion = opearion.split("%PLUS%")[0];
+				logger.debug(EELFLoggerDelegator.debugLogger, "Opearion :  {} ", opearion);
+				bos.setOperation_name(opearion);
+				container.setOperation_signature(bos);
+				String containerName = rltn.getSourceNodeName();
+				container.setContainer_name(containerName);
+				containerList.add(container);
+			}
+		}
+		return containerList;
+	}
+	
+	/**
 	 * @param requirements
 	 * @param nodeOperationName
 	 * @return
@@ -1508,8 +1519,76 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
         logger.debug(EELFLoggerDelegator.debugLogger, " setProbeIndicator() : End ");
 		return successErrorMessage;
 	}
-        private SuccessErrorMessage getResponseMessageStatus(String messagestatus, String messagedescription){
+	
+	/**
+	 * @param cdump
+	 * @param nodes
+	 * @param relationsList
+	 */
+	private boolean ValidateCorrectPortsConnected(Cdump cdump) {
+		String nodeid;
+		boolean isCorrectPortsConnected = true;
+		String firstNodeId = getFirstNodeId(cdump);
+		String srcOperation = null;
+		String trgOperation = null;
+		List<Nodes> nodes = cdump.getNodes();
+		List<Relations> relationsList = cdump.getRelations();
+		for (Nodes n : nodes) {
+			nodeid = n.getNodeId();
+			if(!firstNodeId.equals(nodeid)){
+				for (Relations rel : relationsList) {
+					if(nodeid.equals(rel.getSourceNodeId())){
+						srcOperation = rel.getSourceNodeRequirement().replace("+", "%PLUS%");
+						srcOperation = srcOperation.split("%PLUS%")[0];
+						//Now check if same input port is connected or not and its not the first node. 
+							boolean isSameportConnected = false;
+							for (Relations rel2 : relationsList) {
+								if(nodeid.equals(rel2.getTargetNodeId())){ //Node is target of some other link
+									trgOperation = rel2.getTargetNodeCapability().replace("+", "%PLUS%");
+									trgOperation = trgOperation.split("%PLUS%")[0];
+									if(trgOperation.equals(srcOperation)){
+										isSameportConnected = true;
+										break;
+									}
+								}
+							}
+							if(!isSameportConnected){
+								isCorrectPortsConnected = false;
+								break;
+							}
+					}
+				}
+				if(!isCorrectPortsConnected){
+					break;
+				}
+			}
+		}
+		return isCorrectPortsConnected;
+	}
+	 private SuccessErrorMessage getResponseMessageStatus(String messagestatus, String messagedescription){
 		return new SuccessErrorMessage(messagestatus,messagedescription);
+	 }
+
+	/**
+	 * @param cdump
+	 * @return container List
+	 */
+	private String getFirstNodeId(Cdump cdump) {
+		String firstNodeId = null;
+		Set<String> sourceNodeId = new HashSet<>();
+		Set<String> targetNodeId = new HashSet<>();
+		List<Relations> relationsList = cdump.getRelations();
+		for (Relations rlns : relationsList) {
+			sourceNodeId.add(rlns.getSourceNodeId());
+			targetNodeId.add(rlns.getTargetNodeId());
+		}
+		sourceNodeId.removeAll(targetNodeId);
+		for (Relations rltn : relationsList) {
+			if (sourceNodeId.contains(rltn.getSourceNodeId())) {
+				firstNodeId = rltn.getSourceNodeId();
+			}
+		}
+		return firstNodeId;
 	}
         public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
 		cdmsClient = commonDataServiceRestClient;
