@@ -506,7 +506,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		}
 		
 		cmd = "/usr/bin/javac -cp " + protobufjarpath + " " + path + packagepath + className + ".java"
-				+ "d " + targetPath;
+				+ " -d " + targetPath;
 
 		try {
 			exitVal = DSUtil.runCommand(cmd);
