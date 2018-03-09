@@ -425,7 +425,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		String cmd;
 		int exitVal = -1;
 
-		cmd = "protoc -I=" + path + "java_out=" + path + " " + path + protobufFileName + ".proto";
+		cmd = "protoc -I=" + path + " --java_out=" + path + " " + path + protobufFileName + ".proto";
 
 		try {
 			exitVal = DSUtil.runCommand(cmd);
