@@ -1061,7 +1061,7 @@ public class SolutionControllerTest {
 		
 		try {
 			cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
-			when(gdmService.createDeployGDM(cdump, "8fcc3384-e3f8-4520-af1c-413d9495a154")).thenReturn("xyz");
+			when(gdmService.createDeployGDM(cdump, "", "8fcc3384-e3f8-4520-af1c-413d9495a154")).thenReturn("xyz");
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
 					" Exception Occured in createDeployGDM ", e);

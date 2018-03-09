@@ -21,7 +21,10 @@
 package org.acumos.designstudio.test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.anyString;
 
 import java.util.Properties;
 
@@ -39,11 +42,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-/**
- * 
- * @author ****
- *
- */
+
 public class ArtfactDetailsControllerTest {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ArtfactDetailsControllerTest.class);
 	public static Properties CONFIG = new Properties();
@@ -60,6 +59,9 @@ public class ArtfactDetailsControllerTest {
 	AcumosCatalogServiceImpl acumosCatalogServiceImpl;
 	@Mock
 	ICompositeSolutionService compositeServiceImpl;
+	@Mock
+	org.acumos.designstudio.ce.util.Properties props;
+	
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
 
@@ -90,4 +92,25 @@ public class ArtfactDetailsControllerTest {
 		}
 	}
 
+	
+	@Test
+	public void fetchJsonTOSCA2() throws Exception {
+		
+		
+		when(props.getArtifactType()).thenReturn("TG");	
+		when(acumosCatalogServiceImpl.readArtifact(userId, solutionId, version, "TG")).thenReturn("123");
+		Object result = artfactDetailsController.fetchJsonTOSCA(userId, solutionId, version);
+		assertNotNull((String)result);
+	}
+	
+	@Test
+	public void fetchJsonTOSCA3() throws Exception {
+		
+		
+		when(props.getArtifactType()).thenReturn("TG");	
+		when(acumosCatalogServiceImpl.readArtifact(userId, solutionId, version, "TG")).thenReturn(null);
+		Object result = artfactDetailsController.fetchJsonTOSCA(userId, solutionId, version);
+		assertNotNull((String)result);
+		assertEquals("Failed to fetch the TOSCA details for specified solutionId and version", (String) result);
+	}
 }

@@ -123,8 +123,28 @@ public class Properties implements Serializable {
 	@Value("${blueprintArtifactType}")
 	private String blueprintArtifactType;
 	
+	@Value("${gdmType}")
+	private String gdmType;
+	
+	@Value("${databrokerType}")
+	private String databrokerType;
 	
 	
+	
+	/**
+	 * @return the gdmType
+	 */
+	public String getGdmType() {
+		return gdmType;
+	}
+
+	/**
+	 * @return the databrokerType
+	 */
+	public String getDatabrokerType() {
+		return databrokerType;
+	}
+
 	/**
 	 * @return the blueprintArtifactType
 	 */
@@ -322,10 +342,4 @@ public class Properties implements Serializable {
 	}
 	
 	
-
-	
-	
-
-
-
 }

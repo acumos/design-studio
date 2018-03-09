@@ -61,6 +61,19 @@ public class ConfigurationProperties {
 	@Value("${lib}")
 	private String lib;
 	
+	
+	//TODO : Need to be removed once actual implementation is in place
+	@Value("${databrokerImageURI}")
+	private String databrokerImageURI;
+
+	
+	/**
+	 * @return the databrokerImageURI
+	 */
+	public String getDatabrokerImageURI() {
+		return databrokerImageURI;
+	}
+
 	/**
 	 * @return the lib
 	 */

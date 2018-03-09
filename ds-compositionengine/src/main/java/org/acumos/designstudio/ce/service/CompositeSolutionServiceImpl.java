@@ -107,6 +107,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	@Autowired
 	private GenericDataMapperServiceImpl gdmService;
+	
+	@Autowired			
+	private DataBrokerServiceImpl dbService;
 
 	@Override
 	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException {
@@ -1120,7 +1123,31 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		List<ProbeIndicator> probeLst = new ArrayList<ProbeIndicator>();
 		probeLst.add(pIndicator);
 		bluePrint.setProbeIndicator(probeLst); // In cdump probeIndicator is a string, in blueprint it should not be an array just a string 
-		List<Container> containerList = getInputPorts(cdump);
+		Set<String> sourceNodeId = new HashSet<>();
+		Set<String> targetNodeId = new HashSet<>();
+		List<Relations> relationsList = cdump.getRelations();
+		for (Relations rlns : relationsList) {
+			sourceNodeId.add(rlns.getSourceNodeId());
+			targetNodeId.add(rlns.getTargetNodeId());
+		}
+		sourceNodeId.removeAll(targetNodeId);
+		
+		List<Container> containerList = new ArrayList<Container>();
+		Container container = new Container();
+		BaseOperationSignature bos = new BaseOperationSignature();
+		String opearion = "";
+		for (Relations rltn : relationsList) {
+			if (sourceNodeId.contains(rltn.getSourceNodeId())) {
+				opearion = rltn.getSourceNodeRequirement().replace("+", "%PLUS%");
+				opearion = opearion.split("%PLUS%")[0];
+				logger.debug(EELFLoggerDelegator.debugLogger, "Opearion :  {} ", opearion);
+				bos.setOperation_name(opearion);
+				container.setOperation_signature(bos);
+				String containerName = rltn.getSourceNodeName();
+				container.setContainer_name(containerName);
+				containerList.add(container);
+			}
+		}
 		bluePrint.setInput_ports(containerList);
 		// 8. Get the nodes from Cdump file & set the required details in the blueprint nodes
 		logger.debug(EELFLoggerDelegator.debugLogger,"8. Get the nodes from Cdump file & set the required details in the blueprint nodes");
@@ -1150,34 +1177,25 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			// 11. Get the MlpSolutionRevisions from CDMSClient for the NodeSolutionId
 			logger.debug(EELFLoggerDelegator.debugLogger,"11. Get the MlpSolutionRevisions from CDMSClient for the NodeSolutionId");
 			mlpSolRevision = getSolutionRevisions(nodeSolutionId, nodeVersion, mlpSolRevision);
-			boolean isGDM = false;
-			// get the properties from Nodes
-			properties = n.getProperties();
-			// check whether properties are exits or not
-			logger.debug(EELFLoggerDelegator.debugLogger,"check whether properties are exits or not");
-			if (null != properties && properties.length > 0) {
-				propLength = properties.length;
-				for (int i = 0; i < propLength; i++) {
-					dataMap = properties[i].getData_map();
-					if (null != dataMap) {
-						if (null != gdm) {
-							logger.debug(EELFLoggerDelegator.debugLogger,"GDM present");
-							isGDM = true;
-						}
-						break;
-					}
-				}
-			}
-			logger.debug(EELFLoggerDelegator.debugLogger,"GDM Found :  {} ", isGDM);
-			if (isGDM) {
+						
+			if (n.getType().getName().equalsIgnoreCase(props.getGdmType())) {
+				logger.debug(EELFLoggerDelegator.debugLogger,"GDM Found :  {} ", n.getNodeId());
 				// For Generic Data Mapper, get the dockerImageUrl by deploying the GDM
 				// Construct the image for the Generic Data mapper
 				logger.debug(EELFLoggerDelegator.debugLogger,"For Generic Data Mapper, get the dockerImageUrl by deploying the GDM Construct the image for the Generic Data mapper");
-				dockerImageURL = gdmService.createDeployGDM(cdump, userId);
+				dockerImageURL = gdmService.createDeployGDM(cdump, n.getNodeId(), userId);
 				if (null == dockerImageURL) {
 					logger.debug(EELFLoggerDelegator.debugLogger,"Error : Issue in createDeployGDM() : Failed to create the Solution Artifact ");
 					throw new ServiceException("  Issue in createDeployGDM() ", "333",
 							"Issue while crearting and deploying GDM image");
+				}
+			} else if(n.getType().getName().equalsIgnoreCase(props.getDatabrokerType())) {
+				logger.debug(EELFLoggerDelegator.debugLogger,"DataBroker Found :  {} ", n.getType().getName());
+				dockerImageURL = dbService.createDeployDataBroker(cdump, n.getNodeId(), userId);
+				if (null == dockerImageURL) {
+					logger.debug(EELFLoggerDelegator.debugLogger,"Error : Issue in createDeployDataBroker() : Failed to create the Solution Artifact ");
+					throw new ServiceException("  Issue in createDeployGDM() ", "333",
+							"Issue while crearting and deploying DataBroker image");
 				}
 			} else {
 				// Else for basic models, upload the image and get the uri
@@ -1328,12 +1346,13 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				logger.debug(EELFLoggerDelegator.debugLogger," Successfully associated the Solution Revision Artifact for solution ID  : "
 								+ solutionId);
 			}
+			result = "{\"success\" : \"true\", \"errorDescription\" : \"\"}";
 		} catch (Exception e) {
+			result = "{\"success\" : \"false\", \"errorDescription\" : \"Exception while creating Blutprint.\"}";
 			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in validateCompositeSolution() : Failed to create the Solution Artifact ",e);
 			throw new ServiceException("  Exception in validateCompositeSolution() ", "333","Failed to create the Solution Artifact");
+			
 		}
-		result = "{\"success\" : \"true\", \"errorDescription\" : \"\"}";
-
 		return result;
 	}
 

@@ -84,12 +84,12 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	}*/
 	
 	@Override
-	public String createDeployGDM(Cdump cdump, String userId) throws ServiceException {
+	public String createDeployGDM(Cdump cdump, String nodeId, String userId) throws ServiceException {
 		String dockerImageURI = null;
 		boolean result = false;
 		logger.debug(EELFLoggerDelegator.debugLogger, "createDeployGDM() : Begin");
 		//1. Create Proto buf file for cdump 
-		result = createProtobufFile(cdump, userId);
+		result = createProtobufFile(cdump, nodeId, userId);
 		
 		if(result){
 			logger.debug(EELFLoggerDelegator.debugLogger," 1. Protobuf File created ");
@@ -526,7 +526,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		return result;
 	}
 	
-	private boolean createProtobufFile(Cdump cdump, String userId) throws ServiceException {
+	private boolean createProtobufFile(Cdump cdump, String nodeId, String userId) throws ServiceException {
 		//Get file from resources folder
 		logger.debug(EELFLoggerDelegator.debugLogger," createProtobufFile() : Begin ");
 		boolean result = false;
@@ -548,13 +548,15 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			
 			nodes = cdump.getNodes();
 			for(Nodes node : nodes){
-				Property[] properties = node.getProperties();
-				if(null != properties && properties.length > 0 && null == dataMap){
-					propLength = properties.length;
-					for(int i = 0 ; i < propLength; i++){
-						dataMap = properties[i].getData_map();
-						if(null!=dataMap){
-							break;
+				if(node.getNodeId().equals(nodeId)){
+					Property[] properties = node.getProperties();
+					if(null != properties && properties.length > 0 && null == dataMap){
+						propLength = properties.length;
+						for(int i = 0 ; i < propLength; i++){
+							dataMap = properties[i].getData_map();
+							if(null!=dataMap){
+								break;
+							}
 						}
 					}
 				}
