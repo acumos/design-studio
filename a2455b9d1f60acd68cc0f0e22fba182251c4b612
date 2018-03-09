@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b15bda51_44cb7b51",
+        "filename": ".gitignore",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-03-09T12:32:22Z",
+      "side": 1,
+      "message": "should not change this file",
+      "range": {
+        "startLine": 6,
+        "startChar": 1,
+        "endLine": 6,
+        "endChar": 7
+      },
+      "revId": "a2455b9d1f60acd68cc0f0e22fba182251c4b612",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b55255a_487afd83",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 973,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-03-09T12:32:22Z",
+      "side": 1,
+      "message": "It seems that you have not committed on latest code.  As there should not be any change in the validateCompositeSolution method",
+      "range": {
+        "startLine": 973,
+        "startChar": 15,
+        "endLine": 973,
+        "endChar": 40
+      },
+      "revId": "a2455b9d1f60acd68cc0f0e22fba182251c4b612",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
