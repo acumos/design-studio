@@ -85,7 +85,7 @@ import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 /**
  * 
  *
- *
+ * 
  */
 @Service("compositeServiceImpl")
 public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
@@ -244,6 +244,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		}
 
 		String path = DSUtil.readCdumpPath(dscs.getAuthor(), confprops.getToscaOutputFolder());
+		if(null == dscs.getcId()){
+			dscs.setcId(mlpSolution.getSolutionId());
+		}
 		String cdumpFileName = "acumos-cdump" + "-" + dscs.getcId();
 		String payload = "";
 
