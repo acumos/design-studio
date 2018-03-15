@@ -92,8 +92,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(CompositeSolutionServiceImpl.class);
 
-        private SuccessErrorMessage successErrorMessage = null;
-        @Autowired
+    private SuccessErrorMessage successErrorMessage = null;
+    
+    @Autowired
 	private Properties props;
 
 	@Autowired
@@ -369,68 +370,28 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		MLPSolutionRevision mlpSolutionRevision = null;
 		if (null != mlpSolution) {
 			
-			//PUBLIC composite solution to be edited, but Saved only as a different (non-existing) version or different name
-			//same name or same version can not be save. it will return a error message.
-			
-			if (null != mlpSolution.getAccessTypeCode() && (( "PB".equals(mlpSolution.getAccessTypeCode())) ||("OR".equals(mlpSolution.getAccessTypeCode())))) {
-				List<MLPSolutionRevision> mlpSolnRevision = cdmsClient.getSolutionRevisions(mlpSolution.getSolutionId());
-				if (null != mlpSolnRevision && !mlpSolnRevision.isEmpty()) {
-					for (MLPSolutionRevision mlpSolRev : mlpSolnRevision) {
-						
-						//Start for error list
-						//if model name and version is same then send the error message back to UI.
-						if (mlpSolution.getName().equalsIgnoreCase(dscs.getSolutionName()) && mlpSolRev.getVersion().equalsIgnoreCase(dscs.getVersion())) {
-							result = "{\"duplicateErrorCode\" : \"219\", \"duplicate\" : \"Solution In Public/Company. Please change either solution name, version or both.\"}";
-							break;
-						} else if(mlpSolution.getName().equalsIgnoreCase(dscs.getSolutionName()) && !mlpSolRev.getVersion().equalsIgnoreCase(dscs.getVersion())) {
-							//if model name is same and version is different then create new Revision.
-							mlpSolutionRevision = new MLPSolutionRevision();
-							try {
-								mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
-								mlpSolutionRevision.setDescription(dscs.getDescription());
-								mlpSolutionRevision.setOwnerId(dscs.getAuthor());
-								mlpSolutionRevision.setVersion(dscs.getVersion());
+			// 2. check the solution name with input solution name, if solution name is different then its altogether new solution.
+			if (mlpSolution.getName().equalsIgnoreCase(dscs.getSolutionName())) {
 
-								mlpSolutionRevision = cdmsClient.createSolutionRevision(mlpSolutionRevision);
-								// new method for save the composite solution, if the version changes.
-								result = insertNewUpdatedCompositeSolution(dscs, mlpSolution, mlpSolutionRevision);
-								logger.debug(EELFLoggerDelegator.debugLogger,
-										"2. Successfully Created the SolutionRevision :  {} ", mlpSolutionRevision.getRevisionId());
-							} catch (Exception e) {
-								logger.error(EELFLoggerDelegator.errorLogger,
-										"Error : Exception in updateCompositeSolution() : Failed to create the Solution Revision",
-										e);
-								throw new ServiceException("  Exception in updateCompositeSolution() ", "222",
-										"Failed to create the Solution");
-							}
-						} else if(!mlpSolution.getName().equalsIgnoreCase(dscs.getSolutionName())){
-							//create a new composite solution.
-							result = insertCompositeSolution(dscs);
-						}
+				// 3. get the list of solutionRevision details using CDS : MLPSolutionRevison sorted in descending order.
+				List<MLPSolutionRevision> mlpSolutionList = cdmsClient.getSolutionRevisions(dscs.getSolutionId());
+
+				Collections.sort(mlpSolutionList, new Comparator<MLPSolutionRevision>() {
+					@Override
+					public int compare(MLPSolutionRevision s1, MLPSolutionRevision s2) {
+						return s2.getCreated().compareTo(s1.getCreated());
 					}
-				}
-			} else {
-				// 2. check the solution name with input solution name
-				if (mlpSolution.getName().equalsIgnoreCase(dscs.getSolutionName())) {
-	
-					// 3. get the list of solutionRevision details using CDS :
-					// MLPSolutionRevison sorted in descending order.
-					List<MLPSolutionRevision> mlpSolutionList = cdmsClient.getSolutionRevisions(dscs.getSolutionId());
-	
-					Collections.sort(mlpSolutionList, new Comparator<MLPSolutionRevision>() {
-						@Override
-						public int compare(MLPSolutionRevision s1, MLPSolutionRevision s2) {
-							return s2.getCreated().compareTo(s1.getCreated());
-						}
-					});
-	
-					if (null != mlpSolutionList && !mlpSolutionList.isEmpty()) {
-						// 4. get the first solutionRevision and check the solution version with input
-						// solution version
-						if (mlpSolutionList.get(0).getVersion().equals(dscs.getVersion())) {
+				});
+
+				if (null != mlpSolutionList && !mlpSolutionList.isEmpty()) {
+					// 4. get the first solutionRevision and check the solution
+					// version with input solution version
+					if ("PR".equals(mlpSolution.getAccessTypeCode())) {
+						if (mlpSolutionList.get(0).getVersion().equals(dscs.getVersion())
+								&& "PR".equals(mlpSolution.getAccessTypeCode())) {
 							logger.debug(EELFLoggerDelegator.debugLogger, "Upadating Existing Solution");
 							result = updateExistingSolution(mlpSolutionList.get(0), mlpSolution, dscs);
-	
+
 						} else {
 							boolean previousFlag = false;
 							int cnt = 0;// To skip the first solutionRevision
@@ -438,9 +399,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								if (cnt > 0) {
 									if (mlpSR.getVersion().equals(dscs.getVersion())) {
 										previousFlag = true;
-	
+
 										if (!dscs.getIgnoreLesserVersionConflictFlag()) {
-	
+
 											result = "{\"alert\": \"" + props.getAskToUpdateExistingCompSolnMsg() + "\" }";
 										} else if (dscs.getIgnoreLesserVersionConflictFlag()) {
 											logger.debug(EELFLoggerDelegator.debugLogger,
@@ -457,23 +418,31 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								result = updateSolnWithNewVersion(mlpSolution, dscs);
 							}
 						}
-					} else { // This means no version available for the solution as result for delete
-								// solution. So add new version to the existing solution.
-	
-						logger.debug(EELFLoggerDelegator.debugLogger,
-								"No version found, so adding new version to the Solution");
-						result = updateSolnWithNewVersion(mlpSolution, dscs);
+					} else { //solution is not private so the version should not match.
+						boolean versionExists = false;
+						for (MLPSolutionRevision mlpSR : mlpSolutionList) {
+								if (mlpSR.getVersion().equals(dscs.getVersion())) {
+									versionExists = true;
+									result = "{\"duplicateErrorCode\" : \"219\", \"duplicate\" : \"Solution In Public/Company. Please change either solution name, version or both.\"}";
+									break;
+								}
+						}
+						if(!versionExists){
+							result = updateSolnWithNewVersion(mlpSolution, dscs);
+						}
 					}
-				} else {
-					// New Case: When user tries to update the existting solution with a different
-					// name
-					// Update the dscs with the new values
-					dscs.setcId(dscs.getSolutionId());
-					dscs.setSolutionId(null);
-					// call the save method to get the normal flow saving a solution
-					result = saveCompositeSolution(dscs);
-	
+				} else { // This means no version available for the solution as result for delete solution. So add new version to the existing solution.
+
+					logger.debug(EELFLoggerDelegator.debugLogger, "No version found, so adding new version to the Solution");
+					result = updateSolnWithNewVersion(mlpSolution, dscs);
 				}
+			} else {
+				// New Case: When user tries to update the existting solution with a different name Update the dscs with the new values
+				dscs.setcId(dscs.getSolutionId());
+				dscs.setSolutionId(null);
+				// call the save method to get the normal flow saving a solution
+				result = saveCompositeSolution(dscs);
+
 			}
 		} else {
 
