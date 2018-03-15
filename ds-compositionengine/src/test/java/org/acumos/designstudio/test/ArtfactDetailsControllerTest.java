@@ -113,4 +113,29 @@ public class ArtfactDetailsControllerTest {
 		assertNotNull((String)result);
 		assertEquals("Failed to fetch the TOSCA details for specified solutionId and version", (String) result);
 	}
+	
+	@Test
+	/**
+	 * The test case is used to fetch the Json Tosca.json for a model by using a
+	 * method readArtifact which consumes userId, solutionId, version,
+	 * artifactType as parameters and fetches TGIF.json in a string
+	 * format.TGIF.json consist of name, version, description, component_type
+	 * under self, streams,parameters,auxiliary,artifacts. It also defines the
+	 * services, called and provided by a model at the input and output port
+	 * respectively. The file is used by ds-composition engine to represent a
+	 * model.
+	 * 
+	 * @throws Exception
+	 */
+	public void fetchProtoBufJSON() throws Exception {
+		try {			
+			when(props.getProtoArtifactType()).thenReturn("PJ");	
+			String results = acumosCatalogServiceImpl.readArtifact(userId, solutionId, version, props.getProtoArtifactType().trim());
+			logger.debug(EELFLoggerDelegator.debugLogger, results);
+		} catch (ServiceException e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "CDUMP file not created", e);
+			throw e;
+		}
+	}
+
 }

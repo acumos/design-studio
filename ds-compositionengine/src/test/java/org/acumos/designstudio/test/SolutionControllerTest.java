@@ -72,7 +72,9 @@ import org.acumos.designstudio.cdump.Target;
 import org.acumos.designstudio.cdump.Type;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
+import org.acumos.designstudio.ce.service.AcumosCatalogServiceImpl;
 import org.acumos.designstudio.ce.service.CompositeSolutionServiceImpl;
+import org.acumos.designstudio.ce.service.DataBrokerServiceImpl;
 import org.acumos.designstudio.ce.service.GenericDataMapperServiceImpl;
 import org.acumos.designstudio.ce.service.SolutionServiceImpl;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
@@ -110,8 +112,6 @@ import com.google.gson.Gson;
  *
  *
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CompositeSolutionServiceImpl.class)
 public class SolutionControllerTest {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(SolutionControllerTest.class);
 	private String url = "";
@@ -161,17 +161,23 @@ public class SolutionControllerTest {
 
 	@InjectMocks
 	SolutionServiceImpl solutionService;
+	
+	@InjectMocks
+	AcumosCatalogServiceImpl  acumosCatalogServiceImpl;
 
 	@InjectMocks
 	CompositeSolutionServiceImpl compositeService;
-
+	
+	@InjectMocks
+	DataBrokerServiceImpl dataBrokerServiceImpl;
+	
 	@Autowired
 	ConfigurationProperties confprops1;
 
 	@Mock
 	org.acumos.designstudio.ce.util.Properties properties;
 
-	@Mock
+	@InjectMocks
 	GenericDataMapperServiceImpl gdmService;
 	
 	@Rule
@@ -1062,6 +1068,7 @@ public class SolutionControllerTest {
 		try {
 			cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
 			when(gdmService.createDeployGDM(cdump, "", "8fcc3384-e3f8-4520-af1c-413d9495a154")).thenReturn("xyz");
+			String result1 = gdmService.createDeployGDM(cdump, "", "8fcc3384-e3f8-4520-af1c-413d9495a154");
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
 					" Exception Occured in createDeployGDM ", e);
@@ -1240,8 +1247,8 @@ public class SolutionControllerTest {
 		
 		
 		try {
-			PowerMockito.whenNew(Map.class).withAnyArguments().thenReturn(queryParameters);
-			PowerMockito.whenNew(RestPageRequest.class).withAnyArguments().thenReturn(restPageRequets);
+			/*PowerMockito.whenNew(Map.class).withAnyArguments().thenReturn(queryParameters);
+			PowerMockito.whenNew(RestPageRequest.class).withAnyArguments().thenReturn(restPageRequets);*/
 			
 			when(cmnDataService.searchSolutions(queryParameters, false, restPageRequets)).thenReturn(pageResponse);
 			// CASE 1 : where New Composite Solution : CID exist and SolutionID
@@ -1335,15 +1342,44 @@ public class SolutionControllerTest {
 	public void deleteCompositeSolution() throws Exception {
 		try {
 			boolean isSolutionDeleted = false;
-			String userId = "e57490ed-8462-4a77-ab39-157138dfbda8";
-			String solutionId = "710d881b-e926-4412-831c-10b0bf04c354yyy"; // correct
-																			// solutionId
-																			// 710d881b-e926-4412-831c-10b0bf04c354
+			
 			String version = "1.0.0";
 			CompositeSolutionServiceImpl iCompositeSolutionService = new CompositeSolutionServiceImpl();
 			iCompositeSolutionService.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
 			iCompositeSolutionService.getNexusClient(nexusArtifactClient, confprops1, properties);
-			isSolutionDeleted = iCompositeSolutionService.deleteCompositeSolution(userId, solutionId, version);
+			MLPSolution mlpSolution = new MLPSolution();
+			mlpSolution.setSolutionId("710d881b-e926-4412-831c-10b0bf04c354yyy");
+			mlpSolution.setName("Test");
+			mlpSolution.setDescription("sample");
+			mlpSolution.setOwnerId(userId);
+			mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
+			mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
+			mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
+			mlpSolution.setToolkitTypeCode("CP");
+			
+			MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
+			mlpSolutionRevision.setRevisionId("84874435-d103-44c1-9451-d2b660fae766");
+			mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
+			mlpSolutionRevision.setDescription("test"); 
+			mlpSolutionRevision.setOwnerId(userId);
+			mlpSolutionRevision.setVersion("1.0.0");
+			
+			CompositeSolutionServiceImpl csimpl = new CompositeSolutionServiceImpl();
+			List<MLPArtifact> artifacts = new ArrayList<MLPArtifact>();
+			MLPArtifact artifact = new MLPArtifact();
+			artifact.setArtifactTypeCode("DI");
+			artifact.setUri("xyz");
+			artifacts.add(artifact);
+			csimpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+			csimpl.getNexusClient(nexusArtifactClient, confprops, properties);
+			csimpl.setGenericDataMapperServiceImpl(gdmService);
+			
+			List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
+			mlpSolutionRevisionList.add(mlpSolutionRevision);
+			when(cmnDataService.getSolution(mlpSolution.getSolutionId())).thenReturn(mlpSolution);	
+			when(cmnDataService.getSolutionRevisions(mlpSolution.getSolutionId())).thenReturn(mlpSolutionRevisionList);
+			when(cmnDataService.getSolutionRevisionArtifacts(mlpSolution.getSolutionId(), mlpSolutionRevision.getRevisionId())).thenReturn(artifacts);
+			isSolutionDeleted = iCompositeSolutionService.deleteCompositeSolution(userId, mlpSolution.getSolutionId(), version);
 			//assertTrue(isSolutionDeleted);
 			logger.info(EELFLoggerDelegator.applicationLogger, "deleteCompositeSolution {}", isSolutionDeleted);
 		} catch (AcumosException ex) {
@@ -1570,4 +1606,536 @@ public class SolutionControllerTest {
 		}
 		return nexusArtifactClient;
 	}
+	
+	@Test
+	/**
+	 * The test case is used to update the composite solution and store it in
+	 * nexus repository as well as the database. The test case uses
+	 * updatePublicCompositeSolution method which consumes DSCompositeSolution object
+	 * and returns solutionId and version or error message in string format
+	 * Check for Same Solution Name and same version
+	 * @throws JSONException
+	 */
+	public void updatePublicCompositeSolutionSameName() throws JSONException {
+
+		CompositeSolutionServiceImpl compositeServiceImpl = new CompositeSolutionServiceImpl();
+		compositeServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		compositeServiceImpl.getNexusClient(nexusArtifactClient, confprops, properties);
+		SolutionServiceImpl solutionServiceImpl = new SolutionServiceImpl();
+		solutionServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		solutionServiceImpl.getNexusClient(nexusArtifactClient, confprops, properties);
+
+		DSCompositeSolution dscs = new DSCompositeSolution();
+
+		//dscs.setcId(sessionId);
+		dscs.setAuthor(userId);
+		dscs.setSolutionName(RandomStringUtils.randomAlphanumeric(5) + "-Test");
+		dscs.setSolutionName("Test");
+		dscs.setSolutionId("12345");
+		dscs.setVersion("1.0.0");
+		dscs.setOnBoarder(userId);
+		dscs.setDescription("Testing Save Function");
+		dscs.setProvider(properties.getProvider());
+		dscs.setToolKit(properties.getToolKit());
+		dscs.setVisibilityLevel("PB");
+		dscs.setIgnoreLesserVersionConflictFlag(false);
+		
+		ArrayList<MLPSolution> mlpSols = new ArrayList<MLPSolution>();
+		MLPSolution mlpSolution = new MLPSolution();
+		mlpSolution.setSolutionId("12345");
+		mlpSolution.setName("Test");
+		mlpSolution.setDescription(dscs.getDescription());
+		mlpSolution.setOwnerId(dscs.getAuthor());
+		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolution.setProvider(dscs.getProvider());
+		mlpSolution.setAccessTypeCode(AccessTypeCode.PB.toString());
+		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolution.setToolkitTypeCode("CP");
+		
+		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
+		mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
+		mlpSolutionRevision.setDescription(dscs.getDescription()); 
+		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+		mlpSolutionRevision.setVersion("1.0.0");
+		
+		
+		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
+		mlpSolutionRevisionList.add(mlpSolutionRevision);
+		mlpSols.add(mlpSolution);
+		
+		MLPSolution mlpSolNew = new MLPSolution();
+		mlpSolNew.setName("sample1");
+		mlpSolNew.setDescription(dscs.getDescription());
+		mlpSolNew.setOwnerId(dscs.getAuthor());
+		mlpSolNew.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolNew.setProvider(dscs.getProvider());
+		mlpSolNew.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolNew.setToolkitTypeCode("CP");
+		
+		MLPSolution mlpSolNew1 = new MLPSolution();
+		mlpSolNew1.setSolutionId("545545a-e674-46af-a4ad-d6514f41de9b");
+		mlpSolNew1.setName("sample1");
+		mlpSolNew1.setDescription(dscs.getDescription());
+		mlpSolNew1.setOwnerId(dscs.getAuthor());
+		mlpSolNew1.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolNew1.setProvider(dscs.getProvider());
+		mlpSolNew1.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolNew1.setToolkitTypeCode("CP");
+		
+		String result = null;
+
+		try {
+			
+			when(cmnDataService.getSolution(dscs.getSolutionId())).thenReturn(mlpSolution);
+			when(cmnDataService.getSolutionRevisions(mlpSolution.getSolutionId())).thenReturn(mlpSolutionRevisionList);
+			when(cmnDataService.createSolution(mlpSolNew)).thenReturn(mlpSolNew1);
+			when(cmnDataService.createSolutionRevision(mlpSolutionRevision)).thenReturn(mlpSolutionRevision);
+			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+			
+			result = compositeServiceImpl.updateCompositeSolution(dscs); 
+			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+		}
+		
+	}
+	
+	@Test
+	/**
+	 * The test case is used to update the composite solution and store it in
+	 * nexus repository as well as the database. The test case uses
+	 * updatePublicCompositeSolution method which consumes DSCompositeSolution object
+	 * and returns solutionId and version or error message in string format
+	 *  Check for Different Solution Name
+	 * @throws JSONException
+	 */
+	public void updatePublicCompositeSolutionDiffName() throws JSONException {
+
+		CompositeSolutionServiceImpl compositeServiceImpl = new CompositeSolutionServiceImpl();
+		compositeServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		compositeServiceImpl.getNexusClient(nexusArtifactClient, confprops, properties);
+		SolutionServiceImpl solutionServiceImpl = new SolutionServiceImpl();
+		solutionServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		solutionServiceImpl.getNexusClient(nexusArtifactClient, confprops, properties);
+
+		DSCompositeSolution dscs = new DSCompositeSolution();
+
+		//dscs.setcId(sessionId);
+		dscs.setAuthor(userId);
+		dscs.setSolutionName(RandomStringUtils.randomAlphanumeric(5) + "-Test");
+		dscs.setSolutionName("Test");
+		dscs.setSolutionId("12345");
+		dscs.setVersion("1.0.0");
+		dscs.setOnBoarder(userId);
+		dscs.setDescription("Testing Save Function");
+		dscs.setProvider(properties.getProvider());
+		dscs.setToolKit(properties.getToolKit());
+		dscs.setVisibilityLevel("PB");
+		dscs.setIgnoreLesserVersionConflictFlag(false);
+		
+		ArrayList<MLPSolution> mlpSols = new ArrayList<MLPSolution>();
+		MLPSolution mlpSolution = new MLPSolution();
+		mlpSolution.setSolutionId("12345");
+		mlpSolution.setName("Test2");
+		mlpSolution.setDescription(dscs.getDescription());
+		mlpSolution.setOwnerId(dscs.getAuthor());
+		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolution.setProvider(dscs.getProvider());
+		mlpSolution.setAccessTypeCode(AccessTypeCode.PB.toString());
+		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolution.setToolkitTypeCode("CP");
+		
+		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
+		mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
+		mlpSolutionRevision.setDescription(dscs.getDescription()); 
+		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+		mlpSolutionRevision.setVersion("1.0.0");
+		
+		
+		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
+		mlpSolutionRevisionList.add(mlpSolutionRevision);
+		mlpSols.add(mlpSolution);
+		
+		MLPSolution mlpSolNew = new MLPSolution();
+		mlpSolNew.setName("sample1");
+		mlpSolNew.setDescription(dscs.getDescription());
+		mlpSolNew.setOwnerId(dscs.getAuthor());
+		mlpSolNew.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolNew.setProvider(dscs.getProvider());
+		mlpSolNew.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolNew.setToolkitTypeCode("CP");
+		
+		MLPSolution mlpSolNew1 = new MLPSolution();
+		mlpSolNew1.setSolutionId("545545a-e674-46af-a4ad-d6514f41de9b");
+		mlpSolNew1.setName("sample1");
+		mlpSolNew1.setDescription(dscs.getDescription());
+		mlpSolNew1.setOwnerId(dscs.getAuthor());
+		mlpSolNew1.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolNew1.setProvider(dscs.getProvider());
+		mlpSolNew1.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolNew1.setToolkitTypeCode("CP");
+		
+		String result = null;
+
+		try {
+			
+			when(cmnDataService.getSolution(dscs.getSolutionId())).thenReturn(mlpSolution);
+			when(cmnDataService.getSolutionRevisions(mlpSolution.getSolutionId())).thenReturn(mlpSolutionRevisionList);
+			when(cmnDataService.createSolution(mlpSolNew)).thenReturn(mlpSolNew1);
+			when(cmnDataService.createSolutionRevision(mlpSolutionRevision)).thenReturn(mlpSolutionRevision);
+			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+			
+			result = compositeServiceImpl.updateCompositeSolution(dscs); 
+			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+		}
+		
+	}
+	
+	@Test
+	/**
+	 * The test case is used to update the composite solution and store it in
+	 * nexus repository as well as the database. The test case uses
+	 * updatePublicCompositeSolution method which consumes DSCompositeSolution object
+	 * and returns solutionId and version or error message in string format
+	 *  Check for Different Solution Name
+	 * @throws JSONException
+	 */
+	public void updatePublicCompositeSolutionSameNameDiffVersion() throws JSONException {
+
+		CompositeSolutionServiceImpl compositeServiceImpl = new CompositeSolutionServiceImpl();
+		compositeServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		compositeServiceImpl.getNexusClient(nexusArtifactClient, confprops, properties);
+		SolutionServiceImpl solutionServiceImpl = new SolutionServiceImpl();
+		solutionServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		solutionServiceImpl.getNexusClient(nexusArtifactClient, confprops, properties);
+
+		DSCompositeSolution dscs = new DSCompositeSolution();
+
+		//dscs.setcId(sessionId);
+		dscs.setAuthor(userId);
+		dscs.setSolutionName(RandomStringUtils.randomAlphanumeric(5) + "-Test");
+		dscs.setSolutionName("Test");
+		dscs.setSolutionId("12345");
+		dscs.setVersion("1.0.2");
+		dscs.setOnBoarder(userId);
+		dscs.setDescription("Testing Save Function");
+		dscs.setProvider(properties.getProvider());
+		dscs.setToolKit(properties.getToolKit());
+		dscs.setVisibilityLevel("PB");
+		dscs.setIgnoreLesserVersionConflictFlag(false);
+		
+		ArrayList<MLPSolution> mlpSols = new ArrayList<MLPSolution>();
+		MLPSolution mlpSolution = new MLPSolution();
+		mlpSolution.setSolutionId("12345");
+		mlpSolution.setName("Test");
+		mlpSolution.setDescription(dscs.getDescription());
+		mlpSolution.setOwnerId(dscs.getAuthor());
+		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolution.setProvider(dscs.getProvider());
+		mlpSolution.setAccessTypeCode(AccessTypeCode.PB.toString());
+		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolution.setToolkitTypeCode("CP");
+		
+		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
+		mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
+		mlpSolutionRevision.setDescription(dscs.getDescription()); 
+		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+		mlpSolutionRevision.setVersion("1.0.0");
+		
+		
+		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
+		mlpSolutionRevisionList.add(mlpSolutionRevision);
+		mlpSols.add(mlpSolution);
+		
+		MLPSolution mlpSolNew = new MLPSolution();
+		mlpSolNew.setName("sample1");
+		mlpSolNew.setDescription(dscs.getDescription());
+		mlpSolNew.setOwnerId(dscs.getAuthor());
+		mlpSolNew.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolNew.setProvider(dscs.getProvider());
+		mlpSolNew.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolNew.setToolkitTypeCode("CP");
+		
+		MLPSolution mlpSolNew1 = new MLPSolution();
+		mlpSolNew1.setSolutionId("545545a-e674-46af-a4ad-d6514f41de9b");
+		mlpSolNew1.setName("sample1");
+		mlpSolNew1.setDescription(dscs.getDescription());
+		mlpSolNew1.setOwnerId(dscs.getAuthor());
+		mlpSolNew1.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolNew1.setProvider(dscs.getProvider());
+		mlpSolNew1.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolNew1.setToolkitTypeCode("CP");
+		
+		String result = null;
+
+		try {
+			
+			when(cmnDataService.getSolution(dscs.getSolutionId())).thenReturn(mlpSolution);
+			when(cmnDataService.getSolutionRevisions(mlpSolution.getSolutionId())).thenReturn(mlpSolutionRevisionList);
+			when(cmnDataService.createSolution(mlpSolNew)).thenReturn(mlpSolNew1);
+			when(cmnDataService.createSolutionRevision(mlpSolutionRevision)).thenReturn(mlpSolutionRevision);
+			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+			
+			result = compositeServiceImpl.updateCompositeSolution(dscs); 
+			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+		}
+		
+	}
+	
+	@Test
+	/**
+	 * The test case is used to save the composite solution and store it in
+	 * nexus repository as well as the database. The test case uses
+	 * saveCompositeSolution method which consumes DSCompositeSolution object
+	 * and returns solutionId and version or error message in string format
+	 * 
+	 * @throws JSONException
+	 */
+	public void updatePrivateCompositeSolution() throws JSONException {
+
+		CompositeSolutionServiceImpl compositeServiceImpl = new CompositeSolutionServiceImpl();
+		compositeServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		compositeServiceImpl.getNexusClient(nexusArtifactClient, confprops, properties);
+		SolutionServiceImpl solutionServiceImpl = new SolutionServiceImpl();
+		solutionServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		solutionServiceImpl.getNexusClient(nexusArtifactClient, confprops, properties);
+
+		DSCompositeSolution dscs = new DSCompositeSolution();
+
+		//dscs.setcId(sessionId);
+		dscs.setAuthor(userId);
+		dscs.setSolutionName(RandomStringUtils.randomAlphanumeric(5) + "-Test");
+		dscs.setSolutionName("Test");
+		dscs.setSolutionId(null);
+		dscs.setVersion("1.0.0");
+		dscs.setOnBoarder(userId);
+		dscs.setDescription("Testing Save Function");
+		dscs.setProvider(properties.getProvider());
+		dscs.setToolKit(properties.getToolKit());
+		dscs.setVisibilityLevel(properties.getVisibilityLevel());
+		dscs.setIgnoreLesserVersionConflictFlag(false);
+		
+		ArrayList<MLPSolution> mlpSols = new ArrayList<MLPSolution>();
+		MLPSolution mlpSolution = new MLPSolution();
+		mlpSolution.setSolutionId("1234");
+		mlpSolution.setName("Test");
+		mlpSolution.setDescription(dscs.getDescription());
+		mlpSolution.setOwnerId(dscs.getAuthor());
+		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolution.setProvider(dscs.getProvider());
+		mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolution.setToolkitTypeCode("CP");
+		
+		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
+		mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
+		mlpSolutionRevision.setDescription(dscs.getDescription()); 
+		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+		mlpSolutionRevision.setVersion(dscs.getVersion());
+		
+		
+		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
+		mlpSolutionRevisionList.add(mlpSolutionRevision);
+		mlpSols.add(mlpSolution);
+		
+		MLPSolution mlpSolNew = new MLPSolution();
+		mlpSolNew.setName("sample1");
+		mlpSolNew.setDescription(dscs.getDescription());
+		mlpSolNew.setOwnerId(dscs.getAuthor());
+		mlpSolNew.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolNew.setProvider(dscs.getProvider());
+		mlpSolNew.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolNew.setToolkitTypeCode("CP");
+		
+		MLPSolution mlpSolNew1 = new MLPSolution();
+		mlpSolNew1.setSolutionId("545545a-e674-46af-a4ad-d6514f41de9b");
+		mlpSolNew1.setName("sample1");
+		mlpSolNew1.setDescription(dscs.getDescription());
+		mlpSolNew1.setOwnerId(dscs.getAuthor());
+		mlpSolNew1.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolNew1.setProvider(dscs.getProvider());
+		mlpSolNew1.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolNew1.setToolkitTypeCode("CP");
+		
+		String result = null;
+
+		try {
+			
+			when(cmnDataService.getSolution(dscs.getSolutionId())).thenReturn(mlpSolution);
+			when(cmnDataService.getSolutionRevisions(mlpSolution.getSolutionId())).thenReturn(mlpSolutionRevisionList);
+			when(cmnDataService.createSolution(mlpSolNew)).thenReturn(mlpSolNew1);
+			when(cmnDataService.createSolutionRevision(mlpSolutionRevision)).thenReturn(mlpSolutionRevision);
+			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+			
+			result = compositeServiceImpl.updateCompositeSolution(dscs); 
+			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+		}
+		
+	}
+	
+	@Test
+	/**
+	 * The test case is used to save the composite solution and store it in
+	 * nexus repository as well as the database. The test case uses
+	 * saveCompositeSolution method which consumes DSCompositeSolution object
+	 * and returns solutionId and version or error message in string format
+	 * 
+	 * @throws JSONException
+	 */
+	public void updatePrivateVersionSameCompositeSolution() throws JSONException {
+
+		CompositeSolutionServiceImpl compositeServiceImpl = new CompositeSolutionServiceImpl();
+		compositeServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		compositeServiceImpl.getNexusClient(nexusArtifactClient, confprops, properties);
+		SolutionServiceImpl solutionServiceImpl = new SolutionServiceImpl();
+		solutionServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		solutionServiceImpl.getNexusClient(nexusArtifactClient, confprops, properties);
+
+		DSCompositeSolution dscs = new DSCompositeSolution();
+
+		//dscs.setcId(sessionId);
+		dscs.setSolutionId("33egfed24242");
+		dscs.setAuthor(userId);
+		dscs.setSolutionName(RandomStringUtils.randomAlphanumeric(5) + "-Test");
+		dscs.setSolutionName("Test");
+		dscs.setSolutionId(null);
+		dscs.setVersion("1.0.0");
+		dscs.setOnBoarder(userId);
+		dscs.setDescription("Testing Save Function");
+		dscs.setProvider(properties.getProvider());
+		dscs.setToolKit(properties.getToolKit());
+		dscs.setVisibilityLevel(properties.getVisibilityLevel());
+		dscs.setIgnoreLesserVersionConflictFlag(false);
+		
+		ArrayList<MLPSolution> mlpSols = new ArrayList<MLPSolution>();
+		MLPSolution mlpSolution = new MLPSolution();
+		mlpSolution.setSolutionId("1234");
+		mlpSolution.setName("Test");
+		mlpSolution.setDescription(dscs.getDescription());
+		mlpSolution.setOwnerId(dscs.getAuthor());
+		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolution.setProvider(dscs.getProvider());
+		mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolution.setToolkitTypeCode("CP");
+		
+		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
+		mlpSolutionRevision.setSolutionId(dscs.getSolutionId());
+		mlpSolutionRevision.setDescription(dscs.getDescription()); 
+		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+		mlpSolutionRevision.setVersion(dscs.getVersion());
+		
+		
+		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
+		mlpSolutionRevisionList.add(mlpSolutionRevision);
+		mlpSols.add(mlpSolution);
+		
+		MLPSolution mlpSolNew = new MLPSolution();
+		mlpSolNew.setName("sample1");
+		mlpSolNew.setDescription(dscs.getDescription());
+		mlpSolNew.setOwnerId(dscs.getAuthor());
+		mlpSolNew.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolNew.setProvider(dscs.getProvider());
+		mlpSolNew.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolNew.setToolkitTypeCode("CP");
+		
+		MLPSolution mlpSolNew1 = new MLPSolution();
+		mlpSolNew1.setSolutionId("545545a-e674-46af-a4ad-d6514f41de9b");
+		mlpSolNew1.setName("sample1");
+		mlpSolNew1.setDescription(dscs.getDescription());
+		mlpSolNew1.setOwnerId(dscs.getAuthor());
+		mlpSolNew1.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolNew1.setProvider(dscs.getProvider());
+		mlpSolNew1.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolNew1.setToolkitTypeCode("CP");
+		
+		String result = null;
+		try {
+			
+			when(cmnDataService.getSolution(dscs.getSolutionId())).thenReturn(mlpSolution);		
+			when(cmnDataService.createSolution(mlpSolNew)).thenReturn(mlpSolNew1);
+			when(cmnDataService.createSolutionRevision(mlpSolutionRevision)).thenReturn(mlpSolutionRevision);
+			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+			when(cmnDataService.getSolutionRevisions(dscs.getSolutionId())).thenReturn(mlpSolutionRevisionList);
+			
+			result = compositeServiceImpl.updateCompositeSolution(dscs); 
+			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+		}
+		
+	}
+	
+	@Test
+	/**
+	 * The test case is used to Fetch Json Tosca file and return the file
+	 */
+	public void fetchJsonTOSCA()  {
+		
+		String solutionID = "710d881b-e926-4412-831c-10b0bf04c354yyy";
+		String version = "1.0.0";
+		List<MLPSolutionRevision> mlpSolRevisions = new ArrayList<MLPSolutionRevision>();
+		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
+		mlpSolutionRevision.setSolutionId(solutionID);
+		mlpSolutionRevision.setDescription("Testing Save Function");
+		mlpSolutionRevision.setOwnerId(userId);
+		mlpSolutionRevision.setVersion(version);
+		mlpSolutionRevision.setRevisionId("111");
+		
+		List<MLPArtifact> artifacts = new ArrayList<MLPArtifact>();
+		MLPArtifact artifact = new MLPArtifact();
+		artifact.setArtifactTypeCode("DI");
+		artifact.setUri("xyz");
+		artifacts.add(artifact);
+		mlpSolRevisions.add(mlpSolutionRevision);
+		String result = null;
+		try {
+			
+			when(cmnDataService.getSolutionRevisions(solutionID)).thenReturn(mlpSolRevisions);
+			when(cmnDataService.getSolutionRevisionArtifacts("222", null)).thenReturn(artifacts);
+			result = acumosCatalogServiceImpl.fetchJsonTOSCA(solutionID, version);
+			assertNotNull(result);
+			when(props.getArtifactType()).thenReturn("DI");
+			when(cmnDataService.getSolutionRevisionArtifacts(solutionID, mlpSolutionRevision.getRevisionId())).thenReturn(artifacts);
+			String artifactResult = acumosCatalogServiceImpl.readArtifact(userId, solutionID, version, props.getArtifactType().trim());
+			assertNotNull(artifactResult);
+			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+		}
+		
+	}
+	
+	@Test
+	/**
+	 * The test case is used to Create & Deploy Data bRoker
+	 */
+	public void createDeployDataBroker() throws ServiceException{
+
+		String solutionID = "710d881b-e926-4412-831c-10b0bf04c354yyy";
+		String version = "1.0.0";
+		Cdump cdump = new Cdump();
+		cdump.setCid(sessionId);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		cdump.setCtime(sdf.format(new Date()));
+		cdump.setProbeIndicator("false");
+		String artifactResult = dataBrokerServiceImpl.createDeployDataBroker(cdump,"Node8", userId);
+	}
+
 }
