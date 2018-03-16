@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0fa40cd_612da90d",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/ControllersTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-03-16T15:35:31Z",
+      "side": 1,
+      "message": "Please avoid using these enum classes from CDS.  They are going away eventually because they do not provide complete information.",
+      "revId": "31a814ef2ba622a39c6e6966ec9b5e105a8aa70c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
