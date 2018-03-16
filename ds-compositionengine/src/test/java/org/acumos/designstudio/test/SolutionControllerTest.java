@@ -32,6 +32,7 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -104,6 +105,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -155,6 +158,12 @@ public class SolutionControllerTest {
 
 	@Mock
 	org.acumos.designstudio.ce.util.Properties props;
+	
+	@Mock
+	ResourceLoader resourceLoader;
+	
+	@Mock
+	Resource resource;
 	
 	@Mock
 	NexusArtifactClient nexusArtifactClient;
@@ -529,89 +538,10 @@ public class SolutionControllerTest {
 	 * @throws Exception
 	 */
 	public void addNode3() throws Exception {
-		Nodes node = new Nodes();
-		node.setName("Node9");
-		node.setNodeId("1");
-		node.setNodeSolutionId("333");
-		node.setNodeVersion("1.0.0");
-		node.setTypeInfo(null);
-		node.setProperties(null);
-		node.setProtoUri("com/org/xyz");
-		Capabilities cap = new Capabilities();
-		cap.setId("1");
-		cap.setName("cap1");
-		CapabilityTarget ct = new CapabilityTarget();
-		ct.setId("transform");
-		Message msg = new Message();
-		msg.setMessageName("DataFrame");
-		List<Argument> al = new ArrayList<Argument>();
-		Argument arg = new Argument();
-		arg.setRole("repeated");
-		arg.setTag("1");
-		arg.setType("float");
-		al.add(arg);
-		Argument[] Argument = al.toArray(new Argument[al.size()]);
-		msg.setMessageargumentList(Argument);
-		List<Message> ml = new ArrayList<Message>();
-		ml.add(msg);
-		Message[] mal = ml.toArray(new Message[ml.size()]);
-		ct.setName(mal);
-		cap.setTarget(ct);
-		cap.setTarget_type("capability");
-		cap.setProperties(null);
-		List<Capabilities> cal = new ArrayList<Capabilities>();
-		cal.add(cap);
-		Capabilities[] caa = cal.toArray(new Capabilities[cal.size()]);
-		node.setCapabilities(caa);
-		Requirements req = new Requirements();
-		req.setName("ReqName");
-		req.setId("Req1");
-		req.setRelationship("ManyToMany");
-		req.setTarget_type("Node");
-		Target target = new Target();
-		target.setName("Target1");
-		target.setDescription("TargetDescription");
-		req.setTarget(target);
-		ReqCapability reqCap = new ReqCapability();
-		reqCap.setId("1");
-		Message m = new Message();
-		m.setMessageName("Prediction");
-		Argument a = new Argument();
-		a.setRole("Role 1");
-		a.setTag("Tag1");
-		a.setType("Tag1");
-		List<Argument> ArgList = new ArrayList<Argument>();
-		ArgList.add(a);
-		Argument[] ArgArray = ArgList.toArray(new Argument[ArgList.size()]);
-		m.setMessageargumentList(ArgArray);
-		List<Message> msgList = new ArrayList<Message>();
-		msgList.add(m);
-		Message[] magArg = msgList.toArray(new Message[msgList.size()]);
-		reqCap.setName(magArg);
-		req.setCapability(reqCap);
-		List<Requirements> reqList = new ArrayList<Requirements>();
-		reqList.add(req);
-		Requirements[] reqArgs = reqList.toArray(new Requirements[reqList.size()]);
-		node.setRequirements(reqArgs);
-		Ndata data = new Ndata();
-		data.setFixed(false);
-		data.setNtype("200");
-		data.setPx("100");
-		data.setPy("100");
-		data.setRadius("100");
-		node.setNdata(data);
-		Type type = new Type();
-		type.setName("xyz1");
-		node.setType(type);
+		Nodes node = getNode();
 
 		assertNotNull(node);
-		assertNotNull(req);
-		assertNotNull(reqCap);
-		assertNotNull(target);
 		assertEquals("Node9", node.getName());
-		assertEquals("1", cap.getId());
-		assertEquals("ReqName", req.getName());
-		assertEquals("200", data.getNtype());
 
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.addNode(userId, null, null, sessionId, node);
@@ -1061,14 +991,26 @@ public class SolutionControllerTest {
 		Artifact cdumpArtifact = null;
 		Gson gson = new Gson();
 		
-		ObjectMapper mapper = new ObjectMapper();
+		Cdump cdump = new Cdump();
+		cdump.setCid(sessionId);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		cdump.setCtime(sdf.format(new Date()));
+		cdump.setProbeIndicator("false");
+		//cdump.setSolutionId("8fcc3384-e3f8-4520-af1c-413d9495a154");
+		List<Nodes> nodes = new ArrayList<Nodes>();
+		Nodes node = getNode();
+		nodes.add(node);
+		cdump.setNodes(nodes);
 		
-		Cdump cdump = null;
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream inputStream = null;
 		
 		try {
-			cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
-			when(gdmService.createDeployGDM(cdump, "", "8fcc3384-e3f8-4520-af1c-413d9495a154")).thenReturn("xyz");
-			String result1 = gdmService.createDeployGDM(cdump, "", "8fcc3384-e3f8-4520-af1c-413d9495a154");
+			Resource resourse1 = resourceLoader.getResource("classpath:Protobuf_Template.txt") ;
+			when(props.getPackagepath()).thenReturn("/src/main/java");
+			when(resourceLoader.getResource("classpath:Protobuf_Template.txt")).thenReturn(resourse1);
+			when(resource.getInputStream()).thenReturn(inputStream);
+			String result1 = gdmService.createDeployGDM(cdump, "54321", "8fcc3384-e3f8-4520-af1c-413d9495a154");
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
 					" Exception Occured in createDeployGDM ", e);
@@ -1076,7 +1018,7 @@ public class SolutionControllerTest {
 		String payload = gson.toJson(cdump);
 		MLPArtifact mlpArtifact = null;
 		try {
-			fileInputStream = new FileInputStream(
+			/*fileInputStream = new FileInputStream(
 					"./src/test/resources/8fcc3384-e3f8-4520-af1c-413d9495a154/BluePrint-4f91545a-e674-46af-a4ad-d6514f41de9b.json");
 			PowerMockito.whenNew(FileInputStream.class).withAnyArguments().thenReturn(fileInputStream);
 			artifactInfo = new UploadArtifactInfo("xyz", "1234", "1.0.0", "com.org.acumos", "com.org.acumos", 559);
@@ -1086,20 +1028,20 @@ public class SolutionControllerTest {
 			when(nexusArtifactClient.uploadArtifact("xyz",
 					cdumpArtifact.getSolutionID() + "_" + cdumpArtifact.getType(), cdumpArtifact.getVersion(),
 					cdumpArtifact.getExtension(), cdumpArtifact.getContentLength(), fileInputStream))
-							.thenReturn(artifactInfo);
+							.thenReturn(artifactInfo);*/
 
 			
 			mlpArtifact = new MLPArtifact();
 			mlpArtifact.setArtifactTypeCode("BP");
 			mlpArtifact.setDescription("BluePrint File for : Test for SolutionID : "
 					+ mlpSolutionRevision.getSolutionId() + " with version : " + mlpSolutionRevision.getVersion());
-			mlpArtifact.setUri(cdumpArtifact.getPayloadURI());
-			mlpArtifact.setName(cdumpArtifact.getName());
+			mlpArtifact.setUri("xyz.com");
+			mlpArtifact.setName("test");
 			mlpArtifact.setOwnerId("8fcc3384-e3f8-4520-af1c-413d9495a154");
 			mlpArtifact.setVersion("1.0.0");
-			mlpArtifact.setSize(cdumpArtifact.getContentLength());
+			mlpArtifact.setSize(1);
 			mlpArtifact.setArtifactId("333");
-			PowerMockito.whenNew(MLPArtifact.class).withAnyArguments().thenReturn(mlpArtifact);
+			//PowerMockito.whenNew(MLPArtifact.class).withAnyArguments().thenReturn(mlpArtifact);
 			when(cmnDataService.createArtifact(mlpArtifact)).thenReturn(mlpArtifact);
 
 			//CommonDataServiceRestClientImpl cmnDataService2 = mock(CommonDataServiceRestClientImpl.class);
@@ -1257,6 +1199,8 @@ public class SolutionControllerTest {
 			
 			when(cmnDataService.createSolution(mlpSolution)).thenReturn(mlpSolution);
 			when(cmnDataService.createSolutionRevision(mlpSolutionRevision)).thenReturn(mlpSolutionRevision);
+			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+			
 			result = compositeServiceImpl.saveCompositeSolution(dscs);
 			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
 		} catch (Exception e) {
@@ -1463,10 +1407,22 @@ public class SolutionControllerTest {
 	public void readCompositeSolutionGraph() throws AcumosException {
 		String sId = "040fe8f7-14f7-45e1-b46d-2de505e9d52d";
 		String version = "1.0.0";
+		MLPSolution mlpSolution = new MLPSolution();
+		mlpSolution.setSolutionId(sId);
+		mlpSolution.setName("Test");
+		mlpSolution.setDescription("sample");
+		mlpSolution.setOwnerId(userId);
+		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolution.setToolkitTypeCode("CP");
+		
 		when(props.getArtifactTypeCode()).thenReturn("CD");
+		when(cmnDataService.getSolution(sId)).thenReturn(mlpSolution);
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
 		solutionService.getNexusClient(nexusArtifactClient, confprops, props);
+		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.readCompositeSolutionGraph(userId, sId, version);
 		Assert.assertNotNull(result);
 		logger.info(EELFLoggerDelegator.applicationLogger, "readCompositeSolutionGraph {}", result);
@@ -1901,7 +1857,7 @@ public class SolutionControllerTest {
 	 * 
 	 * @throws JSONException
 	 */
-	public void updatePrivateCompositeSolution() throws JSONException {
+	public void updatePrivateCompositeSolutionSameName() throws JSONException {
 
 		CompositeSolutionServiceImpl compositeServiceImpl = new CompositeSolutionServiceImpl();
 		compositeServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
@@ -1916,7 +1872,7 @@ public class SolutionControllerTest {
 		dscs.setAuthor(userId);
 		dscs.setSolutionName(RandomStringUtils.randomAlphanumeric(5) + "-Test");
 		dscs.setSolutionName("Test");
-		dscs.setSolutionId(null);
+		dscs.setSolutionId("1234");
 		dscs.setVersion("1.0.0");
 		dscs.setOnBoarder(userId);
 		dscs.setDescription("Testing Save Function");
@@ -1996,7 +1952,102 @@ public class SolutionControllerTest {
 	 * 
 	 * @throws JSONException
 	 */
-	public void updatePrivateVersionSameCompositeSolution() throws JSONException {
+	public void updatePrivateCompositeSolutionDiffName() throws JSONException {
+
+		CompositeSolutionServiceImpl compositeServiceImpl = new CompositeSolutionServiceImpl();
+		compositeServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		compositeServiceImpl.getNexusClient(nexusArtifactClient, confprops, properties);
+		SolutionServiceImpl solutionServiceImpl = new SolutionServiceImpl();
+		solutionServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+		solutionServiceImpl.getNexusClient(nexusArtifactClient, confprops, properties);
+
+		DSCompositeSolution dscs = new DSCompositeSolution();
+
+		//dscs.setcId(sessionId);
+		dscs.setSolutionId("33egfed24242");
+		dscs.setAuthor(userId);
+		dscs.setSolutionName(RandomStringUtils.randomAlphanumeric(5) + "-Test");
+		dscs.setSolutionName("Test");
+		dscs.setSolutionId(null);
+		dscs.setVersion("1.0.0");
+		dscs.setOnBoarder(userId);
+		dscs.setDescription("Testing Save Function");
+		dscs.setProvider(properties.getProvider());
+		dscs.setToolKit(properties.getToolKit());
+		dscs.setVisibilityLevel(properties.getVisibilityLevel());
+		dscs.setIgnoreLesserVersionConflictFlag(false);
+		
+		ArrayList<MLPSolution> mlpSols = new ArrayList<MLPSolution>();
+		MLPSolution mlpSolution = new MLPSolution();
+		mlpSolution.setSolutionId("1234");
+		mlpSolution.setName("Test2");
+		mlpSolution.setDescription(dscs.getDescription());
+		mlpSolution.setOwnerId(dscs.getAuthor());
+		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolution.setProvider(dscs.getProvider());
+		mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolution.setToolkitTypeCode("CP");
+		
+		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
+		mlpSolutionRevision.setSolutionId(dscs.getSolutionId());
+		mlpSolutionRevision.setDescription(dscs.getDescription()); 
+		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+		mlpSolutionRevision.setVersion(dscs.getVersion());
+		
+		
+		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
+		mlpSolutionRevisionList.add(mlpSolutionRevision);
+		mlpSols.add(mlpSolution);
+		
+		MLPSolution mlpSolNew = new MLPSolution();
+		mlpSolNew.setName("sample1");
+		mlpSolNew.setDescription(dscs.getDescription());
+		mlpSolNew.setOwnerId(dscs.getAuthor());
+		mlpSolNew.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolNew.setProvider(dscs.getProvider());
+		mlpSolNew.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolNew.setToolkitTypeCode("CP");
+		
+		MLPSolution mlpSolNew1 = new MLPSolution();
+		mlpSolNew1.setSolutionId("545545a-e674-46af-a4ad-d6514f41de9b");
+		mlpSolNew1.setName("sample1");
+		mlpSolNew1.setDescription(dscs.getDescription());
+		mlpSolNew1.setOwnerId(dscs.getAuthor());
+		mlpSolNew1.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolNew1.setProvider(dscs.getProvider());
+		mlpSolNew1.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
+		mlpSolNew1.setToolkitTypeCode("CP");
+		
+		String result = null;
+		try {
+			
+			when(cmnDataService.getSolution(dscs.getSolutionId())).thenReturn(mlpSolution);		
+			when(cmnDataService.createSolution(mlpSolNew)).thenReturn(mlpSolNew1);
+			when(cmnDataService.createSolutionRevision(mlpSolutionRevision)).thenReturn(mlpSolutionRevision);
+			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+			when(cmnDataService.getSolutionRevisions(dscs.getSolutionId())).thenReturn(mlpSolutionRevisionList);
+			
+			result = compositeServiceImpl.updateCompositeSolution(dscs); 
+			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+		}
+		
+	}
+	
+	@Test
+	/**
+	 * The test case is used to save the composite solution and store it in
+	 * nexus repository as well as the database. The test case uses
+	 * saveCompositeSolution method which consumes DSCompositeSolution object
+	 * and returns solutionId and version or error message in string format
+	 * 
+	 * @throws JSONException
+	 */
+	public void updatePrivateCompositeSolutionDiffVersion() throws JSONException {
 
 		CompositeSolutionServiceImpl compositeServiceImpl = new CompositeSolutionServiceImpl();
 		compositeServiceImpl.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
@@ -2037,7 +2088,7 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setSolutionId(dscs.getSolutionId());
 		mlpSolutionRevision.setDescription(dscs.getDescription()); 
 		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
-		mlpSolutionRevision.setVersion(dscs.getVersion());
+		mlpSolutionRevision.setVersion("1.0.2");
 		
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
@@ -2137,5 +2188,110 @@ public class SolutionControllerTest {
 		cdump.setProbeIndicator("false");
 		String artifactResult = dataBrokerServiceImpl.createDeployDataBroker(cdump,"Node8", userId);
 	}
+	
+	public Nodes getNode(){
+		Nodes node = new Nodes();
+		node.setName("Node9");
+		node.setNodeId("54321");
+		node.setNodeSolutionId("333");
+		node.setNodeVersion("1.0.0");
+		node.setTypeInfo(null);
+		node.setProperties(null);
+		node.setProtoUri("com/org/xyz");
+		Capabilities cap = new Capabilities();
+		cap.setId("1");
+		cap.setName("cap1");
+		CapabilityTarget ct = new CapabilityTarget();
+		ct.setId("transform");
+		Message msg = new Message();
+		msg.setMessageName("DataFrame");
+		List<Argument> al = new ArrayList<Argument>();
+		Argument arg = new Argument();
+		arg.setRole("repeated");
+		arg.setTag("1");
+		arg.setType("float");
+		al.add(arg);
+		Argument[] Argument = al.toArray(new Argument[al.size()]);
+		msg.setMessageargumentList(Argument);
+		List<Message> ml = new ArrayList<Message>();
+		ml.add(msg);
+		Message[] mal = ml.toArray(new Message[ml.size()]);
+		ct.setName(mal);
+		cap.setTarget(ct);
+		cap.setTarget_type("capability");
+		cap.setProperties(null);
+		List<Capabilities> cal = new ArrayList<Capabilities>();
+		cal.add(cap);
+		Capabilities[] caa = cal.toArray(new Capabilities[cal.size()]);
+		node.setCapabilities(caa);
+		Requirements req = new Requirements();
+		req.setName("ReqName");
+		req.setId("Req1");
+		req.setRelationship("ManyToMany");
+		req.setTarget_type("Node");
+		Target target = new Target();
+		target.setName("Target1");
+		target.setDescription("TargetDescription");
+		req.setTarget(target);
+		ReqCapability reqCap = new ReqCapability();
+		reqCap.setId("1");
+		Message m = new Message();
+		m.setMessageName("Prediction");
+		Argument a = new Argument();
+		a.setRole("Role 1");
+		a.setTag("Tag1");
+		a.setType("Tag1");
+		List<Argument> ArgList = new ArrayList<Argument>();
+		ArgList.add(a);
+		Argument[] ArgArray = ArgList.toArray(new Argument[ArgList.size()]);
+		m.setMessageargumentList(ArgArray);
+		List<Message> msgList = new ArrayList<Message>();
+		msgList.add(m);
+		Message[] magArg = msgList.toArray(new Message[msgList.size()]);
+		reqCap.setName(magArg);
+		req.setCapability(reqCap);
+		List<Requirements> reqList = new ArrayList<Requirements>();
+		reqList.add(req);
+		Requirements[] reqArgs = reqList.toArray(new Requirements[reqList.size()]);
+		node.setRequirements(reqArgs);
+		Ndata data = new Ndata();
+		data.setFixed(false);
+		data.setNtype("200");
+		data.setPx("100");
+		data.setPy("100");
+		data.setRadius("100");
+		node.setNdata(data);
+		Type type = new Type();
+		type.setName("xyz1");
+		node.setType(type);
+		
+		Property property = new Property();
+		DataBrokerMap databrokerMap = new DataBrokerMap();
+		databrokerMap.setScript("this is the script");
+
+		DataMap data_map = new DataMap();
+		MapInputs[] map_inputs = new MapInputs[0];
+		MapOutput[] map_outputs = new MapOutput[1];
+		MapOutput map_outputsObj = new MapOutput();
+		DataMapOutputField[] output_fields = new DataMapOutputField[1];
+		DataMapOutputField output_fieldsObj = new DataMapOutputField();
+		output_fieldsObj.settag("1");
+		output_fieldsObj.setrole("repeated");
+		output_fieldsObj.setname("name");
+		output_fieldsObj.settype("int32");
+		output_fields[0] = output_fieldsObj;
+		map_outputsObj.setOutput_fields(output_fields);
+		map_outputsObj.setMessage_name("Classification");
+		map_outputs[0] = map_outputsObj;
+		data_map.setMap_inputs(map_inputs);
+		data_map.setMap_outputs(map_outputs);
+		property.setData_map(data_map);
+		property.setData_broker_map(databrokerMap);
+		Property[] properties = new Property[1];
+		properties[0] = property;
+		node.setProperties(properties);
+		return node;
+	}
+	
 
 }

@@ -29,6 +29,12 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.acumos.cds.AccessTypeCode;
+import org.acumos.cds.ModelTypeCode;
+import org.acumos.cds.ValidationStatusCode;
+import org.acumos.cds.client.CommonDataServiceRestClientImpl;
+import org.acumos.cds.domain.MLPSolution;
+import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.designstudio.cdump.Argument;
 import org.acumos.designstudio.cdump.Capabilities;
 import org.acumos.designstudio.cdump.CapabilityTarget;
@@ -45,6 +51,7 @@ import org.acumos.designstudio.cdump.Property;
 import org.acumos.designstudio.cdump.ReqCapability;
 import org.acumos.designstudio.cdump.Requirements;
 import org.acumos.designstudio.cdump.Target;
+import org.acumos.designstudio.cdump.Type;
 import org.acumos.designstudio.ce.controller.SolutionController;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.service.ICompositeSolutionService;
@@ -66,6 +73,8 @@ import com.jayway.jsonpath.InvalidJsonException;
  * 
  *
  */
+
+
 public class ControllersTest {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ControllersTest.class);
 	// CCDS TechMDev(8003) UserId, change it if the CCDS port changes.
@@ -84,6 +93,9 @@ public class ControllersTest {
 	ICompositeSolutionService compositeServiceImpl;
 	@Mock
 	org.acumos.designstudio.ce.util.Properties props;
+	
+	@Mock
+    CommonDataServiceRestClientImpl cmnDataService;
 
 	@Test
 	/**
@@ -192,6 +204,9 @@ public class ControllersTest {
 			data.setPy("100");
 			data.setRadius("100");
 			node.setNdata(data);
+			Type type = new Type();
+			type.setName("xyz1");
+			node.setType(type);
 
 			assertNotNull(data);
 			assertNotNull(node);
@@ -591,7 +606,7 @@ public class ControllersTest {
 		dscs.setSolutionId("solutionId");
 		dscs.setVersion("version");
 		dscs.setOnBoarder(userId);
-		dscs.setDescription("description");
+		dscs.setDescription("description"); 
 		dscs.setProvider("Test");
 		dscs.setToolKit("CP");
 		dscs.setVisibilityLevel("PV");
@@ -612,5 +627,50 @@ public class ControllersTest {
 		assertEquals("description", dscs.getDescription());
 		logger.debug(EELFLoggerDelegator.debugLogger, "results");
 	}
-
+	
+	@Test
+	/**
+	 * The test case is used to read a composite solution graph. The test case
+	 * uses readCompositeSolutionGraph method which consumes userId, solutionId and Version 
+	 * And return result as string.
+	 * 
+	 * @throws Exception
+	 */
+	public void readCompositeSolutionGraph() throws Exception {
+		try {
+			String solutionId = "710d881b-e926-4412-831c-10b0bf04c354yyy";
+			List<MLPSolutionRevision> mlpSolRevisions = new ArrayList<MLPSolutionRevision>();
+			MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
+			mlpSolutionRevision.setSolutionId("solutionId");
+			mlpSolutionRevision.setDescription("Testing Save Function");
+			mlpSolutionRevision.setOwnerId(userId);
+			mlpSolutionRevision.setVersion("1.0.0");
+			mlpSolutionRevision.setRevisionId("111");
+			
+			MLPSolution mlpSolution = new MLPSolution();
+			mlpSolution.setSolutionId("solutionId");
+			mlpSolution.setName("Test");
+			mlpSolution.setDescription("sample");
+			mlpSolution.setOwnerId(userId);
+			mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
+			mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
+			mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
+			mlpSolution.setToolkitTypeCode("CP");
+			
+			mlpSolRevisions.add(mlpSolutionRevision);
+			when(cmnDataService.getSolutionRevisions(solutionId)).thenReturn(mlpSolRevisions);
+			when(cmnDataService.getSolution(mlpSolution.getSolutionId())).thenReturn(mlpSolution);	
+			when(solutionService.readCompositeSolutionGraph(userId, solutionId, "1.0.0"))
+			.thenReturn("Successfully read the ComposietSolution");
+			String results = solutionController.readCompositeSolutionGraph(userId, solutionId, "1.0.0");
+			if (results.contains("true")) {
+				logger.debug(EELFLoggerDelegator.debugLogger, results);
+			} else {
+				throw new ServiceException("Not created", "4xx", "Unable to create composite solution");
+			}
+		} catch (ServiceException e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "CDUMP file not created", e);
+			throw e;
+		}
+	}
 }
