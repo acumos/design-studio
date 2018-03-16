@@ -29,6 +29,12 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.acumos.cds.AccessTypeCode;
+import org.acumos.cds.ModelTypeCode;
+import org.acumos.cds.ValidationStatusCode;
+import org.acumos.cds.client.CommonDataServiceRestClientImpl;
+import org.acumos.cds.domain.MLPSolution;
+import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.designstudio.cdump.Argument;
 import org.acumos.designstudio.cdump.Capabilities;
 import org.acumos.designstudio.cdump.CapabilityTarget;
@@ -45,6 +51,7 @@ import org.acumos.designstudio.cdump.Property;
 import org.acumos.designstudio.cdump.ReqCapability;
 import org.acumos.designstudio.cdump.Requirements;
 import org.acumos.designstudio.cdump.Target;
+import org.acumos.designstudio.cdump.Type;
 import org.acumos.designstudio.ce.controller.SolutionController;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.service.ICompositeSolutionService;
@@ -66,6 +73,8 @@ import com.jayway.jsonpath.InvalidJsonException;
  * 
  *
  */
+
+
 public class ControllersTest {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ControllersTest.class);
 	// CCDS TechMDev(8003) UserId, change it if the CCDS port changes.
@@ -84,6 +93,9 @@ public class ControllersTest {
 	ICompositeSolutionService compositeServiceImpl;
 	@Mock
 	org.acumos.designstudio.ce.util.Properties props;
+	
+	@Mock
+    CommonDataServiceRestClientImpl cmnDataService;
 
 	@Test
 	/**
@@ -192,6 +204,9 @@ public class ControllersTest {
 			data.setPy("100");
 			data.setRadius("100");
 			node.setNdata(data);
+			Type type = new Type();
+			type.setName("xyz1");
+			node.setType(type);
 
 			assertNotNull(data);
 			assertNotNull(node);
@@ -591,7 +606,7 @@ public class ControllersTest {
 		dscs.setSolutionId("solutionId");
 		dscs.setVersion("version");
 		dscs.setOnBoarder(userId);
-		dscs.setDescription("description");
+		dscs.setDescription("description"); 
 		dscs.setProvider("Test");
 		dscs.setToolKit("CP");
 		dscs.setVisibilityLevel("PV");
@@ -612,5 +627,5 @@ public class ControllersTest {
 		assertEquals("description", dscs.getDescription());
 		logger.debug(EELFLoggerDelegator.debugLogger, "results");
 	}
-
+	
 }
