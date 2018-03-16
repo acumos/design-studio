@@ -20,7 +20,9 @@
 
 package org.acumos.designstudio.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.io.FileNotFoundException;
@@ -29,10 +31,12 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.designstudio.cdump.Argument;
 import org.acumos.designstudio.cdump.Capabilities;
 import org.acumos.designstudio.cdump.CapabilityTarget;
 import org.acumos.designstudio.cdump.DataBrokerMap;
+import org.acumos.designstudio.cdump.DataConnector;
 import org.acumos.designstudio.cdump.DataMap;
 import org.acumos.designstudio.cdump.DataMapInputField;
 import org.acumos.designstudio.cdump.FieldMap;
@@ -45,13 +49,13 @@ import org.acumos.designstudio.cdump.Property;
 import org.acumos.designstudio.cdump.ReqCapability;
 import org.acumos.designstudio.cdump.Requirements;
 import org.acumos.designstudio.cdump.Target;
+import org.acumos.designstudio.cdump.Type;
 import org.acumos.designstudio.ce.controller.SolutionController;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.service.ICompositeSolutionService;
 import org.acumos.designstudio.ce.service.SolutionServiceImpl;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
-import org.acumos.designstudio.cdump.DataConnector;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -66,6 +70,8 @@ import com.jayway.jsonpath.InvalidJsonException;
  * 
  *
  */
+
+
 public class ControllersTest {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ControllersTest.class);
 	// CCDS TechMDev(8003) UserId, change it if the CCDS port changes.
@@ -84,6 +90,9 @@ public class ControllersTest {
 	ICompositeSolutionService compositeServiceImpl;
 	@Mock
 	org.acumos.designstudio.ce.util.Properties props;
+	
+	@Mock
+    CommonDataServiceRestClientImpl cmnDataService;
 
 	@Test
 	/**
@@ -192,6 +201,9 @@ public class ControllersTest {
 			data.setPy("100");
 			data.setRadius("100");
 			node.setNdata(data);
+			Type type = new Type();
+			type.setName("xyz1");
+			node.setType(type);
 
 			assertNotNull(data);
 			assertNotNull(node);
@@ -591,7 +603,7 @@ public class ControllersTest {
 		dscs.setSolutionId("solutionId");
 		dscs.setVersion("version");
 		dscs.setOnBoarder(userId);
-		dscs.setDescription("description");
+		dscs.setDescription("description"); 
 		dscs.setProvider("Test");
 		dscs.setToolKit("CP");
 		dscs.setVisibilityLevel("PV");
@@ -612,5 +624,5 @@ public class ControllersTest {
 		assertEquals("description", dscs.getDescription());
 		logger.debug(EELFLoggerDelegator.debugLogger, "results");
 	}
-
+	
 }
