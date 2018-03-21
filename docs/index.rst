@@ -15,14 +15,14 @@
 .. See the License for the specific language governing permissions and
 .. limitations under the License.
 .. ===============LICENSE_END=========================================================
-Acumos Design Studio Documentation
-=======================================
+
+=============
+Design Studio
+=============
 
 .. toctree::
        :maxdepth: 3
        :caption: Contents:
 
-       DevelopersGuide.rst
-       UserGuide.rst
-       release-notes.rst
-       tutorials/index.rst
+        release-notes.rst
+        developer-guide.rst
