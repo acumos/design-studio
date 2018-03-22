@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baff40b5_e63c791d",
+        "filename": "docs/index.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 51
+      },
+      "writtenOn": "2018-03-22T01:49:37Z",
+      "side": 1,
+      "message": "take out a blank before release-notes.rst and one blank before developer-guide.rst",
+      "revId": "3c14443f4836818398e5cbcc4d80c5787123e7ca",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
