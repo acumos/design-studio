@@ -330,7 +330,7 @@ public class SolutionServiceImpl implements ISolutionService {
 					node1.setNodeSolutionId(node.getNodeSolutionId());
 					node1.setNodeVersion(node.getNodeVersion());
 					node1.setProtoUri(
-							getProtoUrl(node.getNodeSolutionId(), node.getNodeVersion(), props.getProtoArtifactType()));
+							getProtoUrl(node.getNodeSolutionId(), node.getNodeVersion(), props.getModelImageArtifactType(), props.getProtobuffFileExtention()));
 					if (node.getProperties() == null) {
 						node1.setProperties(propertyarray);
 					} else {
@@ -359,7 +359,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				node1.setNodeSolutionId(node.getNodeSolutionId());
 				node1.setNodeVersion(node.getNodeVersion());
 				node1.setProtoUri(
-						getProtoUrl(node.getNodeSolutionId(), node.getNodeVersion(), props.getProtoArtifactType()));
+						getProtoUrl(node.getNodeSolutionId(), node.getNodeVersion(), props.getModelImageArtifactType(), props.getProtobuffFileExtention()));
 				if (node.getProperties() == null) {
 					node1.setProperties(propertyarray);
 				} else {
@@ -1341,7 +1341,7 @@ public class SolutionServiceImpl implements ISolutionService {
 	 * @throws AcumosException
 	 *             Use for getting the nexusURI for solution.
 	 */
-	public String getProtoUrl(String solutionId, String version, String artifactType) throws AcumosException {
+	public String getProtoUrl(String solutionId, String version, String artifactType, String fileExtention) throws AcumosException {
 		logger.debug(EELFLoggerDelegator.debugLogger, "getProtoUrl() : Begin");
 
 		String nexusURI = "";
@@ -1392,9 +1392,21 @@ public class SolutionServiceImpl implements ISolutionService {
 			if (null != mlpArtifactList && !mlpArtifactList.isEmpty()) {
 				try {
 					// 3. Get the nexus URI for the SolutionId
-					nexusURI = mlpArtifactList.stream()
+					/*nexusURI = mlpArtifactList.stream()
 							.filter(mlpArt -> mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType)).findFirst()
-							.get().getUri();
+							.get().getUri();*/
+					for(MLPArtifact mlpArt : mlpArtifactList){
+						if( null != fileExtention ){
+							if(mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType) && mlpArt.getName().contains(fileExtention)){
+								nexusURI = mlpArt.getUri();
+								break;
+							}
+						} else if(mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType)){
+							nexusURI = mlpArt.getUri();
+							break;
+						}
+						
+					}
 					logger.debug(EELFLoggerDelegator.debugLogger, " Nexus URI :  {} ", nexusURI );
 				} catch (NoSuchElementException | NullPointerException e) {
 					logger.error(EELFLoggerDelegator.errorLogger,

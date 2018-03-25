@@ -129,7 +129,26 @@ public class Properties implements Serializable {
 	@Value("${databrokerType}")
 	private String databrokerType;
 	
+	@Value("${modelImageArtifactType}")
+	private String modelImageArtifactType;
+
+	@Value("${protobuffFileExtention}")	
+	private String protobuffFileExtention;
 	
+	
+	/**
+	 * @return the protobuffFileExtention
+	 */
+	public String getProtobuffFileExtention() {
+		return protobuffFileExtention;
+	}
+
+	/**
+	 * @return the modelImageArtifactType
+	 */
+	public String getModelImageArtifactType() {
+		return modelImageArtifactType;
+	}
 	
 	/**
 	 * @return the gdmType
