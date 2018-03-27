@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4e99ff4_d0d4ee7d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/DBMapOutputs.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-03-27T08:30:01Z",
+      "side": 1,
+      "message": "license details is missing",
+      "range": {
+        "startLine": 9,
+        "startChar": 7,
+        "endLine": 9,
+        "endChar": 12
+      },
+      "revId": "ff7d60161e8d4ed54e9d225f6cee469a17e93c61",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59f075b0_01cc1759",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/DBMapOutputs.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-03-27T08:30:01Z",
+      "side": 1,
+      "message": "Class name should not be plural",
+      "range": {
+        "startLine": 9,
+        "startChar": 13,
+        "endLine": 9,
+        "endChar": 25
+      },
+      "revId": "ff7d60161e8d4ed54e9d225f6cee469a17e93c61",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "20d0bba2_4f0b0628",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/DataBrokerMap.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-03-27T08:30:01Z",
+      "side": 1,
+      "message": "Don\u0027t introduce empty comments",
+      "range": {
+        "startLine": 22,
+        "startChar": 2,
+        "endLine": 22,
+        "endChar": 3
+      },
+      "revId": "ff7d60161e8d4ed54e9d225f6cee469a17e93c61",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48acdf4a_bec20d46",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/DataBrokerMap.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-03-27T08:30:01Z",
+      "side": 1,
+      "message": "Don\u0027t introduce empty comments",
+      "range": {
+        "startLine": 32,
+        "startChar": 3,
+        "endLine": 32,
+        "endChar": 4
+      },
+      "revId": "ff7d60161e8d4ed54e9d225f6cee469a17e93c61",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bbd0ae1_49eb14df",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/TypeAndRoleHierarchyList.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-03-27T08:30:01Z",
+      "side": 1,
+      "message": "Please remove List from the Class name",
+      "range": {
+        "startLine": 9,
+        "startChar": 13,
+        "endLine": 9,
+        "endChar": 37
+      },
+      "revId": "ff7d60161e8d4ed54e9d225f6cee469a17e93c61",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
