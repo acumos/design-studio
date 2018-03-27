@@ -94,6 +94,40 @@
     },
     {
       "key": {
+        "uuid": "e3ea6233_b0f29687",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/OutputField.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-03-27T10:36:22Z",
+      "side": 1,
+      "message": "License please",
+      "revId": "ff7d60161e8d4ed54e9d225f6cee469a17e93c61",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a58db01d_82496a27",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/TypeAndRoleHierarchyList.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-03-27T10:36:22Z",
+      "side": 1,
+      "message": "License please",
+      "revId": "ff7d60161e8d4ed54e9d225f6cee469a17e93c61",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9bbd0ae1_49eb14df",
         "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/cdump/TypeAndRoleHierarchyList.java",
         "patchSetId": 2
