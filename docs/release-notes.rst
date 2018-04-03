@@ -22,6 +22,20 @@ Design Studio Release Notes
 
 The Design Studio Composition Engine is deployed within a Docker image in the Docker registry.  TOSCAGenerator Client is uploaded in Nexus repository as a jar file.
 
+0.0.24-SNAPSHOT, 2017-03-25
+---------------------------
+* ACUMOS-547 : Design Studio stores the protobuf URI of PROTOBUF.json instead of .proto 
+
+
+0.0.23-SNAPSHOT, 2017-03-09
+---------------------------
+* Update to use latest version of Common Data Service : 1.14.1.
+* ACUMOS-291 Update API behavior : Validate Composite Solution w.r.t inclusion of Databroker
+* ACUMOS-293 3.	An output port of a node can be connected to ONLY one input port of another node – add this restriction until we support split and join of links allowed in Design Studio. [NOTE: Design Studio will NOT restrict the user, but during Validation we will flag this error.]
+* ACUMOS-294 4.	An input port of a node can be connected to ONLY one output  port of another node – add this restriction until we support split and join of links allowed in Design Studio. [NOTE: Design Studio will NOT restrict the user, but during Validation we will flag this error.]
+* ACUMOS-295 5.	A node of type “DataBroker” cannot have its input port connected to any other node.
+* ACUMOSE-335 Store the location of the docker image in the Blueprint.json file
+
 
 0.0.22-SNAPSHOT, 2017-02-16
 ---------------------------
