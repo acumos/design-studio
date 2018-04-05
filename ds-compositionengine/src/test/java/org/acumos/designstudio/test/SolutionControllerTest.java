@@ -20,16 +20,6 @@
 
 package org.acumos.designstudio.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -52,25 +42,6 @@ import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.cds.domain.MLPUser;
 import org.acumos.cds.transport.RestPageRequest;
 import org.acumos.cds.transport.RestPageResponse;
-import org.acumos.designstudio.cdump.Argument;
-import org.acumos.designstudio.cdump.Capabilities;
-import org.acumos.designstudio.cdump.CapabilityTarget;
-import org.acumos.designstudio.cdump.Cdump;
-import org.acumos.designstudio.cdump.DataBrokerMap;
-import org.acumos.designstudio.cdump.DataMap;
-import org.acumos.designstudio.cdump.DataMapInputField;
-import org.acumos.designstudio.cdump.DataMapOutputField;
-import org.acumos.designstudio.cdump.FieldMap;
-import org.acumos.designstudio.cdump.MapInputs;
-import org.acumos.designstudio.cdump.MapOutput;
-import org.acumos.designstudio.cdump.Message;
-import org.acumos.designstudio.cdump.Ndata;
-import org.acumos.designstudio.cdump.Nodes;
-import org.acumos.designstudio.cdump.Property;
-import org.acumos.designstudio.cdump.ReqCapability;
-import org.acumos.designstudio.cdump.Requirements;
-import org.acumos.designstudio.cdump.Target;
-import org.acumos.designstudio.cdump.Type;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.service.AcumosCatalogServiceImpl;
@@ -83,6 +54,30 @@ import org.acumos.designstudio.ce.util.DSUtil;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.Artifact;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
+import org.acumos.designstudio.ce.vo.cdump.Argument;
+import org.acumos.designstudio.ce.vo.cdump.Capabilities;
+import org.acumos.designstudio.ce.vo.cdump.CapabilityTarget;
+import org.acumos.designstudio.ce.vo.cdump.Cdump;
+import org.acumos.designstudio.ce.vo.cdump.Message;
+import org.acumos.designstudio.ce.vo.cdump.Ndata;
+import org.acumos.designstudio.ce.vo.cdump.Nodes;
+import org.acumos.designstudio.ce.vo.cdump.Property;
+import org.acumos.designstudio.ce.vo.cdump.ReqCapability;
+import org.acumos.designstudio.ce.vo.cdump.Requirements;
+import org.acumos.designstudio.ce.vo.cdump.Target;
+import org.acumos.designstudio.ce.vo.cdump.Type;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBInputField;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapInput;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapOutput;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBOTypeAndRoleHierarchy;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBOutputField;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMap;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMapInputField;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMapOutputField;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.FieldMap;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.MapInputs;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.MapOutput;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.acumos.nexus.client.RepositoryLocation;
 import org.acumos.nexus.client.data.UploadArtifactInfo;
@@ -94,16 +89,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -682,6 +673,54 @@ public class SolutionControllerTest {
 		fieldMap.setOutput_field_tag_id("2");
 		DataBrokerMap databrokerMap = new DataBrokerMap();
 		databrokerMap.setScript("this is the script");
+		databrokerMap.setCsv_file_field_separator(",");
+		databrokerMap.setData_broker_type("SQLDataBroker1");
+		databrokerMap.setFirst_row("Yes");
+		databrokerMap.setLocal_system_data_file_path("localpath");
+		databrokerMap.setMap_action("mapaction");
+		databrokerMap.setTarget_system_url("remoteurl");
+		
+		// DataBrokerMap Input List
+		List<DBMapInput> dbmapInputLst = new ArrayList<DBMapInput>();
+		DBMapInput dbMapInput = new DBMapInput();
+		DBInputField dbInField = new DBInputField();
+		
+		dbInField.setChecked("Yes");
+		dbInField.setMapped_to_field("1.2");
+		dbInField.setName("Name of SourceField");
+		dbInField.setType("Float");
+		
+		dbMapInput.setInput_field(dbInField);
+		dbmapInputLst.add(dbMapInput);
+		DBMapInput[] dbMapInArr = new DBMapInput[dbmapInputLst.size()];
+		dbMapInArr = dbmapInputLst.toArray(dbMapInArr);
+		databrokerMap.setMap_inputs(dbMapInArr);
+		
+		// DataBrokerMap Output List
+		List<DBMapOutput> dbmapOutputLst = new ArrayList<DBMapOutput>();
+		DBMapOutput dbMapOutput = new DBMapOutput();
+		DBOutputField dbOutField = new DBOutputField();
+		
+		dbOutField.setName("sepal_len");
+		dbOutField.setTag("1.3");
+		
+		List<DBOTypeAndRoleHierarchy> dboList = new ArrayList<DBOTypeAndRoleHierarchy>();
+		DBOTypeAndRoleHierarchy dboTypeAndRole = new DBOTypeAndRoleHierarchy();
+		DBOTypeAndRoleHierarchy[] dboTypeAndRoleHierarchyArr = null;
+		
+		dboTypeAndRole.setName("DataFrameRow");
+		dboTypeAndRole.setRole("Repeated");
+		dboList.add(dboTypeAndRole);
+		dboTypeAndRoleHierarchyArr = new DBOTypeAndRoleHierarchy[dboList.size()];
+		dboTypeAndRoleHierarchyArr = dboList.toArray(dboTypeAndRoleHierarchyArr);
+		
+		dbOutField.setType_and_role_hierarchy_list(dboTypeAndRoleHierarchyArr);
+		dbMapOutput.setOutput_field(dbOutField);
+		dbmapOutputLst.add(dbMapOutput);
+		
+		DBMapOutput[] dbMapOutputArr = new DBMapOutput[dbmapOutputLst.size()];
+		dbMapOutputArr = dbmapOutputLst.toArray(dbMapOutputArr);
+		databrokerMap.setMap_outputs(dbMapOutputArr);
 
 		assertNotNull(fieldMap);
 		assertNotNull(databrokerMap);
@@ -710,6 +749,56 @@ public class SolutionControllerTest {
 		FieldMap fieldMap = new FieldMap();
 		DataBrokerMap databrokerMap = new DataBrokerMap();
 		databrokerMap.setScript("this is the script");
+		databrokerMap.setCsv_file_field_separator(",");
+		databrokerMap.setData_broker_type("SQLDataBroker1");
+		databrokerMap.setFirst_row("Yes");
+		databrokerMap.setLocal_system_data_file_path("localpath");
+		databrokerMap.setMap_action("mapaction");
+		databrokerMap.setTarget_system_url("remoteurl");
+		
+		// DataBrokerMap Input List
+		List<DBMapInput> dbmapInputLst = new ArrayList<DBMapInput>();
+		DBMapInput dbMapInput = new DBMapInput();
+		DBInputField dbInField = new DBInputField();
+		
+		dbInField.setChecked("Yes");
+		dbInField.setMapped_to_field("1.2");
+		dbInField.setName("Name of SourceField");
+		dbInField.setType("Float");
+		
+		dbMapInput.setInput_field(dbInField);
+		dbmapInputLst.add(dbMapInput);
+		DBMapInput[] dbMapInArr = new DBMapInput[dbmapInputLst.size()];
+		dbMapInArr = dbmapInputLst.toArray(dbMapInArr);
+		databrokerMap.setMap_inputs(dbMapInArr);
+		
+		// DataBrokerMap Output List
+		List<DBMapOutput> dbmapOutputLst = new ArrayList<DBMapOutput>();
+		DBMapOutput dbMapOutput = new DBMapOutput();
+		DBOutputField dbOutField = new DBOutputField();
+		
+		dbOutField.setName("sepal_len");
+		dbOutField.setTag("1.3");
+		
+		List<DBOTypeAndRoleHierarchy> dboList = new ArrayList<DBOTypeAndRoleHierarchy>();
+		DBOTypeAndRoleHierarchy dboTypeAndRole = new DBOTypeAndRoleHierarchy();
+		DBOTypeAndRoleHierarchy[] dboTypeAndRoleHierarchyArr = null;
+		
+		dboTypeAndRole.setName("DataFrameRow");
+		dboTypeAndRole.setRole("Repeated");
+		dboList.add(dboTypeAndRole);
+		dboTypeAndRoleHierarchyArr = new DBOTypeAndRoleHierarchy[dboList.size()];
+		dboTypeAndRoleHierarchyArr = dboList.toArray(dboTypeAndRoleHierarchyArr);
+		
+		dbOutField.setType_and_role_hierarchy_list(dboTypeAndRoleHierarchyArr);
+		dbMapOutput.setOutput_field(dbOutField);
+		dbmapOutputLst.add(dbMapOutput);
+		
+		DBMapOutput[] dbMapOutputArr = new DBMapOutput[dbmapOutputLst.size()];
+		dbMapOutputArr = dbmapOutputLst.toArray(dbMapOutputArr);
+		databrokerMap.setMap_outputs(dbMapOutputArr);
+		
+		
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		assertNotNull(fieldMap);
 		assertNotNull(databrokerMap);
@@ -737,6 +826,56 @@ public class SolutionControllerTest {
 		fieldMap.setOutput_field_tag_id("2");
 		DataBrokerMap databrokerMap = new DataBrokerMap();
 		databrokerMap.setScript("this is the script");
+		databrokerMap.setCsv_file_field_separator(",");
+		databrokerMap.setData_broker_type("SQLDataBroker1");
+		databrokerMap.setFirst_row("Yes");
+		databrokerMap.setLocal_system_data_file_path("localpath");
+		databrokerMap.setMap_action("mapaction");
+		databrokerMap.setTarget_system_url("remoteurl");
+		
+		// DataBrokerMap Input List
+		List<DBMapInput> dbmapInputLst = new ArrayList<DBMapInput>();
+		DBMapInput dbMapInput = new DBMapInput();
+		DBInputField dbInField = new DBInputField();
+		
+		dbInField.setChecked("Yes");
+		dbInField.setMapped_to_field("1.2");
+		dbInField.setName("Name of SourceField");
+		dbInField.setType("Float");
+		
+		dbMapInput.setInput_field(dbInField);
+		dbmapInputLst.add(dbMapInput);
+		DBMapInput[] dbMapInArr = new DBMapInput[dbmapInputLst.size()];
+		dbMapInArr = dbmapInputLst.toArray(dbMapInArr);
+		databrokerMap.setMap_inputs(dbMapInArr);
+		
+		// DataBrokerMap Output List
+		List<DBMapOutput> dbmapOutputLst = new ArrayList<DBMapOutput>();
+		DBMapOutput dbMapOutput = new DBMapOutput();
+		DBOutputField dbOutField = new DBOutputField();
+		
+		dbOutField.setName("sepal_len");
+		dbOutField.setTag("1.3");
+		
+		List<DBOTypeAndRoleHierarchy> dboList = new ArrayList<DBOTypeAndRoleHierarchy>();
+		DBOTypeAndRoleHierarchy dboTypeAndRole = new DBOTypeAndRoleHierarchy();
+		DBOTypeAndRoleHierarchy[] dboTypeAndRoleHierarchyArr = null;
+		
+		dboTypeAndRole.setName("DataFrameRow");
+		dboTypeAndRole.setRole("Repeated");
+		dboList.add(dboTypeAndRole);
+		dboTypeAndRoleHierarchyArr = new DBOTypeAndRoleHierarchy[dboList.size()];
+		dboTypeAndRoleHierarchyArr = dboList.toArray(dboTypeAndRoleHierarchyArr);
+		
+		dbOutField.setType_and_role_hierarchy_list(dboTypeAndRoleHierarchyArr);
+		dbMapOutput.setOutput_field(dbOutField);
+		dbmapOutputLst.add(dbMapOutput);
+		
+		DBMapOutput[] dbMapOutputArr = new DBMapOutput[dbmapOutputLst.size()];
+		dbMapOutputArr = dbmapOutputLst.toArray(dbMapOutputArr);
+		databrokerMap.setMap_outputs(dbMapOutputArr);
+		
+		
 		assertNotNull(fieldMap);
 		assertNotNull(databrokerMap);
 		assertEquals("Prediction", fieldMap.getInput_field_message_name());

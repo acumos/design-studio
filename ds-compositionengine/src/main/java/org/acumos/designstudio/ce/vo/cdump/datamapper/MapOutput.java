@@ -18,63 +18,30 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump.datamapper;
 
 import java.io.Serializable;
 
-public class Ndata implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4430756495417649713L;
-	/**
-	 * 
-	 */
+public class MapOutput implements Serializable {
 	
-	private String ntype;
-	private String px;
-	private String py;
-	private String radius;
-	private boolean fixed = true;
+	private static final long serialVersionUID = -3626431575255694502L;
+	private String message_name;
+	private DataMapOutputField[] output_fields;
 
-	public String getNtype() {
-		return ntype;
+	public String getMessage_name() {
+		return message_name;
 	}
 
-	public void setNtype(String ntype) {
-		this.ntype = ntype;
+	public void setMessage_name(String message_name) {
+		this.message_name = message_name;
 	}
 
-	public String getPx() {
-		return px;
+	public DataMapOutputField[] getOutput_fields() {
+		return output_fields;
 	}
 
-	public void setPx(String px) {
-		this.px = px;
-	}
-
-	public String getPy() {
-		return py;
-	}
-
-	public void setPy(String py) {
-		this.py = py;
-	}
-
-	public String getRadius() {
-		return radius;
-	}
-
-	public void setRadius(String radius) {
-		this.radius = radius;
-	}
-
-	public boolean isFixed() {
-		return fixed;
-	}
-
-	public void setFixed(boolean fixed) {
-		this.fixed = fixed;
+	public void setOutput_fields(DataMapOutputField[] output_fields) {
+		this.output_fields = output_fields;
 	}
 
 }

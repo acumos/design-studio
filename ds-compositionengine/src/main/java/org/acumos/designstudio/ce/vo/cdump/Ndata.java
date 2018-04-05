@@ -18,35 +18,58 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-public class DataConnector implements Serializable {
+public class Ndata implements Serializable {
 	
-	private static final long serialVersionUID = 3121933663617437481L;
+	private static final long serialVersionUID = 4430756495417649713L;
 	
-	private FieldMap fieldMap;
-	private DataBrokerMap databrokerMap;
-	
-	/**
-	 * @return fieldMap
-	 */
-	public FieldMap getFieldMap() {
-		return fieldMap;
+	private String ntype;
+	private String px;
+	private String py;
+	private String radius;
+	private boolean fixed = true;
+
+	public String getNtype() {
+		return ntype;
 	}
-	
-	public void setFieldMap(FieldMap fieldMap) {
-		this.fieldMap = fieldMap;
+
+	public void setNtype(String ntype) {
+		this.ntype = ntype;
 	}
-	
-	/**
-	 * @return databrokerMap
-	 */
-	public DataBrokerMap getDatabrokerMap() {
-		return databrokerMap;
+
+	public String getPx() {
+		return px;
 	}
-	public void setDatabrokerMap(DataBrokerMap databrokerMap) {
-		this.databrokerMap = databrokerMap;
+
+	public void setPx(String px) {
+		this.px = px;
 	}
+
+	public String getPy() {
+		return py;
+	}
+
+	public void setPy(String py) {
+		this.py = py;
+	}
+
+	public String getRadius() {
+		return radius;
+	}
+
+	public void setRadius(String radius) {
+		this.radius = radius;
+	}
+
+	public boolean isFixed() {
+		return fixed;
+	}
+
+	public void setFixed(boolean fixed) {
+		this.fixed = fixed;
+	}
+
 }

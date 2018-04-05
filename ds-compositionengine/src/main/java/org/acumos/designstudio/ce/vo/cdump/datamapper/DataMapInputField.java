@@ -18,27 +18,36 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump.datamapper;
 
 import java.io.Serializable;
 
-public class Capabilities implements Serializable{
-	
+import org.acumos.designstudio.ce.vo.cdump.ComplexType;
+
+public class DataMapInputField implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1136087024327606271L;
-	
-	private String id;
+	private static final long serialVersionUID = -7735575155080257503L;
+	private String tag;
+	private String role;
 	private String name;
-	private CapabilityTarget target;
-	private String target_type;
-	private String properties;
-	public String getId() {
-		return id;
+	private String type;
+	//private ComplexType complexType;
+	private String mapped_to_message;
+	private String mapped_to_field;
+	
+	public String getTag() {
+		return tag;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 	public String getName() {
 		return name;
@@ -46,41 +55,23 @@ public class Capabilities implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	/*public Target getTarget() {
-		return target;
+	public String getType() {
+		return type;
 	}
-	public void setTarget(Target target) {
-		this.target = target;
-	}*/
-	
-	/**
-	 * @return the target
-	 */
-	public CapabilityTarget getTarget() {
-		return target;
+	public void setType(String type) {
+		this.type = type;
 	}
-	/**
-	 * @param target the target to set
-	 */
-	public void setTarget(CapabilityTarget target) {
-		this.target = target;
+	public String getMapped_to_message() {
+		return mapped_to_message;
 	}
-	public String getTarget_type() {
-		return target_type;
+	public void setMapped_to_message(String mapped_to_message) {
+		this.mapped_to_message = mapped_to_message;
 	}
-	public void setTarget_type(String target_type) {
-		this.target_type = target_type;
+	public String getMapped_to_field() {
+		return mapped_to_field;
 	}
-	public String getProperties() {
-		return properties;
+	public void setMapped_to_field(String mapped_to_field) {
+		this.mapped_to_field = mapped_to_field;
 	}
-	public void setProperties(String properties) {
-		this.properties = properties;
-	}
-	
-	
-	
-	
 
 }

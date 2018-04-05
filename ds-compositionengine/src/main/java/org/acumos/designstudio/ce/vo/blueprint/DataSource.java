@@ -18,40 +18,46 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.blueprint;
 
 import java.io.Serializable;
 
-public class Property implements Serializable {
-
+public class DataSource implements Serializable {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8446568394003104679L;
-	private DataMap data_map;
-	private DataBrokerMap data_broker_map;
+	private static final long serialVersionUID = -6077555433160050430L;
+	
+	private String name;
+	private BaseOperationSignature operation_signature;
 
-	public DataMap getData_map() {
-		return data_map;
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
 	}
 
-	public void setData_map(DataMap data_map) {
-		this.data_map = data_map;
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the operation_signature
+	 */
+	public BaseOperationSignature getOperation_signature() {
+		return operation_signature;
+	}
+
+	/**
+	 * @param operation_signature the operation_signature to set
+	 */
+	public void setOperation_signature(BaseOperationSignature operation_signature) {
+		this.operation_signature = operation_signature;
 	}
 	
-	/**
-	 * @return the data_broker_map
-	 */
-	public DataBrokerMap getData_broker_map() {
-		return data_broker_map;
-	}
-
-	/**
-	 * @param data_broker_map the data_broker_map to set
-	 */
-	public void setData_broker_map(DataBrokerMap data_broker_map) {
-		this.data_broker_map = data_broker_map;
-	}
+	
+	
 
 }

@@ -21,87 +21,44 @@
 /**
  * 
  */
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-/**
- * 
- *
- */
-public class Argument implements Serializable{
+
+public class CapabilityTarget implements Serializable{
 
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5934864309832203668L;
-	/**
-	 * 
-	 */
+	private static final long serialVersionUID = 1915608769079919859L;
 	
-	private String name;
-	private String role;
-	private String tag;
-	private String type;
-	private ComplexType complexType;
-	/**
-	 * @return the role
-	 */
-	public String getRole() {
-		return role;
-	}
-	/**
-	 * @param role
-	 *            the role to set
-	 */
-	public void setRole(String role) {
-		this.role = role;
-	}
-	/**
-	 * @return the tag
-	 */
-	public String getTag() {
-		return tag;
-	}
-	/**
-	 * @param tag the tag to set
-	 */
-	public void setTag(String tag) {
-		this.tag = tag;
-	}
-	/**
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
+	private Message[] name;
+	private String id;
+	
 	/**
 	 * @return the name
 	 */
-	public String getName() {
+	public Message[] getName() {
 		return name;
 	}
 	/**
 	 * @param name the name to set
 	 */
-	public void setName(String name) {
+	public void setName(Message[] name) {
 		this.name = name;
 	}
-
-	public ComplexType getComplexType() {
-		return complexType;
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
 	}
-
-	public void setComplexType(ComplexType complexType) {
-		this.complexType = complexType;
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
 	}
-
 	
+	
+
 }

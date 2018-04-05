@@ -18,26 +18,12 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-public class DataBrokerMap implements Serializable{
+public class Relationship implements Serializable {
 
-	private static final long serialVersionUID = -4853419224669616315L;
-	
-	private String script;
-	
-	/**
-	 * @return the script
-	 */
-	public String getScript() {
-		return script;
-	}
-	/**
-	 * @param script the script to set
-	 */
-	public void setScript(String script) {
-		this.script = script;
-	}
+	private static final long serialVersionUID = -7383798315818998298L;
+
 }

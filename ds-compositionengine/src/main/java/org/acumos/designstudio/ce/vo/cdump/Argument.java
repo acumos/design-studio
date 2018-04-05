@@ -18,61 +18,80 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.ce.vo.tgif;
+/**
+ * 
+ */
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-public class Artifact implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	public String uri;
-	public String type;
-
-	public Artifact() {
-
-	}
-
+public class Argument implements Serializable{
+	private static final long serialVersionUID = -5934864309832203668L;
+	
+	private String name;
+	private String role;
+	private String tag;
+	private String type;
+	private ComplexType complexType;
+	
 	/**
-	 * 
-	 * @param uri
-	 *            URI
-	 * @param type
-	 *            Type
+	 * @return the role
 	 */
-	public Artifact(String uri, String type) {
-		super();
-		this.uri = uri;
-		this.type = type;
+	public String getRole() {
+		return role;
 	}
-
 	/**
-	 * @return the uri
+	 * @param role
+	 *            the role to set
 	 */
-	public String getUri() {
-		return uri;
+	public void setRole(String role) {
+		this.role = role;
 	}
-
 	/**
-	 * @param uri
-	 *            the uri to set
+	 * @return the tag
 	 */
-	public void setUri(String uri) {
-		this.uri = uri;
+	public String getTag() {
+		return tag;
 	}
-
+	/**
+	 * @param tag the tag to set
+	 */
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 	/**
 	 * @return the type
 	 */
 	public String getType() {
 		return type;
 	}
-
 	/**
-	 * @param type
-	 *            the type to set
+	 * @param type the type to set
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
+	public ComplexType getComplexType() {
+		return complexType;
+	}
+
+	public void setComplexType(ComplexType complexType) {
+		this.complexType = complexType;
+	}
+
+	
 }

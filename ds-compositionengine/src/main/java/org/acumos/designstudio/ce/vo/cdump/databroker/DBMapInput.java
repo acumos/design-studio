@@ -18,32 +18,31 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump.databroker;
 
 import java.io.Serializable;
 
-public class MapInputs implements Serializable {
+public class DBMapInput implements Serializable {
+
+	private static final long serialVersionUID = 8260073504366872566L;
+	
+	private DBInputField input_field;
+
 	/**
-	 * 
+	 * @return the input_field
 	 */
-	private static final long serialVersionUID = -8560444235646525017L;
-	private String message_name;
-	private DataMapInputField[] input_fields;
-
-	public String getMessage_name() {
-		return message_name;
+	public DBInputField getInput_field() {
+		return input_field;
 	}
 
-	public void setMessage_name(String message_name) {
-		this.message_name = message_name;
+	/**
+	 * @param input_field the input_field to set
+	 */
+	public void setInput_field(DBInputField input_field) {
+		this.input_field = input_field;
 	}
-
-	public DataMapInputField[] getInput_fields() {
-		return input_fields;
-	}
-
-	public void setInput_fields(DataMapInputField[] input_fields) {
-		this.input_fields = input_fields;
-	}
+	
+	
+	
 
 }

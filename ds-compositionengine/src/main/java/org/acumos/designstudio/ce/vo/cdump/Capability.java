@@ -18,76 +18,30 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-public class DataMapOutputField implements Serializable{
+public class Capability implements Serializable{
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1480016409521727866L;
-	private String tag;
-	private String role;
+	private static final long serialVersionUID = 565058291617565696L;
+	
 	private String name;
-	private String type;
-	private ComplexType complexType;
-
-	/**
-	 * @return the tag
-	 */
-	public String gettag() {
-		return tag;
-	}
-	/**
-	 * @param tag the tag to set
-	 */
-	public void settag(String tag) {
-		this.tag = tag;
-	}
-	/**
-	 * @return the role
-	 */
-	public String getrole() {
-		return role;
-	}
-	/**
-	 * @param role the role to set
-	 */
-	public void setrole(String role) {
-		this.role = role;
-	}
-	/**
-	 * @return the name
-	 */
-	public String getname() {
+	private String id;
+	
+	public String getName() {
 		return name;
 	}
-	/**
-	 * @param name the name to set
-	 */
-	public void setname(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
-	/**
-	 * @return the type
-	 */
-	public String gettype() {
-		return type;
+	public String getId() {
+		return id;
 	}
-	/**
-	 * @param type the type to set
-	 */
-	public void settype(String type) {
-		this.type = type;
+	public void setId(String id) {
+		this.id = id;
 	}
+	
+	
 
-	public ComplexType getComplexType() {
-		return complexType;
-	}
-
-	public void setComplexType(ComplexType complexType) {
-		this.complexType = complexType;
-	}
 }

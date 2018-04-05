@@ -18,15 +18,41 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump.databroker;
 
 import java.io.Serializable;
 
-public class Relationship implements Serializable {
+public class DBOTypeAndRoleHierarchy implements Serializable{
 
+	private static final long serialVersionUID = -6615101557142925404L;
+	
+	private String name;
+	private String role;
 	/**
-	 * 
+	 * @return the name
 	 */
-	private static final long serialVersionUID = -7383798315818998298L;
+	public String getName() {
+		return name;
+	}
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	/**
+	 * @return the role
+	 */
+	public String getRole() {
+		return role;
+	}
+	/**
+	 * @param role the role to set
+	 */
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
+	
 
 }

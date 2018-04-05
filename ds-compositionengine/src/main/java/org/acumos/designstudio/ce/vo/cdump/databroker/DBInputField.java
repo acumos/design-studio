@@ -18,59 +18,67 @@
  * ===============LICENSE_END=========================================================
  */
 
-/**
- * 
- */
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump.databroker;
 
 import java.io.Serializable;
 
-import org.acumos.designstudio.cdump.Message;
+public class DBInputField implements Serializable{
 
-/**
- * 
- *
- */
-public class ReqCapability implements Serializable{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1215951868789856113L;
-	/**
-	 * 
-	 */
+	private static final long serialVersionUID = 5104542735630234525L;
 	
-	
-	private String id;
-	private Message[] name;
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
+	private String name;
+	private String type;
+	private String checked;
+	private String mapped_to_field;
 	/**
 	 * @return the name
 	 */
-	public Message[] getName() {
+	public String getName() {
 		return name;
 	}
 	/**
 	 * @param name the name to set
 	 */
-	public void setName(Message[] name) {
+	public void setName(String name) {
 		this.name = name;
+	}
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+	/**
+	 * @return the checked
+	 */
+	public String getChecked() {
+		return checked;
+	}
+	/**
+	 * @param checked the checked to set
+	 */
+	public void setChecked(String checked) {
+		this.checked = checked;
+	}
+	/**
+	 * @return the mapped_to_field
+	 */
+	public String getMapped_to_field() {
+		return mapped_to_field;
+	}
+	/**
+	 * @param mapped_to_field the mapped_to_field to set
+	 */
+	public void setMapped_to_field(String mapped_to_field) {
+		this.mapped_to_field = mapped_to_field;
 	}
 	
 	
-	
-	
-	
+
 }

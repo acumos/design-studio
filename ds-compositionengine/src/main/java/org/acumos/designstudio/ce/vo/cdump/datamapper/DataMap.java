@@ -18,40 +18,39 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.ce.vo.blueprint;
+package org.acumos.designstudio.ce.vo.cdump.datamapper;
 
 import java.io.Serializable;
 
-public class Container implements Serializable{
-
-	private static final long serialVersionUID = 7033995176723370491L;
-
-	private String container_name;
-	private BaseOperationSignature operation_signature;
+public class DataMap implements Serializable {
+	private static final long serialVersionUID = 5437495964588153222L;
 	
-	/**
-	 * @return the container_name
-	 */
-	public String getContainer_name() {
-		return container_name;
+	private MapInputs[] map_inputs;
+	private MapOutput[] map_outputs;
+
+	public MapInputs[] getMap_inputs() {
+		return map_inputs;
 	}
-	/**
-	 * @param container_name the container_name to set
-	 */
-	public void setContainer_name(String container_name) {
-		this.container_name = container_name;
+
+	public void setMap_inputs(MapInputs[] map_inputs) {
+		this.map_inputs = map_inputs;
 	}
+
 	/**
-	 * @return the operation_signature
+	 * @return the map_outputs
 	 */
-	public BaseOperationSignature getOperation_signature() {
-		return operation_signature;
+	public MapOutput[] getMap_outputs() {
+		return map_outputs;
 	}
+
 	/**
-	 * @param operation_signature the operation_signature to set
+	 * @param map_outputs the map_outputs to set
 	 */
-	public void setOperation_signature(BaseOperationSignature operation_signature) {
-		this.operation_signature = operation_signature;
+	public void setMap_outputs(MapOutput[] map_outputs) {
+		this.map_outputs = map_outputs;
 	}
+
 	
+	
+
 }

@@ -18,31 +18,40 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-public class Capability implements Serializable{
+import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMap;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.FieldMap;
+
+public class DataConnector implements Serializable {
+	
+	private static final long serialVersionUID = 3121933663617437481L;
+	
+	private FieldMap fieldMap;
+	private DataBrokerMap databrokerMap;
+	
 	/**
-	 * 
+	 * @return fieldMap
 	 */
-	private static final long serialVersionUID = 565058291617565696L;
-	
-	private String name;
-	private String id;
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
+	public FieldMap getFieldMap() {
+		return fieldMap;
 	}
 	
+	public void setFieldMap(FieldMap fieldMap) {
+		this.fieldMap = fieldMap;
+	}
 	
+	/**
+	 * @return databrokerMap
+	 */
+	public DataBrokerMap getDatabrokerMap() {
+		return databrokerMap;
+	}
+	public void setDatabrokerMap(DataBrokerMap databrokerMap) {
+		this.databrokerMap = databrokerMap;
+	}
 
 }

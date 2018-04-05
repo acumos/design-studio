@@ -18,36 +18,29 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-public class Type implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7676525620761286343L;
-	/**
-	 * 
-	 */
+public class NodeType implements Serializable {
 	
-
-	private String name;
+	private static final long serialVersionUID = -4770898797492929173L;
+	
+	private String nodeTypeName = "";
 
 	/**
-	 * @return the name
+	 * @return the nodeTypeName
 	 */
-	public String getName() {
-		return name;
+	public String getNodeTypeName() {
+		return nodeTypeName;
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param nodeTypeName
+	 *            the nodeTypeName to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setNodeTypeName(String nodeTypeName) {
+		this.nodeTypeName = nodeTypeName;
 	}
-	
-	
+
 }

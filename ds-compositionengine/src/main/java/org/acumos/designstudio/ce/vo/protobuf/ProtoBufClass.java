@@ -23,15 +23,7 @@ package org.acumos.designstudio.ce.vo.protobuf;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * 
- * 
- *
- */
 public class ProtoBufClass implements Serializable{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	public ProtoBufClass() {

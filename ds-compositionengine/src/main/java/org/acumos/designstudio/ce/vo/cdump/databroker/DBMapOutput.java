@@ -18,40 +18,31 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.ce.vo.blueprint;
+package org.acumos.designstudio.ce.vo.cdump.databroker;
 
 import java.io.Serializable;
 
-public class Container implements Serializable{
+public class DBMapOutput implements Serializable {
 
-	private static final long serialVersionUID = 7033995176723370491L;
-
-	private String container_name;
-	private BaseOperationSignature operation_signature;
+	private static final long serialVersionUID = -2003941950541351800L;
 	
+	private DBOutputField output_field;
+
 	/**
-	 * @return the container_name
+	 * @return the output_field
 	 */
-	public String getContainer_name() {
-		return container_name;
+	public DBOutputField getOutput_field() {
+		return output_field;
 	}
+
 	/**
-	 * @param container_name the container_name to set
+	 * @param output_field the output_field to set
 	 */
-	public void setContainer_name(String container_name) {
-		this.container_name = container_name;
-	}
-	/**
-	 * @return the operation_signature
-	 */
-	public BaseOperationSignature getOperation_signature() {
-		return operation_signature;
-	}
-	/**
-	 * @param operation_signature the operation_signature to set
-	 */
-	public void setOperation_signature(BaseOperationSignature operation_signature) {
-		this.operation_signature = operation_signature;
+	public void setOutput_field(DBOutputField output_field) {
+		this.output_field = output_field;
 	}
 	
+	
+	
+
 }

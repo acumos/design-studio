@@ -18,15 +18,14 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
 public class Cdump implements Serializable{
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -4497733479659006216L;
+	
 	private String cname;
 	private String version;
 	private String cid;
@@ -36,6 +35,7 @@ public class Cdump implements Serializable{
 	private String probeIndicator;
 	private java.util.List<Nodes> nodes;
 	private java.util.List<Relations> relations;
+	
 	public String getCname() {
 		return cname;
 	}

@@ -22,8 +22,8 @@ package org.acumos.designstudio.ce.service;
 
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
-import org.json.JSONException;
 import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
+import org.json.JSONException;
 
 public interface ICompositeSolutionService {
 
