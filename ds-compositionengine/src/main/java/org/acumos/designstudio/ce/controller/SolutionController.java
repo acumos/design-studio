@@ -26,13 +26,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.acumos.designstudio.cdump.DataBrokerMap;
-import org.acumos.designstudio.cdump.DataMap;
-import org.acumos.designstudio.cdump.FieldMap;
-import org.acumos.designstudio.cdump.MapInputs;
-import org.acumos.designstudio.cdump.MapOutput;
-import org.acumos.designstudio.cdump.Nodes;
-import org.acumos.designstudio.cdump.Property;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.service.ICompositeSolutionService;
 import org.acumos.designstudio.ce.service.ISolutionService;
@@ -41,7 +34,13 @@ import org.acumos.designstudio.ce.util.DSUtil;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
-import org.acumos.designstudio.cdump.DataConnector;
+import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
+import org.acumos.designstudio.ce.vo.cdump.DataConnector;
+import org.acumos.designstudio.ce.vo.cdump.Nodes;
+import org.acumos.designstudio.ce.vo.cdump.Property;
+import org.acumos.designstudio.vo.cdump.databroker.DataBrokerMap;
+import org.acumos.designstudio.vo.cdump.datamapper.FieldMap;
+import org.acumos.designstudio.vo.cdump.datamapper.MapOutput;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,7 +55,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
 import io.swagger.annotations.ApiOperation;
-import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 
 /**
  * 
@@ -558,8 +556,7 @@ public class SolutionController {
 			@RequestParam(value = "targetNodeId", required = true) String targetNodeId,
 			@RequestParam(value = "sourceNodeRequirement", required = true) String sourceNodeRequirement,
 			@RequestParam(value = "targetNodeCapabilityName", required = true) String targetNodeCapabilityName,
-			@RequestBody(required = false) @Valid org.acumos.designstudio.cdump.Property property) { // Change in API
-																										// signature
+			@RequestBody(required = false) @Valid org.acumos.designstudio.ce.vo.cdump.Property property) { // Change in API signature
 
 		logger.debug(EELFLoggerDelegator.debugLogger, " addLink()  : Begin");
 
@@ -607,7 +604,7 @@ public class SolutionController {
 
 		Gson gson = new Gson();
 		boolean isValid = false;
-		DataMap dMap = new DataMap();
+		org.acumos.designstudio.vo.cdump.datamapper.DataMap dMap = new org.acumos.designstudio.vo.cdump.datamapper.DataMap();
 		dMap = property.getData_map();
 		boolean map_inputsFlag = false;
 		boolean map_outputsFlag = false;
@@ -623,7 +620,7 @@ public class SolutionController {
 				parser.parse(gson.toJson(property));
 				// validate map_inputs
 				if (dMap.getMap_outputs().length == 0) {
-					MapInputs[] map_inputs = dMap.getMap_inputs();
+					org.acumos.designstudio.vo.cdump.datamapper.MapInputs[] map_inputs = dMap.getMap_inputs();
 					if (map_inputs != null && map_inputs.length != 0) {
 						for (int i = 0; i < map_inputs.length; i++) {
 							if (map_inputs[i].getMessage_name() != null && map_inputs[i].getInput_fields() != null

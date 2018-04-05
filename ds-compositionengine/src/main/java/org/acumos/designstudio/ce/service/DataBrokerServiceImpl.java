@@ -1,11 +1,11 @@
 package org.acumos.designstudio.ce.service;
 
-import org.acumos.designstudio.cdump.Cdump;
 import org.acumos.designstudio.ce.docker.DockerConfiguration;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
+import org.acumos.designstudio.ce.vo.cdump.Cdump;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
