@@ -28,6 +28,7 @@ public class Container implements Serializable{
 
 	private String container_name;
 	private BaseOperationSignature operation_signature;
+	
 	/**
 	 * @return the container_name
 	 */
