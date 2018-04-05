@@ -32,30 +32,30 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
-import org.acumos.designstudio.cdump.Argument;
-import org.acumos.designstudio.cdump.Capabilities;
-import org.acumos.designstudio.cdump.CapabilityTarget;
-import org.acumos.designstudio.cdump.DataBrokerMap;
-import org.acumos.designstudio.cdump.DataConnector;
-import org.acumos.designstudio.cdump.DataMap;
-import org.acumos.designstudio.cdump.DataMapInputField;
-import org.acumos.designstudio.cdump.FieldMap;
-import org.acumos.designstudio.cdump.MapInputs;
-import org.acumos.designstudio.cdump.MapOutput;
-import org.acumos.designstudio.cdump.Message;
-import org.acumos.designstudio.cdump.Ndata;
-import org.acumos.designstudio.cdump.Nodes;
-import org.acumos.designstudio.cdump.Property;
-import org.acumos.designstudio.cdump.ReqCapability;
-import org.acumos.designstudio.cdump.Requirements;
-import org.acumos.designstudio.cdump.Target;
-import org.acumos.designstudio.cdump.Type;
 import org.acumos.designstudio.ce.controller.SolutionController;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.service.ICompositeSolutionService;
 import org.acumos.designstudio.ce.service.SolutionServiceImpl;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
+import org.acumos.designstudio.ce.vo.cdump.Argument;
+import org.acumos.designstudio.ce.vo.cdump.Capabilities;
+import org.acumos.designstudio.ce.vo.cdump.CapabilityTarget;
+import org.acumos.designstudio.ce.vo.cdump.DataConnector;
+import org.acumos.designstudio.ce.vo.cdump.Message;
+import org.acumos.designstudio.ce.vo.cdump.Ndata;
+import org.acumos.designstudio.ce.vo.cdump.Nodes;
+import org.acumos.designstudio.ce.vo.cdump.Property;
+import org.acumos.designstudio.ce.vo.cdump.ReqCapability;
+import org.acumos.designstudio.ce.vo.cdump.Requirements;
+import org.acumos.designstudio.ce.vo.cdump.Target;
+import org.acumos.designstudio.ce.vo.cdump.Type;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMap;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMapInputField;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.FieldMap;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.MapInputs;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.MapOutput;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -64,13 +64,6 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import com.jayway.jsonpath.InvalidJsonException;
-
-/**
- * 
- * 
- *
- */
-
 
 public class ControllersTest {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ControllersTest.class);

@@ -18,55 +18,58 @@
  * ===============LICENSE_END=========================================================
  */
 
-/**
- * 
- */
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-import org.json.JSONArray;
+public class Ndata implements Serializable {
+	
+	private static final long serialVersionUID = 4430756495417649713L;
+	
+	private String ntype;
+	private String px;
+	private String py;
+	private String radius;
+	private boolean fixed = true;
 
-/**
- * 
- *
- */
-public class Message implements Serializable{
+	public String getNtype() {
+		return ntype;
+	}
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1288328507537289159L;
-	
-	
-	private String messageName; 
-	private Argument[] messageargumentList;
-	/**
-	 * @return the messageName
-	 */
-	public String getMessageName() {
-		return messageName;
+	public void setNtype(String ntype) {
+		this.ntype = ntype;
 	}
-	/**
-	 * @param messageName the messageName to set
-	 */
-	public void setMessageName(String messageName) {
-		this.messageName = messageName;
+
+	public String getPx() {
+		return px;
 	}
-	/**
-	 * @return the messageargumentList
-	 */
-	public Argument[] getMessageargumentList() {
-		return messageargumentList;
+
+	public void setPx(String px) {
+		this.px = px;
 	}
-	/**
-	 * @param messageargumentList the messageargumentList to set
-	 */
-	public void setMessageargumentList(Argument[] messageargumentList) {
-		this.messageargumentList = messageargumentList;
+
+	public String getPy() {
+		return py;
 	}
-		
-	
-	
+
+	public void setPy(String py) {
+		this.py = py;
+	}
+
+	public String getRadius() {
+		return radius;
+	}
+
+	public void setRadius(String radius) {
+		this.radius = radius;
+	}
+
+	public boolean isFixed() {
+		return fixed;
+	}
+
+	public void setFixed(boolean fixed) {
+		this.fixed = fixed;
+	}
 
 }

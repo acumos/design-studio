@@ -18,80 +18,67 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.ce.vo.tgif;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-public class Parameter implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class Capabilities implements Serializable{
+	
+	private static final long serialVersionUID = 1136087024327606271L;
+	
+	private String id;
 	private String name;
-	private String value;
-	private String description;
-
-	public Parameter() {
-
+	private CapabilityTarget target;
+	private String target_type;
+	private String properties;
+	
+	public String getId() {
+		return id;
 	}
-
-	/**
-	 * 
-	 * @param name
-	 *            Parameter name
-	 * @param value
-	 *            Parameter value
-	 * @param description
-	 *            Parameter desc
-	 */
-	public Parameter(String name, String value, String description) {
-		super();
-		this.name = name;
-		this.value = value;
-		this.description = description;
+	public void setId(String id) {
+		this.id = id;
 	}
-
-	/**
-	 * @return the name
-	 */
 	public String getName() {
 		return name;
 	}
-
-	/**
-	 * @param name
-	 *            the name to set
-	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	/**
-	 * @return the value
-	 */
-	public String getValue() {
-		return value;
+	
+	/*public Target getTarget() {
+		return target;
 	}
-
+	public void setTarget(Target target) {
+		this.target = target;
+	}*/
+	
 	/**
-	 * @param value
-	 *            the value to set
+	 * @return the target
 	 */
-	public void setValue(String value) {
-		this.value = value;
+	public CapabilityTarget getTarget() {
+		return target;
 	}
-
 	/**
-	 * @return the description
+	 * @param target the target to set
 	 */
-	public String getDescription() {
-		return description;
+	public void setTarget(CapabilityTarget target) {
+		this.target = target;
 	}
-
-	/**
-	 * @param description
-	 *            the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
+	public String getTarget_type() {
+		return target_type;
 	}
+	public void setTarget_type(String target_type) {
+		this.target_type = target_type;
+	}
+	public String getProperties() {
+		return properties;
+	}
+	public void setProperties(String properties) {
+		this.properties = properties;
+	}
+	
+	
+	
+	
 
 }

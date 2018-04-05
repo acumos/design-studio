@@ -18,40 +18,54 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.ce.vo.blueprint;
+
+package org.acumos.designstudio.ce.vo.cdump.databroker;
 
 import java.io.Serializable;
 
-public class Container implements Serializable{
+public class DBOutputField implements Serializable {
 
-	private static final long serialVersionUID = 7033995176723370491L;
-
-	private String container_name;
-	private BaseOperationSignature operation_signature;
+	private static final long serialVersionUID = 4348254387011784964L;
+	
+	private String tag;
+	private String name;
+	private DBOTypeAndRoleHierarchy[] type_and_role_hierarchy_list;
 	
 	/**
-	 * @return the container_name
+	 * @return the tag
 	 */
-	public String getContainer_name() {
-		return container_name;
+	public String getTag() {
+		return tag;
 	}
 	/**
-	 * @param container_name the container_name to set
+	 * @param tag the tag to set
 	 */
-	public void setContainer_name(String container_name) {
-		this.container_name = container_name;
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 	/**
-	 * @return the operation_signature
+	 * @return the name
 	 */
-	public BaseOperationSignature getOperation_signature() {
-		return operation_signature;
+	public String getName() {
+		return name;
 	}
 	/**
-	 * @param operation_signature the operation_signature to set
+	 * @param name the name to set
 	 */
-	public void setOperation_signature(BaseOperationSignature operation_signature) {
-		this.operation_signature = operation_signature;
+	public void setName(String name) {
+		this.name = name;
 	}
-	
+	/**
+	 * @return the type_and_role_hierarchy_list
+	 */
+	public DBOTypeAndRoleHierarchy[] getType_and_role_hierarchy_list() {
+		return type_and_role_hierarchy_list;
+	}
+	/**
+	 * @param type_and_role_hierarchy_list the type_and_role_hierarchy_list to set
+	 */
+	public void setType_and_role_hierarchy_list(DBOTypeAndRoleHierarchy[] type_and_role_hierarchy_list) {
+		this.type_and_role_hierarchy_list = type_and_role_hierarchy_list;
+	}
+
 }

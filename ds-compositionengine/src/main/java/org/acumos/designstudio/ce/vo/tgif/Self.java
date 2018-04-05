@@ -22,26 +22,18 @@ package org.acumos.designstudio.ce.vo.tgif;
 
 import java.io.Serializable;
 
-/**
- * 
- * 
- *
- */
 public class Self implements Serializable{
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
+	
 	private String version;
 	private String name;
 	private String description;
 	private String component_type;
 	
-	
 	public Self(){
 		
 	}
-	
 	
 	public Self(String version, String name, String description, String component_type) {
 		super();
