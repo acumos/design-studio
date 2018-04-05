@@ -18,40 +18,45 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.ce.vo.blueprint;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
+import java.util.List;
 
-public class Container implements Serializable{
+import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
 
-	private static final long serialVersionUID = 7033995176723370491L;
 
-	private String container_name;
-	private BaseOperationSignature operation_signature;
+public class ComplexType implements Serializable {
+
+	private static final long serialVersionUID = -8550690156793239836L;
+	
+	private String messageName ="";
+	private List<MessageargumentList> messageargumentList;
 	
 	/**
-	 * @return the container_name
+	 * @return the messageName
 	 */
-	public String getContainer_name() {
-		return container_name;
+	public String getMessageName() {
+		return messageName;
 	}
 	/**
-	 * @param container_name the container_name to set
+	 * @param messageName the messageName to set
 	 */
-	public void setContainer_name(String container_name) {
-		this.container_name = container_name;
+	public void setMessageName(String messageName) {
+		this.messageName = messageName;
 	}
 	/**
-	 * @return the operation_signature
+	 * @return the messageargumentList
 	 */
-	public BaseOperationSignature getOperation_signature() {
-		return operation_signature;
+	public List<MessageargumentList> getMessageargumentList() {
+		return messageargumentList;
 	}
 	/**
-	 * @param operation_signature the operation_signature to set
+	 * @param messageargumentList the messageargumentList to set
 	 */
-	public void setOperation_signature(BaseOperationSignature operation_signature) {
-		this.operation_signature = operation_signature;
+	public void setMessageargumentList(List<MessageargumentList> messageargumentList) {
+		this.messageargumentList = messageargumentList;
 	}
 	
+
 }

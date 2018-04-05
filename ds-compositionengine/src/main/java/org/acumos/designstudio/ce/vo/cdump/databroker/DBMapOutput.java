@@ -18,63 +18,31 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump.databroker;
 
 import java.io.Serializable;
 
-public class Ndata implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4430756495417649713L;
-	/**
-	 * 
-	 */
+public class DBMapOutput implements Serializable {
+
+	private static final long serialVersionUID = -2003941950541351800L;
 	
-	private String ntype;
-	private String px;
-	private String py;
-	private String radius;
-	private boolean fixed = true;
+	private DBOutputField output_field;
 
-	public String getNtype() {
-		return ntype;
+	/**
+	 * @return the output_field
+	 */
+	public DBOutputField getOutput_field() {
+		return output_field;
 	}
 
-	public void setNtype(String ntype) {
-		this.ntype = ntype;
+	/**
+	 * @param output_field the output_field to set
+	 */
+	public void setOutput_field(DBOutputField output_field) {
+		this.output_field = output_field;
 	}
-
-	public String getPx() {
-		return px;
-	}
-
-	public void setPx(String px) {
-		this.px = px;
-	}
-
-	public String getPy() {
-		return py;
-	}
-
-	public void setPy(String py) {
-		this.py = py;
-	}
-
-	public String getRadius() {
-		return radius;
-	}
-
-	public void setRadius(String radius) {
-		this.radius = radius;
-	}
-
-	public boolean isFixed() {
-		return fixed;
-	}
-
-	public void setFixed(boolean fixed) {
-		this.fixed = fixed;
-	}
+	
+	
+	
 
 }

@@ -18,19 +18,13 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class Relations implements Serializable{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -972174523695525071L;
-	/**
-	 * 
-	 */
 	
 	private String linkName = "";
 	private String linkId = "";
@@ -41,8 +35,6 @@ public class Relations implements Serializable{
 	private String sourceNodeId = "";
 	private String sourceNodeRequirement;
 	private List<Relationship> relationship;
-	
-	
 	
 	
 	/**

@@ -18,32 +18,15 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+/**
+ * 
+ */
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-public class MapOutput implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3626431575255694502L;
-	private String message_name;
-	private DataMapOutputField[] output_fields;
+public class Typeinfo implements Serializable {
 
-	public String getMessage_name() {
-		return message_name;
-	}
-
-	public void setMessage_name(String message_name) {
-		this.message_name = message_name;
-	}
-
-	public DataMapOutputField[] getOutput_fields() {
-		return output_fields;
-	}
-
-	public void setOutput_fields(DataMapOutputField[] output_fields) {
-		this.output_fields = output_fields;
-	}
+	private static final long serialVersionUID = 3301990217162294096L;
 
 }

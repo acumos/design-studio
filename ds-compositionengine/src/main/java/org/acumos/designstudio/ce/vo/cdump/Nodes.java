@@ -18,21 +18,14 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-/**
- * 
- * 
- *
- */
 public class Nodes implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5437495964588153222L;
+	
 	private String name;
 	private String nodeId;
 	private String nodeSolutionId;

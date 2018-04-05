@@ -20,7 +20,9 @@
 
 package org.acumos.designstudio.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.tgif.Artifact;

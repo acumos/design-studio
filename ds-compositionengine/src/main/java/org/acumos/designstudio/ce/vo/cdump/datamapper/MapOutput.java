@@ -18,51 +18,30 @@
  * ===============LICENSE_END=========================================================
  */
 
-/**
- * 
- */
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump.datamapper;
 
 import java.io.Serializable;
 
-/**
- * 
- *
- */
-public class CapabilityTarget implements Serializable{
+public class MapOutput implements Serializable {
+	
+	private static final long serialVersionUID = -3626431575255694502L;
+	private String message_name;
+	private DataMapOutputField[] output_fields;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1915608769079919859L;
-	
-	private Message[] name;
-	private String id;
-	/**
-	 * @return the name
-	 */
-	public Message[] getName() {
-		return name;
+	public String getMessage_name() {
+		return message_name;
 	}
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(Message[] name) {
-		this.name = name;
+
+	public void setMessage_name(String message_name) {
+		this.message_name = message_name;
 	}
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
+
+	public DataMapOutputField[] getOutput_fields() {
+		return output_fields;
 	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
+
+	public void setOutput_fields(DataMapOutputField[] output_fields) {
+		this.output_fields = output_fields;
 	}
-	
-	
 
 }

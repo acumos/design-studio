@@ -24,17 +24,10 @@ import java.io.Serializable;
 
 import org.json.simple.JSONArray;
 
-/**
- * 
- * 
- *
- */
 public class Response implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
 	private JSONArray format;
 	private String version;
 

@@ -41,17 +41,6 @@ import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.cds.domain.MLPUser;
 import org.acumos.cds.transport.RestPageRequest;
 import org.acumos.cds.transport.RestPageResponse;
-import org.acumos.designstudio.cdump.Cdump;
-import org.acumos.designstudio.cdump.DataBrokerMap;
-import org.acumos.designstudio.cdump.DataMap;
-import org.acumos.designstudio.cdump.DataMapInputField;
-import org.acumos.designstudio.cdump.FieldMap;
-import org.acumos.designstudio.cdump.MapInputs;
-import org.acumos.designstudio.cdump.MapOutput;
-import org.acumos.designstudio.cdump.Ndata;
-import org.acumos.designstudio.cdump.Nodes;
-import org.acumos.designstudio.cdump.Property;
-import org.acumos.designstudio.cdump.Relations;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
@@ -60,6 +49,17 @@ import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.DSSolution;
 import org.acumos.designstudio.ce.vo.MatchingModel;
+import org.acumos.designstudio.ce.vo.cdump.Cdump;
+import org.acumos.designstudio.ce.vo.cdump.Ndata;
+import org.acumos.designstudio.ce.vo.cdump.Nodes;
+import org.acumos.designstudio.ce.vo.cdump.Property;
+import org.acumos.designstudio.ce.vo.cdump.Relations;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMap;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMapInputField;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.FieldMap;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.MapInputs;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.MapOutput;
 import org.acumos.designstudio.ce.vo.protobuf.MessageBody;
 import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
 import org.acumos.designstudio.ce.vo.tgif.Call;
@@ -297,7 +297,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		String results = "";
 		String resultTemplate = "{\"success\" : \"%s\", \"errorDescription\" : \"%s\"}";
 		logger.debug(EELFLoggerDelegator.debugLogger, " addNode() : Begin  ");
-		org.acumos.designstudio.cdump.Property[] propertyarray = node.getProperties();
+		Property[] propertyarray = node.getProperties();
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -541,6 +541,10 @@ public class SolutionServiceImpl implements ISolutionService {
 		String resultTemplate = "{\"success\" : \"%s\", \"errorDescription\" : \"%s\"}";
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+			mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+			mapper.setSerializationInclusion(Include.NON_NULL);
 			Cdump cdump = null;
 			String id = "";
 			if (null != cid && null == solutionId) {
@@ -557,8 +561,6 @@ public class SolutionServiceImpl implements ISolutionService {
 			String cdumpFileName = "acumos-cdump" + "-" + id;
 			String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 			cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
-			mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-			mapper.setSerializationInclusion(Include.NON_NULL);
 			List<Nodes> cdumpNodeList = cdump.getNodes();
 
 			if (null == cdumpNodeList || cdumpNodeList.isEmpty()) {
@@ -647,19 +649,45 @@ public class SolutionServiceImpl implements ISolutionService {
 							}
 						} else if (null != databrokerMap && databrokerMap.toString().length() != 0) {
 							Property newProperty = null;
-							Property[] newProperties = null;
 							if(null != properties){
+								// For New Solution Create the Property[]
 								newProperty = new Property();
 								newProperty.setData_broker_map(databrokerMap);
 								
 								//check if the databrokerMap already exist. 
 								ArrayList<Property> propertyList = new ArrayList<Property>(Arrays.asList(properties));
+								
 								if(propertyList.size() == 0){ //if the properties is empty then add the new property with databroket map. 
 									propertyList.add(newProperty);
 								} else {
 									for(Property p : propertyList){
-										if(p.getData_broker_map() != null){ //else if databroker map exist and update the same. 
-											p.setData_broker_map(databrokerMap);
+										if(p.getData_broker_map() != null){ //else if databroker map exist and update the same.
+											DataBrokerMap dataBrokerMap = p.getData_broker_map();
+											
+											if(null != databrokerMap.getCsv_file_field_separator()){
+												dataBrokerMap.setCsv_file_field_separator(databrokerMap.getCsv_file_field_separator());
+											}
+											if(null != databrokerMap.getData_broker_type()){
+												dataBrokerMap.setData_broker_type(databrokerMap.getData_broker_type());
+											}
+											if(null != databrokerMap.getFirst_row()){
+												dataBrokerMap.setFirst_row(databrokerMap.getFirst_row());
+											}
+											if(null != databrokerMap.getLocal_system_data_file_path()){
+												dataBrokerMap.setLocal_system_data_file_path(databrokerMap.getLocal_system_data_file_path());
+											}
+											if(null != databrokerMap.getScript()){
+												dataBrokerMap.setScript(databrokerMap.getScript());
+											}
+											if(null != databrokerMap.getTarget_system_url()){
+												dataBrokerMap.setTarget_system_url(databrokerMap.getTarget_system_url());
+											}
+											if (null != databrokerMap.getMap_inputs()
+													&& null != databrokerMap.getMap_outputs()) {
+												dataBrokerMap.setMap_inputs(databrokerMap.getMap_inputs());
+												dataBrokerMap.setMap_outputs(databrokerMap.getMap_outputs());
+											}
+											p.setData_broker_map(dataBrokerMap);
 										} else {
 											propertyList.add(newProperty); //else add the new databroker map to non empty properties. 
 										}
@@ -1097,7 +1125,7 @@ public class SolutionServiceImpl implements ISolutionService {
 	public boolean addLink(String userId, String solutionId, String version, String linkName, String linkId,
 			String sourceNodeName, String sourceNodeId, String targetNodeName, String targetNodeId,
 			String sourceNodeRequirement, String targetNodeCapabilityName, String cid,
-			org.acumos.designstudio.cdump.Property property) {
+			Property property) {
 
 		logger.debug(EELFLoggerDelegator.debugLogger, " addLink() in SolutionServiceImpl : Begin ");
 
@@ -1140,11 +1168,11 @@ public class SolutionServiceImpl implements ISolutionService {
 					for (Nodes node : nodesList) {
 						if (node.getNodeId().equals(nodeToUpdate)) {
 
-							org.acumos.designstudio.cdump.Property[] propertyarray = node.getProperties();
+							Property[] propertyarray = node.getProperties();
 							logger.debug(EELFLoggerDelegator.debugLogger, "PropertyArray :  {} ", propertyarray.toString());
 							if (null == propertyarray || propertyarray.length == 0) {
 								logger.debug(EELFLoggerDelegator.debugLogger, "propertyarray  :  {} ", propertyarray.toString());
-								org.acumos.designstudio.cdump.Property[] propertyArray = new org.acumos.designstudio.cdump.Property[1];
+								Property[] propertyArray = new Property[1];
 								propertyArray[0] = property;
 								node.setProperties(propertyArray);
 

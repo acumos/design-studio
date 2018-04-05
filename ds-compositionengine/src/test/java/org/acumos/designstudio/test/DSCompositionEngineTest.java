@@ -20,24 +20,12 @@
 
 package org.acumos.designstudio.test;
 
-import static org.junit.Assert.*;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.client.ICommonDataServiceRestClient;
-import org.acumos.cds.domain.MLPSolution;
-import org.acumos.cds.domain.MLPSolutionRevision;
-import org.acumos.cds.domain.MLPUser;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
-import org.acumos.designstudio.ce.vo.DSSolution;
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  * 

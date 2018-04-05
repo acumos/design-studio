@@ -20,12 +20,12 @@
 
 package org.acumos.designstudio.ce.service;
 
-import org.acumos.designstudio.cdump.DataBrokerMap;
-import org.acumos.designstudio.cdump.FieldMap;
-import org.acumos.designstudio.cdump.Nodes;
-import org.acumos.designstudio.cdump.Property;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
+import org.acumos.designstudio.ce.vo.cdump.Nodes;
+import org.acumos.designstudio.ce.vo.cdump.Property;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.FieldMap;
 import org.json.JSONArray;
 
 public interface ISolutionService {
