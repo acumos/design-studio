@@ -22,18 +22,11 @@ package org.acumos.designstudio.ce.vo.protobuf;
 
 import java.io.Serializable;
 
-import org.acumos.designstudio.cdump.ComplexType;
+import org.acumos.designstudio.ce.vo.cdump.ComplexType;
 
-/**
- * 
- * 
- *
- */
 public class MessageargumentList implements Serializable{
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
 	private String role;
     private String type;
     private String name;
