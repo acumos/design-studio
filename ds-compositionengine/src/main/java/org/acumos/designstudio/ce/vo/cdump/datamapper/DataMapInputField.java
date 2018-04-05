@@ -18,61 +18,58 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.ce.vo.tgif;
+package org.acumos.designstudio.ce.vo.cdump.datamapper;
 
 import java.io.Serializable;
 
-public class Artifact implements Serializable {
-
-	private static final long serialVersionUID = 1L;
-	public String uri;
-	public String type;
-
-	public Artifact() {
-
-	}
-
+public class DataMapInputField implements Serializable{
 	/**
 	 * 
-	 * @param uri
-	 *            URI
-	 * @param type
-	 *            Type
 	 */
-	public Artifact(String uri, String type) {
-		super();
-		this.uri = uri;
-		this.type = type;
+	private static final long serialVersionUID = -7735575155080257503L;
+	private String tag;
+	private String role;
+	private String name;
+	private String type;
+	//private ComplexType complexType;
+	private String mapped_to_message;
+	private String mapped_to_field;
+	
+	public String getTag() {
+		return tag;
 	}
-
-	/**
-	 * @return the uri
-	 */
-	public String getUri() {
-		return uri;
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
-
-	/**
-	 * @param uri
-	 *            the uri to set
-	 */
-	public void setUri(String uri) {
-		this.uri = uri;
+	public String getRole() {
+		return role;
 	}
-
-	/**
-	 * @return the type
-	 */
+	public void setRole(String role) {
+		this.role = role;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public String getType() {
 		return type;
 	}
-
-	/**
-	 * @param type
-	 *            the type to set
-	 */
 	public void setType(String type) {
 		this.type = type;
+	}
+	public String getMapped_to_message() {
+		return mapped_to_message;
+	}
+	public void setMapped_to_message(String mapped_to_message) {
+		this.mapped_to_message = mapped_to_message;
+	}
+	public String getMapped_to_field() {
+		return mapped_to_field;
+	}
+	public void setMapped_to_field(String mapped_to_field) {
+		this.mapped_to_field = mapped_to_field;
 	}
 
 }

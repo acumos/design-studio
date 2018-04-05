@@ -18,35 +18,41 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump.databroker;
 
 import java.io.Serializable;
 
-public class DataConnector implements Serializable {
+public class DBOTypeAndRoleHierarchy implements Serializable{
+
+	private static final long serialVersionUID = -6615101557142925404L;
 	
-	private static final long serialVersionUID = 3121933663617437481L;
-	
-	private FieldMap fieldMap;
-	private DataBrokerMap databrokerMap;
-	
+	private String name;
+	private String role;
 	/**
-	 * @return fieldMap
+	 * @return the name
 	 */
-	public FieldMap getFieldMap() {
-		return fieldMap;
+	public String getName() {
+		return name;
 	}
-	
-	public void setFieldMap(FieldMap fieldMap) {
-		this.fieldMap = fieldMap;
-	}
-	
 	/**
-	 * @return databrokerMap
+	 * @param name the name to set
 	 */
-	public DataBrokerMap getDatabrokerMap() {
-		return databrokerMap;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public void setDatabrokerMap(DataBrokerMap databrokerMap) {
-		this.databrokerMap = databrokerMap;
+	/**
+	 * @return the role
+	 */
+	public String getRole() {
+		return role;
 	}
+	/**
+	 * @param role the role to set
+	 */
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
+	
+
 }

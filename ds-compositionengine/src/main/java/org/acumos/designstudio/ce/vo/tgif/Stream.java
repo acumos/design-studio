@@ -22,16 +22,8 @@ package org.acumos.designstudio.ce.vo.tgif;
 
 import java.io.Serializable;
 
-/**
- * 
- * 
- *
- */
 public class Stream implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private String[] subscribes;
 	private String[] publishes;

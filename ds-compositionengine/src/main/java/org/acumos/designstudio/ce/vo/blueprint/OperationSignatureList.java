@@ -30,6 +30,7 @@ public class OperationSignatureList implements Serializable {
 
 	private NodeOperationSignature operation_signature;
 	private List<Container> connected_to;
+	
 	/**
 	 * @return the operation_signature
 	 */

@@ -45,14 +45,6 @@ import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.cds.domain.MLPUser;
 import org.acumos.cds.transport.RestPageRequest;
 import org.acumos.cds.transport.RestPageResponse;
-import org.acumos.designstudio.cdump.Capabilities;
-import org.acumos.designstudio.cdump.Cdump;
-import org.acumos.designstudio.cdump.DataMap;
-import org.acumos.designstudio.cdump.Nodes;
-import org.acumos.designstudio.cdump.Property;
-import org.acumos.designstudio.cdump.Relations;
-import org.acumos.designstudio.cdump.ReqCapability;
-import org.acumos.designstudio.cdump.Requirements;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
@@ -62,13 +54,29 @@ import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.Artifact;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
 import org.acumos.designstudio.ce.vo.DSSolution;
+import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
+import org.acumos.designstudio.ce.vo.blueprint.BPDataBrokerMap;
 import org.acumos.designstudio.ce.vo.blueprint.BaseOperationSignature;
 import org.acumos.designstudio.ce.vo.blueprint.BluePrint;
 import org.acumos.designstudio.ce.vo.blueprint.Container;
+import org.acumos.designstudio.ce.vo.blueprint.DataSource;
 import org.acumos.designstudio.ce.vo.blueprint.Node;
 import org.acumos.designstudio.ce.vo.blueprint.NodeOperationSignature;
 import org.acumos.designstudio.ce.vo.blueprint.OperationSignatureList;
 import org.acumos.designstudio.ce.vo.blueprint.ProbeIndicator;
+import org.acumos.designstudio.ce.vo.cdump.Capabilities;
+import org.acumos.designstudio.ce.vo.cdump.Cdump;
+import org.acumos.designstudio.ce.vo.cdump.Nodes;
+import org.acumos.designstudio.ce.vo.cdump.Property;
+import org.acumos.designstudio.ce.vo.cdump.Relations;
+import org.acumos.designstudio.ce.vo.cdump.ReqCapability;
+import org.acumos.designstudio.ce.vo.cdump.Requirements;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBInputField;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapInput;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapOutput;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBOTypeAndRoleHierarchy;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBOutputField;
+import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMap;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.acumos.nexus.client.data.UploadArtifactInfo;
 import org.apache.commons.collections.CollectionUtils;
@@ -80,13 +88,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
-import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 
-/**
- * 
- *
- * 
- */
 @Service("compositeServiceImpl")
 public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
@@ -1152,8 +1154,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						
 			if (n.getType().getName().equalsIgnoreCase(props.getGdmType())) {
 				logger.debug(EELFLoggerDelegator.debugLogger,"GDM Found :  {} ", n.getNodeId());
-				// For Generic Data Mapper, get the dockerImageUrl by deploying the GDM
-				// Construct the image for the Generic Data mapper
+				// For Generic Data Mapper, get the dockerImageUrl by deploying the GDM Construct the image for the Generic Data mapper
 				logger.debug(EELFLoggerDelegator.debugLogger,"For Generic Data Mapper, get the dockerImageUrl by deploying the GDM Construct the image for the Generic Data mapper");
 				dockerImageURL = gdmService.createDeployGDM(cdump, n.getNodeId(), userId);
 				if (null == dockerImageURL) {
@@ -1171,8 +1172,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				}
 			} else {
 				// Else for basic models, upload the image and get the uri
-				// 12. Get the list of artifact from CDMSClient which will return the
-				// DockerImageUrl
+				// 12. Get the list of artifact from CDMSClient which will return the DockerImageUrl
 				logger.debug(EELFLoggerDelegator.debugLogger,"12. Get the list of artifact from CDMSClient which will return the DockerImageUrl");
 				dockerImageURL = getDockerImageURL(nodeSolutionId, mlpSolRevision);
 			}
@@ -1185,14 +1185,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			bpnode.setNode_type(node_type); 
 			
 			// Check for the Node type is DataBroker or not
-			if (bpnode.getNode_type().equals("DataBroker")) {
-				Property[] prop = n.getProperties();
-				ArrayList<Property> propslst = new ArrayList<Property> (Arrays.asList(prop));
-				String script = null;
-				for (Property dbprops : propslst) {
-					script = dbprops.getData_broker_map().getScript();
-					bpnode.setScript(script); 
-				}
+			if (node_type.equals(props.getDatabrokerType())) {
+
+				// Need to set all the values of DataBrokerMap
+				// Get the Property[] from Nodes
+				BPDataBrokerMap bpdbMap = getDataBrokerDetails(n);
+				bpnode.setData_broker_map(bpdbMap);
 			}
 			String protoUri = n.getProtoUri();
 			bpnode.setProto_uri(protoUri); 
@@ -1214,7 +1212,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				if(nodeOperationName.equals(connectedPort)){
 					osll = new OperationSignatureList();
 					nos = new NodeOperationSignature();
-					
 					nos.setOperation_name(nodeOperationName);
 
 					nos.setInput_message_name(c.getTarget().getName()[0].getMessageName());  
@@ -1326,6 +1323,112 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			
 		}
 		return result;
+	}
+
+	/**
+	 * @param n
+	 * @return
+	 */
+	private BPDataBrokerMap getDataBrokerDetails(Nodes n) {
+		Property[] prop = n.getProperties();
+		// Convert the Property[] into List
+		ArrayList<Property> propslst = new ArrayList<Property>(Arrays.asList(prop));
+		String script = null;
+		String data_broker_Type = null;
+		String target_system_Url = null;
+		String local_system_data_file_Path = null;
+		String first_Row = null;
+		String csv_file_field_Separator = null;
+		
+		// BluePrint DataBrokerMap object
+		BPDataBrokerMap bpdbMap = new BPDataBrokerMap();
+
+		List<DBMapInput> dbmapInputLst = new ArrayList<DBMapInput>();
+		DBMapInput dbMapInput = new DBMapInput();
+		DBInputField dbInField = new DBInputField();
+		
+		List<DBMapOutput> dbmapOutputLst = new ArrayList<DBMapOutput>();
+		DBMapOutput dbMapOutput = new DBMapOutput();
+		DBOutputField dbOutField = new DBOutputField();
+
+		// Iterate over the PropertyList of the Node from Cdump
+		for (Property dbprops : propslst) {
+			if(null != dbprops.getData_broker_map()){
+			// Set all the values from Property List of cdump to Blueprint DataBrokerMap object
+			script = dbprops.getData_broker_map().getScript();
+			data_broker_Type = dbprops.getData_broker_map().getData_broker_type();
+			target_system_Url = dbprops.getData_broker_map().getTarget_system_url();
+			local_system_data_file_Path = dbprops.getData_broker_map()
+					.getLocal_system_data_file_path();
+			first_Row = dbprops.getData_broker_map().getFirst_row();
+			csv_file_field_Separator = dbprops.getData_broker_map()
+					.getCsv_file_field_separator();
+
+			bpdbMap.setData_broker_type(data_broker_Type);
+			bpdbMap.setScript(script);
+			bpdbMap.setTarget_system_url(target_system_Url);
+			bpdbMap.setLocal_system_data_file_path(local_system_data_file_Path);
+			bpdbMap.setFirst_row(first_Row);
+			bpdbMap.setCsv_file_field_separator(csv_file_field_Separator);
+
+			// Get the DBMapInput[] from DataBrokerMap from the Cdump file
+			DBMapInput[] dmapIn = dbprops.getData_broker_map().getMap_inputs();
+			// Convert MapInputs[] to List
+			ArrayList<DBMapInput> dbMapInLst = new ArrayList<DBMapInput>(Arrays.asList(dmapIn));
+
+			// Iterate over the DBMapInput List of the Cdump file
+			for (DBMapInput db : dbMapInLst) {
+				// set the all values into DataBroekr Input Field of BluePrint File
+				dbInField.setName(db.getInput_field().getName());
+				dbInField.setType(db.getInput_field().getType());
+				dbInField.setChecked(db.getInput_field().getChecked());
+				dbInField.setMapped_to_field(db.getInput_field().getMapped_to_field());
+				dbMapInput.setInput_field(dbInField);
+				dbmapInputLst.add(dbMapInput);
+			}
+			
+			// Convert the DataBrokerMapInput Lsit to DBMapInput[]
+			DBMapInput[] dbMapInArr = new DBMapInput[dbmapInputLst.size()];
+			dbMapInArr = dbmapInputLst.toArray(dbMapInArr);
+			bpdbMap.setMap_inputs(dbMapInArr);
+
+			// Get the DBMapOutput[] from DataBrokerMap from the Cdump file
+			DBMapOutput[] dbMapOutArr = dbprops.getData_broker_map().getMap_outputs();
+			ArrayList<DBMapOutput> dbMapOutLst = new ArrayList<DBMapOutput>(Arrays.asList(dbMapOutArr));
+			
+			List<DBOTypeAndRoleHierarchy> dboList = new ArrayList<DBOTypeAndRoleHierarchy>();
+			DBOTypeAndRoleHierarchy dboTypeAndRole = null;
+			DBOTypeAndRoleHierarchy[] dboTypeAndRoleHierarchyArr = null;
+			
+			//Iterate over DBMapOutput List of Cdump File
+			for (DBMapOutput dbOut : dbMapOutLst) {
+				// Set DBMapOutput values of Cdump into DBOutputField values of BluePrint File
+				dbOutField.setName(dbOut.getOutput_field().getName());
+				dbOutField.setTag(dbOut.getOutput_field().getTag());
+				
+				// Iterate over DBOTypeAndRoleHierarchy List of Cdump File
+				for (DBOTypeAndRoleHierarchy dboTypeAndRoleHierarchy : dbOut.getOutput_field()
+						.getType_and_role_hierarchy_list()) {
+					dboTypeAndRole = new DBOTypeAndRoleHierarchy();
+					dboTypeAndRole.setName(dboTypeAndRoleHierarchy.getName());
+					dboTypeAndRole.setRole(dboTypeAndRoleHierarchy.getRole());
+					dboList.add(dboTypeAndRole);
+				}
+				dboTypeAndRoleHierarchyArr = new DBOTypeAndRoleHierarchy[dboList.size()];
+				dboTypeAndRoleHierarchyArr = dboList.toArray(dboTypeAndRoleHierarchyArr);
+				dbOutField.setType_and_role_hierarchy_list(dboTypeAndRoleHierarchyArr);
+
+				dbMapOutput.setOutput_field(dbOutField);
+				dbmapOutputLst.add(dbMapOutput);
+			}
+
+			// Convert DBMapOutPutList to DBMapOutput[]
+			DBMapOutput[] dbMapOutputArr = new DBMapOutput[dbmapOutputLst.size()];
+			dbMapOutputArr = dbmapOutputLst.toArray(dbMapOutputArr);
+			bpdbMap.setMap_outputs(dbMapOutputArr);
+		}
+}
+		return bpdbMap;
 	}
 
 	/**

@@ -22,16 +22,8 @@ package org.acumos.designstudio.ce.vo.tgif;
 
 import java.io.Serializable;
 
-/**
- * 
- * 
- *
- */
 public class Call implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private String config_key;
 	private Request request;

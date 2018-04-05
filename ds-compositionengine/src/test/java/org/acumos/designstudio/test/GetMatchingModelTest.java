@@ -20,7 +20,7 @@
 
 package org.acumos.designstudio.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.Properties;
 

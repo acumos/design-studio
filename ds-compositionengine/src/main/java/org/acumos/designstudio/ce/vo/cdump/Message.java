@@ -21,24 +21,42 @@
 /**
  * 
  */
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-/**
- * 
- *
- */
-public class Typeinfo implements Serializable {
-
+public class Message implements Serializable{
+	private static final long serialVersionUID = -1288328507537289159L;
+	
+	private String messageName; 
+	private Argument[] messageargumentList;
+	
 	/**
-	 * 
+	 * @return the messageName
 	 */
-	private static final long serialVersionUID = 3301990217162294096L;
-
+	public String getMessageName() {
+		return messageName;
+	}
 	/**
-	 * 
+	 * @param messageName the messageName to set
 	 */
+	public void setMessageName(String messageName) {
+		this.messageName = messageName;
+	}
+	/**
+	 * @return the messageargumentList
+	 */
+	public Argument[] getMessageargumentList() {
+		return messageargumentList;
+	}
+	/**
+	 * @param messageargumentList the messageargumentList to set
+	 */
+	public void setMessageargumentList(Argument[] messageargumentList) {
+		this.messageargumentList = messageargumentList;
+	}
+		
+	
 	
 
 }
