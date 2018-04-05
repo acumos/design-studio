@@ -32,7 +32,8 @@ public class Node implements Serializable {
 	private String image;
 	private String proto_uri;
 	private List<OperationSignatureList> operation_signature_list;
-	private String script;
+	private BPDataBrokerMap data_broker_map;
+	private List<DataSource> data_sources;
 
 	
 	/**
@@ -105,19 +106,36 @@ public class Node implements Serializable {
 	public void setOperation_signature_list(List<OperationSignatureList> operation_signature_list) {
 		this.operation_signature_list = operation_signature_list;
 	}
-
+	
 	/**
-	 * @return the script
+	 * @return the data_sources
 	 */
-	public String getScript() {
-		return script;
+	public List<DataSource> getData_sources() {
+		return data_sources;
 	}
 
 	/**
-	 * @param script the script to set
+	 * @param data_sources the data_sources to set
 	 */
-	public void setScript(String script) {
-		this.script = script;
+	public void setData_sources(List<DataSource> data_sources) {
+		this.data_sources = data_sources;
 	}
+
+	/**
+	 * @return the data_broker_map
+	 */
+	public BPDataBrokerMap getData_broker_map() {
+		return data_broker_map;
+	}
+
+	/**
+	 * @param data_broker_map the data_broker_map to set
+	 */
+	public void setData_broker_map(BPDataBrokerMap data_broker_map) {
+		this.data_broker_map = data_broker_map;
+	}
+	
+	
+	
 
 }
