@@ -18,65 +18,69 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump.datamapper;
 
 import java.io.Serializable;
 
-public class DataMapInputField implements Serializable{
+public class DataMapOutputField implements Serializable{
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7735575155080257503L;
+	private static final long serialVersionUID = 1480016409521727866L;
 	private String tag;
 	private String role;
 	private String name;
 	private String type;
-	private ComplexType complexType;
-	private String mapped_to_message;
-	private String mapped_to_field;
-	public String getTag() {
+	//private ComplexType complexType;
+
+	/**
+	 * @return the tag
+	 */
+	public String gettag() {
 		return tag;
 	}
-	public void setTag(String tag) {
+	/**
+	 * @param tag the tag to set
+	 */
+	public void settag(String tag) {
 		this.tag = tag;
 	}
-	public String getRole() {
+	/**
+	 * @return the role
+	 */
+	public String getrole() {
 		return role;
 	}
-	public void setRole(String role) {
+	/**
+	 * @param role the role to set
+	 */
+	public void setrole(String role) {
 		this.role = role;
 	}
-	public String getName() {
+	/**
+	 * @return the name
+	 */
+	public String getname() {
 		return name;
 	}
-	public void setName(String name) {
+	/**
+	 * @param name the name to set
+	 */
+	public void setname(String name) {
 		this.name = name;
 	}
-	public String getType() {
+	/**
+	 * @return the type
+	 */
+	public String gettype() {
 		return type;
 	}
-	public void setType(String type) {
+	/**
+	 * @param type the type to set
+	 */
+	public void settype(String type) {
 		this.type = type;
-	}
-	public String getMapped_to_message() {
-		return mapped_to_message;
-	}
-	public void setMapped_to_message(String mapped_to_message) {
-		this.mapped_to_message = mapped_to_message;
-	}
-	public String getMapped_to_field() {
-		return mapped_to_field;
-	}
-	public void setMapped_to_field(String mapped_to_field) {
-		this.mapped_to_field = mapped_to_field;
-	}
-
-	public ComplexType getComplexType() {
-		return complexType;
-	}
-
-	public void setComplexType(ComplexType complexType) {
-		this.complexType = complexType;
 	}
 
 }

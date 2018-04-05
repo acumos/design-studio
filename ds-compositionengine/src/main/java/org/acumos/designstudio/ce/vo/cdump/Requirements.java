@@ -18,74 +18,69 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-public class Target implements Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4739084610588775205L;
-	/**
-	 * 
-	 */
+public class Requirements implements Serializable{
+	private static final long serialVersionUID = -2337142362506384973L;
 	
 	private String name;
-	private String description;;
-	//private String id;
-	public Target(){
-		
-	}
-
+	private String relationship;
+	private String id;
+	private ReqCapability capability;
+	private Target target;
+	private String target_type;
 	
-	public Target(String name, String description) {
-		super();
-		this.name = name;
-		this.description = description;
-	}
-
-
-	/*public Target(String name, String id) {
-		super();
-		this.name = name;
-		this.id = id;
-	}
-	
-	public Target(String name, String description, String id) {
-		super();
-		this.name = name;
-		this.description = description;
-	}*/
-	/*public Target(String name, String description) {
-		super();
-		this.name = name;
-		this.description = description;
-	}
-	public Target(String name, String description, String id) {
-		super();
-		this.name = name;
-		this.description = description;
-	}*/
-
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getDescription() {
-		return description;
+	public String getRelationship() {
+		return relationship;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setRelationship(String relationship) {
+		this.relationship = relationship;
 	}
-	/*public String getId() {
+	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	/**
+	 * @return the capability
+	 */
+	public ReqCapability getCapability() {
+		return capability;
+	}
+	/**
+	 * @param capability the capability to set
+	 */
+	public void setCapability(ReqCapability capability) {
+		this.capability = capability;
+	}
+	/*public Capability getCapability() {
+		return capability;
+	}
+	public void setCapability(Capability capability) {
+		this.capability = capability;
 	}*/
+	public Target getTarget() {
+		return target;
+	}
+	public void setTarget(Target target) {
+		this.target = target;
+	}
+	public String getTarget_type() {
+		return target_type;
+	}
+	public void setTarget_type(String target_type) {
+		this.target_type = target_type;
+	}
 	
 	
 	

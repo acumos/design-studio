@@ -18,68 +18,66 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump.databroker;
 
 import java.io.Serializable;
 
-public class Capabilities implements Serializable{
+public class DBInputField implements Serializable{
+
+	private static final long serialVersionUID = 5104542735630234525L;
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1136087024327606271L;
-	
-	private String id;
 	private String name;
-	private CapabilityTarget target;
-	private String target_type;
-	private String properties;
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
+	private String type;
+	private String checked;
+	private String mapped_to_field;
+	/**
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
+	/**
+	 * @param name the name to set
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	/*public Target getTarget() {
-		return target;
-	}
-	public void setTarget(Target target) {
-		this.target = target;
-	}*/
-	
 	/**
-	 * @return the target
+	 * @return the type
 	 */
-	public CapabilityTarget getTarget() {
-		return target;
+	public String getType() {
+		return type;
 	}
 	/**
-	 * @param target the target to set
+	 * @param type the type to set
 	 */
-	public void setTarget(CapabilityTarget target) {
-		this.target = target;
+	public void setType(String type) {
+		this.type = type;
 	}
-	public String getTarget_type() {
-		return target_type;
+	/**
+	 * @return the checked
+	 */
+	public String getChecked() {
+		return checked;
 	}
-	public void setTarget_type(String target_type) {
-		this.target_type = target_type;
+	/**
+	 * @param checked the checked to set
+	 */
+	public void setChecked(String checked) {
+		this.checked = checked;
 	}
-	public String getProperties() {
-		return properties;
+	/**
+	 * @return the mapped_to_field
+	 */
+	public String getMapped_to_field() {
+		return mapped_to_field;
 	}
-	public void setProperties(String properties) {
-		this.properties = properties;
+	/**
+	 * @param mapped_to_field the mapped_to_field to set
+	 */
+	public void setMapped_to_field(String mapped_to_field) {
+		this.mapped_to_field = mapped_to_field;
 	}
-	
-	
 	
 	
 

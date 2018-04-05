@@ -18,59 +18,14 @@
  * ===============LICENSE_END=========================================================
  */
 
-/**
- * 
- */
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.blueprint;
 
-import java.io.Serializable;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
 
-import org.acumos.designstudio.cdump.Message;
 
-/**
- * 
- *
- */
-public class ReqCapability implements Serializable{
+public class BPDataBrokerMap extends DataBrokerMap {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1215951868789856113L;
-	/**
-	 * 
-	 */
 	
-	
-	private String id;
-	private Message[] name;
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-	/**
-	 * @return the name
-	 */
-	public Message[] getName() {
-		return name;
-	}
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(Message[] name) {
-		this.name = name;
-	}
-	
-	
-	
-	
-	
+	private static final long serialVersionUID = -5731702058249589218L;
+
 }

@@ -18,40 +18,46 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.ce.vo.blueprint;
+/**
+ * 
+ */
+package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
-public class Container implements Serializable{
-
-	private static final long serialVersionUID = 7033995176723370491L;
-
-	private String container_name;
-	private BaseOperationSignature operation_signature;
+public class ReqCapability implements Serializable{
+	private static final long serialVersionUID = -1215951868789856113L;
+	
+	private String id;
+	private Message[] name;
 	
 	/**
-	 * @return the container_name
+	 * @return the id
 	 */
-	public String getContainer_name() {
-		return container_name;
+	public String getId() {
+		return id;
 	}
 	/**
-	 * @param container_name the container_name to set
+	 * @param id the id to set
 	 */
-	public void setContainer_name(String container_name) {
-		this.container_name = container_name;
+	public void setId(String id) {
+		this.id = id;
 	}
 	/**
-	 * @return the operation_signature
+	 * @return the name
 	 */
-	public BaseOperationSignature getOperation_signature() {
-		return operation_signature;
+	public Message[] getName() {
+		return name;
 	}
 	/**
-	 * @param operation_signature the operation_signature to set
+	 * @param name the name to set
 	 */
-	public void setOperation_signature(BaseOperationSignature operation_signature) {
-		this.operation_signature = operation_signature;
+	public void setName(Message[] name) {
+		this.name = name;
 	}
+	
+	
+	
+	
 	
 }

@@ -18,14 +18,12 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.cdump;
+package org.acumos.designstudio.ce.vo.cdump.datamapper;
 
 import java.io.Serializable;
 
 public class MapInputs implements Serializable {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -8560444235646525017L;
 	private String message_name;
 	private DataMapInputField[] input_fields;

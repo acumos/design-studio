@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.acumos.designstudio.cdump.Capability;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.DSSolution;
@@ -38,6 +37,7 @@ import org.acumos.designstudio.ce.vo.blueprint.BaseOperationSignature;
 import org.acumos.designstudio.ce.vo.blueprint.BluePrint;
 import org.acumos.designstudio.ce.vo.blueprint.Container;
 import org.acumos.designstudio.ce.vo.blueprint.Node;
+import org.acumos.designstudio.ce.vo.cdump.Capability;
 import org.acumos.designstudio.ce.vo.tgif.Artifact;
 import org.acumos.designstudio.ce.vo.tgif.Auxiliary;
 import org.acumos.designstudio.ce.vo.tgif.Call;
@@ -50,11 +50,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-
-/**
- * 
- *
- */
 public class VOTest  {
 	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(VOTest.class);
 	private String nexusURI = "";
@@ -183,8 +178,6 @@ public class VOTest  {
 		donList.add(con);
 		
 		n.setContainer_name("Aggregate");
-		
-		
 		
 		logger.debug(EELFLoggerDelegator.debugLogger, bp.toString());
 		
