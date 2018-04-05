@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0140e0c6_d45ed3c5",
+        "filename": "ds-compositionengine/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-04-05T15:16:15Z",
+      "side": 1,
+      "message": "Use the release version please!",
+      "revId": "b27080f5e20509e222c05e93bf0ed8a65ff03bb7",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca47e87a_ff87b3ac",
+        "filename": "ds-compositionengine/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-04-05T15:16:15Z",
+      "side": 1,
+      "message": "No, please do NOT use -SNAPSHOT versions of any libraries.  Use 1.13.1 release version.",
+      "revId": "b27080f5e20509e222c05e93bf0ed8a65ff03bb7",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97ed9a3d_f604852e",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/SolutionController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-04-05T15:16:15Z",
+      "side": 1,
+      "message": "Why use a fully qualified package here? Why not import like everything else?",
+      "revId": "b27080f5e20509e222c05e93bf0ed8a65ff03bb7",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a66c0fb_06687086",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1296,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-04-05T15:16:15Z",
+      "side": 1,
+      "message": "pls remove, don\u0027t comment out",
+      "revId": "b27080f5e20509e222c05e93bf0ed8a65ff03bb7",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14e7cb28_077eed07",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/Container.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-04-05T15:16:15Z",
+      "side": 1,
+      "message": "if possible please try to avoid committing whitespace-only changes",
+      "revId": "b27080f5e20509e222c05e93bf0ed8a65ff03bb7",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88551f02_a167b5db",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/blueprint/OperationSignatureList.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-04-05T15:16:15Z",
+      "side": 1,
+      "message": "Please try to avoid whitespace-only changes, if possible",
+      "revId": "b27080f5e20509e222c05e93bf0ed8a65ff03bb7",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
