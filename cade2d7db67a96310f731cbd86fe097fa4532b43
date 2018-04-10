@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc4e69e8_cdcba78b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 1188,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-04-10T08:10:12Z",
+      "side": 1,
+      "message": "Use props.getDatabrokerType() instead of \"DataBroker\".",
+      "range": {
+        "startLine": 1188,
+        "startChar": 25,
+        "endLine": 1188,
+        "endChar": 35
+      },
+      "revId": "cade2d7db67a96310f731cbd86fe097fa4532b43",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
