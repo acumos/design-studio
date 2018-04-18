@@ -79,6 +79,12 @@ public class DBInputField implements Serializable{
 		this.mapped_to_field = mapped_to_field;
 	}
 	
+	@Override
+	public String toString() {
+		return "DBInputField [name=" + name + ", type=" + type + ", checked=" + checked + ", mapped_to_field="
+				+ mapped_to_field + "]";
+	}
+	
 	
 
 }

@@ -1251,7 +1251,20 @@ public class SolutionServiceImpl implements ISolutionService {
 		relationObj.setTargetNodeId(targetNodeId);
 		relationObj.setSourceNodeRequirement(sourceNodeRequirement);
 		relationObj.setTargetNodeCapability(targetNodeCapabilityName);
-
+		List<Nodes> nodes = cdump.getNodes();
+		String protoUri = "";
+		for (Nodes no : nodes) {
+			if (no.getType().getName().equals(props.getDatabrokerType())) {
+				if (no.getNodeId().equals(sourceNodeId)) {
+					for (Nodes n : nodes) {
+						if (n.getNodeId().equals(targetNodeId)) {
+							protoUri = n.getProtoUri();
+							no.setProtoUri(protoUri);
+						}
+					}
+				}
+			}
+		}
 		if (cdump.getRelations() == null) {
 			List<Relations> list = new ArrayList<>();
 			list.add(relationObj);

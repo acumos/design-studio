@@ -41,6 +41,11 @@ public class DBMapOutput implements Serializable {
 	public void setOutput_field(DBOutputField output_field) {
 		this.output_field = output_field;
 	}
+
+	@Override
+	public String toString() {
+		return "DBMapOutput [output_field=" + output_field + "]";
+	}
 	
 	
 	
