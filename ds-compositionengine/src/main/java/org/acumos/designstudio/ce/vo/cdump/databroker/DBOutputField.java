@@ -22,6 +22,7 @@
 package org.acumos.designstudio.ce.vo.cdump.databroker;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class DBOutputField implements Serializable {
 
@@ -67,5 +68,15 @@ public class DBOutputField implements Serializable {
 	public void setType_and_role_hierarchy_list(DBOTypeAndRoleHierarchy[] type_and_role_hierarchy_list) {
 		this.type_and_role_hierarchy_list = type_and_role_hierarchy_list;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "DBOutputField [tag=" + tag + ", name=" + name + ", type_and_role_hierarchy_list="
+				+ Arrays.toString(type_and_role_hierarchy_list) + "]";
+	}
+	
+	
 
 }

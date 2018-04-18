@@ -685,7 +685,7 @@ public class SolutionControllerTest {
 		databrokerMap.setData_broker_type("SQLDataBroker1");
 		databrokerMap.setFirst_row("Yes");
 		databrokerMap.setLocal_system_data_file_path("localpath");
-		databrokerMap.setMap_action("mapaction");
+		//databrokerMap.setMap_action("mapaction");
 		databrokerMap.setTarget_system_url("remoteurl");
 		
 		// DataBrokerMap Input List
@@ -761,7 +761,7 @@ public class SolutionControllerTest {
 		databrokerMap.setData_broker_type("SQLDataBroker1");
 		databrokerMap.setFirst_row("Yes");
 		databrokerMap.setLocal_system_data_file_path("localpath");
-		databrokerMap.setMap_action("mapaction");
+		//databrokerMap.setMap_action("mapaction");
 		databrokerMap.setTarget_system_url("remoteurl");
 		
 		// DataBrokerMap Input List
@@ -838,7 +838,7 @@ public class SolutionControllerTest {
 		databrokerMap.setData_broker_type("SQLDataBroker1");
 		databrokerMap.setFirst_row("Yes");
 		databrokerMap.setLocal_system_data_file_path("localpath");
-		databrokerMap.setMap_action("mapaction");
+		//databrokerMap.setMap_action("mapaction");
 		databrokerMap.setTarget_system_url("remoteurl");
 		
 		// DataBrokerMap Input List

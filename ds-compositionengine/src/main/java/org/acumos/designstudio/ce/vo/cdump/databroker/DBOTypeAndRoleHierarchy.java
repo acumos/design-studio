@@ -52,6 +52,14 @@ public class DBOTypeAndRoleHierarchy implements Serializable{
 	public void setRole(String role) {
 		this.role = role;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "DBOTypeAndRoleHierarchy [name=" + name + ", role=" + role + "]";
+	}
+	
 	
 	
 

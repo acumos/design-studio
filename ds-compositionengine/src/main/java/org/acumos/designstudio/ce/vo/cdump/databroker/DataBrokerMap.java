@@ -34,7 +34,7 @@ public class DataBrokerMap implements Serializable{
 	private String data_broker_type;
 	private DBMapInput[] map_inputs;
 	private DBMapOutput[] map_outputs;
-	private String map_action;
+	//private String map_action;
 	
 	
 	
@@ -134,18 +134,20 @@ public class DataBrokerMap implements Serializable{
 	public void setMap_outputs(DBMapOutput[] map_outputs) {
 		this.map_outputs = map_outputs;
 	}
+	
 	/**
 	 * @return the map_action
 	 */
+	/*
 	public String getMap_action() {
 		return map_action;
 	}
-	/**
+	*//**
 	 * @param map_action the map_action to set
-	 */
+	 *//*
 	public void setMap_action(String map_action) {
 		this.map_action = map_action;
 	}
-	
+	*/
 	
 }

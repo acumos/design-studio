@@ -41,6 +41,14 @@ public class DBMapInput implements Serializable {
 	public void setInput_field(DBInputField input_field) {
 		this.input_field = input_field;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "DBMapInput [input_field=" + input_field + "]";
+	}
 	
 	
 	

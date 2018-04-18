@@ -78,6 +78,14 @@ public class DBInputField implements Serializable{
 	public void setMapped_to_field(String mapped_to_field) {
 		this.mapped_to_field = mapped_to_field;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "DBInputField [name=" + name + ", type=" + type + ", checked=" + checked + ", mapped_to_field="
+				+ mapped_to_field + "]";
+	}
 	
 	
 
