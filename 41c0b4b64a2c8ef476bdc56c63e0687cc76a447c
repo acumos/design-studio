@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7dda4fd_3188f027",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/cdump/databroker/DBInputField.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-04-19T08:37:56Z",
+      "side": 1,
+      "message": "Please remove non-Javadoc",
+      "range": {
+        "startLine": 81,
+        "startChar": 5,
+        "endLine": 81,
+        "endChar": 8
+      },
+      "revId": "41c0b4b64a2c8ef476bdc56c63e0687cc76a447c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "307a5c90_53b210a0",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/cdump/databroker/DBMapInput.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-04-19T08:37:56Z",
+      "side": 1,
+      "message": "please remove non-Javadoc",
+      "range": {
+        "startLine": 45,
+        "startChar": 9,
+        "endLine": 45,
+        "endChar": 16
+      },
+      "revId": "41c0b4b64a2c8ef476bdc56c63e0687cc76a447c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf8eedf6_b8a08118",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/cdump/databroker/DBMapOutput.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-04-19T08:37:56Z",
+      "side": 1,
+      "message": "please remove non-Javadoc",
+      "range": {
+        "startLine": 45,
+        "startChar": 9,
+        "endLine": 45,
+        "endChar": 16
+      },
+      "revId": "41c0b4b64a2c8ef476bdc56c63e0687cc76a447c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "38067f4a_a573a46b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/cdump/databroker/DBOutputField.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-04-19T08:37:56Z",
+      "side": 1,
+      "message": "please remove non-Javadoc",
+      "range": {
+        "startLine": 72,
+        "startChar": 25,
+        "endLine": 72,
+        "endChar": 26
+      },
+      "revId": "41c0b4b64a2c8ef476bdc56c63e0687cc76a447c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e42adc6e_bd5a3eda",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/cdump/databroker/DataBrokerMap.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-04-19T08:37:56Z",
+      "side": 1,
+      "message": "Remove the commented code, if required we can get the same from history",
+      "range": {
+        "startLine": 37,
+        "startChar": 18,
+        "endLine": 37,
+        "endChar": 28
+      },
+      "revId": "41c0b4b64a2c8ef476bdc56c63e0687cc76a447c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
