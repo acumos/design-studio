@@ -22,12 +22,17 @@ Design Studio Release Notes
 
 The Design Studio Composition Engine is deployed within a Docker image in the Docker registry.  TOSCAGenerator Client is uploaded in Nexus repository as a jar file.
 
-0.0.24-SNAPSHOT, 2017-03-25
+0.0.25-SNAPSHOT, 2018-04-26
+---------------------------
+* ACUMOS-630 : Update the CDump and Blueprint structure for Databroker (BE) 
+
+
+0.0.24-SNAPSHOT, 2018-03-25
 ---------------------------
 * ACUMOS-547 : Design Studio stores the protobuf URI of PROTOBUF.json instead of .proto 
 
 
-0.0.23-SNAPSHOT, 2017-03-09
+0.0.23-SNAPSHOT, 2018-03-09
 ---------------------------
 * Update to use latest version of Common Data Service : 1.14.1.
 * ACUMOS-291 Update API behavior : Validate Composite Solution w.r.t inclusion of Databroker
@@ -37,7 +42,7 @@ The Design Studio Composition Engine is deployed within a Docker image in the Do
 * ACUMOSE-335 Store the location of the docker image in the Blueprint.json file
 
 
-0.0.22-SNAPSHOT, 2017-02-16
+0.0.22-SNAPSHOT, 2018-02-16
 ---------------------------
 * Update to use latest version of Common Data Service : 1.13.1.
 * ACUMOS-40 : View the on boarded Data Brokers and Training Clients in the Design Studio Palette under the Data Source drawer
@@ -48,7 +53,7 @@ The Design Studio Composition Engine is deployed within a Docker image in the Do
 * ACUMOS-206 EPIC - Log Message Standardization 
 
 
-0.0.21-SNAPSHOT, 2017-02-16
+0.0.21-SNAPSHOT, 2018-02-16
 ---------------------------
 * Update to use latest version of Common Data Service : 1.13.0.
 * ACUMOS-130 EPIC - Deploy Link from Design Studio to Market Place – Portal
@@ -57,17 +62,17 @@ The Design Studio Composition Engine is deployed within a Docker image in the Do
 
 
 
-0.0.20-SNAPSHOT, 2017-02-14
+0.0.20-SNAPSHOT, 2018-02-14
 ---------------------------
 * Update to use latest version of Common Data Service : 1.13.0.
 
 
-0.19.2-SNAPSHOT, 2017-01-23
+0.19.2-SNAPSHOT, 2018-01-23
 ---------------------------
 * Update to use latest version of Common Data Service : 1.12.0.
 
 
-0.19.1-SNAPSHOT, 2017-01-15
+0.19.1-SNAPSHOT, 2018-01-15
 ---------------------------
 * Update to use latest version of Common Data Service : 1.10.1
 * Fix for CD-1972 : Clear functionality not working as expected w.r.t backend.
@@ -75,7 +80,7 @@ The Design Studio Composition Engine is deployed within a Docker image in the Do
 * Generic Data Mapper to connect two incompatible nodes having same number of fields
 
 
-0.0.19-SNAPSHOT, 2017-01-10
+0.0.19-SNAPSHOT, 2018-01-10
 ---------------------------
 * Update to use latest version of Common Data Service : 1.10.1
 
