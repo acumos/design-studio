@@ -956,6 +956,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String type = null;
 		String nodeid = null;
 		boolean isDataBroker = false;
+		String isolatedModels = null;
+		Set<String> uniqueSet = new HashSet<>();
 		try {
 
 			Cdump cdump = null;
@@ -984,9 +986,26 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						set.add(rhs.getTargetNodeId());
 					}
 				}
+				// Checking if any of the Models are Isolated or not from the CompositeSolution
+				boolean duplicateFlag = false;
+				List<String> duplicateList = new ArrayList<>();
+				List<String> uniqueList = new ArrayList<>();
+				
+				for (String item : idList) {
+				    if (set.contains(item)) {
+				        duplicateList.add(item);
+				    } else {
+				    	uniqueList.add(item);
+				    	for(String ss: uniqueList){
+				    		uniqueSet.add(ss);
+				    		duplicateFlag = true;
+				    		isolatedModels = uniqueSet.toString().replace("[", "").replace("]", "");
+				    	}
+				    }
+				}
 				// 4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.
 				logger.debug(EELFLoggerDelegator.debugLogger,"4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.");
-				if (CollectionUtils.isEqualCollection(idList, set)) {
+				if (!duplicateFlag) {
 					// 5. Checking the Composite Solution Nodes and Relations are connected or not.
 					logger.debug(EELFLoggerDelegator.debugLogger,"5. Checking the Composite Solution Nodes and Relations are connected or not.");
 					if (relationsList.size() >= idList.size() - 1) {
@@ -1005,7 +1024,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 										break;
 									} 
 								}
-								break;
 							}
 						}
 						if (isDataBroker) {
@@ -1013,7 +1031,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						} else {
 							// If DataBroker is true then check for one to one mapping for the SourceNodeId and TargetNodeId
 							
-							// If ouput port for the Node is connected then its same input ports should be connected only if its not the first node.
+							// If output port for the Node is connected then its same input ports should be connected only if its not the first node.
 							boolean isCorrectPortsConnected = ValidateCorrectPortsConnected(cdump);
 							
 							if(!isCorrectPortsConnected){
@@ -1056,7 +1074,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : all nodes are not connected\"}";
 						}
 					} else {
-						result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : nodeId's and relationId are not matching \"}";
+						result =  "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution  "+ isolatedModels + " : is Isolated Model(s) \"}";
 					}
 				} else {
 					result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : Composite Solution Relations can not be empty\"}";
