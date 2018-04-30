@@ -59,7 +59,6 @@ import org.acumos.designstudio.ce.vo.blueprint.BPDataBrokerMap;
 import org.acumos.designstudio.ce.vo.blueprint.BaseOperationSignature;
 import org.acumos.designstudio.ce.vo.blueprint.BluePrint;
 import org.acumos.designstudio.ce.vo.blueprint.Container;
-import org.acumos.designstudio.ce.vo.blueprint.DataSource;
 import org.acumos.designstudio.ce.vo.blueprint.Node;
 import org.acumos.designstudio.ce.vo.blueprint.NodeOperationSignature;
 import org.acumos.designstudio.ce.vo.blueprint.OperationSignatureList;
@@ -76,10 +75,8 @@ import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapInput;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapOutput;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBOTypeAndRoleHierarchy;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBOutputField;
-import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMap;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.acumos.nexus.client.data.UploadArtifactInfo;
-import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -369,7 +366,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String error = "{\"errorCode\" : \"%s\", \"errorDescription\" : \"%s\"}";
 		// 1. get the solution details using CDS : MLPSolution
 		MLPSolution mlpSolution = cdmsClient.getSolution(dscs.getSolutionId());
-		MLPSolutionRevision mlpSolutionRevision = null;
 		if (null != mlpSolution) {
 			
 			// 2. check the solution name with input solution name, if solution name is different then its altogether new solution.
@@ -947,7 +943,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	}
 
 	@Override
-	public String validateCompositeSolution(String userId, String solutionName, String solutionId, String version)throws AcumosException {
+	public String validateCompositeSolution(String userId, String solutionName, String solutionId, String version)
+			throws AcumosException {
 		String result = "";
 		logger.debug(EELFLoggerDelegator.debugLogger, "validateCompositeSolution() : Begin ");
 		String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
@@ -957,7 +954,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String nodeid = null;
 		boolean isDataBroker = false;
 		try {
-
 			Cdump cdump = null;
 			// 1. Read the cdump file
 			logger.debug(EELFLoggerDelegator.debugLogger, "1. Read the cdump file");
@@ -968,63 +964,70 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			List<Nodes> nodes = cdump.getNodes();
 			List<Relations> relationsList = cdump.getRelations();
 			// Check for the Nodes and Relations in the CDUMP is empty or not
-			if (null != nodes ) {
+			if (null != nodes) {
 				ArrayList<String> idList = new ArrayList<>();
 				for (Nodes n : nodes) {
 					idList.add(n.getNodeId());
 				}
 				// 3. get the Relations(Links) from cdump file and collect the SourceNodeId and TargetNodeId and add those to set
 				logger.debug(EELFLoggerDelegator.debugLogger,"3. get the Relations(Links) from cdump file and collect the SourceNodeId and TargetNodeId and add those to set");
-				HashSet<String> set = new HashSet<>();
+				HashSet<String> nodeIdSet = new HashSet<String>(); 
 				if (null != relationsList) {
-				HashSet<Relations> relationsSet = new HashSet<>(relationsList);
-				if (null != relationsSet) {
-					for (Relations rhs : relationsSet) {
-						set.add(rhs.getSourceNodeId());
-						set.add(rhs.getTargetNodeId());
-					}
-				}
-				// 4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.
-				logger.debug(EELFLoggerDelegator.debugLogger,"4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.");
-				if (CollectionUtils.isEqualCollection(idList, set)) {
-					// 5. Checking the Composite Solution Nodes and Relations are connected or not.
-					logger.debug(EELFLoggerDelegator.debugLogger,"5. Checking the Composite Solution Nodes and Relations are connected or not.");
-					if (relationsList.size() >= idList.size() - 1) {
-						//  Validation Case 1. Check Data Broker is present or not
-						logger.debug(EELFLoggerDelegator.debugLogger,"6. Checking Data Broker is present as first node of the solution.");
-						for (Nodes no : nodes) {
-							nodeid = no.getNodeId();
-							type = no.getType().getName();
-							// If node type is DataBroker then check for sourceNodeId of relations which is of different nodeId
-							if ("DataBroker".equals(type)) {
-								// Check whether databroker is first node or not
-								for (Relations rel : relationsList) {
-									if (nodeid.equals(rel.getTargetNodeId())) {
-										// For DataBroker if the targetNode is not connected to any other nodeId then solution first Node is DataBroker
-										isDataBroker = true;
-										break;
-									} 
-								}
-								break;
-							}
+					HashSet<Relations> relationsSet = new HashSet<Relations>(relationsList);
+						for (Relations rhs : relationsSet) {
+							nodeIdSet.add(rhs.getSourceNodeId());
+							nodeIdSet.add(rhs.getTargetNodeId());
 						}
-						if (isDataBroker) {
-							result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : DataBroker should be first Node. \"}";
-						} else {
-							// If DataBroker is true then check for one to one mapping for the SourceNodeId and TargetNodeId
-							
-							// If ouput port for the Node is connected then its same input ports should be connected only if its not the first node.
-							boolean isCorrectPortsConnected = ValidateCorrectPortsConnected(cdump);
-							
-							if(!isCorrectPortsConnected){
-								result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : incorrect ports connected. \"}";
+					// Check whether the nodes are Isolated or not
+					boolean isolateModelFound = false;
+					List<String> notConnectedNodes = new ArrayList<String>();
+					for (String nodeId : idList) {
+						if (!nodeIdSet.contains(nodeId)) {
+							notConnectedNodes.add(nodeId);
+							isolateModelFound = true;
+						}
+					}
+
+					// 4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.
+					logger.debug(EELFLoggerDelegator.debugLogger,"4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.");
+					if (!isolateModelFound) {
+						// 5. Checking the Composite Solution Nodes and Relations are connected or not.
+						logger.debug(EELFLoggerDelegator.debugLogger,"5. Checking the Composite Solution Nodes and Relations are connected or not.");
+						if (relationsList.size() >= idList.size() - 1) {
+							// Validation Case 1. Check Data Broker is present or not
+							logger.debug(EELFLoggerDelegator.debugLogger,"6. Checking Data Broker is present as first node of the solution.");
+							for (Nodes no : nodes) {
+								nodeid = no.getNodeId();
+								type = no.getType().getName();
+								// If node type is DataBroker then check for sourceNodeId of relations which is of different nodeId
+								if ("DataBroker".equals(type)) {
+									// Check whether data broker is first node or not
+									for (Relations rel : relationsList) {
+										if (nodeid.equals(rel.getTargetNodeId())) {
+											// For DataBroker if the targetNode is not connected to any other nodeId then solution first Node is DataBroker
+											isDataBroker = true;
+											break;
+										}
+									}
+								}
+							}
+							if (isDataBroker) {
+								result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : DataBroker should be first Node. \"}";
 							} else {
-								Set<String> dupSourceNodeSet = new HashSet<String>();
-								Set<String> dupTargetNodeSet = new HashSet<String>();
-								String sourceNodeId = "";
-								String targetNodeId = "";
-								boolean isConnectedToMultiple = false;
-								boolean isMultipleInput = false; 
+								// If DataBroker is true then check for one to one mapping for the SourceNodeId and TargetNodeId
+
+								// If output port for the Node is connected then its same input ports should be connected only if its not the first node.
+								boolean isCorrectPortsConnected = ValidateCorrectPortsConnected(cdump);
+
+								if (!isCorrectPortsConnected) {
+									result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : incorrect ports connected. \"}";
+								} else {
+									Set<String> dupSourceNodeSet = new HashSet<String>();
+									Set<String> dupTargetNodeSet = new HashSet<String>();
+									String sourceNodeId = "";
+									String targetNodeId = "";
+									boolean isConnectedToMultiple = false;
+									boolean isMultipleInput = false;
 
 									for (Relations rel : relationsList) {
 										// Validation Case 2: If Duplicate SourceNodeId's are found then solution is Invalid
@@ -1040,23 +1043,23 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 											break;
 										}
 									}
-								if (isConnectedToMultiple) {
-									result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot be connected to multiple nodes. \"}";
-								} else if (isMultipleInput) {
-									result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot get input from multiple nodes. \"}";
-								} else {
-									// On successful validation generate the BluePrint file
-									logger.debug(EELFLoggerDelegator.debugLogger,"On successful validation generate the BluePrint file.");
-									result = createAndUploadBluePrint(userId, solutionId, solutionName, version, cdump);
+									if (isConnectedToMultiple) {
+										result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot be connected to multiple nodes. \"}";
+									} else if (isMultipleInput) {
+										result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot get input from multiple nodes. \"}";
+									} else {
+										// On successful validation generate the BluePrint file
+										logger.debug(EELFLoggerDelegator.debugLogger,"On successful validation generate the BluePrint file.");
+										result = createAndUploadBluePrint(userId, solutionId, solutionName, version,cdump);
 									}
 								}
 							}
-							
+
 						} else {
 							result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : all nodes are not connected\"}";
 						}
 					} else {
-						result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : nodeId's and relationId are not matching \"}";
+						result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution  "+ notConnectedNodes + " : is Isolated Model(s) \"}";
 					}
 				} else {
 					result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : Composite Solution Relations can not be empty\"}";
@@ -1135,11 +1138,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String nodeVersion = "";
 		String dockerImageURL = null;
 		Node bpnode = null;
-		int propLength = 0;
-		DataMap dataMap = null;
-		Property[] properties = null;
-		String gdm = "GDM";
-		
 
 		// 9. Extract NodeId, NodeName,NodeSolutionId,NodeVersion
 		logger.debug(EELFLoggerDelegator.debugLogger,"9. Extract NodeId, NodeName,NodeSolutionId,NodeVersion");
