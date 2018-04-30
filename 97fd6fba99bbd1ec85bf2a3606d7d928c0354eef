@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "581c3def_3fac5262",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1008,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-04-30T12:48:04Z",
+      "side": 1,
+      "message": "pls remove code, don\u0027t comment out",
+      "revId": "97fd6fba99bbd1ec85bf2a3606d7d928c0354eef",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
