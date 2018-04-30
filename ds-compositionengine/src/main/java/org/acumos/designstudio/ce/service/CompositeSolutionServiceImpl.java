@@ -1005,7 +1005,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 										break;
 									} 
 								}
-								break;
 							}
 						}
 						if (isDataBroker) {
