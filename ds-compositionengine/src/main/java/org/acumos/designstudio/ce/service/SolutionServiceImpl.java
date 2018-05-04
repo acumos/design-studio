@@ -54,6 +54,7 @@ import org.acumos.designstudio.ce.vo.cdump.Ndata;
 import org.acumos.designstudio.ce.vo.cdump.Nodes;
 import org.acumos.designstudio.ce.vo.cdump.Property;
 import org.acumos.designstudio.ce.vo.cdump.Relations;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapOutput;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMapInputField;
@@ -780,7 +781,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				try {
 					Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName)), Cdump.class);
 					List<Nodes> nodesList = cdump.getNodes();
-					List<Relations> relationsList;
+					List<Relations> relationsList = cdump.getRelations();
 					if (nodesList == null || nodesList.isEmpty()) {
 						deletedNode = false;
 					} else {
@@ -790,12 +791,38 @@ public class SolutionServiceImpl implements ISolutionService {
 							Nodes node = nodeitr.next();
 							if (node.getNodeId().equals(nodeId)) {
 								deletedNode = true;
-								nodeitr.remove();
+								nodeitr.remove();	
 								break;
 							}
 						}
+						for (Relations relations : relationsList) {
+							if (relations.getTargetNodeId().equals(nodeId)) {
+								String sourceNodeId = relations.getSourceNodeId();
+								for (Nodes nodes : nodesList) {
+									if (nodes.getNodeId().equals(sourceNodeId)) {
+										String nodeType = nodes.getType().getName();
+										if (props.getDatabrokerType().equals(nodeType)) {
+											Property[] pp = nodes.getProperties();
+											ArrayList<Property> arrayList = new ArrayList<Property>(Arrays.asList(pp));
+											Iterator<Property> propertyItr = arrayList.iterator();
+											while (propertyItr.hasNext()) {
+												Property pro = propertyItr.next();
+												DBMapOutput[] dbMap = pro.getData_broker_map().getMap_outputs();
+												ArrayList<DBMapOutput> dbMapOutList = new ArrayList<DBMapOutput>(
+														Arrays.asList(dbMap));
+												Iterator<DBMapOutput> dbMapOutItr = dbMapOutList.iterator();
+												while (dbMapOutItr.hasNext()) {
+													DBMapOutput dbmout = dbMapOutItr.next();
+													dbmout.setOutput_field(null);
+													break;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 						// Deleting relationsList for given nodeId
-						relationsList = cdump.getRelations();
 						if (relationsList == null || relationsList.isEmpty()) {
 						} else {
 							Iterator<Relations> relationitr = relationsList.iterator();
