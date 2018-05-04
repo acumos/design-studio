@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "500a5568_b2b87c51",
+        "filename": "docs/release-notes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-04T12:16:50Z",
+      "side": 1,
+      "message": "Please include one more empty line",
+      "range": {
+        "startLine": 27,
+        "startChar": 12,
+        "endLine": 27,
+        "endChar": 13
+      },
+      "revId": "5eb1ad21551a0dfbe5b4f46a2a6856b65dbad84d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11a0256e_bcb6ce6e",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 808,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-04T12:16:50Z",
+      "side": 1,
+      "message": "map_inputs also need to updated : set checked \u003d\"NO\" and mapped_to_field \u003d \"\"",
+      "range": {
+        "startLine": 808,
+        "startChar": 18,
+        "endLine": 808,
+        "endChar": 29
+      },
+      "revId": "5eb1ad21551a0dfbe5b4f46a2a6856b65dbad84d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a25d5a20_91503c93",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-04T12:16:50Z",
+      "side": 1,
+      "message": "variable name is not reveling the purpose, its misleading to DatabrokerMap instead of DBMapOutput",
+      "range": {
+        "startLine": 810,
+        "startChar": 26,
+        "endLine": 810,
+        "endChar": 31
+      },
+      "revId": "5eb1ad21551a0dfbe5b4f46a2a6856b65dbad84d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8952acc5_ba89ffc8",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 818,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-04T12:16:50Z",
+      "side": 1,
+      "message": "This loop is not needed, try setting the DBMapOutput array to empty array or null (which ever is correct)",
+      "range": {
+        "startLine": 811,
+        "startChar": 12,
+        "endLine": 818,
+        "endChar": 13
+      },
+      "revId": "5eb1ad21551a0dfbe5b4f46a2a6856b65dbad84d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
