@@ -1,0 +1,735 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10d554c4_a02bc73d",
+        "filename": "csvdatabroker/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "what is this strange thing for all jars?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aca09095_4443acb7",
+        "filename": "csvdatabroker/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "remove",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8db1daec_a2db8d57",
+        "filename": "csvdatabroker/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Use 0.7.9",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1e5f016_76d92368",
+        "filename": "csvdatabroker/src/license/acumos/license.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "You don\u0027t need this in the project down at this level",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "26f69fc0_8289efa2",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/Application.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "What about external configuration from SPRING_APPLICATION_JSON ?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4bdc357_392d60ac",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/config/SwggerConfiguration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Please correct name: Swagger",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea0883ab_530d2deb",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "should be private",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83d30d15_b832a102",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "The @ApiOperation should include the response type; e.g.:\n\n\t@ApiOperation(value \u003d \"Leaps over buildings.\", response \u003d Result.class)",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "282dc6f7_4b4ddd10",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "On a failure must set the HTTP response code to something meaningful; e.g.:\n\n    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);\n\nIf you allow the default 200 to go back, most clients will not check further.\n\nSame applies to all methods here, I\u0027m not adding a comment on each :/",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd22d586_77c14112",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Is this object that gets serialized as JSON?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24431a7e_b5b3650c",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Do you really want to return string?  Probably should return a JSON object with String embedded.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3d680d76_8b70d91d",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "You can omit a default mapping of root",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c9b8cab_b642136a",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "should be private",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6123ecf_604b1a4e",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Should have result type/class",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d19fa2f2_73f9a3ee",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Should set non-200 response code",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0c2c0401_b4ae825e",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "add Response type?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4dbf608b_3a24a7a0",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/exceptionhandler/AcumosException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Probably don\u0027t want a logger in the exception. It doesn\u0027t seem to be used, so can be removed",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc10fa96_73b5fd32",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/exceptionhandler/AcumosException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "You don\u0027t want this to be serialized?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7da64f02_64779737",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/exceptionhandler/ServiceException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "This is an exceptionally generic class name - do you want to prefix it with DataBroker or maybe DB ?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a074948_08736134",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Please add detailed Javadoc to this (and all) interfaces.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8651cd46_82a3a68d",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Needs a logger",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82a76f2f_7877e6ea",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Remove don\u0027t comment out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e659fb6_7974a5d4",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Should log the exception",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dca68884_cd7f3806",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "SHould log the exception",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cde8e0c_f8c839aa",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ConfigurationService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Why a static instance here?  static is often big trouble",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c848bd39_cb2f33aa",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ConfigurationService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "This is a service that Spring will autowire - why do you need a getInstance method?  Very concerned about this",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "475f3cf9_ea54e037",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "This \"impl\" class does not extend an interface ProtobufService.  What\u0027s really going on here?  The convention of \"Impl\" is that there\u0027s an interface that defines it.  Please revisit.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "617498b3_34b61b53",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Should be private",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ddeb00a6_e278c992",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "WHy a static instance?  Looks like trouble",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7621faca_86915345",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Remove all system.out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ec46fd3_d3af2c24",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/Constants.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "I like to use interface (rather than class) to define constants, it\u0027s a personal preference :)",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0d16d70_1577e76a",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Not needed",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1c54f11_12a44568",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Are you 100% confident you are reading text files?  What happens if you read a 10MB file with no newlines?  Why do you translate bytes to characters here using the default charset?  How about just using FileInputStream with a 8K buffer instead?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa2aa2e_cb033b30",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "This should throw IOException.  Do not catch, let it bubble up",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91e0afd3_001f4d8d",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Why a print writer?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad56334c_5b428380",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "pls fix: json",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34803104_4d0efde2",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Why catch and discard and return VALID?  This exception should bubble up - if validation fails then it should NOT answer true.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d80c739c_2c7649eb",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "This comment looks wildly  out of place",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "121f56b7_c87dcd76",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "And what if not deleted? Maybe it should throw??",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5175fc2d_1f53e2d1",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Why convert the stack trace to a string? The logger knows how to do that all on its own.  This is unnecessarily complicated.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ff75705_1fdb7d6d",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/EELFLoggerDelegator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Suggest you steal the latest version of this class from CDS server area, which has a file with about 360 lines",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fcab3e4_61556c24",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/ProtobufUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "remove don\u0027t comment out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "579133d9_eafc9dd6",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/ProtobufUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-04T20:59:53Z",
+      "side": 1,
+      "message": "Ditto",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
