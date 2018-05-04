@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -88,7 +89,9 @@ import com.google.gson.JsonIOException;
 @Service("solutionServiceImpl")
 public class SolutionServiceImpl implements ISolutionService {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(SolutionServiceImpl.class);
-
+	private List<MLPSolution> matchingModelsolutionList = null;
+	private LinkedHashMap<String, List<MLPSolutionRevision>> matchingModelRevisionList = new LinkedHashMap<String,List<MLPSolutionRevision>>();
+	
 	@Autowired
 	Properties props;
 
@@ -134,7 +137,8 @@ public class SolutionServiceImpl implements ISolutionService {
 			} else {
 				logger.debug(EELFLoggerDelegator.debugLogger,
 						" CommonDataService returned Solution list of size :  {} ", mlpSolutionsList.size());
-
+				matchingModelsolutionList = new ArrayList<MLPSolution>();
+				matchingModelRevisionList = new LinkedHashMap<String,List<MLPSolutionRevision>>();
 				MLPUser mlpUser = cmnDataService.getUser(userID);
 				logger.debug(EELFLoggerDelegator.debugLogger, "MLPUSer  {} ", mlpUser);
 				// Get the TypeCodes from Properties file
@@ -152,16 +156,19 @@ public class SolutionServiceImpl implements ISolutionService {
 						if (accessTypeCode.equals(pbAccessTypeCode)) {
 							strBuilder = buildSolutionDetails(mlpsolution, cmnDataService, strBuilder, solutionId,
 									dssolution, dsSolutionList, solutionIdList, mlpSolRevisionList, sdf);
+							matchingModelsolutionList.add(mlpsolution);
 						}
 
 						if (mlpsolution.getOwnerId().equals(userID) && accessTypeCode.equals(prAccessTypeCode)) {
 							strBuilder = buildSolutionDetails(mlpsolution, cmnDataService, strBuilder, solutionId,
 									dssolution, dsSolutionList, solutionIdList, mlpSolRevisionList, sdf);
+							matchingModelsolutionList.add(mlpsolution);
 						}
 
 						if (accessTypeCode.equals(orAccessTypeCode)) {
 							strBuilder = buildSolutionDetails(mlpsolution, cmnDataService, strBuilder, solutionId,
 									dssolution, dsSolutionList, solutionIdList, mlpSolRevisionList, sdf);
+							matchingModelsolutionList.add(mlpsolution);
 						}
 					}
 
@@ -840,13 +847,20 @@ public class SolutionServiceImpl implements ISolutionService {
 		List<MatchingModel> matchingModelList = new ArrayList<>();
 		boolean validMatchingModel;
 		try {
-			Map<String, Object> queryParameters = new HashMap<>();
+			/*Map<String, Object> queryParameters = new HashMap<>();
 			queryParameters.put("active", Boolean.TRUE);
 			// Code changes are to match the change in the CDS API Definition
 			// searchSolution in version 1.13.x
 			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
 					new RestPageRequest(0, props.getSolutionResultsetSize()));
-			mlpSolutions = pageResponse.getContent();
+			mlpSolutions = pageResponse.getContent();*/
+			if(null != matchingModelsolutionList){
+				mlpSolutions = matchingModelsolutionList;	
+			}else{
+				logger.debug(EELFLoggerDelegator.debugLogger,
+						"getSolutions API returned empty Solution list,please check whether getSolutions API is called before getMatchingModels");
+			}
+			
 			MatchingModel matchingModel = null;
 			List<MLPSolutionRevision> mlpSolRevisions;
 			String solutionId = null;
@@ -856,7 +870,14 @@ public class SolutionServiceImpl implements ISolutionService {
 				mlpSolRevisions = new ArrayList<>();
 				for (MLPSolution mlpsol : mlpSolutions) {
 					solutionId = mlpsol.getSolutionId();
-					mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
+					//mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
+					if(null != matchingModelRevisionList && matchingModelRevisionList.containsKey(solutionId)){
+						mlpSolRevisions = matchingModelRevisionList.get(solutionId);
+					}else{
+						mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);// 
+						//matchingModelRevisionList =new LinkedHashMap<String,List<MLPSolutionRevision>>();
+						matchingModelRevisionList.put(solutionId, mlpSolRevisions);
+					}
 					if (mlpSolRevisions != null && mlpSolRevisions.size() != 0) {
 						logger.debug(EELFLoggerDelegator.debugLogger,
 								" CommonDataService returned Solution Revision list of size : "
