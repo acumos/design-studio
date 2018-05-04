@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cc30e05_f3a290a1",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-04T13:21:04Z",
+      "side": 1,
+      "message": "You are adding state to the service. Till now none of our service had state, so single instance of service serves all the call.  But just adding the state to the service will create undesirable result.  You need to define the scope (session/request) for the service if it has state.",
+      "range": {
+        "startLine": 93,
+        "startChar": 9,
+        "endLine": 93,
+        "endChar": 22
+      },
+      "revId": "d2be282fb5b6f2a960efea81e57e93d4732bacd4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
