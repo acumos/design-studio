@@ -730,6 +730,1043 @@
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6dfd14d_662f16d7",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Call logger? Certainly don\u0027t discard exception, connect should throw if it fails.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d957d97b_dbaf8f43",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Poor exception handling should be improved",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4992efd9_6e92206c",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Why read lines? Why not just read into an array of bytes?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "338b92f2_c636695a",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Don\u0027t ever call printStackTrace.  Don\u0027t discard the exception.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cefb79e6_1c406d54",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Don\u0027t discard the exception",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a802483_f7bdd8cf",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/Configuration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "be consistent with field naming. Either use camel case or snake case, but don\u0027t mix them.  userName vs user_name.  dataBrokerMap vs data_broker_map.  Java tends to use camel case, so that\u0027s my preference.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "945b9e0e_3ac6e688",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/Configuration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "move this main to a Junit test class over in src/test/resources",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d7e6bba_08e14799",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/DBInputField.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "snake case in Java?  be consistent with other POJO classes",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c8bc74f_989f3c36",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/DBOTypeAndRoleHierarchy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "How is this a type and role hierarchy? It\u0027s just a pair of strings, role and some name.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "470e233b_9ca39034",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/DBOutputField.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "This isn\u0027t a list it\u0027s an array",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0cda0d88_732ca066",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/ProtobufService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Is this trying to build valid JSON?  If not then skip the  json formatting {} characters",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9af6c53_249af74e",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/ProtobufServiceOperation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "careful - if your list was empty this does the wrong thing",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5d11b1d_97ba1cb3",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/ProtobufServiceOperation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Instead of this awkward and buggy logic, add a check in the loop to insert the comma.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "147e052a_c5328f60",
+        "filename": "csvdatabroker/src/main/resources/Protobuf_Template.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Why is this here? It should have a license template header?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e15601a_1fc6e6f1",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/CSVDatabrokerControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "make private",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86e96689_59016981",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/CSVDatabrokerControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "use logger instead, and remove the visual chaff **************",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c52db06e_fcd5998a",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "remove?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "666dc0f0_67e51b41",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "make private",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa8d5932_29af2f4b",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "remove don\u0027t comment out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f5df9b5_c64f1bfd",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Use logger not system.out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72ddee0e_9d3a20f2",
+        "filename": "gdmservice/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Where is the maven configuration to create a docker image?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f30065f7_ec6c7ece",
+        "filename": "gdmservice/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "remove don\u0027t comment out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fd7025f_a227fd3c",
+        "filename": "gdmservice/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "should be implementation version, not these funny custom tags",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e62e94e2_e669c770",
+        "filename": "gdmservice/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "remove staging plugin",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70d89460_1856d30b",
+        "filename": "gdmservice/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "use 0.7.9",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d928d476_1ecfbc74",
+        "filename": "gdmservice/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "You can remove this, it\u0027s not needed.  LF deployment uses other magic, not maven.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34f0305f_cdc0253c",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/Application.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Maybe call this GdmApplication?  We have a *lot* of plain Application.java instances",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "756b4c53_bf2f644d",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/config/AppConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Should log that it reads config from environment variable",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "761abe8a_f38ad5cf",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/config/SwggerConfiguration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "please use a proper Apache license URL",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0c2fe1ef_c45a29bc",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/controller/GDMController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "private",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12a88a9c_69baf063",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/controller/GDMController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "private",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "766bbe64_d31876f9",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/controller/GDMController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Tell swagger the response class",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48c4948e_fcdcbf27",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/controller/GDMController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "debug (not info)",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43709fee_fa004cb7",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/controller/GDMController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "debug level (not info)",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d455278_9a30515c",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/service/GDMServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "make final",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a100f26_8ab9cf24",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/service/GDMServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Probably this should throw, instead of try/catch/discard",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff2fac2a_f02a1467",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/service/GDMServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "DOn\u0027t work so hard.  Instead log exceptions like this:\n\nlogger.error(\"methodName failed\", e);",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ede3632_151400dc",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/service/GDMServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "remove don\u0027t comment out -- or guard with if (Debug) {",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a179b86c_51d5ef91",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/service/GDMServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "If these are truly going to remain empty then just delete",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82baae4f_983e5d9e",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/service/IGDMService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Document methods in interfaces thoroughly",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6dde59e_d13d0235",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/util/EELFLoggerDelegator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Get latest version from CDS",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4f00af6_9ceaa1f6",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/util/Properties.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "I don\u0027t think this is needed, right?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "842bdd5d_9a4e71bf",
+        "filename": "gdmservice/src/main/java/org/acumos/vo/DataVO.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "maybe this package is a bit too generic? do you want it to be data broker, or data mapper, or ??",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c503a41b_74d47a1c",
+        "filename": "gdmservice/src/main/java/org/acumos/vo/mapping/InputField.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "snake vs camel case",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e662f109_5e901051",
+        "filename": "gdmservice/src/main/java/org/acumos/vo/mapping/MapInput.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "See comments elsewhere about camel vs snake case.  You didn\u0027t name this class map_input so why would you name its fields with snake case?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e721365f_ce9bd418",
+        "filename": "gdmservice/src/main/java/org/acumos/vo/mapping/MapOutput.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "mixing camel case and snake case looks poor to my eyes :/",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28c952f9_a96edf83",
+        "filename": "gdmservice/src/main/java/org/acumos/vo/mapping/OutputField.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Please fix case setType, getType and so on",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "641e044c_5b984af5",
+        "filename": "gdmservice/src/main/resources/FieldMapping.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "This license header is not valid JSON",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e96eb468_dc9358f1",
+        "filename": "gdmservice/src/main/resources/logback.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "wrong component name, I think",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e12e2f4_33080ae9",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/ApplicationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "where is an assertion?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1de9037b_c02a6c12",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/controller/GDMControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "should be private",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79496b18_e12a7d91",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/controller/GDMControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "remove don\u0027t comment out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf7c93ea_c7d26e4c",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/controller/GDMControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Use logger not system.out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46ba9fec_8b96cca6",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/gdmservice/AppTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Is this template really needed?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ef3694e_2da16e65",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "probably should be private",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e3db374_80948ac5",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Ditto",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee9bc286_e4096917",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Please don\u0027t use names of team members",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4bf37c5_5cac6c53",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Maybe check the content??",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "047b9374_8f87ac91",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Ditto",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "918c1117_4cb5fbde",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Check content?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aadcce84_ecdb218f",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-05T03:02:11Z",
+      "side": 1,
+      "message": "Use logger not system.out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
     }
   ]
 }
