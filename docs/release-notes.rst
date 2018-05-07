@@ -22,9 +22,12 @@ Design Studio Release Notes
 
 The Design Studio Composition Engine is deployed within a Docker image in the Docker registry.  TOSCAGenerator Client is uploaded in Nexus repository as a jar file.
 
-0.0.27-SNAPSHOT, 2018-05-04
+0.0.27-SNAPSHOT, 2018-05-10
 ---------------------------
 * ACUMOS-791 : Data is present in target table when there is no node or ML is directly connected to the databroker node.
+* ACUMOS-794 : Update API : createNewCompositeSolution to set the solution validate flag to false (BE).
+* ACUMOS-795 : Update API : saveCompositeSolution to reset the solution validate flag to false.
+* ACUMOS-796 : Update API : validateCompositeSolution to reset the solution valid flat to true or false.
 
 
 0.0.26-SNAPSHOT, 2018-05-03
