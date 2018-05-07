@@ -87,6 +87,24 @@
     },
     {
       "key": {
+        "uuid": "af39fbc9_79a75272",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/Application.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "As such not needed, the required configuration get set from API /configDB.",
+      "parentUuid": "26f69fc0_8289efa2",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4bdc357_392d60ac",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/config/SwggerConfiguration.java",
         "patchSetId": 1
@@ -121,6 +139,24 @@
     },
     {
       "key": {
+        "uuid": "a0064604_de8df95e",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea0883ab_530d2deb",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83d30d15_b832a102",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
         "patchSetId": 1
@@ -132,6 +168,24 @@
       "writtenOn": "2018-05-04T20:59:53Z",
       "side": 1,
       "message": "The @ApiOperation should include the response type; e.g.:\n\n\t@ApiOperation(value \u003d \"Leaps over buildings.\", response \u003d Result.class)",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab14f710_4c6968ab",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83d30d15_b832a102",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -155,6 +209,24 @@
     },
     {
       "key": {
+        "uuid": "845e21f2_910b7c9b",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "282dc6f7_4b4ddd10",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd22d586_77c14112",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
         "patchSetId": 1
@@ -166,6 +238,24 @@
       "writtenOn": "2018-05-04T20:59:53Z",
       "side": 1,
       "message": "Is this object that gets serialized as JSON?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f74425d_1a353c22",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "returns the integer value.",
+      "parentUuid": "bd22d586_77c14112",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -189,6 +279,24 @@
     },
     {
       "key": {
+        "uuid": "ca37786e_56ffd724",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "The result should be content of .proto file, so converting to Json will not server the purpose.",
+      "parentUuid": "24431a7e_b5b3650c",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3d680d76_8b70d91d",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
         "patchSetId": 1
@@ -200,6 +308,24 @@
       "writtenOn": "2018-05-04T20:59:53Z",
       "side": 1,
       "message": "You can omit a default mapping of root",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "963e9009_e62a92ad",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d680d76_8b70d91d",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -223,6 +349,24 @@
     },
     {
       "key": {
+        "uuid": "4b01052c_13696750",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c9b8cab_b642136a",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6123ecf_604b1a4e",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
         "patchSetId": 1
@@ -234,6 +378,24 @@
       "writtenOn": "2018-05-04T20:59:53Z",
       "side": 1,
       "message": "Should have result type/class",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "059d19b7_14f95e5c",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6123ecf_604b1a4e",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -257,6 +419,24 @@
     },
     {
       "key": {
+        "uuid": "51bb13c5_252bfd8c",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d19fa2f2_73f9a3ee",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0c2c0401_b4ae825e",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerController.java",
         "patchSetId": 1
@@ -268,6 +448,24 @@
       "writtenOn": "2018-05-04T20:59:53Z",
       "side": 1,
       "message": "add Response type?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98eed105_9ae30a67",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "in case of success its byte[], but in case of Exception it will be Result",
+      "parentUuid": "0c2c0401_b4ae825e",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -325,6 +523,24 @@
     },
     {
       "key": {
+        "uuid": "3c216942_e6bea782",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/exceptionhandler/ServiceException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "This Exception is thrown at Service level and catch in Controller.",
+      "parentUuid": "7da64f02_64779737",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a074948_08736134",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerService.java",
         "patchSetId": 1
@@ -336,6 +552,24 @@
       "writtenOn": "2018-05-04T20:59:53Z",
       "side": 1,
       "message": "Please add detailed Javadoc to this (and all) interfaces.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71cde124_a95ef8d8",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a074948_08736134",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -359,6 +593,24 @@
     },
     {
       "key": {
+        "uuid": "cce670da_50f9ee83",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8651cd46_82a3a68d",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82a76f2f_7877e6ea",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceImpl.java",
         "patchSetId": 1
@@ -370,6 +622,24 @@
       "writtenOn": "2018-05-04T20:59:53Z",
       "side": 1,
       "message": "Remove don\u0027t comment out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "998ab349_2ff09ac0",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82a76f2f_7877e6ea",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -393,6 +663,24 @@
     },
     {
       "key": {
+        "uuid": "f66a1a31_495044e4",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e659fb6_7974a5d4",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dca68884_cd7f3806",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceImpl.java",
         "patchSetId": 1
@@ -404,6 +692,24 @@
       "writtenOn": "2018-05-04T20:59:53Z",
       "side": 1,
       "message": "SHould log the exception",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b55ec85_5620ce97",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dca68884_cd7f3806",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -427,6 +733,24 @@
     },
     {
       "key": {
+        "uuid": "81552322_e742d166",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ConfigurationService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Singleton service",
+      "parentUuid": "3cde8e0c_f8c839aa",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c848bd39_cb2f33aa",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ConfigurationService.java",
         "patchSetId": 1
@@ -444,6 +768,24 @@
     },
     {
       "key": {
+        "uuid": "558447ef_48662a1b",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ConfigurationService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "singleton service",
+      "parentUuid": "c848bd39_cb2f33aa",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "475f3cf9_ea54e037",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
         "patchSetId": 1
@@ -455,6 +797,24 @@
       "writtenOn": "2018-05-04T20:59:53Z",
       "side": 1,
       "message": "This \"impl\" class does not extend an interface ProtobufService.  What\u0027s really going on here?  The convention of \"Impl\" is that there\u0027s an interface that defines it.  Please revisit.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7dac4658_06a7c403",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "475f3cf9_ea54e037",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -495,6 +855,24 @@
     },
     {
       "key": {
+        "uuid": "97c9325b_162eedda",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Singleton service",
+      "parentUuid": "ddeb00a6_e278c992",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7621faca_86915345",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
         "patchSetId": 1
@@ -506,6 +884,24 @@
       "writtenOn": "2018-05-04T20:59:53Z",
       "side": 1,
       "message": "Remove all system.out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ac68ad73_d9901da2",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7621faca_86915345",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -529,6 +925,24 @@
     },
     {
       "key": {
+        "uuid": "660048b6_ed525c1c",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/Constants.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ec46fd3_d3af2c24",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0d16d70_1577e76a",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
         "patchSetId": 1
@@ -546,6 +960,24 @@
     },
     {
       "key": {
+        "uuid": "06470002_3ae89b85",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0d16d70_1577e76a",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b1c54f11_12a44568",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
         "patchSetId": 1
@@ -557,6 +989,24 @@
       "writtenOn": "2018-05-04T20:59:53Z",
       "side": 1,
       "message": "Are you 100% confident you are reading text files?  What happens if you read a 10MB file with no newlines?  Why do you translate bytes to characters here using the default charset?  How about just using FileInputStream with a 8K buffer instead?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bfa0f0a_ba426045",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "This is to read the files which DS creates, for e.g., Protobufjson, TGIF, CDUMP, Blueprint.",
+      "parentUuid": "b1c54f11_12a44568",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -614,6 +1064,24 @@
     },
     {
       "key": {
+        "uuid": "f553f1ae_968186f0",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad56334c_5b428380",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "34803104_4d0efde2",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
         "patchSetId": 1
@@ -631,6 +1099,24 @@
     },
     {
       "key": {
+        "uuid": "dbf72e84_41d0511c",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34803104_4d0efde2",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d80c739c_2c7649eb",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
         "patchSetId": 1
@@ -642,6 +1128,24 @@
       "writtenOn": "2018-05-04T20:59:53Z",
       "side": 1,
       "message": "This comment looks wildly  out of place",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6ae5af_c0cee417",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d80c739c_2c7649eb",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -682,6 +1186,24 @@
     },
     {
       "key": {
+        "uuid": "71aca69c_99559601",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5175fc2d_1f53e2d1",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ff75705_1fdb7d6d",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/EELFLoggerDelegator.java",
         "patchSetId": 1
@@ -716,6 +1238,24 @@
     },
     {
       "key": {
+        "uuid": "5caeceb0_a14a369f",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/ProtobufUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3fcab3e4_61556c24",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "579133d9_eafc9dd6",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/ProtobufUtil.java",
         "patchSetId": 1
@@ -727,6 +1267,24 @@
       "writtenOn": "2018-05-04T20:59:53Z",
       "side": 1,
       "message": "Ditto",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3e1e049_06292db3",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/ProtobufUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "579133d9_eafc9dd6",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -750,6 +1308,24 @@
     },
     {
       "key": {
+        "uuid": "40bd0ac9_be0ef24d",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6dfd14d_662f16d7",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d957d97b_dbaf8f43",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
         "patchSetId": 1
@@ -761,6 +1337,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "Poor exception handling should be improved",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0270ada4_b39640c5",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d957d97b_dbaf8f43",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -784,6 +1378,24 @@
     },
     {
       "key": {
+        "uuid": "26d6be5d_a485c4c8",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "File can be too large and to read complete file will increase IO, and also we just need one line and convert it to protobuf binary format.",
+      "parentUuid": "4992efd9_6e92206c",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "338b92f2_c636695a",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
         "patchSetId": 1
@@ -795,6 +1407,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "Don\u0027t ever call printStackTrace.  Don\u0027t discard the exception.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ead337c_d1672733",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "338b92f2_c636695a",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -818,6 +1448,24 @@
     },
     {
       "key": {
+        "uuid": "a06aa5df_5de91f7c",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cefb79e6_1c406d54",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a802483_f7bdd8cf",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/Configuration.java",
         "patchSetId": 1
@@ -829,6 +1477,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "be consistent with field naming. Either use camel case or snake case, but don\u0027t mix them.  userName vs user_name.  dataBrokerMap vs data_broker_map.  Java tends to use camel case, so that\u0027s my preference.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebe92669_e74f7f3a",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/Configuration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "field names are as per the field in the input JSON of API /configDB",
+      "parentUuid": "6a802483_f7bdd8cf",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -852,6 +1518,24 @@
     },
     {
       "key": {
+        "uuid": "c9cdc140_a2df9846",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/Configuration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "945b9e0e_3ac6e688",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d7e6bba_08e14799",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/DBInputField.java",
         "patchSetId": 1
@@ -863,6 +1547,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "snake case in Java?  be consistent with other POJO classes",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82680e05_0c41c669",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/DBInputField.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "As per the fields in the input JSON",
+      "parentUuid": "8d7e6bba_08e14799",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -886,6 +1588,24 @@
     },
     {
       "key": {
+        "uuid": "74c4f8fe_b9fa06cb",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/DBOTypeAndRoleHierarchy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "just to revel what exactly it represent in the JSON",
+      "parentUuid": "6c8bc74f_989f3c36",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "470e233b_9ca39034",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/DBOutputField.java",
         "patchSetId": 1
@@ -897,6 +1617,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "This isn\u0027t a list it\u0027s an array",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04fd2edd_ce4e0511",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/DBOutputField.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Field names are JSON driven.",
+      "parentUuid": "470e233b_9ca39034",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -920,6 +1658,24 @@
     },
     {
       "key": {
+        "uuid": "8ce7d6e1_4da2263a",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/ProtobufService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "not JSON, the structured text in .proto file",
+      "parentUuid": "0cda0d88_732ca066",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9af6c53_249af74e",
         "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/ProtobufServiceOperation.java",
         "patchSetId": 1
@@ -931,6 +1687,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "careful - if your list was empty this does the wrong thing",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fec797d7_74326734",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/vo/ProtobufServiceOperation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "its mandatory field.",
+      "parentUuid": "f9af6c53_249af74e",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -971,6 +1745,24 @@
     },
     {
       "key": {
+        "uuid": "dea439a6_a482888b",
+        "filename": "csvdatabroker/src/main/resources/Protobuf_Template.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "147e052a_c5328f60",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2e15601a_1fc6e6f1",
         "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/CSVDatabrokerControllerTest.java",
         "patchSetId": 1
@@ -982,6 +1774,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "make private",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fb8ff9f_564e6ec4",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/CSVDatabrokerControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e15601a_1fc6e6f1",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -1005,6 +1815,24 @@
     },
     {
       "key": {
+        "uuid": "f409bed1_5a358c31",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/CSVDatabrokerControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86e96689_59016981",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c52db06e_fcd5998a",
         "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerControllerTest.java",
         "patchSetId": 1
@@ -1016,6 +1844,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "remove?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d39875d6_187b954b",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c52db06e_fcd5998a",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -1039,6 +1885,24 @@
     },
     {
       "key": {
+        "uuid": "68fe5164_e81ff650",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "666dc0f0_67e51b41",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa8d5932_29af2f4b",
         "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerControllerTest.java",
         "patchSetId": 1
@@ -1056,6 +1920,24 @@
     },
     {
       "key": {
+        "uuid": "dc0d7243_edca644b",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa8d5932_29af2f4b",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f5df9b5_c64f1bfd",
         "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerControllerTest.java",
         "patchSetId": 1
@@ -1067,6 +1949,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "Use logger not system.out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e16ac29f_c82c8519",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-07T12:47:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f5df9b5_c64f1bfd",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
