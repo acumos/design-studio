@@ -272,6 +272,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
 				cdump.setCtime(sdf.format(new Date()));
 				cdump.setProbeIndicator("false");
+				cdump.setValidSolution(false);
 				Gson gson = new Gson();
 				String emptyCdumpJson = gson.toJson(cdump);
 				String path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());

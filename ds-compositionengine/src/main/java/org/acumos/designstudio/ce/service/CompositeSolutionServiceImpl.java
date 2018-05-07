@@ -82,6 +82,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -259,6 +260,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			} else {
 				cdump.setCname(dscs.getSolutionName());
 				cdump.setVersion(dscs.getVersion());
+				cdump.setValidSolution(false);
 				cdump.setSolutionId(mlpSolution.getSolutionId());
 				SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
 				cdump.setMtime(sdf.format(new Date()));
@@ -950,6 +952,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(Include.NON_NULL);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		String type = null;
 		String nodeid = null;
 		boolean isDataBroker = false;
@@ -1049,8 +1052,15 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 										result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot get input from multiple nodes. \"}";
 									} else {
 										// On successful validation generate the BluePrint file
+										// Update the Cdump file with validaSolution as true after successful validation conditions
 										logger.debug(EELFLoggerDelegator.debugLogger,"On successful validation generate the BluePrint file.");
+										cdump.setValidSolution(true);
+										Gson gson = new Gson();
+										String emptyCdumpJson = gson.toJson(cdump);
+										path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
+										DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionId, "json", emptyCdumpJson);
 										result = createAndUploadBluePrint(userId, solutionId, solutionName, version,cdump);
+										
 									}
 								}
 							}

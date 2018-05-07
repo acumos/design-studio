@@ -35,7 +35,15 @@ public class Cdump implements Serializable{
 	private String probeIndicator;
 	private java.util.List<Nodes> nodes;
 	private java.util.List<Relations> relations;
+	private boolean validSolution;
 	
+	
+	public boolean isValidSolution() {
+		return validSolution;
+	}
+	public void setValidSolution(boolean validSolution) {
+		this.validSolution = validSolution;
+	}
 	public String getCname() {
 		return cname;
 	}
