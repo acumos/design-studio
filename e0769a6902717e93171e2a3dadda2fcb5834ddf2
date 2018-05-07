@@ -1,0 +1,463 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "052431e9_4f6a6b30",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "Don\u0027t use HttpServletResponse.SC_EXPECTATION_FAILED that\u0027s confusing.  Use SC_INTERNAL_SERVER_ERROR which is exactly what happened here",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "38cab645_263cc6e0",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "Response \u003d Integer.class (or something like that)",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72065591_c8b1a0d2",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "Response \u003d String.class",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63049da4_871a769a",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "remove don\u0027t comment out :)",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0612717d_8c9697fb",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "use SC_INTERNAL_SERVER_ERROR",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8b17e5b_7a6cdb7a",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "SC_INTERNAL_SERVER_ERROR",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f88da764_8cb7c622",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/CSVDatabrokerController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "SC_INTERNAL_SERVER_ERROR",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70636273_5c18f134",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "Add response \u003d Byte[].  Error response is totally different, that\u0027s ok",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3e60c11_01f6fc96",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "SC_INTERNAL_SERVER_ERROR",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce993015_2af41067",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "Remove don\u0027t comment out",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e9fca4a_6898672b",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "SC_INTERNAL_SERVER_ERROR",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e0c948b2_c8738f87",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/exceptionhandler/AcumosException.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "Please document why transient is needed here",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cae2badf_806d5d6f",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/exceptionhandler/ServiceException.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "My point is, the name is not descriptive.  Maybe you should call it DBServiceException or BrokerSvcException, IDK, but that\u0027s just a suggestion.",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e98859f_b992472e",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/exceptionhandler/ServiceException.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "SC_INTERNAL_SERVER_ERROR",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33394931_09ff492d",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "pls describe params, javadoc will complain bitterly",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e41d8a9_2df93f27",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "Ditto",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "caf324ca_b769d383",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ConfigurationService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "I really don\u0027t think this class should provide this method.  Where is it used?  Why can\u0027t Configuration be autowired by Spring where it\u0027s needed?",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6906f4fd_f852ac37",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ConfigurationService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "Why clone?",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79be2ac8_b1fc26a4",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/Constants.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "You might name it DBConstants or DataBrokerConstants or CSVDBConstants, something.  Just a suggestion. I know the class has a package name, but I still try to avoid utterly generic class names like this, or \"User\" or \"Table\" etc.",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "899e7f34_3e126ff3",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "Does this catch?  Exception should bubble up.",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ba3f5ca_278979d4",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "Don\u0027t catch!  Remove the catch block!!",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bcb35ac8_a7ce5855",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/DSUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "rmdir not runCommand",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63556f7b_773327a5",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "I don\u0027t think it adds value to wrap an exception in another. If you insist on catching, perhaps so you can log it, then just re-throw the same exception:\n\n    throw e;",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0841ea7e_8c79ec8c",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "Ditto",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9cbdca2_1df6a388",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "I\u0027m not sure you want to catch at all.",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfd96dc4_f5aca68f",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "See comment about about wrapping an exception, or not.  Seems like you\u0027re doing too much work here.",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "874efd76_8bfef497",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-07T18:54:59Z",
+      "side": 1,
+      "message": "Add assertion to check what came back.  This is not yet a test case, it\u0027s just the first part; the second part is still missing.",
+      "revId": "e0769a6902717e93171e2a3dadda2fcb5834ddf2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
