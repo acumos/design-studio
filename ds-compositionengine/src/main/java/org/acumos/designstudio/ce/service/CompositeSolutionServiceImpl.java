@@ -1003,7 +1003,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								nodeid = no.getNodeId();
 								type = no.getType().getName();
 								// If node type is DataBroker then check for sourceNodeId of relations which is of different nodeId
-								if ("DataBroker".equals(type)) {
+								if (props.getDatabrokerType().equals(type)) {
 									// Check whether data broker is first node or not
 									for (Relations rel : relationsList) {
 										if (nodeid.equals(rel.getTargetNodeId())) {

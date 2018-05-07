@@ -54,6 +54,9 @@ import org.acumos.designstudio.ce.vo.cdump.Ndata;
 import org.acumos.designstudio.ce.vo.cdump.Nodes;
 import org.acumos.designstudio.ce.vo.cdump.Property;
 import org.acumos.designstudio.ce.vo.cdump.Relations;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBInputField;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapInput;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapOutput;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMapInputField;
@@ -587,8 +590,7 @@ public class SolutionServiceImpl implements ISolutionService {
 						if (null != relations && !relations.isEmpty()) {
 							// iterate through relation
 							for (Relations relation : relations) {
-								// check if the relation contains the specified
-								// nodeId
+								// check if the relation contains the specified nodeId
 								if (relation.getSourceNodeId().equals(nodeId)) {
 									relation.setSourceNodeName(nodeName);
 								} else if (relation.getTargetNodeId().equals(nodeId)) {
@@ -781,7 +783,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				try {
 					Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName)), Cdump.class);
 					List<Nodes> nodesList = cdump.getNodes();
-					List<Relations> relationsList;
+					List<Relations> relationsList = cdump.getRelations();
 					if (nodesList == null || nodesList.isEmpty()) {
 						deletedNode = false;
 					} else {
@@ -791,12 +793,39 @@ public class SolutionServiceImpl implements ISolutionService {
 							Nodes node = nodeitr.next();
 							if (node.getNodeId().equals(nodeId)) {
 								deletedNode = true;
-								nodeitr.remove();
+								nodeitr.remove();	
 								break;
 							}
 						}
+						for (Relations relations : relationsList) {
+							if (relations.getTargetNodeId().equals(nodeId)) {
+								String sourceNodeId = relations.getSourceNodeId();
+								for (Nodes no : nodesList) {
+									if (no.getNodeId().equals(sourceNodeId)) {
+										String nodeType = no.getType().getName();
+										if (props.getDatabrokerType().equals(nodeType)) {
+											Property[] propArr = no.getProperties();
+											ArrayList<Property> arrayList = new ArrayList<Property>(Arrays.asList(propArr));
+											Iterator<Property> propertyItr = arrayList.iterator();
+											while (propertyItr.hasNext()) {
+												Property prop = propertyItr.next();
+												DBMapOutput[] dbMapOutputArr = prop.getData_broker_map().getMap_outputs();
+												for(int i=0;i<dbMapOutputArr.length;i++){
+													dbMapOutputArr[i].setOutput_field(null);
+												}
+												DBMapInput[] dbMapInputArr = prop.getData_broker_map().getMap_inputs();
+												for(DBMapInput dbMapIp : dbMapInputArr){
+													DBInputField dbInField = dbMapIp.getInput_field();
+													dbInField.setChecked("NO");
+													dbInField.setMapped_to_field("");
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 						// Deleting relationsList for given nodeId
-						relationsList = cdump.getRelations();
 						if (relationsList == null || relationsList.isEmpty()) {
 						} else {
 							Iterator<Relations> relationitr = relationsList.iterator();
@@ -1293,39 +1322,41 @@ public class SolutionServiceImpl implements ISolutionService {
 			} else if (null == cid && null != solutionId) {
 				id = solutionId;
 			}
-
 			cdumpFileName = "acumos-cdump" + "-" + id + ".json";
 			File file = new File(filePath.concat(cdumpFileName));
 			if (file.exists()) {
-
 				Cdump cdump = mapper.readValue(new File(filePath.concat(cdumpFileName)), Cdump.class);
 				List<Relations> relationsList = cdump.getRelations();
-
 				if (null == relationsList || relationsList.isEmpty()) {
 					deletedLink = false;
 				} else {
 					Iterator<Relations> relationsItr = relationsList.iterator();
-
-					// Identify link to delete + Data mapper node to delete it's
-					// properties field
+					// Identify link to delete + Data mapper node to delete it's properties field
 					while (relationsItr.hasNext()) {
 						Relations relation = relationsItr.next();
 						if (relation.getLinkId().equals(linkId)) {
-
 							sourceNodeId = relation.getSourceNodeId();
 							targetNodeId = relation.getTargetNodeId();
-
 							nodesList = cdump.getNodes();
-
 							// delete properties field from DM
 							for (Nodes node : nodesList) {
 								if (node.getNodeId().equals(sourceNodeId) && node.getProperties().length != 0) {
-
-									node.getProperties()[0].getData_map().setMap_outputs(new MapOutput[0]);
+									if(props.getGdmType().equals(node.getType().getName())){
+										node.getProperties()[0].getData_map().setMap_outputs(new MapOutput[0]);
+									}else if(props.getDatabrokerType().equals(node.getType().getName())){
+										node.getProperties()[0].getData_broker_map().setMap_outputs(new DBMapOutput[0]);
+										DBMapInput[] dbMapInArr = node.getProperties()[0].getData_broker_map().getMap_inputs();
+										for(DBMapInput dbmInput : dbMapInArr){
+											DBInputField dbiField = dbmInput.getInput_field();
+											dbiField.setChecked("NO");
+											dbiField.setMapped_to_field("");
+										}
+									}
 								}
 								if (node.getNodeId().equals(targetNodeId) && node.getProperties().length != 0) {
-
-									node.getProperties()[0].getData_map().setMap_inputs(new MapInputs[0]);
+									if(props.getGdmType().equals(node.getType().getName())){
+										node.getProperties()[0].getData_map().setMap_inputs(new MapInputs[0]);
+									}
 								}
 							}
 							// delete link details form relations list
