@@ -956,6 +956,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String type = null;
 		String nodeid = null;
 		boolean isDataBroker = false;
+		Date currentDate = new Date();
 		try {
 			Cdump cdump = null;
 			// 1. Read the cdump file
@@ -1052,13 +1053,18 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 										result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot get input from multiple nodes. \"}";
 									} else {
 										// On successful validation generate the BluePrint file
-										// Update the Cdump file with validaSolution as true after successful validation conditions
+										// Update the Cdump file with validaSolution as true after successful validation conditions and Modified Time also
 										logger.debug(EELFLoggerDelegator.debugLogger,"On successful validation generate the BluePrint file.");
 										cdump.setValidSolution(true);
+										cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
 										Gson gson = new Gson();
 										String emptyCdumpJson = gson.toJson(cdump);
 										path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
+										// Write Data to File
 										DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionId, "json", emptyCdumpJson);
+										Artifact cdumpArtifact = new Artifact(cdumpFileName, "json",solutionId, version, path, emptyCdumpJson.length());
+										// upload the file to repository
+										uploadFilesToRepository(solutionId, version,cdumpArtifact);
 										result = createAndUploadBluePrint(userId, solutionId, solutionName, version,cdump);
 										
 									}
