@@ -1990,6 +1990,24 @@
     },
     {
       "key": {
+        "uuid": "9f675404_77ab61fa",
+        "filename": "gdmservice/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-08T14:21:20Z",
+      "side": 1,
+      "message": "deployment artifact is not Docker image, but its the jar to be included in class path",
+      "parentUuid": "72ddee0e_9d3a20f2",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f30065f7_ec6c7ece",
         "filename": "gdmservice/pom.xml",
         "patchSetId": 1
@@ -2007,6 +2025,24 @@
     },
     {
       "key": {
+        "uuid": "78db8bd5_934988af",
+        "filename": "gdmservice/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-08T14:21:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f30065f7_ec6c7ece",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fd7025f_a227fd3c",
         "filename": "gdmservice/pom.xml",
         "patchSetId": 1
@@ -2018,6 +2054,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "should be implementation version, not these funny custom tags",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25b0132c_f5c0b579",
+        "filename": "gdmservice/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-08T14:21:20Z",
+      "side": 1,
+      "message": "Didn\u0027t get this comment",
+      "parentUuid": "3fd7025f_a227fd3c",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
