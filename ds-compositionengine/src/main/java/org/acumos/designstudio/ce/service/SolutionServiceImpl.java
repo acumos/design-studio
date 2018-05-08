@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -72,7 +73,7 @@ import org.acumos.nexus.client.NexusArtifactClient;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.context.annotation.SessionScope;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -91,6 +92,9 @@ import com.google.gson.JsonIOException;
 @Service("solutionServiceImpl")
 public class SolutionServiceImpl implements ISolutionService {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(SolutionServiceImpl.class);
+	
+	@Autowired
+	MatchingModelServiceComponent matchingModelServiceComponent;
 
 	@Autowired
 	Properties props;
@@ -137,7 +141,7 @@ public class SolutionServiceImpl implements ISolutionService {
 			} else {
 				logger.debug(EELFLoggerDelegator.debugLogger,
 						" CommonDataService returned Solution list of size :  {} ", mlpSolutionsList.size());
-
+				List<MLPSolution> matchingModelsolutionList  = new ArrayList<MLPSolution>();
 				MLPUser mlpUser = cmnDataService.getUser(userID);
 				logger.debug(EELFLoggerDelegator.debugLogger, "MLPUSer  {} ", mlpUser);
 				// Get the TypeCodes from Properties file
@@ -155,20 +159,26 @@ public class SolutionServiceImpl implements ISolutionService {
 						if (accessTypeCode.equals(pbAccessTypeCode)) {
 							strBuilder = buildSolutionDetails(mlpsolution, cmnDataService, strBuilder, solutionId,
 									dssolution, dsSolutionList, solutionIdList, mlpSolRevisionList, sdf);
+							matchingModelsolutionList.add(mlpsolution);
 						}
 
 						if (mlpsolution.getOwnerId().equals(userID) && accessTypeCode.equals(prAccessTypeCode)) {
 							strBuilder = buildSolutionDetails(mlpsolution, cmnDataService, strBuilder, solutionId,
 									dssolution, dsSolutionList, solutionIdList, mlpSolRevisionList, sdf);
+							matchingModelsolutionList.add(mlpsolution);
 						}
 
 						if (accessTypeCode.equals(orAccessTypeCode)) {
 							strBuilder = buildSolutionDetails(mlpsolution, cmnDataService, strBuilder, solutionId,
 									dssolution, dsSolutionList, solutionIdList, mlpSolRevisionList, sdf);
+							matchingModelsolutionList.add(mlpsolution);
 						}
 					}
 
 				}
+				matchingModelServiceComponent.setMatchingModelsolutionList(matchingModelsolutionList);
+				matchingModelServiceComponent.setMatchingModelRevisionList(null);
+				matchingModelServiceComponent.setMatchingModelArtifactTigifFileList(null);
 			}
 
 			if (strBuilder.length() > 1) {
@@ -867,16 +877,29 @@ public class SolutionServiceImpl implements ISolutionService {
 	public String getMatchingModels(String userId, String portType, JSONArray protobufJsonString) throws Exception {
 		Gson gson = new Gson();
 		List<MLPSolution> mlpSolutions = null;
+		List<MLPArtifact> mlpArtifact  = null;
 		List<MatchingModel> matchingModelList = new ArrayList<>();
 		boolean validMatchingModel;
+		LinkedHashMap<String, List<MLPSolutionRevision>> matchingModelRevisionList = new LinkedHashMap<String,List<MLPSolutionRevision>>();
+		LinkedHashMap<String, List<MLPArtifact>> matchingModelArtifactTigifFileList = new LinkedHashMap<String, List<MLPArtifact>>();
 		try {
-			Map<String, Object> queryParameters = new HashMap<>();
+			/*Map<String, Object> queryParameters = new HashMap<>();
 			queryParameters.put("active", Boolean.TRUE);
 			// Code changes are to match the change in the CDS API Definition
 			// searchSolution in version 1.13.x
 			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
 					new RestPageRequest(0, props.getSolutionResultsetSize()));
-			mlpSolutions = pageResponse.getContent();
+			mlpSolutions = pageResponse.getContent();*/
+			if(null != matchingModelServiceComponent.getMatchingModelsolutionList()){
+				mlpSolutions = matchingModelServiceComponent.getMatchingModelsolutionList();	
+				logger.debug(EELFLoggerDelegator.debugLogger,
+						"Take solution list at the time of getSolutionS API is called as well from the local cache or session");
+			}else{
+				mlpSolutions = getSolutionsForMatchingModel(userId);
+				logger.debug(EELFLoggerDelegator.debugLogger,
+						"If solution list is not available from at time of getSolutionS API call as well "
+						+ "from the local cache or session then need to fetch from CCDS");
+			}
 			MatchingModel matchingModel = null;
 			List<MLPSolutionRevision> mlpSolRevisions;
 			String solutionId = null;
@@ -886,7 +909,14 @@ public class SolutionServiceImpl implements ISolutionService {
 				mlpSolRevisions = new ArrayList<>();
 				for (MLPSolution mlpsol : mlpSolutions) {
 					solutionId = mlpsol.getSolutionId();
-					mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
+					//mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
+					if(null != matchingModelServiceComponent.getMatchingModelRevisionList() && 
+							matchingModelServiceComponent.getMatchingModelRevisionList().containsKey(solutionId)){
+						    mlpSolRevisions = matchingModelServiceComponent.getMatchingModelRevisionList().get(solutionId);
+					}else{
+						mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);// 
+						matchingModelRevisionList.put(solutionId, mlpSolRevisions);
+					}
 					if (mlpSolRevisions != null && mlpSolRevisions.size() != 0) {
 						logger.debug(EELFLoggerDelegator.debugLogger,
 								" CommonDataService returned Solution Revision list of size : "
@@ -894,9 +924,16 @@ public class SolutionServiceImpl implements ISolutionService {
 						validMatchingModel = false;
 						for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
 							matchingModel = new MatchingModel();
-							List<MLPArtifact> mlpArtifact = cmnDataService.getSolutionRevisionArtifacts(
-									mlpsol.getSolutionId(), mlpSolRevision.getRevisionId());
-							logger.debug(EELFLoggerDelegator.debugLogger,
+							if(null !=matchingModelServiceComponent.getMatchingModelArtifactTigifFileList()){
+								if(matchingModelServiceComponent.getMatchingModelArtifactTigifFileList().containsKey(mlpsol.getSolutionId()+mlpSolRevision.getRevisionId())){
+									mlpArtifact = matchingModelServiceComponent.getMatchingModelArtifactTigifFileList().get(mlpsol.getSolutionId()+mlpSolRevision.getRevisionId());
+								}	
+						   }else{
+								mlpArtifact = cmnDataService.getSolutionRevisionArtifacts(
+										mlpsol.getSolutionId(), mlpSolRevision.getRevisionId());
+								matchingModelArtifactTigifFileList.put(mlpsol.getSolutionId()+mlpSolRevision.getRevisionId(), mlpArtifact);
+						   }
+						    logger.debug(EELFLoggerDelegator.debugLogger,
 									" Solution Id {} ", mlpsol.getSolutionId());
 							String artifactURI = "";
 							if (null != mlpArtifact && !mlpArtifact.isEmpty()) {
@@ -925,6 +962,12 @@ public class SolutionServiceImpl implements ISolutionService {
 					}
 
 				}
+				if(null == matchingModelServiceComponent.getMatchingModelRevisionList()){
+					matchingModelServiceComponent.setMatchingModelRevisionList(matchingModelRevisionList);
+				}
+				if(null ==matchingModelServiceComponent.getMatchingModelArtifactTigifFileList()){
+					matchingModelServiceComponent.setMatchingModelArtifactTigifFileList(matchingModelArtifactTigifFileList);
+				}
 			} else {
 				logger.debug(EELFLoggerDelegator.debugLogger,
 						" CommonDataService returned empty Solution list");
@@ -940,7 +983,56 @@ public class SolutionServiceImpl implements ISolutionService {
 			return "false";
 		}
 	}
+	private List<MLPSolution> getSolutionsForMatchingModel(String userId){
+		List<MLPSolution> matchingModelsolutionList  = new ArrayList<MLPSolution>();
+		List<MLPSolution> mlpSolutionsList = null;
+		Map<String, Object> queryParameters = new HashMap<>();
+		queryParameters.put("active", Boolean.TRUE);
+		// Code changes are to match the change in the CDS API Definition
+		// searchSolution in version 1.13.x
+		RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
+				new RestPageRequest(0, props.getSolutionResultsetSize()));
+		mlpSolutionsList = pageResponse.getContent();
+		logger.debug(EELFLoggerDelegator.debugLogger, " The Date Format :  {} ", confprops.getDateFormat());
+		if (null == mlpSolutionsList) {
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					" CommonDataService returned null Solution list");
+		} else if (mlpSolutionsList.isEmpty()) {
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					" CommonDataService returned empty Solution list");
+		} else {
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					" CommonDataService returned Solution list of size :  {} ", mlpSolutionsList.size());
+			
+			MLPUser mlpUser = cmnDataService.getUser(userId);
+			logger.debug(EELFLoggerDelegator.debugLogger, "MLPUSer  {} ", mlpUser);
+			// Get the TypeCodes from Properties file
+			String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
+			String pbAccessTypeCode = props.getPublicAccessTypeCode();
+			String prAccessTypeCode = props.getPrivateAccessTypeCode();
+			String orAccessTypeCode = props.getOrganizationAccessTypeCode();
+			// For each solution where toolkittypeCode is not null and not
+			// equal to "CP".
+			for (MLPSolution mlpsolution : mlpSolutionsList) {
+				if (mlpsolution.getToolkitTypeCode() != null
+						&& (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
+                        String accessTypeCode = mlpsolution.getAccessTypeCode();
+					if (accessTypeCode.equals(pbAccessTypeCode)) {
+						matchingModelsolutionList.add(mlpsolution);
+					}
+                    if (mlpsolution.getOwnerId().equals(userId) && accessTypeCode.equals(prAccessTypeCode)) {
+						matchingModelsolutionList.add(mlpsolution);
+					}
+                    if (accessTypeCode.equals(orAccessTypeCode)) {
+						matchingModelsolutionList.add(mlpsolution);
+					}
+				}
 
+			}
+			matchingModelServiceComponent.setMatchingModelsolutionList(matchingModelsolutionList);
+		}
+		return matchingModelsolutionList;
+	} 
 	/**
 	 * 
 	 * @param artifactURI
@@ -1500,5 +1592,59 @@ public class SolutionServiceImpl implements ISolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, "getProtoUrl() : End");
 		return nexusURI;
 	}
+	/**
+	 * @param userId
+	 * return List<MLPSolution>
+	*/
+	private List<MLPSolution> getSolutionsForMatchingModel(String userId){
+		List<MLPSolution> matchingModelsolutionList  = new ArrayList<MLPSolution>();
+		List<MLPSolution> mlpSolutionsList = null;
+		Map<String, Object> queryParameters = new HashMap<>();
+		queryParameters.put("active", Boolean.TRUE);
+		// Code changes are to match the change in the CDS API Definition
+		// searchSolution in version 1.13.x
+		RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
+				new RestPageRequest(0, props.getSolutionResultsetSize()));
+		mlpSolutionsList = pageResponse.getContent();
+		logger.debug(EELFLoggerDelegator.debugLogger, " The Date Format :  {} ", confprops.getDateFormat());
+		if (null == mlpSolutionsList) {
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					" CommonDataService returned null Solution list");
+		} else if (mlpSolutionsList.isEmpty()) {
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					" CommonDataService returned empty Solution list");
+		} else {
+			logger.debug(EELFLoggerDelegator.debugLogger,
+					" CommonDataService returned Solution list of size :  {} ", mlpSolutionsList.size());
+			
+			MLPUser mlpUser = cmnDataService.getUser(userId);
+			logger.debug(EELFLoggerDelegator.debugLogger, "MLPUSer  {} ", mlpUser);
+			// Get the TypeCodes from Properties file
+			String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
+			String pbAccessTypeCode = props.getPublicAccessTypeCode();
+			String prAccessTypeCode = props.getPrivateAccessTypeCode();
+			String orAccessTypeCode = props.getOrganizationAccessTypeCode();
+			// For each solution where toolkittypeCode is not null and not
+			// equal to "CP".
+			for (MLPSolution mlpsolution : mlpSolutionsList) {
+				if (mlpsolution.getToolkitTypeCode() != null
+						&& (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
+                        String accessTypeCode = mlpsolution.getAccessTypeCode();
+					if (accessTypeCode.equals(pbAccessTypeCode)) {
+						matchingModelsolutionList.add(mlpsolution);
+					}
+                    if (mlpsolution.getOwnerId().equals(userId) && accessTypeCode.equals(prAccessTypeCode)) {
+						matchingModelsolutionList.add(mlpsolution);
+					}
+                    if (accessTypeCode.equals(orAccessTypeCode)) {
+						matchingModelsolutionList.add(mlpsolution);
+					}
+				}
+
+			}
+			matchingModelServiceComponent.setMatchingModelsolutionList(matchingModelsolutionList);
+		}
+		return matchingModelsolutionList;
+	} 
 
 }
