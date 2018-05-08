@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae2b6901_6ee10531",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/controller/VerifyCsvDatabrokerController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-08T13:58:35Z",
+      "side": 1,
+      "message": "well the response is byte array, not just Byte; does Swagger support that?",
+      "revId": "a973a7f5877ff7a43b676d64153e836d367bda75",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f17575b0_3bc92aa9",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-08T13:58:35Z",
+      "side": 1,
+      "message": "Include original exception",
+      "revId": "a973a7f5877ff7a43b676d64153e836d367bda75",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e3de630_acd7cbda",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-08T13:58:35Z",
+      "side": 1,
+      "message": "Include the original exception in the throw as the cause.  Does your Exc constructor accept an exception to wrap?  If not please extend so that it does.",
+      "revId": "a973a7f5877ff7a43b676d64153e836d367bda75",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5dee414_e4772029",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ConfigurationServiceImpl.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-08T13:58:35Z",
+      "side": 1,
+      "message": "This still looks strange to me.  A configuration service provides configuration options.  Actually getting the configuration service object seems like a warped design.  Wish you could explain it to me on a whiteboard, via email it\u0027s not getting into my thick skull.",
+      "revId": "a973a7f5877ff7a43b676d64153e836d367bda75",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f64da122_7b90f315",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-08T13:58:35Z",
+      "side": 1,
+      "message": "Include the original exception when you wrap and throw",
+      "revId": "a973a7f5877ff7a43b676d64153e836d367bda75",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84a9dfb8_e296b089",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/util/RemoteScriptExecutor.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-08T13:58:35Z",
+      "side": 1,
+      "message": "Ditto",
+      "revId": "a973a7f5877ff7a43b676d64153e836d367bda75",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2c5c5478_b44f315d",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-08T13:58:35Z",
+      "side": 1,
+      "message": "Please add license text",
+      "revId": "a973a7f5877ff7a43b676d64153e836d367bda75",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
