@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9052ed80_03e242e9",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceComponent.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-08T08:29:54Z",
+      "side": 1,
+      "message": "Include License",
+      "range": {
+        "startLine": 1,
+        "startChar": 35,
+        "endLine": 1,
+        "endChar": 42
+      },
+      "revId": "debf4d8610e38b75d1ceadebe727b597a8330ce6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69faec12_7f0b326c",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceComponent.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-08T08:29:54Z",
+      "side": 1,
+      "message": "Include detailed java doc comments",
+      "revId": "debf4d8610e38b75d1ceadebe727b597a8330ce6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb320380_e4d56dad",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceComponent.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-08T08:29:54Z",
+      "side": 1,
+      "message": "LinkedHashMap are more expensive",
+      "range": {
+        "startLine": 19,
+        "startChar": 9,
+        "endLine": 19,
+        "endChar": 22
+      },
+      "revId": "debf4d8610e38b75d1ceadebe727b597a8330ce6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1abf0a6d_7929c99a",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 986,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-08T08:29:54Z",
+      "side": 1,
+      "message": "Please include the private method at the end of the class",
+      "range": {
+        "startLine": 986,
+        "startChar": 27,
+        "endLine": 986,
+        "endChar": 55
+      },
+      "revId": "debf4d8610e38b75d1ceadebe727b597a8330ce6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
