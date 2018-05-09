@@ -2112,6 +2112,24 @@
     },
     {
       "key": {
+        "uuid": "74c6f0c5_f9ae043b",
+        "filename": "gdmservice/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70d89460_1856d30b",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d928d476_1ecfbc74",
         "filename": "gdmservice/pom.xml",
         "patchSetId": 1
@@ -2123,6 +2141,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "You can remove this, it\u0027s not needed.  LF deployment uses other magic, not maven.",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c95a1045_4a87e3f4",
+        "filename": "gdmservice/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "You mean to say, remove entire \u003cdistributionManagement\u003e ?",
+      "parentUuid": "d928d476_1ecfbc74",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2163,6 +2199,24 @@
     },
     {
       "key": {
+        "uuid": "30def9f4_54050d49",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/config/AppConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Nothing to read from Environment variable, removing the class",
+      "parentUuid": "756b4c53_bf2f644d",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "761abe8a_f38ad5cf",
         "filename": "gdmservice/src/main/java/org/acumos/gdm/config/SwggerConfiguration.java",
         "patchSetId": 1
@@ -2174,6 +2228,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "please use a proper Apache license URL",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b5a73e6_47c31b22",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/config/SwggerConfiguration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "761abe8a_f38ad5cf",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2231,6 +2303,24 @@
     },
     {
       "key": {
+        "uuid": "309e4c7b_2feffb5f",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/controller/GDMController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "766bbe64_d31876f9",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48c4948e_fcdcbf27",
         "filename": "gdmservice/src/main/java/org/acumos/gdm/controller/GDMController.java",
         "patchSetId": 1
@@ -2242,6 +2332,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "debug (not info)",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc82c8e0_3f5a221f",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/controller/GDMController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48c4948e_fcdcbf27",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2265,6 +2373,24 @@
     },
     {
       "key": {
+        "uuid": "7d9c2ebf_b4b6299a",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/controller/GDMController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43709fee_fa004cb7",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7d455278_9a30515c",
         "filename": "gdmservice/src/main/java/org/acumos/gdm/service/GDMServiceImpl.java",
         "patchSetId": 1
@@ -2276,6 +2402,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "make final",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6dbb3213_45b1cb49",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/service/GDMServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d455278_9a30515c",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2299,6 +2443,24 @@
     },
     {
       "key": {
+        "uuid": "03dca68d_873212cd",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/service/GDMServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a100f26_8ab9cf24",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff2fac2a_f02a1467",
         "filename": "gdmservice/src/main/java/org/acumos/gdm/service/GDMServiceImpl.java",
         "patchSetId": 1
@@ -2310,6 +2472,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "DOn\u0027t work so hard.  Instead log exceptions like this:\n\nlogger.error(\"methodName failed\", e);",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c59d80ce_f981692c",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/service/GDMServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff2fac2a_f02a1467",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2333,6 +2513,24 @@
     },
     {
       "key": {
+        "uuid": "fd94d5b9_8ebdc988",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/service/GDMServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ede3632_151400dc",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a179b86c_51d5ef91",
         "filename": "gdmservice/src/main/java/org/acumos/gdm/service/GDMServiceImpl.java",
         "patchSetId": 1
@@ -2344,6 +2542,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "If these are truly going to remain empty then just delete",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c048f349_998fc193",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/service/GDMServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a179b86c_51d5ef91",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2367,6 +2583,24 @@
     },
     {
       "key": {
+        "uuid": "9539b137_a40264e5",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/service/IGDMService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82baae4f_983e5d9e",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6dde59e_d13d0235",
         "filename": "gdmservice/src/main/java/org/acumos/gdm/util/EELFLoggerDelegator.java",
         "patchSetId": 1
@@ -2378,6 +2612,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "Get latest version from CDS",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "962ca214_47fdf847",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/util/EELFLoggerDelegator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6dde59e_d13d0235",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2401,6 +2653,24 @@
     },
     {
       "key": {
+        "uuid": "1549465b_90b0db6b",
+        "filename": "gdmservice/src/main/java/org/acumos/gdm/util/Properties.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4f00af6_9ceaa1f6",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "842bdd5d_9a4e71bf",
         "filename": "gdmservice/src/main/java/org/acumos/vo/DataVO.java",
         "patchSetId": 1
@@ -2412,6 +2682,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "maybe this package is a bit too generic? do you want it to be data broker, or data mapper, or ??",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7a46355_1bcdac23",
+        "filename": "gdmservice/src/main/java/org/acumos/vo/DataVO.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "because we need to specify the package in the .proto file so made it generic",
+      "parentUuid": "842bdd5d_9a4e71bf",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2435,6 +2723,24 @@
     },
     {
       "key": {
+        "uuid": "13f58c8d_591a6823",
+        "filename": "gdmservice/src/main/java/org/acumos/vo/mapping/InputField.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "field names are to match the Json.",
+      "parentUuid": "c503a41b_74d47a1c",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e662f109_5e901051",
         "filename": "gdmservice/src/main/java/org/acumos/vo/mapping/MapInput.java",
         "patchSetId": 1
@@ -2446,6 +2752,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "See comments elsewhere about camel vs snake case.  You didn\u0027t name this class map_input so why would you name its fields with snake case?",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7bf7f41_5601fc65",
+        "filename": "gdmservice/src/main/java/org/acumos/vo/mapping/MapInput.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "field names are per the Json or to match the Json fields.",
+      "parentUuid": "e662f109_5e901051",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2469,6 +2793,24 @@
     },
     {
       "key": {
+        "uuid": "3322480a_769b2182",
+        "filename": "gdmservice/src/main/java/org/acumos/vo/mapping/MapOutput.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "field names are per the Json or to match the Json fields.",
+      "parentUuid": "e721365f_ce9bd418",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28c952f9_a96edf83",
         "filename": "gdmservice/src/main/java/org/acumos/vo/mapping/OutputField.java",
         "patchSetId": 1
@@ -2480,6 +2822,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "Please fix case setType, getType and so on",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b0aee2d_15af8e8b",
+        "filename": "gdmservice/src/main/java/org/acumos/vo/mapping/OutputField.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "28c952f9_a96edf83",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2503,6 +2863,24 @@
     },
     {
       "key": {
+        "uuid": "5a93e055_61e3cf28",
+        "filename": "gdmservice/src/main/resources/FieldMapping.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Removed the license",
+      "parentUuid": "641e044c_5b984af5",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e96eb468_dc9358f1",
         "filename": "gdmservice/src/main/resources/logback.xml",
         "patchSetId": 1
@@ -2514,6 +2892,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "wrong component name, I think",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de3dcec4_333efa99",
+        "filename": "gdmservice/src/main/resources/logback.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Removed the logback.xml as it will use the logback.xml of project in which it get included.",
+      "parentUuid": "e96eb468_dc9358f1",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2537,6 +2933,24 @@
     },
     {
       "key": {
+        "uuid": "b024b96c_9d26fa99",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/ApplicationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "cannot have assert, as it just start the application",
+      "parentUuid": "9e12e2f4_33080ae9",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1de9037b_c02a6c12",
         "filename": "gdmservice/src/test/java/org/acumos/gdm/controller/GDMControllerTest.java",
         "patchSetId": 1
@@ -2548,6 +2962,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "should be private",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b31ab9a_8599bdf1",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/controller/GDMControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1de9037b_c02a6c12",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2571,6 +3003,24 @@
     },
     {
       "key": {
+        "uuid": "89ac8f01_7efee63f",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/controller/GDMControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79496b18_e12a7d91",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cf7c93ea_c7d26e4c",
         "filename": "gdmservice/src/test/java/org/acumos/gdm/controller/GDMControllerTest.java",
         "patchSetId": 1
@@ -2582,6 +3032,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "Use logger not system.out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23667bf9_6bec3222",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/controller/GDMControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf7c93ea_c7d26e4c",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2605,6 +3073,24 @@
     },
     {
       "key": {
+        "uuid": "3a1cdab0_a99b2218",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/gdmservice/AppTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46ba9fec_8b96cca6",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ef3694e_2da16e65",
         "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
         "patchSetId": 1
@@ -2616,6 +3102,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "probably should be private",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41e4c6d1_4d2493bd",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ef3694e_2da16e65",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2639,6 +3143,24 @@
     },
     {
       "key": {
+        "uuid": "6a1d74a0_cee417f1",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e3db374_80948ac5",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee9bc286_e4096917",
         "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
         "patchSetId": 1
@@ -2650,6 +3172,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "Please don\u0027t use names of team members",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fffab5f1_3b8457a2",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee9bc286_e4096917",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2673,6 +3213,24 @@
     },
     {
       "key": {
+        "uuid": "cdd9e095_fb0f8784",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4bf37c5_5cac6c53",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "047b9374_8f87ac91",
         "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
         "patchSetId": 1
@@ -2684,6 +3242,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "Ditto",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17edb94f_0e5f55dd",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "047b9374_8f87ac91",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
@@ -2707,6 +3283,24 @@
     },
     {
       "key": {
+        "uuid": "d75864bf_c25ac03b",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "918c1117_4cb5fbde",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aadcce84_ecdb218f",
         "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
         "patchSetId": 1
@@ -2718,6 +3312,24 @@
       "writtenOn": "2018-05-05T03:02:11Z",
       "side": 1,
       "message": "Use logger not system.out",
+      "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46ea0514_100d4758",
+        "filename": "gdmservice/src/test/java/org/acumos/gdm/service/GDMServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-09T13:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aadcce84_ecdb218f",
       "revId": "ffc32e0f9819b7de36e76d2071b1f948b51b7eb2",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
