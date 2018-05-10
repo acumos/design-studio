@@ -28,6 +28,8 @@ The Design Studio Composition Engine is deployed within a Docker image in the Do
 * ACUMOS-794 : Update API : createNewCompositeSolution to set the solution validate flag to false (BE).
 * ACUMOS-795 : Update API : saveCompositeSolution to reset the solution validate flag to false.
 * ACUMOS-796 : Update API : validateCompositeSolution to reset the solution valid flat to true or false.
+* ACUMOS-800 : Construct CSV Databroker as DS tool
+* Update to use latest version of Common Data Service : 1.14.4.
 
 
 0.0.26-SNAPSHOT, 2018-05-03
