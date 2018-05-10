@@ -1451,11 +1451,16 @@ public class SolutionServiceImpl implements ISolutionService {
 
 	/**
 	 * @param solutionId
+	 * 			solutionId is required to get protoUrl
 	 * @param version
+	 * 			version is required to get protoUrl			
 	 * @param artifactType
-	 * @return nexusURI
+	 * 			artifactType is required to get protoUrl	
+	 * @return fileExtention
+	 * 			This method accepts fileExtention
 	 * @throws AcumosException
-	 *             Use for getting the nexusURI for solution.
+	 *          Throws AcumosException while getting protoUrl, Use for getting the nexusURI for solution.
+	 *  
 	 */
 	public String getProtoUrl(String solutionId, String version, String artifactType, String fileExtention) throws AcumosException {
 		logger.debug(EELFLoggerDelegator.debugLogger, "getProtoUrl() : Begin");
@@ -1469,40 +1474,30 @@ public class SolutionServiceImpl implements ISolutionService {
 			try {
 				mlpSolutionRevisionList = cmnDataService.getSolutionRevisions(solutionId);
 			} catch (Exception e) {
-				logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutionRevisions() ",
-						e);
+				logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutionRevisions() ",e);
 				throw new ServiceException("Failed to get the SolutionRevisionList");
 			}
 
-			// 2. Match the version with the SolutionRevision and get the
-			// solutionRevisionId.
+			// 2. Match the version with the SolutionRevision and get the solutionRevisionId.
 			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
 				solutionRevisionId = mlpSolutionRevisionList.stream().filter(mlp -> mlp.getVersion().equals(version))
 						.findFirst().get().getRevisionId();
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						" SolutionRevisonId for Version :  {} ", solutionRevisionId );
+				logger.debug(EELFLoggerDelegator.debugLogger, " SolutionRevisonId for Version :  {} ", solutionRevisionId );
 			}
 		} catch (NoSuchElementException | NullPointerException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",
-					e);
+			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
 			throw new NoSuchElementException("Failed to fetch the Solution Revision Id of the solutionId for the user");
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",
-					e);
+			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
 			throw new ServiceException("Failed to fetch the Solution Revision Id for the solutionId " + solutionId);
 		}
 
 		if (null != solutionRevisionId) {
-			// 3. Get the list of Artifiact for the SolutionId and
-			// SolutionRevisionId.
+			// 3. Get the list of Artifiact for the SolutionId and SolutionRevisionId.
 			try {
 				mlpArtifactList = getListOfArtifacts(solutionId, solutionRevisionId);
 			} catch (Exception e1) {
-				throw new ServiceException(
-						" Exception Occured decryptAndWriteTofile() ", "501",
-						"No artifact found for the solution Id " + solutionId+ " and revisionId " + solutionRevisionId );
+				throw new ServiceException(" Exception Occured decryptAndWriteTofile() ", "501","No artifact found for the solution Id " + solutionId+ " and revisionId " + solutionRevisionId );
 			}
 
 			if (null != mlpArtifactList && !mlpArtifactList.isEmpty()) {
@@ -1525,18 +1520,11 @@ public class SolutionServiceImpl implements ISolutionService {
 					}
 					logger.debug(EELFLoggerDelegator.debugLogger, " Nexus URI :  {} ", nexusURI );
 				} catch (NoSuchElementException | NullPointerException e) {
-					logger.error(EELFLoggerDelegator.errorLogger,
-							"Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",
-							e);
-					throw new NoSuchElementException(
-							"Could not search the artifact URI for artifactType " + artifactType);
+					logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",e);
+					throw new NoSuchElementException("Could not search the artifact URI for artifactType " + artifactType);
 				} catch (Exception e) {
-					logger.error(EELFLoggerDelegator.errorLogger,
-							"Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",
-							e);
-					throw new ServiceException(
-							" Exception Occured decryptAndWriteTofile() ", "501",
-							"Could not search the artifact URI for artifactType " + artifactType, e.getCause());
+					logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",e);
+					throw new ServiceException(" Exception Occured decryptAndWriteTofile() ", "501","Could not search the artifact URI for artifactType " + artifactType, e.getCause());
 				}
 			}
 		}

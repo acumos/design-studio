@@ -36,25 +36,29 @@ public class Result {
 	}
 	
 	/**
-	 * @return the status
+	 * @return status
+	 * 			This method returns status
 	 */
 	public int getStatus() {
 		return status;
 	}
 	/**
-	 * @param status the status to set
+	 * @param status 
+	 * 			This method accepts status
 	 */
 	public void setStatus(int status) {
 		this.status = status;
 	}
 	/**
-	 * @return the data
+	 * @return message
+	 * 		This method returns message
 	 */
 	public Object getMessage() {
 		return message;
 	}
 	/**
-	 * @param data the data to set
+	 * @param message 
+	 * 		This method accepts message
 	 */
 	public void setMessage(Object message) {
 		this.message = message;

@@ -39,31 +39,32 @@ public class ProtobufService implements Serializable {
 	}
 	/**
 	 * @return the name
+	 * 		This method returns name
 	 */
 	public String getName() {
 		return name;
 	}
 	/**
 	 * @param name the name to set
+	 * 		This method accepts name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 	/**
 	 * @return the operations
+	 * 			This method returns operations	
 	 */
 	public List<ProtobufServiceOperation> getOperations() {
 		return operations;
 	}
 	/**
-	 * @param rpc the operations to set
+	 * @param operations
+	 * 			This method accepts operations
 	 */
 	public void setOperations(List<ProtobufServiceOperation> operations) {
 		this.operations = operations;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

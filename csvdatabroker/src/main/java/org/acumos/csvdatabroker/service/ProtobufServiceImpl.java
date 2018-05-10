@@ -67,7 +67,9 @@ public class ProtobufServiceImpl implements ProtobufService {
 	/**
 	 * This method process the protobuf and sets the details.
 	 * @param conf
+	 * 		This method accepts conf
 	 * @throws ServiceException
+	 * 		In case of any exception, this method throws the ServiceException
 	 */
 	public void processProtobuf(Configuration conf) throws ServiceException {
 		try{
@@ -84,7 +86,9 @@ public class ProtobufServiceImpl implements ProtobufService {
 	/**
 	 * This method return the Protobuf Class set from the configuration details using API /configDB.
 	 * @return Protobuf
+	 * 			This method returns Protobuf
 	 * @throws ServiceException
+	 * 			In case of any exception, this method throws the ServiceException
 	 */
 	public Protobuf getProtobuf() throws ServiceException {
 		if(null == protobuf){
@@ -96,8 +100,11 @@ public class ProtobufServiceImpl implements ProtobufService {
 	/**
 	 * This method converters the ASCII data (input line) into protobuf binary format.
 	 * @param line
+	 * 		This method accepts line
 	 * @return byte[]
+	 * 		This method returns byte[]
 	 * @throws CloneNotSupportedException
+	 * 		In case of any exception, this method throws the CloneNotSupportedException	
 	 */
 	public byte[] convertToProtobufFormat(String line) throws CloneNotSupportedException{
 		byte[] result = null;
@@ -116,10 +123,15 @@ public class ProtobufServiceImpl implements ProtobufService {
 	/**
 	 * This method converters the ASCII data (input line) into protobuf binary format for the specified message name.
 	 * @param messageName
+	 * 		This method accepts messageName
 	 * @param line
+	 * 		This method accepts line
 	 * @return
+	 * 		This method returns byte[]
 	 * @throws CloneNotSupportedException
+	 * 		In case of any exception, this method throws the CloneNotSupportedException
 	 * @throws InvalidProtocolBufferException
+	 * 		In case of any exception, this method throws the InvalidProtocolBufferException
 	 */
 	public byte[] convertToProtobufFormat(String messageName, String line) throws CloneNotSupportedException, InvalidProtocolBufferException {
 		byte[] result = null;
@@ -132,9 +144,13 @@ public class ProtobufServiceImpl implements ProtobufService {
 	/**
 	 * This method read the protobuf binary formatted data (i.e., line) into specified message.
 	 * @param messageName
+	 * 		This method accepts messageName
 	 * @param line
+	 * 		This method accepts This method accepts messageName
 	 * @return
+	 * 		This method returns result as String
 	 * @throws InvalidProtocolBufferException
+	 * 		In case of any exception, this method throws the InvalidProtocolBufferException
 	 */
 	public String readProtobufFormat(String messageName, byte[] line) throws InvalidProtocolBufferException{
 		String result = null;
@@ -218,10 +234,15 @@ public class ProtobufServiceImpl implements ProtobufService {
 	 * e.g. [1,2,3],[4,5,6],1,2,3 and first two fields might be part of nested structure and might be repeated. 
 	 * 
 	 * @param messageName
+	 * 		This method accepts messageName
 	 * @param field
+	 * 		This method accepts field
 	 * @param line
+	 * 		This method accepts line
 	 * @return
+	 * 		This method returns list of Object
 	 * @throws CloneNotSupportedException
+	 * 		In case of any exception, this method throws the CloneNotSupportedException
 	 */
 	private List<Object> getRepeatedValues(String messageName, ProtobufMessageField field, String line) throws CloneNotSupportedException {
 		String fieldType = field.getType();
@@ -255,10 +276,15 @@ public class ProtobufServiceImpl implements ProtobufService {
 	 * e.g. [{[1,2,3],[4,5,6]}],1,2,3 and first field is nested structure and repeated. 
 	 * 
 	 * @param messageName
+	 * 		This method accepts messageName
 	 * @param field
+	 * 		This method accepts field
 	 * @param line
+	 * 		This method accepts line
 	 * @return
+	 * 		This method returns list of Object
 	 * @throws CloneNotSupportedException
+	 * 		In case of any exception, this method throws the CloneNotSupportedException
 	 */
 	private List<Object> getRepeatedValues1(String messageName, ProtobufMessageField field, String line) throws CloneNotSupportedException {
 		int mappedColumn = getMappedColumn(messageName, field);

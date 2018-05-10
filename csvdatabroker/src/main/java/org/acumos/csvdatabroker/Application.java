@@ -35,7 +35,9 @@ private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(
 	/**
 	 * 
 	 * @param args
+	 * 			Main method Arg
 	 * @throws Exception
+	 * 			This method Throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
 			
