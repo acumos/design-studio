@@ -6,6 +6,8 @@ import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.cdump.Cdump;
+import org.acumos.designstudio.ce.vo.cdump.Nodes;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -38,12 +40,41 @@ private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(DataBr
 	private String path = null;
 	
 	@Override
+	@Deprecated
 	public String createDeployDataBroker(Cdump cdump, String nodeId, String userId) throws ServiceException {
 		String dockerImageURI = null;
 		
 		
 		//TODO : Need to implement the jar creation, for now get the dockerimage URI of static databroker 
-		dockerImageURI = confprops.getDatabrokerImageURI();
+		dockerImageURI = confprops.getCsvdatabrokerURI();
+		return dockerImageURI;
+	}
+
+	@Override
+	public String getDataBrokerImageURI(Nodes node) throws ServiceException {
+		String dockerImageURI = null;
+
+		DataBrokerMap map = (null != node.getProperties()[0])? node.getProperties()[0].getData_broker_map():null;
+		
+		if(null != map){
+			String databrokertype = map.getData_broker_type();
+			switch (databrokertype) {
+			case "csv":
+				dockerImageURI = confprops.getCsvdatabrokerURI();
+				break;
+			case "image":
+				dockerImageURI = confprops.getImagedatabrokerURI();
+				break;
+			case "json":
+				dockerImageURI = confprops.getJsondatabrokerURI();
+				break;
+			case "sql":
+				dockerImageURI = confprops.getSqldatabrokerURI();
+				break;
+			default:
+				break;
+			}
+		}
 		return dockerImageURI;
 	}
 

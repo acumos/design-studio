@@ -49,8 +49,9 @@ public class DSUtil {
 	 * @param filePath
 	 *            Path of file to read
 	 * @return Contents of file
+	 * 			This method returns Contents of file 
 	 * @throws IOException
-	 *             On failure to read
+	 *             In case of any exception, this method throws the IOException
 	 */
 	public static String readFile(String filePath) throws IOException {
 		logger.debug(EELFLoggerDelegator.debugLogger, "  readFile() started ");
@@ -83,6 +84,8 @@ public class DSUtil {
 	 *            File extension
 	 * @param data
 	 *            Data to write
+	 * @throws IOException
+	 * 			Throws IOException while writing data.
 	 */
 	public static void writeDataToFile(String path, String fileName, String extension, String data) throws IOException {
 		logger.debug(EELFLoggerDelegator.debugLogger, " writeDataToFile() started ");
@@ -106,9 +109,11 @@ public class DSUtil {
 	/**
 	 * 
 	 * @param filePath
-	 * File path to parse
+	 * 		File path to parse
 	 * @return Boolean
+	 * 		This method returns boolean value
 	 * @throws IOException 
+	 * 		Throws IOException while writing data.
 	 */
 	public static boolean isValidJsonSchema(String filePath) throws IOException {
 		
@@ -129,10 +134,11 @@ public class DSUtil {
 	/**
 	 * 
 	 * @param userId
-	 * User ID
+	 * 			This method accepts UserId
 	 * @param path
-	 * Path
+	 * 			This method accepts path
 	 * @return Path
+	 * 			This method returns path
 	 */
 	public static String createCdumpPath(String userId, String path) {
 		File parentfile = new File(path);
@@ -148,10 +154,11 @@ public class DSUtil {
 	/**
 	 * 
 	 * @param userId
-	 * User ID
+	 * 			This method accepts UserId
 	 * @param path
-	 * Path
+	 * 			This method accepts path
 	 * @return Path
+	 * 			This method returns path
 	 */
 	public static String readCdumpPath(String userId, String path) {
 		// construct the user specific path
@@ -162,6 +169,7 @@ public class DSUtil {
 	/**
 	 * 
 	 * @param path File path to delete
+	 * 		This method accepts path
 	 */
 	public static void deleteFile(String path) {
 		File file = new File(path);
@@ -177,6 +185,8 @@ public class DSUtil {
 	/**
 	 * 
 	 * @param folder Folder to remove
+	 * 			This method accepts folder to remove
+	 * 		
 	 */
 	public static void rmdir(final File folder) {
 		// check if folder file is a real folder
@@ -201,6 +211,7 @@ public class DSUtil {
 	/**
 	 * 
 	 * @param path Directory to remove
+	 * 		This method accepts path
 	 */
 	public static void rmUserdir(String path) {
 		File parent = new File(path);
@@ -213,10 +224,12 @@ public class DSUtil {
 	/**
 	 * 
 	 * @param requirements
-	 * String to parse as JSON
+	 * 				String to parse as JSON
 	 * @param capabilities 
-	 * String to parse as JSON
+	 * 				String to parse as JSON
 	 * @return requirements, capabilities
+	 * 				This method returns requirements, capabilities
+	 * 				
 	 */
 	public static String isValidJsonSchemaContents_List(String requirements, String capabilities) {
 		StringBuffer sb = new StringBuffer("");
@@ -259,7 +272,9 @@ public class DSUtil {
 	/**
 	 * 
 	 * @param jsonInString String 
+	 * 			This method accepts JSON as String format
 	 * @return Boolean if argument is valid JSON
+	 * 			This method returns boolean value
 	 */
 	public static boolean isValidJSON(String jsonInString) {
 		try {

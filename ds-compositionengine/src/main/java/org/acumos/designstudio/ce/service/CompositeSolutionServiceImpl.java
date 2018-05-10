@@ -1178,7 +1178,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				}
 			} else if(n.getType().getName().equalsIgnoreCase(props.getDatabrokerType())) {
 				logger.debug(EELFLoggerDelegator.debugLogger,"DataBroker Found :  {} ", n.getType().getName());
-				dockerImageURL = dbService.createDeployDataBroker(cdump, n.getNodeId(), userId);
+				dockerImageURL = dbService.getDataBrokerImageURI(n);
 				if (null == dockerImageURL) {
 					logger.debug(EELFLoggerDelegator.debugLogger,"Error : Issue in createDeployDataBroker() : Failed to create the Solution Artifact ");
 					throw new ServiceException("  Issue in createDeployGDM() ", "333",

@@ -62,16 +62,45 @@ public class ConfigurationProperties {
 	private String lib;
 	
 	
-	//TODO : Need to be removed once actual implementation is in place
-	@Value("${databrokerImageURI}")
-	private String databrokerImageURI;
+	@Value("${imagedatabrokerURI}")
+	private String imagedatabrokerURI;
 
+	@Value("${csvdatabrokerURI}")
+	private String csvdatabrokerURI;
+	
+	@Value("${jsondatabrokerURI}")
+	private String jsondatabrokerURI;
+	
+	@Value("${sqldatabrokerURI}")
+	private String sqldatabrokerURI;
+	
 	
 	/**
-	 * @return the databrokerImageURI
+	 * @return the imagedatabrokerURI
 	 */
-	public String getDatabrokerImageURI() {
-		return databrokerImageURI;
+	public String getImagedatabrokerURI() {
+		return imagedatabrokerURI;
+	}
+
+	/**
+	 * @return the csvdatabrokerURI
+	 */
+	public String getCsvdatabrokerURI() {
+		return csvdatabrokerURI;
+	}
+
+	/**
+	 * @return the jsondatabrokerURI
+	 */
+	public String getJsondatabrokerURI() {
+		return jsondatabrokerURI;
+	}
+
+	/**
+	 * @return the sqldatabrokerURI
+	 */
+	public String getSqldatabrokerURI() {
+		return sqldatabrokerURI;
 	}
 
 	/**

@@ -40,8 +40,10 @@ public class ProtobufUtil {
 	
 	/**
 	 * This method return the DynamicMessage.Builder for the provided input msgstructure 
-	 * @param msgStructure
+	 * @param msg
+	 * 		This method accepts msg
 	 * @return msgBuilder
+	 * 		This method returns msgBuilder
 	 */
 	public static DynamicMessage.Builder getMessageBuilder(ProtobufMessage msg) {
 		DynamicMessage.Builder msgBuilder = null;

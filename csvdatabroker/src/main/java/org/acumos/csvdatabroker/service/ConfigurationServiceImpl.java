@@ -48,14 +48,17 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 	
 	/**
 	 * @return the conf
+	 * 				return Configuration
 	 * @throws CloneNotSupportedException 
+	 * 		This method throws CloneNotSupportedException 
 	 */
 	public Configuration getConf() throws CloneNotSupportedException {
 		return (null != conf)? (Configuration)conf.clone() : null;
 	}
 
 	/**
-	 * @param conf 
+	 * @param conf
+	 * 			This method accepts conf 
 	 */
 	public void setConf(Configuration conf) {
 		this.conf = conf;
@@ -70,6 +73,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 	/**
 	 * @return the resultsetSize
+	 * 				This method returns resultsetSize
+	 * 			
 	 */
 	public int getResultsetSize() {
 		return resultsetSize;
@@ -77,6 +82,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 	/**
 	 * @param resultsetSize the resultsetSize to set
+	 * 					This method returns resultsetSize
 	 */
 	public void setResultsetSize(int resultsetSize) {
 		this.resultsetSize = resultsetSize;
@@ -84,6 +90,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 	/**
 	 * @return the start
+	 * 			This method returns start
 	 */
 	public int getStart() {
 		return start;
@@ -91,6 +98,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 	/**
 	 * @param start the start to set
+	 * 				This method sets start
 	 */
 	public void setStart(int start) {
 		this.start = start;
@@ -98,6 +106,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 	/**
 	 * @return the shellFileCreated
+	 * 				This method return shellFileCreated
 	 */
 	public boolean isShellFileCreated() {
 		return shellFileCreated;
@@ -105,6 +114,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 	/**
 	 * @param shellFileCreated the shellFileCreated to set
+	 * 			This method sets shellFileCreated
 	 */
 	public void setShellFileCreated(boolean shellFileCreated) {
 		this.shellFileCreated = shellFileCreated;

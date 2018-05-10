@@ -127,6 +127,9 @@ public class RemoteScriptExecutor {
 	/**
 	 * This method connects to the Remote server and create the shell file for the input Script.
 	 * @param script
+	 * 		This method accepts script
+	 * @throws Exception
+	 * 		This method throws the Exception
 	 */
 	public void createshellFile(String script) throws Exception {
 		OutputStreamWriter writer = null;
@@ -157,8 +160,11 @@ public class RemoteScriptExecutor {
 	/**
 	 * This method execute the shell on the remote server and return the records at "start" converting it into protob binary format.
 	 * @param start
+	 * 		This method accepts script
 	 * @return byte[]
+	 * 		This method returns byte[]
 	 * @throws Exception
+	 * 		This method throws the Exception
 	 */
 	public byte[] executeShell(int start) throws Exception {
 		BufferedReader reader = null;
@@ -221,6 +227,10 @@ public class RemoteScriptExecutor {
 	/**
 	 * This method execute the shell on the remote server and writes data to the OutputStream
 	 * @param out
+	 * 		This method accepts out
+	 * @throws Exception
+	 * 		This method throws the Exception
+	 * 
 	 */
 	public void executeShell(OutputStream out) throws Exception {
 

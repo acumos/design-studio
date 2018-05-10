@@ -35,7 +35,9 @@ public class Application {
 	/**
 	 * 
 	 * @param args
+	 * 		This method accepts args
 	 * @throws Exception
+	 * 		This method throws the Exception
 	 */
 	public static void main(String[] args) throws Exception {
 			
