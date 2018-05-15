@@ -186,7 +186,7 @@ public class ProtobufGeneratorService {
 			} else if (isMessage && !line.contains("}")) {
 				messageargumentList = new ArrayList<MessageargumentList>();
 				messageBody = costructMessage(line, messageBody, messageargumentList);
-			} else if (isMessage && line.startsWith("}")) {
+			} else if (isMessage && line.contains("}")) {
 				messageBodyList.add(messageBody);
 				protoBufClass.setListOfMessages(messageBodyList);
 				isMessage = false;
