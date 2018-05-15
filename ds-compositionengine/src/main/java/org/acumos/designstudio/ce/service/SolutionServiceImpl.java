@@ -807,27 +807,32 @@ public class SolutionServiceImpl implements ISolutionService {
 								break;
 							}
 						}
-						for (Relations relations : relationsList) {
-							if (relations.getTargetNodeId().equals(nodeId)) {
-								String sourceNodeId = relations.getSourceNodeId();
-								for (Nodes no : nodesList) {
-									if (no.getNodeId().equals(sourceNodeId)) {
-										String nodeType = no.getType().getName();
-										if (props.getDatabrokerType().equals(nodeType)) {
-											Property[] propArr = no.getProperties();
-											ArrayList<Property> arrayList = new ArrayList<Property>(Arrays.asList(propArr));
-											Iterator<Property> propertyItr = arrayList.iterator();
-											while (propertyItr.hasNext()) {
-												Property prop = propertyItr.next();
-												DBMapOutput[] dbMapOutputArr = prop.getData_broker_map().getMap_outputs();
-												for(int i=0;i<dbMapOutputArr.length;i++){
-													dbMapOutputArr[i].setOutput_field(null);
-												}
-												DBMapInput[] dbMapInputArr = prop.getData_broker_map().getMap_inputs();
-												for(DBMapInput dbMapIp : dbMapInputArr){
-													DBInputField dbInField = dbMapIp.getInput_field();
-													dbInField.setChecked("NO");
-													dbInField.setMapped_to_field("");
+						if (null != relationsList) {
+							for (Relations relations : relationsList) {
+								if (relations.getTargetNodeId().equals(nodeId)) {
+									String sourceNodeId = relations.getSourceNodeId();
+									for (Nodes no : nodesList) {
+										if (no.getNodeId().equals(sourceNodeId)) {
+											String nodeType = no.getType().getName();
+											if (props.getDatabrokerType().equals(nodeType)) {
+												Property[] propArr = no.getProperties();
+												ArrayList<Property> arrayList = new ArrayList<Property>(
+														Arrays.asList(propArr));
+												Iterator<Property> propertyItr = arrayList.iterator();
+												while (propertyItr.hasNext()) {
+													Property prop = propertyItr.next();
+													DBMapOutput[] dbMapOutputArr = prop.getData_broker_map()
+															.getMap_outputs();
+													for (int i = 0; i < dbMapOutputArr.length; i++) {
+														dbMapOutputArr[i].setOutput_field(null);
+													}
+													DBMapInput[] dbMapInputArr = prop.getData_broker_map()
+															.getMap_inputs();
+													for (DBMapInput dbMapIp : dbMapInputArr) {
+														DBInputField dbInField = dbMapIp.getInput_field();
+														dbInField.setChecked("NO");
+														dbInField.setMapped_to_field("");
+													}
 												}
 											}
 										}
