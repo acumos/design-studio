@@ -75,6 +75,7 @@ import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapInput;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapOutput;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBOTypeAndRoleHierarchy;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBOutputField;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.acumos.nexus.client.data.UploadArtifactInfo;
 import org.json.JSONException;
@@ -1015,7 +1016,18 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 									}
 								}
 							}
-							if (isDataBroker) {
+							boolean dataBrokerMappingFlag = false;
+							for (Nodes n : nodes) {
+								if (props.getDatabrokerType().equals(n.getType().getName())) {
+									Property[] p = n.getProperties();
+									if (p.length == 0) {
+										dataBrokerMappingFlag = true;
+									}
+								}
+							}
+							if(dataBrokerMappingFlag){
+								result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : DataBroker Mapping Details are Incorrect\"}";
+							}else if(isDataBroker){
 								result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : DataBroker should be first Node. \"}";
 							} else {
 								// If DataBroker is true then check for one to one mapping for the SourceNodeId and TargetNodeId
@@ -1339,10 +1351,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		return result;
 	}
 
-	/**
-	 * @param n
-	 * @return
-	 */
 	private BPDataBrokerMap getDataBrokerDetails(Nodes n) {
 		Property[] prop = n.getProperties();
 		// Convert the Property[] into List
@@ -1360,80 +1368,82 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		List<DBMapOutput> dbmapOutputLst = new ArrayList<DBMapOutput>();
 
 		// Iterate over the PropertyList of the Node from Cdump
-		for (Property dbprops : propslst) {
-			if (null != dbprops.getData_broker_map()) {
-				// Set all the values from Property List of cdump to Blueprint DataBrokerMap object
-				script = dbprops.getData_broker_map().getScript();
-				data_broker_Type = dbprops.getData_broker_map().getData_broker_type();
-				target_system_Url = dbprops.getData_broker_map().getTarget_system_url();
-				local_system_data_file_Path = dbprops.getData_broker_map().getLocal_system_data_file_path();
-				first_Row = dbprops.getData_broker_map().getFirst_row();
-				csv_file_field_Separator = dbprops.getData_broker_map().getCsv_file_field_separator();
+		if (null != propslst) {
+			for (Property dbprops : propslst) {
+				if (null != dbprops.getData_broker_map()) {
+					// Set all the values from Property List of cdump to Blueprint DataBrokerMap object
+					script = dbprops.getData_broker_map().getScript();
+					data_broker_Type = dbprops.getData_broker_map().getData_broker_type();
+					target_system_Url = dbprops.getData_broker_map().getTarget_system_url();
+					local_system_data_file_Path = dbprops.getData_broker_map().getLocal_system_data_file_path();
+					first_Row = dbprops.getData_broker_map().getFirst_row();
+					csv_file_field_Separator = dbprops.getData_broker_map().getCsv_file_field_separator();
 
-				bpdbMap.setData_broker_type(data_broker_Type);
-				bpdbMap.setScript(script);
-				bpdbMap.setTarget_system_url(target_system_Url);
-				bpdbMap.setLocal_system_data_file_path(local_system_data_file_Path);
-				bpdbMap.setFirst_row(first_Row);
-				bpdbMap.setCsv_file_field_separator(csv_file_field_Separator);
+					bpdbMap.setData_broker_type(data_broker_Type);
+					bpdbMap.setScript(script);
+					bpdbMap.setTarget_system_url(target_system_Url);
+					bpdbMap.setLocal_system_data_file_path(local_system_data_file_Path);
+					bpdbMap.setFirst_row(first_Row);
+					bpdbMap.setCsv_file_field_separator(csv_file_field_Separator);
 
-				// Get the DBMapInput[] from DataBrokerMap from the Cdump file
-				DBMapInput[] dmapIn = dbprops.getData_broker_map().getMap_inputs();
-				// Convert MapInputs[] to List
-				ArrayList<DBMapInput> dbMapInLst = new ArrayList<DBMapInput>(Arrays.asList(dmapIn));
-				// Iterate over the DBMapInput List of the Cdump file
-				for (DBMapInput db : dbMapInLst) {
-					DBInputField dbInField = new DBInputField();
-					DBMapInput dbMapInput = new DBMapInput();
-					// set the all values into DataBroker Input Field of BluePrint File
-					dbInField.setName(db.getInput_field().getName());
-					dbInField.setType(db.getInput_field().getType());
-					dbInField.setChecked(db.getInput_field().getChecked());
-					dbInField.setMapped_to_field(db.getInput_field().getMapped_to_field());
-					dbMapInput.setInput_field(dbInField);
-					dbmapInputLst.add(dbMapInput);
-				}
-				// Convert the DataBrokerMapInput Lsit to DBMapInput[]
-				DBMapInput[] dbMapInArr = new DBMapInput[dbmapInputLst.size()];
-				dbMapInArr = dbmapInputLst.toArray(dbMapInArr);
-				bpdbMap.setMap_inputs(dbMapInArr);
-
-				// Get the DBMapOutput[] from DataBrokerMap from the Cdump file
-				DBMapOutput[] dbMapOutArr = dbprops.getData_broker_map().getMap_outputs();
-				ArrayList<DBMapOutput> dbMapOutLst = new ArrayList<DBMapOutput>(Arrays.asList(dbMapOutArr));
-
-				DBOTypeAndRoleHierarchy[] dboTypeAndRoleHierarchyArr = null;
-
-				// Iterate over DBMapOutput List of Cdump File
-				for (DBMapOutput dbOut : dbMapOutLst) {
-					// Set DBMapOutput values of Cdump into DBOutputField values of BluePrint File
-					DBMapOutput dbMapOutput = new DBMapOutput();
-					DBOutputField dbOutField = new DBOutputField();
-					dbOutField.setName(dbOut.getOutput_field().getName());
-					dbOutField.setTag(dbOut.getOutput_field().getTag());
-
-					List<DBOTypeAndRoleHierarchy> dboList = new ArrayList<DBOTypeAndRoleHierarchy>();
-					// Iterate over DBOTypeAndRoleHierarchy List of Cdump File
-					for (DBOTypeAndRoleHierarchy dboTypeAndRoleHierarchy : dbOut.getOutput_field()
-							.getType_and_role_hierarchy_list()) {
-
-						DBOTypeAndRoleHierarchy dboTypeAndRole = new DBOTypeAndRoleHierarchy();
-						dboTypeAndRole.setName(dboTypeAndRoleHierarchy.getName());
-						dboTypeAndRole.setRole(dboTypeAndRoleHierarchy.getRole());
-						dboList.add(dboTypeAndRole);
+					// Get the DBMapInput[] from DataBrokerMap from the Cdump file
+					DBMapInput[] dmapIn = dbprops.getData_broker_map().getMap_inputs();
+					// Convert MapInputs[] to List
+					ArrayList<DBMapInput> dbMapInLst = new ArrayList<DBMapInput>(Arrays.asList(dmapIn));
+					// Iterate over the DBMapInput List of the Cdump file
+					for (DBMapInput db : dbMapInLst) {
+						DBInputField dbInField = new DBInputField();
+						DBMapInput dbMapInput = new DBMapInput();
+						// set the all values into DataBroker Input Field of BluePrint File
+						dbInField.setName(db.getInput_field().getName());
+						dbInField.setType(db.getInput_field().getType());
+						dbInField.setChecked(db.getInput_field().getChecked());
+						dbInField.setMapped_to_field(db.getInput_field().getMapped_to_field());
+						dbMapInput.setInput_field(dbInField);
+						dbmapInputLst.add(dbMapInput);
 					}
-					dboTypeAndRoleHierarchyArr = new DBOTypeAndRoleHierarchy[dboList.size()];
-					dboTypeAndRoleHierarchyArr = dboList.toArray(dboTypeAndRoleHierarchyArr);
-					dbOutField.setType_and_role_hierarchy_list(dboTypeAndRoleHierarchyArr);
+					// Convert the DataBrokerMapInput Lsit to DBMapInput[]
+					DBMapInput[] dbMapInArr = new DBMapInput[dbmapInputLst.size()];
+					dbMapInArr = dbmapInputLst.toArray(dbMapInArr);
+					bpdbMap.setMap_inputs(dbMapInArr);
 
-					dbMapOutput.setOutput_field(dbOutField);
-					dbmapOutputLst.add(dbMapOutput);
+					// Get the DBMapOutput[] from DataBrokerMap from the Cdump file
+					DBMapOutput[] dbMapOutArr = dbprops.getData_broker_map().getMap_outputs();
+					ArrayList<DBMapOutput> dbMapOutLst = new ArrayList<DBMapOutput>(Arrays.asList(dbMapOutArr));
+
+					DBOTypeAndRoleHierarchy[] dboTypeAndRoleHierarchyArr = null;
+
+					// Iterate over DBMapOutput List of Cdump File
+					for (DBMapOutput dbOut : dbMapOutLst) {
+						// Set DBMapOutput values of Cdump into DBOutputField values of BluePrint File
+						DBMapOutput dbMapOutput = new DBMapOutput();
+						DBOutputField dbOutField = new DBOutputField();
+						dbOutField.setName(dbOut.getOutput_field().getName());
+						dbOutField.setTag(dbOut.getOutput_field().getTag());
+
+						List<DBOTypeAndRoleHierarchy> dboList = new ArrayList<DBOTypeAndRoleHierarchy>();
+						// Iterate over DBOTypeAndRoleHierarchy List of Cdump File
+						for (DBOTypeAndRoleHierarchy dboTypeAndRoleHierarchy : dbOut.getOutput_field()
+								.getType_and_role_hierarchy_list()) {
+
+							DBOTypeAndRoleHierarchy dboTypeAndRole = new DBOTypeAndRoleHierarchy();
+							dboTypeAndRole.setName(dboTypeAndRoleHierarchy.getName());
+							dboTypeAndRole.setRole(dboTypeAndRoleHierarchy.getRole());
+							dboList.add(dboTypeAndRole);
+						}
+						dboTypeAndRoleHierarchyArr = new DBOTypeAndRoleHierarchy[dboList.size()];
+						dboTypeAndRoleHierarchyArr = dboList.toArray(dboTypeAndRoleHierarchyArr);
+						dbOutField.setType_and_role_hierarchy_list(dboTypeAndRoleHierarchyArr);
+
+						dbMapOutput.setOutput_field(dbOutField);
+						dbmapOutputLst.add(dbMapOutput);
+					}
+
+					// Convert DBMapOutPutList to DBMapOutput[]
+					DBMapOutput[] dbMapOutputArr = new DBMapOutput[dbmapOutputLst.size()];
+					dbMapOutputArr = dbmapOutputLst.toArray(dbMapOutputArr);
+					bpdbMap.setMap_outputs(dbMapOutputArr);
 				}
-
-				// Convert DBMapOutPutList to DBMapOutput[]
-				DBMapOutput[] dbMapOutputArr = new DBMapOutput[dbmapOutputLst.size()];
-				dbMapOutputArr = dbmapOutputLst.toArray(dbMapOutputArr);
-				bpdbMap.setMap_outputs(dbMapOutputArr);
 			}
 		}
 		return bpdbMap;

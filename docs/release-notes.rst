@@ -25,6 +25,7 @@ The Design Studio Composition Engine is deployed within a Docker image in the Do
 0.0.28-SNAPSHOT, 2018-05-15
 ---------------------------
 * ACUMOS-856 : Delete node not working as per the expectations.
+* ACUMOS-864 : Deploy button is active for not validated solution.
 
 
 0.0.27-SNAPSHOT, 2018-05-10
