@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4576df5b_59a891d2",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1029,
+      "author": {
+        "id": 38
+      },
+      "writtenOn": "2018-05-17T08:42:07Z",
+      "side": 1,
+      "message": "The change in return type will cause big change : Interface, implementation class, Controller, Service test case, Controller test case.  \nWe will remove the json construction code and replace with Result pojo in next upcoming release.",
+      "parentUuid": "d7f4ea11_1469dacc",
+      "revId": "df777dc4d19f061f6a6b70998693b9d926866d96",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ffbc0a7_c032059a",
         "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2018-05-16T12:06:16Z",
       "side": 1,
       "message": "If you are going to add Javadoc, please complete the template with information.  Otherwise, you can leave it off on private methods like this.",
+      "revId": "df777dc4d19f061f6a6b70998693b9d926866d96",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73f6ba64_b689c34f",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1356,
+      "author": {
+        "id": 38
+      },
+      "writtenOn": "2018-05-17T08:42:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ffbc0a7_c032059a",
       "revId": "df777dc4d19f061f6a6b70998693b9d926866d96",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
