@@ -126,21 +126,17 @@ public class SolutionServiceImpl implements ISolutionService {
 
 			Map<String, Object> queryParameters = new HashMap<>();
 			queryParameters.put("active", Boolean.TRUE);
-			// Code changes are to match the change in the CDS API Definition
-			// searchSolution in version 1.13.x
+			// Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
 			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
 					new RestPageRequest(0, props.getSolutionResultsetSize()));
 			mlpSolutionsList = pageResponse.getContent();
 			logger.debug(EELFLoggerDelegator.debugLogger, " The Date Format :  {} ", confprops.getDateFormat());
 			if (null == mlpSolutionsList) {
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						" CommonDataService returned null Solution list");
+				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned null Solution list");
 			} else if (mlpSolutionsList.isEmpty()) {
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						" CommonDataService returned empty Solution list");
+				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned empty Solution list");
 			} else {
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						" CommonDataService returned Solution list of size :  {} ", mlpSolutionsList.size());
+				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned Solution list of size :  {} ", mlpSolutionsList.size());
 				List<MLPSolution> matchingModelsolutionList  = new ArrayList<MLPSolution>();
 				MLPUser mlpUser = cmnDataService.getUser(userID);
 				logger.debug(EELFLoggerDelegator.debugLogger, "MLPUSer  {} ", mlpUser);
@@ -149,32 +145,26 @@ public class SolutionServiceImpl implements ISolutionService {
 				String pbAccessTypeCode = props.getPublicAccessTypeCode();
 				String prAccessTypeCode = props.getPrivateAccessTypeCode();
 				String orAccessTypeCode = props.getOrganizationAccessTypeCode();
-				// For each solution where toolkittypeCode is not null and not
-				// equal to "CP".
+				// For each solution where toolkittypeCode is not null and not equal to "CP".
 				for (MLPSolution mlpsolution : mlpSolutionsList) {
-					if (mlpsolution.getToolkitTypeCode() != null
-							&& (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
+					if (mlpsolution.getToolkitTypeCode() != null && (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
 
 						String accessTypeCode = mlpsolution.getAccessTypeCode();
 						if (accessTypeCode.equals(pbAccessTypeCode)) {
-							strBuilder = buildSolutionDetails(mlpsolution, cmnDataService, strBuilder, solutionId,
-									dssolution, dsSolutionList, solutionIdList, mlpSolRevisionList, sdf);
+							strBuilder = buildSolutionDetails(mlpsolution, cmnDataService, strBuilder, solutionId,dssolution, dsSolutionList, solutionIdList, mlpSolRevisionList, sdf);
 							matchingModelsolutionList.add(mlpsolution);
 						}
 
 						if (mlpsolution.getOwnerId().equals(userID) && accessTypeCode.equals(prAccessTypeCode)) {
-							strBuilder = buildSolutionDetails(mlpsolution, cmnDataService, strBuilder, solutionId,
-									dssolution, dsSolutionList, solutionIdList, mlpSolRevisionList, sdf);
+							strBuilder = buildSolutionDetails(mlpsolution, cmnDataService, strBuilder, solutionId,dssolution, dsSolutionList, solutionIdList, mlpSolRevisionList, sdf);
 							matchingModelsolutionList.add(mlpsolution);
 						}
 
 						if (accessTypeCode.equals(orAccessTypeCode)) {
-							strBuilder = buildSolutionDetails(mlpsolution, cmnDataService, strBuilder, solutionId,
-									dssolution, dsSolutionList, solutionIdList, mlpSolRevisionList, sdf);
+							strBuilder = buildSolutionDetails(mlpsolution, cmnDataService, strBuilder, solutionId,dssolution, dsSolutionList, solutionIdList, mlpSolRevisionList, sdf);
 							matchingModelsolutionList.add(mlpsolution);
 						}
 					}
-
 				}
 				matchingModelServiceComponent.setMatchingModelsolutionList(matchingModelsolutionList);
 				matchingModelServiceComponent.setMatchingModelRevisionList(null);
@@ -216,6 +206,9 @@ public class SolutionServiceImpl implements ISolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, " buildSolutionDetails() Begin ");
 
 		try {
+			ObjectMapper mapperObj = new ObjectMapper();
+			mapperObj.setSerializationInclusion(Include.NON_NULL);
+			
 			solutionId = mlpsolution.getSolutionId();
 			solutionIdList.add(solutionId);
 			mlpSolRevisionList = cmnDataService.getSolutionRevisions(solutionId);
@@ -223,23 +216,21 @@ public class SolutionServiceImpl implements ISolutionService {
 			MLPUser user = cmnDataService.getUser(userId);
 			String userName = user.getFirstName() + " " + user.getLastName();
 			if (null == mlpSolRevisionList) {
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						" CommonDataService returned null SolutionRevision list");
+				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned null SolutionRevision list");
 			} else if (mlpSolRevisionList.isEmpty()) {
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						" CommonDataService returned empty SolutionRevision list");
+				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned empty SolutionRevision list");
 			} else {
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						" CommonDataService returned SolutionRevision list of size : "
-								+ mlpSolRevisionList.size() );
+				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned SolutionRevision list of size : " + mlpSolRevisionList.size() );
 
 				for (MLPSolutionRevision mlpSolRevision : mlpSolRevisionList) {
 					dssolution = new DSSolution();
+					// 1. SolutionId
 					dssolution.setSolutionId(mlpsolution.getSolutionId());
-					dssolution.setSolutionRevisionId(mlpSolRevision.getRevisionId());
+					// 2. Solution Created Date
 					dssolution.setCreatedDate(sdf.format(mlpSolRevision.getCreated().getTime()));
+					// 3. Solution Icon
 					dssolution.setIcon(null);
-					// 1. Solution Name
+					// 4. Solution Name
 					dssolution.setSolutionName(mlpsolution.getName());
 					// 5. Solution Provider
 					dssolution.setProvider(mlpsolution.getProvider());
@@ -251,21 +242,31 @@ public class SolutionServiceImpl implements ISolutionService {
 					dssolution.setDescription(mlpsolution.getDescription());
 					// 9. Solution Visibility
 					dssolution.setVisibilityLevel(mlpsolution.getAccessTypeCode());
-					// 2. Solution Version
+					// 10. Solution Version
 					dssolution.setVersion(mlpSolRevision.getVersion());
-					// 3. Solution On boarder
+					// 11. Solution On boarder
 					dssolution.setOnBoarder(userName);
-					// 4. Solution Author
+					// 12. Solution Author
 					dssolution.setAuthor(userName);
+					
 					dsSolutionList.add(dssolution);
-					strBuilder.append(dssolution.toJsonString());
+					// Check if the Solution Contains any Duplicate Name and Version then add the Solution Revision Id for it
+					if (dsSolutionList.size() !=1) {
+						for (DSSolution ds : dsSolutionList) {
+							if (ds.getSolutionName().equals(mlpsolution.getName()) && ds.getVersion().equals(mlpSolRevision.getVersion())) {
+									dssolution.setSolutionRevisionId(mlpSolRevision.getRevisionId());
+							}
+						}
+					} 
+					// Instead of creating jsonString object manually let object mapper do it.
+					String jsonString = mapperObj.writeValueAsString(dssolution);
+					strBuilder.append(jsonString);
 					strBuilder.append(",");
 				}
 			}
 
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in buildSolutionDetails() ",
-					e);
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in buildSolutionDetails() ",e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, " buildSolutionDetails() Ends ");
 		return strBuilder;
@@ -888,29 +889,18 @@ public class SolutionServiceImpl implements ISolutionService {
 		LinkedHashMap<String, List<MLPSolutionRevision>> matchingModelRevisionList = new LinkedHashMap<String,List<MLPSolutionRevision>>();
 		LinkedHashMap<String, List<MLPArtifact>> matchingModelArtifactTigifFileList = new LinkedHashMap<String, List<MLPArtifact>>();
 		try {
-			/*Map<String, Object> queryParameters = new HashMap<>();
-			queryParameters.put("active", Boolean.TRUE);
-			// Code changes are to match the change in the CDS API Definition
-			// searchSolution in version 1.13.x
-			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
-					new RestPageRequest(0, props.getSolutionResultsetSize()));
-			mlpSolutions = pageResponse.getContent();*/
 			if(null != matchingModelServiceComponent.getMatchingModelsolutionList()){
 				mlpSolutions = matchingModelServiceComponent.getMatchingModelsolutionList();	
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						"Take solution list at the time of getSolutionS API is called as well from the local cache or session");
+				logger.debug(EELFLoggerDelegator.debugLogger,"Take solution list at the time of getSolutionS API is called as well from the local cache or session");
 			}else{
 				mlpSolutions = getSolutionsForMatchingModel(userId);
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						"If solution list is not available from at time of getSolutionS API call as well "
-						+ "from the local cache or session then need to fetch from CCDS");
+				logger.debug(EELFLoggerDelegator.debugLogger,"If solution list is not available from at time of getSolutionS API call as well " + "from the local cache or session then need to fetch from CCDS");
 			}
 			MatchingModel matchingModel = null;
 			List<MLPSolutionRevision> mlpSolRevisions;
 			String solutionId = null;
 			if (null != mlpSolutions && !mlpSolutions.isEmpty()) {
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						" CommonDataService returned Solution list of size :  {} ", mlpSolutions.size());
+				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned Solution list of size :  {} ", mlpSolutions.size());
 				mlpSolRevisions = new ArrayList<>();
 				for (MLPSolution mlpsol : mlpSolutions) {
 					solutionId = mlpsol.getSolutionId();
@@ -919,32 +909,27 @@ public class SolutionServiceImpl implements ISolutionService {
 							matchingModelServiceComponent.getMatchingModelRevisionList().containsKey(solutionId)){
 						    mlpSolRevisions = matchingModelServiceComponent.getMatchingModelRevisionList().get(solutionId);
 					}else{
-						mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);// 
+						mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
 						matchingModelRevisionList.put(solutionId, mlpSolRevisions);
 					}
 					if (mlpSolRevisions != null && mlpSolRevisions.size() != 0) {
-						logger.debug(EELFLoggerDelegator.debugLogger,
-								" CommonDataService returned Solution Revision list of size : "
-										+ mlpSolRevisions.size());
+						logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned Solution Revision list of size : "+ mlpSolRevisions.size());
 						validMatchingModel = false;
 						for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
+							
 							matchingModel = new MatchingModel();
-							if(null !=matchingModelServiceComponent.getMatchingModelArtifactTigifFileList()){
+							if(null != matchingModelServiceComponent.getMatchingModelArtifactTigifFileList()){
 								if(matchingModelServiceComponent.getMatchingModelArtifactTigifFileList().containsKey(mlpsol.getSolutionId()+mlpSolRevision.getRevisionId())){
 									mlpArtifact = matchingModelServiceComponent.getMatchingModelArtifactTigifFileList().get(mlpsol.getSolutionId()+mlpSolRevision.getRevisionId());
 								}	
 						   }else{
-								mlpArtifact = cmnDataService.getSolutionRevisionArtifacts(
-										mlpsol.getSolutionId(), mlpSolRevision.getRevisionId());
+								mlpArtifact = cmnDataService.getSolutionRevisionArtifacts(mlpsol.getSolutionId(), mlpSolRevision.getRevisionId());
 								matchingModelArtifactTigifFileList.put(mlpsol.getSolutionId()+mlpSolRevision.getRevisionId(), mlpArtifact);
 						   }
-						    logger.debug(EELFLoggerDelegator.debugLogger,
-									" Solution Id {} ", mlpsol.getSolutionId());
+						    logger.debug(EELFLoggerDelegator.debugLogger," Solution Id {} ", mlpsol.getSolutionId());
 							String artifactURI = "";
 							if (null != mlpArtifact && !mlpArtifact.isEmpty()) {
-								logger.debug(EELFLoggerDelegator.debugLogger,
-										" CommonDataService returned Solution Revision Artifact list of size : "
-												+ mlpArtifact.size());
+								logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned Solution Revision Artifact list of size : " + mlpArtifact.size());
 								for (MLPArtifact mlpArti : mlpArtifact) {
 									if ("TG".equalsIgnoreCase(mlpArti.getArtifactTypeCode())) {
 										artifactURI = mlpArti.getUri();
@@ -962,10 +947,8 @@ public class SolutionServiceImpl implements ISolutionService {
 							}
 						}
 					} else {
-						logger.debug(EELFLoggerDelegator.debugLogger,
-								" CommonDataService returned empty Solution Revision list ");
+						logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned empty Solution Revision list ");
 					}
-
 				}
 				if(null == matchingModelServiceComponent.getMatchingModelRevisionList()){
 					matchingModelServiceComponent.setMatchingModelRevisionList(matchingModelRevisionList);
@@ -974,8 +957,7 @@ public class SolutionServiceImpl implements ISolutionService {
 					matchingModelServiceComponent.setMatchingModelArtifactTigifFileList(matchingModelArtifactTigifFileList);
 				}
 			} else {
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						" CommonDataService returned empty Solution list");
+				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned empty Solution list");
 			}
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getMatchingModels() ", e);
@@ -1012,18 +994,15 @@ public class SolutionServiceImpl implements ISolutionService {
 				} else if ("output".equals(portType)) {
 					matchingPortisFound = validateConsumerPort(result, protobufJsonString);
 				}
-			} else {
-				logger.error(EELFLoggerDelegator.errorLogger,
-						"validateTheMatchingPort() : artifactURI is null or empty");
+			} else { 
+				logger.error(EELFLoggerDelegator.errorLogger,"validateTheMatchingPort() : artifactURI is null or empty");
 			}
 
 		} catch (JsonParseException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "JsonParseException in validateTheMatchingPort() method : ",
-					e);
+			logger.error(EELFLoggerDelegator.errorLogger, "JsonParseException in validateTheMatchingPort() method : ",e);
 			throw e;
 		} catch (JsonMappingException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "JsonMappingException in validateTheMatchingPort() method : ",
-					e);
+			logger.error(EELFLoggerDelegator.errorLogger, "JsonMappingException in validateTheMatchingPort() method : ",e);
 			throw e;
 		} catch (IOException e) {
 			logger.error(EELFLoggerDelegator.errorLogger, "IOException in validateTheMatchingPort() method : ", e);
@@ -1037,8 +1016,7 @@ public class SolutionServiceImpl implements ISolutionService {
 					byteArrayOutputStream.close();
 				}
 			} catch (IOException e) {
-				logger.error(EELFLoggerDelegator.errorLogger,
-						"Error : Exception in readArtifact() : Failed to close the byteArrayOutputStream", e);
+				logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in readArtifact() : Failed to close the byteArrayOutputStream", e);
 				throw e;
 			}
 		}
@@ -1545,31 +1523,38 @@ public class SolutionServiceImpl implements ISolutionService {
 		List<MLPSolution> mlpSolutionsList = null;
 		Map<String, Object> queryParameters = new HashMap<>();
 		queryParameters.put("active", Boolean.TRUE);
-		// Code changes are to match the change in the CDS API Definition
-		// searchSolution in version 1.13.x
-		RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
-				new RestPageRequest(0, props.getSolutionResultsetSize()));
+		
+		// Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
+		
+		RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,new RestPageRequest(0, props.getSolutionResultsetSize()));
+		
 		mlpSolutionsList = pageResponse.getContent();
+		
 		logger.debug(EELFLoggerDelegator.debugLogger, " The Date Format :  {} ", confprops.getDateFormat());
+		
 		if (null == mlpSolutionsList) {
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					" CommonDataService returned null Solution list");
+			
+			logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned null Solution list");
+			
 		} else if (mlpSolutionsList.isEmpty()) {
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					" CommonDataService returned empty Solution list");
+			
+			logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned empty Solution list");
+			
 		} else {
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					" CommonDataService returned Solution list of size :  {} ", mlpSolutionsList.size());
+			
+			logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned Solution list of size :  {} ", mlpSolutionsList.size());
 			
 			MLPUser mlpUser = cmnDataService.getUser(userId);
+			
 			logger.debug(EELFLoggerDelegator.debugLogger, "MLPUSer  {} ", mlpUser);
+			
 			// Get the TypeCodes from Properties file
 			String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
 			String pbAccessTypeCode = props.getPublicAccessTypeCode();
 			String prAccessTypeCode = props.getPrivateAccessTypeCode();
 			String orAccessTypeCode = props.getOrganizationAccessTypeCode();
-			// For each solution where toolkittypeCode is not null and not
-			// equal to "CP".
+			// For each solution where toolkittypeCode is not null and not equal to "CP".
+			
 			for (MLPSolution mlpsolution : mlpSolutionsList) {
 				if (mlpsolution.getToolkitTypeCode() != null
 						&& (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
