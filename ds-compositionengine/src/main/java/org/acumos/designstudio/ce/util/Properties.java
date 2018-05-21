@@ -81,8 +81,8 @@ public class Properties implements Serializable {
 	@Value("${organizationAccessTypeCode}")
 	private String organizationAccessTypeCode;
 
-	@Value("${getSolutionErrorDescription}")
-	private String getSolutionErrorDescription;
+	@Value("${solutionErrorDescription}")
+	private String solutionErrorDescription;
 
 	@Value("${artifactType}")
 	private String artifactType;
@@ -336,7 +336,7 @@ public class Properties implements Serializable {
 	 * @return the getSolutionErrorDescription
 	 */
 	public String getGetSolutionErrorDescription() {
-		return getSolutionErrorDescription;
+		return solutionErrorDescription;
 	}
 
 	/**
