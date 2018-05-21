@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ddfef389_c7fd093c",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 38
+      },
+      "writtenOn": "2018-05-21T17:16:16Z",
+      "side": 1,
+      "message": "though the solution name and version is same but following values will be different : solutionRevisionId,created time, and user may also be different so even if we convert the ArrayList to HashSet\u003c\u003e(list), still it will have same number of elements.",
+      "parentUuid": "1cd2281e_a10913a7",
+      "revId": "146a4b50e2c1c3f8492ad83492e60c74a901f8e7",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e5ff32a_9baa48b0",
         "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/Properties.java",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2018-05-21T17:02:32Z",
       "side": 1,
       "message": "Probably this should be just getSolutionErrorDescription, not get get get get?",
+      "revId": "146a4b50e2c1c3f8492ad83492e60c74a901f8e7",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e638ca6_61b15d54",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/Properties.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 38
+      },
+      "writtenOn": "2018-05-21T17:16:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e5ff32a_9baa48b0",
       "revId": "146a4b50e2c1c3f8492ad83492e60c74a901f8e7",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
