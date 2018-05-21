@@ -151,8 +151,7 @@ public class SolutionServiceImpl implements ISolutionService {
 						String accessTypeCode = mlpsolution.getAccessTypeCode();
 						if ((accessTypeCode.equals(pbAccessTypeCode)) || (mlpsolution.getOwnerId().equals(userID) && accessTypeCode.equals(prAccessTypeCode)) 
 								 || (accessTypeCode.equals(orAccessTypeCode)) ) {
-							dssolution = buildSolutionDetails(mlpsolution, cmnDataService, solutionId, sdf);
-							dsSolutionList.add(dssolution);
+							dsSolutionList.addAll(buildSolutionDetails(mlpsolution, cmnDataService, solutionId, sdf));
 							matchingModelsolutionList.add(mlpsolution);
 						}
 					}
@@ -163,7 +162,7 @@ public class SolutionServiceImpl implements ISolutionService {
 			}
 
 			if (dsSolutionList.size() > 1) {
-				checkDuplicateSolution(dsSolutionList);
+				//checkDuplicateSolution(dsSolutionList);
 				result = mapperObj.writeValueAsString(dsSolutionList);
 			} else {
 				result = props.getSolutionErrorDescription();
@@ -177,33 +176,49 @@ public class SolutionServiceImpl implements ISolutionService {
 		return result;
 	}
 
-	private void checkDuplicateSolution(List<DSSolution> dsSolutionList) {
+	private List<DSSolution> checkDuplicateSolution(List<DSSolution> dsSolutionList) {
 		//Check for solutions with same name and version
 		List<DSSolution> clonedSolution = new ArrayList<DSSolution>();
 		clonedSolution.addAll(dsSolutionList);
+		List<DSSolution> result = new ArrayList<DSSolution>();
 		int cnt = 0;
 		for(DSSolution dss : dsSolutionList){
 			//check if it appears twice in clone
 			cnt = 0;
+			//TODO : Need to remove once tested
+			logger.debug(EELFLoggerDelegator.debugLogger, " dss.getSolutionName() " + dss.getSolutionName());
+            logger.debug(EELFLoggerDelegator.debugLogger, " dss.getVersion() " + dss.getVersion());
+            if(null == dss.getSolutionName() && null == dss.getVersion() ){
+            	break;
+            }
 			for(DSSolution dss1 : clonedSolution ){
-				if(dss.getSolutionName().equals(dss1.getSolutionName()) && dss.getVersion().equals(dss1.getVersion())){
+                
+                if(null == dss1.getSolutionName() && null == dss1.getVersion()){
+                	break;
+                } else if(dss.getSolutionName().equals(dss1.getSolutionName()) && dss.getVersion().equals(dss1.getVersion())){
+                	//TODO : Need to remove once tested
+                	logger.debug(EELFLoggerDelegator.debugLogger, " dss1.getSolutionName() " + dss1.getSolutionName());
+                    logger.debug(EELFLoggerDelegator.debugLogger, " dss1.getVersion() " + dss1.getVersion());
 					cnt++;
 				}
 				if(cnt == 2){  //indicating that same solution name and version appeared twice, so no need to check further 
 					break;
 				}
+				
 			}
 			if(cnt == 1){
 				dss.setSolutionRevisionId("");
 			}
-			
+			result.add(dss);
 		}
+		return result;
 	}
 
-	private DSSolution buildSolutionDetails(MLPSolution mlpsolution, CommonDataServiceRestClientImpl cmnDataService,
+	private List<DSSolution> buildSolutionDetails(MLPSolution mlpsolution, CommonDataServiceRestClientImpl cmnDataService,
 			String solutionId, SimpleDateFormat sdf) {
 		logger.debug(EELFLoggerDelegator.debugLogger, " buildSolutionDetails() Begin ");
 		DSSolution dssolution = null;
+		List<DSSolution> dsSolutions = new ArrayList<DSSolution>();
 		try {
 			solutionId = mlpsolution.getSolutionId();
 			List<MLPSolutionRevision>  mlpSolRevisionList = cmnDataService.getSolutionRevisions(solutionId);
@@ -219,14 +234,16 @@ public class SolutionServiceImpl implements ISolutionService {
 
 				for (MLPSolutionRevision mlpSolRevision : mlpSolRevisionList) {
 					dssolution = populateDsSolution(mlpsolution, sdf, userName, mlpSolRevision);
+					dsSolutions.add(dssolution);
 				}
+				dsSolutions = checkDuplicateSolution(dsSolutions);
 			}
 
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, " Exception in buildSolutionDetails() ",e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, " buildSolutionDetails() Ends ");
-		return dssolution;
+		return dsSolutions;
 	}
 
 	private DSSolution populateDsSolution(MLPSolution mlpsolution, SimpleDateFormat sdf, String userName,
