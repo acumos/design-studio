@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f38cb0a_872e9dbd",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-21T14:58:40Z",
+      "side": 1,
+      "message": "You might consider, maybe, extending your class DSSolution with a constructor that accepts a MLPSolution object, and put all the setters there.",
+      "revId": "ab7e1417335a787ddc3c7fe8b3e98106b47450f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ec19284c_220f7b01",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-21T14:58:40Z",
+      "side": 1,
+      "message": "No, don\u0027t do this here.  Just send the IDs in all cases.",
+      "revId": "ab7e1417335a787ddc3c7fe8b3e98106b47450f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e05af71d_a5522aed",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-21T14:58:40Z",
+      "side": 1,
+      "message": "This is buggy anyhow - it will always find the most recently added item and always add the ID",
+      "revId": "ab7e1417335a787ddc3c7fe8b3e98106b47450f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "028d1cc3_c2a0825f",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-21T14:58:40Z",
+      "side": 1,
+      "message": "Why append a comma to a JSON string?  This looks questionable",
+      "revId": "ab7e1417335a787ddc3c7fe8b3e98106b47450f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
