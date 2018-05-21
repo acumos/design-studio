@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cd2281e_a10913a7",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-21T17:02:32Z",
+      "side": 1,
+      "message": "Please use a Java set, instead of re-implementing an Order-of-N-squared algorithm to do the same thing.",
+      "revId": "146a4b50e2c1c3f8492ad83492e60c74a901f8e7",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e5ff32a_9baa48b0",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/Properties.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-21T17:02:32Z",
+      "side": 1,
+      "message": "Probably this should be just getSolutionErrorDescription, not get get get get?",
+      "revId": "146a4b50e2c1c3f8492ad83492e60c74a901f8e7",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
