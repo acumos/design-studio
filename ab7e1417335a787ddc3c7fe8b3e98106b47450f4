@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7bbf8d56_4a16805f",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 38
+      },
+      "writtenOn": "2018-05-21T16:56:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6f38cb0a_872e9dbd",
+      "revId": "ab7e1417335a787ddc3c7fe8b3e98106b47450f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ec19284c_220f7b01",
         "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
         "patchSetId": 2
@@ -71,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "0bab91d5_85c762f8",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 38
+      },
+      "writtenOn": "2018-05-21T16:56:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e05af71d_a5522aed",
+      "revId": "ab7e1417335a787ddc3c7fe8b3e98106b47450f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "028d1cc3_c2a0825f",
         "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
         "patchSetId": 2
@@ -82,6 +118,24 @@
       "writtenOn": "2018-05-21T14:58:40Z",
       "side": 1,
       "message": "Why append a comma to a JSON string?  This looks questionable",
+      "revId": "ab7e1417335a787ddc3c7fe8b3e98106b47450f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db1fa814_8aa8673c",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 38
+      },
+      "writtenOn": "2018-05-21T16:56:23Z",
+      "side": 1,
+      "message": "removed",
+      "parentUuid": "028d1cc3_c2a0825f",
       "revId": "ab7e1417335a787ddc3c7fe8b3e98106b47450f4",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
