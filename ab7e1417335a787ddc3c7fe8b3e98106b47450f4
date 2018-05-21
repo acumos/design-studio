@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "50a60fec_b527ffd5",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-05-21T15:22:32Z",
+      "side": 1,
+      "message": "But its discussed and confirmed in call with Kazi. If we revert it now then, UI will not check for solution with same Name \u0026 same version and will display Revision Id for all the solutions.",
+      "parentUuid": "ec19284c_220f7b01",
+      "revId": "ab7e1417335a787ddc3c7fe8b3e98106b47450f4",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e05af71d_a5522aed",
         "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
         "patchSetId": 2
