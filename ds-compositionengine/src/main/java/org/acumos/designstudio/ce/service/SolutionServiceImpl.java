@@ -162,7 +162,7 @@ public class SolutionServiceImpl implements ISolutionService {
 			}
 
 			if (dsSolutionList.size() > 1) {
-				//checkDuplicateSolution(dsSolutionList);
+				dsSolutionList = checkDuplicateSolution(dsSolutionList);
 				result = mapperObj.writeValueAsString(dsSolutionList);
 			} else {
 				result = props.getSolutionErrorDescription();
@@ -185,7 +185,6 @@ public class SolutionServiceImpl implements ISolutionService {
 		for(DSSolution dss : dsSolutionList){
 			//check if it appears twice in clone
 			cnt = 0;
-			//TODO : Need to remove once tested
 			logger.debug(EELFLoggerDelegator.debugLogger, " dss.getSolutionName() " + dss.getSolutionName());
             logger.debug(EELFLoggerDelegator.debugLogger, " dss.getVersion() " + dss.getVersion());
             if(null == dss.getSolutionName() && null == dss.getVersion() ){
@@ -196,7 +195,6 @@ public class SolutionServiceImpl implements ISolutionService {
                 if(null == dss1.getSolutionName() && null == dss1.getVersion()){
                 	break;
                 } else if(dss.getSolutionName().equals(dss1.getSolutionName()) && dss.getVersion().equals(dss1.getVersion())){
-                	//TODO : Need to remove once tested
                 	logger.debug(EELFLoggerDelegator.debugLogger, " dss1.getSolutionName() " + dss1.getSolutionName());
                     logger.debug(EELFLoggerDelegator.debugLogger, " dss1.getVersion() " + dss1.getVersion());
 					cnt++;
@@ -236,9 +234,7 @@ public class SolutionServiceImpl implements ISolutionService {
 					dssolution = populateDsSolution(mlpsolution, sdf, userName, mlpSolRevision);
 					dsSolutions.add(dssolution);
 				}
-				dsSolutions = checkDuplicateSolution(dsSolutions);
 			}
-
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, " Exception in buildSolutionDetails() ",e);
 		}
@@ -1582,5 +1578,4 @@ public class SolutionServiceImpl implements ISolutionService {
 		}
 		return matchingModelsolutionList;
 	}
-	
 }
