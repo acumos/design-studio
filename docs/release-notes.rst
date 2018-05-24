@@ -25,6 +25,7 @@ The Design Studio Composition Engine is deployed within a Docker image in the Do
 0.0.29-SNAPSHOT, 2018-05-21
 ---------------------------
 * ACUMOS-882 : Include SolutionRevisionId along with other details for the solution with same name and version.
+* ACUMOS-928 : Junit TestCases For DS-DataBroker.
 
 
 0.0.28-SNAPSHOT, 2018-05-15

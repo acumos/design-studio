@@ -78,8 +78,7 @@ public class CSVDatabrokerControllerTest {
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 		
 		MockHttpServletResponse response = result.getResponse();
-		assertEquals(200, response.getStatus());
-				
+		assertEquals(200, response.getStatus());				
 	}
 	
 	@Test //(expected = com.fasterxml.jackson.databind.JsonMappingException.class)
@@ -92,12 +91,8 @@ public class CSVDatabrokerControllerTest {
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 		
 		MockHttpServletResponse response = result.getResponse();
-		assertEquals(400, response.getStatus());
-				
+		assertEquals(400, response.getStatus());				
 	}
-	
-	
-	
 	
 	@Test
 	public void pullData() throws Exception { 
@@ -113,7 +108,7 @@ public class CSVDatabrokerControllerTest {
 		mvcresult = mockMvc.perform(requestBuilder).andReturn();
 		MockHttpServletResponse response = mvcresult.getResponse();
 		assertEquals(result, response.getContentAsString());
-		
+		  
 		//Exception 
 		Mockito.when(service.getOneRecord()).thenThrow(new ServiceException("No environment configuration found!  Please set the Environment configuration.","401", "Exception in getData()"));
 		
@@ -122,7 +117,6 @@ public class CSVDatabrokerControllerTest {
 		 
 		 response = mvcresult.getResponse();
 		 assertEquals("{\"status\":500,\"message\":\"No Data Found !!!\"}", response.getContentAsString());
-		
 		
 		confService.setResultsetSize(-1);
 		OutputStream out = new FileOutputStream("test.txt");
@@ -149,25 +143,6 @@ public class CSVDatabrokerControllerTest {
 		mvcresult = mockMvc.perform(requestBuilder).andReturn();
 		assertEquals(0, mvcresult.getResponse().getContentLength());
 		
-		
-		
 	}
-	
-	/*@Test(expected = java.lang.NullPointerException.class)
-	public void pullDataException() throws Exception { 
-		confService.setResultsetSize(1);
-		confService.setResultsetSize(0);
-		confService.setShellFileCreated(false);
-		Configuration conf = new Configuration();
-		DataBrokerMap map = new DataBrokerMap();
-		String result = "This is test";
-		confService.setConf(null);
-		//Mockito.when(confService.getConf()).thenThrow(NullPointerException.class);
-		//Mockito.when(service.getOneRecord()).thenReturn(result.getBytes());
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/pullData");
-		MvcResult mvcresult = mockMvc.perform(requestBuilder).andReturn();
-	}*/
-	
-	
 	
 }
