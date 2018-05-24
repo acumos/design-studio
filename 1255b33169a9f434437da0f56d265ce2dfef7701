@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "00c5f901_b60ec2a0",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/controller/AdminCsvDatabrokerControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-24T12:39:28Z",
+      "side": 1,
+      "message": "I don\u0027t see any check of the response in these tests - need to assert something here, at least not-null right?",
+      "revId": "1255b33169a9f434437da0f56d265ce2dfef7701",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c54c44d6_f2871ab2",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/service/ProtobufServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-24T12:39:28Z",
+      "side": 1,
+      "message": "Add license header here pls",
+      "revId": "1255b33169a9f434437da0f56d265ce2dfef7701",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35ae9834_3b28ee13",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/service/ProtobufServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-05-24T12:39:28Z",
+      "side": 1,
+      "message": "Why are all these commented out?",
+      "revId": "1255b33169a9f434437da0f56d265ce2dfef7701",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
