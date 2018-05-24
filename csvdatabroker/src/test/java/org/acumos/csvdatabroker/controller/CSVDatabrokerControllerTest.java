@@ -113,7 +113,7 @@ public class CSVDatabrokerControllerTest {
 		mvcresult = mockMvc.perform(requestBuilder).andReturn();
 		MockHttpServletResponse response = mvcresult.getResponse();
 		assertEquals(result, response.getContentAsString());
-		
+		  
 		//Exception 
 		Mockito.when(service.getOneRecord()).thenThrow(new ServiceException("No environment configuration found!  Please set the Environment configuration.","401", "Exception in getData()"));
 		

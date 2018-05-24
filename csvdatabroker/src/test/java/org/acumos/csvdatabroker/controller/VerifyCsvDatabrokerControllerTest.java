@@ -20,13 +20,14 @@
 
 package org.acumos.csvdatabroker.controller;
 
-import static org.junit.Assert.*;
-
+import org.acumos.csvdatabroker.exceptionhandler.ServiceException;
 import org.acumos.csvdatabroker.service.CSVDatabrokerService;
 import org.acumos.csvdatabroker.service.ConfigurationService;
 import org.acumos.csvdatabroker.service.ProtobufService;
+import org.acumos.csvdatabroker.service.ProtobufServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -40,7 +41,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(controllers = { VerifyCsvDatabrokerController.class, AdminCsvDatabrokerController.class }, secure = false)
+@WebMvcTest(value = VerifyCsvDatabrokerController.class, secure = false)
 public class VerifyCsvDatabrokerControllerTest {
 
 	@Autowired
@@ -48,9 +49,6 @@ public class VerifyCsvDatabrokerControllerTest {
 	
 	String configJson = "{  \"userName\": \"techmahindra\",  \"password\": \"Tech@1234\",  \"host\": \"10.20.44.24\",  \"port\": 22,  \"data_broker_map\": {        \"script\": \"test sample script\",		\"target_system_url\": \"file://10.20.44.24:22/home/techmahindra/vaibhav/predict.csv\",        \"local_system_data_file_path\": \"SampleCSVFile_11kb.csv\",        \"first_row\": \"contains_field_names\",        \"csv_file_field_separator\": \",\",        \"data_broker_type\": \"csv\",        \"map_inputs\":[                 {                    \"input_field\":{                       \"name\":\"date\",                     \"type\":\"string\",                     \"checked\":\"YES\",                     \"mapped_to_field\":\"\"                  }               },               {                    \"input_field\":{                       \"name\":\"cpu\",                     \"type\":\"float\",                     \"checked\":\"YES\",                     \"mapped_to_field\":\"1.2\"                  }               },               {                    \"input_field\":{                       \"name\":\"Memory\",                     \"type\":\"int\",                     \"checked\":\"YES\",                     \"mapped_to_field\":\"1.1\"                  }               },               {                    \"input_field\":{                       \"name\":\"Network\",                     \"type\":\"String\",                     \"checked\":\"YES\",                     \"mapped_to_field\":\"\"                  }               },               {                    \"input_field\":{                       \"name\":\"id\",                     \"type\":\"int\",                     \"checked\":\"YES\",                     \"mapped_to_field\":\"\"                  }               }        ],        \"map_outputs\":[                 {                    \"output_field\":{                       \"tag\":\"1.2\",                     \"name\":\"binary_stream\",                     \"type_and_role_hierarchy_list\":[                          {                             \"name\":\"string\",                           \"role\":\"repeated\"                        },                        {                             \"name\":\"DataFrameRow\",                           \"role\":\"\"                        },                        {                             \"name\":\"DataFrame\",                           \"role\":\"null\"                        }                     ]                  }               },               {                    \"output_field\":{                       \"tag\":\"1.1\",                     \"name\":\"mime_type\",                     \"type_and_role_hierarchy_list\":[                          {                             \"name\":\"string\",                           \"role\":\"repeated\"                        },                        {                             \"name\":\"DataFrameRow\",                           \"role\":\"\"                        },                        {                             \"name\":\"DataFrame\",                           \"role\":\"null\"                        }                     ]                  }               }            ]         },  \"protobufFile\": \"syntax = \\\"proto3\\\";\\n\\nmessage DataFrameRow {\\n  repeated string mime_type = 1;\\n  repeated string binary_stream = 2;\\n}\\nmessage DataFrame { \\n  required DataFrameRow rows = 1;\\n }\\n\\nmessage Prediction {\\n  repeated int64 idx = 1;\\n  repeated int64 class = 2;\\n  repeated int64 prediction = 3;\\n}\\n\\nmessage AggregateData {\\n  repeated string mime_type = 1;\\n  repeated string binary_stream = 2;\\n}\\n\\nservice Predictor-R {\\n  rpc transform (DataFrame) returns (Prediction);\\n}\"}";
 	
-	@MockBean
-	@Qualifier("CSVDatabrokerServiceImpl")
-	private CSVDatabrokerService service;
 	
 	@MockBean
 	@Qualifier("ConfigurationServiceImpl")
@@ -58,20 +56,37 @@ public class VerifyCsvDatabrokerControllerTest {
 	
 	@MockBean
 	@Qualifier("ProtobufServiceImpl")
-	private ProtobufService protoService;
+	private ProtobufServiceImpl protoService;
 	
 	@Test
 	public void getProtobufFormattedData() throws Exception{
-		RequestBuilder requestBuilder = MockMvcRequestBuilders
-				.put("/configDB")
-				.accept(MediaType.APPLICATION_JSON).content(configJson)
-				.contentType(MediaType.APPLICATION_JSON);
+		
+		MvcResult mvcresult = mockMvc.perform(MockMvcRequestBuilders.get("/verify/getProtobufMessage")
+				.param("messageName","test")
+				.param("InputData","demo")
+	            .contentType(MediaType.APPLICATION_JSON)
+	            .accept(MediaType.APPLICATION_JSON)).andReturn();
+		MockHttpServletResponse response = mvcresult.getResponse();
+		
+	}
+	
+	@Test
+	public void getDataForProtobufFormat1() throws Exception{
+		
+		/*MvcResult mvcresult = mockMvc.perform(MockMvcRequestBuilders.get("/verify/getData1")
+	            .contentType(MediaType.APPLICATION_JSON)
+	            .accept(MediaType.APPLICATION_JSON)).andReturn();
+		MockHttpServletResponse response = mvcresult.getResponse();*/
+		byte[] protobufMessage = null;
+		String messageName1 = null;
+		
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/verify/getData1");
 		MvcResult mvcresult = mockMvc.perform(requestBuilder).andReturn();
 		
+		Mockito.when(protoService.readProtobufFormat(messageName1,protobufMessage)).thenThrow(new NullPointerException());
 		
-		requestBuilder = MockMvcRequestBuilders.get("/admin/getProtobuf");
-		mvcresult = mockMvc.perform(requestBuilder).andReturn();
-		MockHttpServletResponse response = mvcresult.getResponse();
+		 requestBuilder = MockMvcRequestBuilders.get("/verify/getData1");
+		 mvcresult = mockMvc.perform(requestBuilder).andReturn();
 		
 	}
 }
