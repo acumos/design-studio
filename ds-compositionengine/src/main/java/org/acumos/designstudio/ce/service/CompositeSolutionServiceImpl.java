@@ -121,14 +121,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, " saveCompositeSolution() Begin ");
 		// Case 1. New Composite Solution : CID exist and SolutionID is missing.
 		if (null != dscs.getcId() && null == dscs.getSolutionId()) {
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"Started implementation of Case 1 : cid is present and SolutionId is null");
+			logger.debug(EELFLoggerDelegator.debugLogger,"Started implementation of Case 1 : cid is present and SolutionId is null");
 			String cdumpFileName = "acumos-cdump" + "-" + dscs.getcId() + ".json";
 			String filePath = DSUtil.readCdumpPath(dscs.getAuthor(), confprops.getToscaOutputFolder());
 
 			File cdump = new File(filePath.concat(cdumpFileName));
-			// 3. If cid is present then validate the cid : By checking
-			// whether the corresponding json file existing or not.
+			// 3. If cid is present then validate the cid : By checking hether the corresponding json file existing or not.
 			if (cdump.exists()) {
 
 				// check if the solution name and its version already exists using CDS
@@ -158,35 +156,27 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					try {
 						result = insertCompositeSolution(dscs);
 					} catch (IOException e) {
-						logger.error(EELFLoggerDelegator.errorLogger, " IOException in insertCompositeSolution ",
-								e);
-						throw new ServiceException("  Exception in insertCompositeSolution ", "222",
-								"IOException in insertCompositeSolution");
+						logger.error(EELFLoggerDelegator.errorLogger, " IOException in insertCompositeSolution ",e);
+						throw new ServiceException("  Exception in insertCompositeSolution ", "222","IOException in insertCompositeSolution");
 					}
 				}
 			} else {
 				result = String.format(error, "201", "Unknown Composition Id " + dscs.getcId());
 			}
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"Ended implementation of Case 1 : cid is present and SolutionId is null");
+			logger.debug(EELFLoggerDelegator.debugLogger,"Ended implementation of Case 1 : cid is present and SolutionId is null");
 		} else if (null == dscs.getcId() && null != dscs.getSolutionId()) {
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"Started implementation of Case 2 : cid is null and SolutionId is present");
+			logger.debug(EELFLoggerDelegator.debugLogger,"Started implementation of Case 2 : cid is null and SolutionId is present");
 			try {
 				result = updateCompositeSolution(dscs);
 			} catch (IOException e) {
 				logger.error(EELFLoggerDelegator.errorLogger, " Exception in updateCompositeSolution ", e);
-				throw new ServiceException("  Exception in insertCompositeSolution ", "222",
-						"Exception in updateCompositeSolution");
+				throw new ServiceException("  Exception in insertCompositeSolution ", "222","Exception in updateCompositeSolution");
 			}
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"Ended implementation of Case 2 : cid is null and SolutionId is present");
+			logger.debug(EELFLoggerDelegator.debugLogger,"Ended implementation of Case 2 : cid is null and SolutionId is present");
 		} else {
 			result = String.format(error, "201", "Error while saving the solution");
 		}
-
-		// 4. (Future) The Composition Engine must call the Modeling Engine
-		// to ensure the TOSCA validation of cdump file.
+		// 4. (Future) The Composition Engine must call the Modeling Engine to ensure the TOSCA validation of cdump file.
 		logger.debug(EELFLoggerDelegator.debugLogger, " saveCompositeSolution() End ");
 		return result;
 	}
@@ -213,16 +203,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
 			mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 			mlpSolution.setToolkitTypeCode("CP");
-			// mlpSolution.
 			mlpSolution.setActive(true);
 			mlpSolution = cdmsClient.createSolution(mlpSolution);
 			logger.debug(EELFLoggerDelegator.debugLogger, "1.  Successfully Created the Solution {0} & generated Solution ID : {1}", mlpSolution.getName(), mlpSolution.getSolutionId());
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Error :  Exception in insertCompositeSolution() Failed to create the Solution ",
-					e);
-			throw new ServiceException("  Exception in insertCompositeSolution ", "222",
-					"Failed to create the Solution");
+			logger.error(EELFLoggerDelegator.errorLogger,"Error :  Exception in insertCompositeSolution() Failed to create the Solution ",e);
+			throw new ServiceException("  Exception in insertCompositeSolution ", "222","Failed to create the Solution");
 		}
 
 		// 2. create the solutionRevision
@@ -235,14 +221,10 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 			mlpSolutionRevision = cdmsClient.createSolutionRevision(mlpSolutionRevision);
 
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"2. Successfully Created the SolutionRevision :  {} ", mlpSolutionRevision.getRevisionId());
+			logger.debug(EELFLoggerDelegator.debugLogger,"2. Successfully Created the SolutionRevision :  {} ", mlpSolutionRevision.getRevisionId());
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Error : Exception in insertCompositeSolution() : Failed to create the Solution Revision",
-					e);
-			throw new ServiceException("  Exception in insertCompositeSolution() ", "222",
-					"Failed to create the Solution");
+			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in insertCompositeSolution() : Failed to create the Solution Revision",e);
+			throw new ServiceException("  Exception in insertCompositeSolution() ", "222","Failed to create the Solution");
 		}
 
 		String path = DSUtil.readCdumpPath(dscs.getAuthor(), confprops.getToscaOutputFolder());
@@ -256,8 +238,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			ObjectMapper mapper = new ObjectMapper();
 			Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
 			if (null == cdump) {
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						"Error : Cdump file not found for Solution ID :   {} ", mlpSolution.getSolutionId());
+				logger.debug(EELFLoggerDelegator.debugLogger,"Error : Cdump file not found for Solution ID :   {} ", mlpSolution.getSolutionId());
 			} else {
 				cdump.setCname(dscs.getSolutionName());
 				cdump.setVersion(dscs.getVersion());
@@ -265,49 +246,36 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				cdump.setSolutionId(mlpSolution.getSolutionId());
 				SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
 				cdump.setMtime(sdf.format(new Date()));
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						"3. Successfully read the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
+				logger.debug(EELFLoggerDelegator.debugLogger,"3. Successfully read the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
 				Gson gson = new Gson();
 				payload = gson.toJson(cdump);
 				cdumpFileName = "acumos-cdump" + "-" + mlpSolution.getSolutionId();
 				DSUtil.writeDataToFile(path, cdumpFileName, "json", payload);
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Error : Exception in insertCompositeSolution() : Failed to Find the Cdump File ",
-					e);
-			throw new ServiceException("  Exception in insertCompositeSolution() ", "222",
-					"Failed to create the Solution");
+			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in insertCompositeSolution() : Failed to Find the Cdump File ",e);
+			throw new ServiceException("  Exception in insertCompositeSolution() ", "222","Failed to create the Solution");
 		}
 
 		Artifact cdumpArtifact = new Artifact(cdumpFileName, "json", mlpSolution.getSolutionId(), dscs.getVersion(),
 				path, payload.length());
 
-		logger.debug(EELFLoggerDelegator.debugLogger,
-				"4. Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
+		logger.debug(EELFLoggerDelegator.debugLogger,"4. Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
 
 		try {
 			uploadFilesToRepository(mlpSolution.getSolutionId(), dscs.getVersion(), cdumpArtifact);
 			dscs.setCdump(cdumpArtifact);
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"5. Successfully uploaded the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
+			logger.debug(EELFLoggerDelegator.debugLogger,"5. Successfully uploaded the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
 			DSUtil.deleteFile(path.concat("acumos-cdump" + "-" + dscs.getcId()).concat(".json"));
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"5.1 Successfully deleted the local Cdump file for solution ID : "
-							+ mlpSolution.getSolutionId());
+			logger.debug(EELFLoggerDelegator.debugLogger,"5.1 Successfully deleted the local Cdump file for solution ID : " + mlpSolution.getSolutionId());
 
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Error : Exception in insertCompositeSolution() : Failed to upload the Cdump File to Nexus ",
-					e);
+			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in insertCompositeSolution() : Failed to upload the Cdump File to Nexus ",e);
 			DSUtil.deleteFile(path.concat("acumos-cdump" + "-" + dscs.getcId()).concat(".json"));
 			if (null != mlpSolution.getSolutionId())
 				DSUtil.deleteFile(path.concat(cdumpFileName).concat(".json"));
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"5.1 Successfully deleted the local Cdump file for solution ID : "
-							+ mlpSolution.getSolutionId());
-			throw new ServiceException("  Exception in insertCompositeSolution() ", "222",
-					"Failed to create the Solution");
+			logger.debug(EELFLoggerDelegator.debugLogger,"5.1 Successfully deleted the local Cdump file for solution ID : " + mlpSolution.getSolutionId());
+			throw new ServiceException("  Exception in insertCompositeSolution() ", "222","Failed to create the Solution");
 		}
 
 		// 4. create the artifact
@@ -326,29 +294,22 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
 
 			// 5. associate articat to the solutionRevisionArtifact.
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"6. Successfully created the artifact for the cdumpfile for the solution : {0} artifact ID : {1}" ,mlpSolution.getSolutionId(), mlpArtifact.getArtifactId());
+			logger.debug(EELFLoggerDelegator.debugLogger,"6. Successfully created the artifact for the cdumpfile for the solution : {0} artifact ID : {1}" ,mlpSolution.getSolutionId(), mlpArtifact.getArtifactId());
 
 			cdmsClient.addSolutionRevisionArtifact(mlpSolution.getSolutionId(), mlpSolutionRevision.getRevisionId(),
 					mlpArtifact.getArtifactId());
 
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"7. Successfully associated the Solution Revision Artifact for solution ID  : "
-							+ mlpSolution.getSolutionId());
+			logger.debug(EELFLoggerDelegator.debugLogger,"7. Successfully associated the Solution Revision Artifact for solution ID  : " + mlpSolution.getSolutionId());
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Error : Exception in insertCompositeSolution() : Failed to create the Solution Artifact ",
-					e);
-			throw new ServiceException("  Exception in insertCompositeSolution() ", "222",
-					"Failed to create the Solution");
+			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in insertCompositeSolution() : Failed to create the Solution Artifact ",e);
+			throw new ServiceException("  Exception in insertCompositeSolution() ", "222","Failed to create the Solution");
 		}
 
 		// 5. Detete the cdump file
 
 		logger.debug(EELFLoggerDelegator.debugLogger, " insertCompositeSolution() End ");
 
-		return "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \"" + dscs.getVersion()
-				+ "\" }";
+		return "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \"" + dscs.getVersion() + "\" }";
 
 	}
 
@@ -385,8 +346,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				});
 
 				if (null != mlpSolutionList && !mlpSolutionList.isEmpty()) {
-					// 4. get the first solutionRevision and check the solution
-					// version with input solution version
+					// 4. get the first solutionRevision and check the solution version with input solution version
 					if ("PR".equals(mlpSolution.getAccessTypeCode())) {
 						if (mlpSolutionList.get(0).getVersion().equals(dscs.getVersion())
 								&& "PR".equals(mlpSolution.getAccessTypeCode())) {
@@ -405,8 +365,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 											result = "{\"alert\": \"" + props.getAskToUpdateExistingCompSolnMsg() + "\" }";
 										} else if (dscs.getIgnoreLesserVersionConflictFlag()) {
-											logger.debug(EELFLoggerDelegator.debugLogger,
-													"Upadating Existing Solution with the previous version");
+											logger.debug(EELFLoggerDelegator.debugLogger,"Upadating Existing Solution with the previous version");
 											result = updateExistingSolution(mlpSR, mlpSolution, dscs);
 										}
 									}
@@ -432,8 +391,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							result = updateSolnWithNewVersion(mlpSolution, dscs);
 						}
 					}
-				} else { // This means no version available for the solution as result for delete solution. So add new version to the existing solution.
-
+				} else { 
+					// This means no version available for the solution as result for delete solution. So add new version to the existing solution.
 					logger.debug(EELFLoggerDelegator.debugLogger, "No version found, so adding new version to the Solution");
 					result = updateSolnWithNewVersion(mlpSolution, dscs);
 				}
@@ -446,7 +405,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 			}
 		} else {
-
 			result = String.format(error, "207", "Solution does not exist in the Database");
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, " updateCompositeSolution() End ");
@@ -482,30 +440,26 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
 
 		if (null == cdump) {
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"Error : Cdump file not found for Solution ID :   {} ", mlpSolution.getSolutionId());
+			logger.debug(EELFLoggerDelegator.debugLogger,"Error : Cdump file not found for Solution ID :   {} ", mlpSolution.getSolutionId());
 		} else {
 			// 5.2 Update the cdump file with mtime
 			cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
+			cdump.setValidSolution(false);
 			Gson gson = new Gson();
 			String payload = gson.toJson(cdump);
 			DSUtil.writeDataToFile(path, cdumpFileName, "json", payload);
 			Artifact cdumpArtifact = new Artifact(cdumpFileName, "json", mlpSolution.getSolutionId(), dscs.getVersion(),
 					path, payload.length());
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"4. Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
-			// 5.3 upload the cdump file in Nexus Repositry. (file name should be the same
-			// as previous one).
+			logger.debug(EELFLoggerDelegator.debugLogger,"4. Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
+			// 5.3 upload the cdump file in Nexus Repositry. (file name should be the same as previous one).
 			uploadFilesToRepository(mlpSolution.getSolutionId(), dscs.getVersion(), cdumpArtifact);
 
 			// Fetch the existing artifact
-			List<MLPArtifact> artfactsList = cdmsClient.getSolutionRevisionArtifacts(mlpSR.getSolutionId(),
-					mlpSR.getRevisionId());
+			List<MLPArtifact> artfactsList = cdmsClient.getSolutionRevisionArtifacts(mlpSR.getSolutionId(), mlpSR.getRevisionId());
 
 			for (MLPArtifact mlpArtifact : artfactsList) {
 
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						"mlpArtifact.getArtifactTypeCode()  :  {} ", mlpArtifact.getArtifactTypeCode());
+				logger.debug(EELFLoggerDelegator.debugLogger,"mlpArtifact.getArtifactTypeCode()  :  {} ", mlpArtifact.getArtifactTypeCode());
 				if (mlpArtifact.getArtifactTypeCode().equals(props.getArtifactTypeCode())) {
 					logger.debug(EELFLoggerDelegator.debugLogger, " {0} = {1} ", mlpArtifact.getArtifactTypeCode(), props.getArtifactTypeCode());
 					dscs.setCdump(cdumpArtifact);
@@ -513,15 +467,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					mlpArtifact.setModified(currentDate);
 					mlpArtifact.setSize(cdumpArtifact.getContentLength());
 					cdmsClient.updateArtifact(mlpArtifact);
-					logger.debug(EELFLoggerDelegator.debugLogger,
-							" Successfully updated the artifact for the cdumpfile for the solution : {0} artifact ID : {1}" , mlpSolution.getSolutionId(),  mlpArtifact.getArtifactId());
-					result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \""
-							+ dscs.getVersion() + "\" }";
+					logger.debug(EELFLoggerDelegator.debugLogger," Successfully updated the artifact for the cdumpfile for the solution : {0} artifact ID : {1}" , mlpSolution.getSolutionId(),  mlpArtifact.getArtifactId());
+					result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \"" + dscs.getVersion() + "\" }";
 					break;
 				}
 			}
-			// 5.4 update the solutionRevisoin (i.e., to update the modified date of the
-			// solutionrevision)
+			// 5.4 update the solutionRevisoin (i.e., to update the modified date of the solutionrevision)
 			mlpSR.setModified(currentDate);
 			cdmsClient.updateSolutionRevision(mlpSR);
 
@@ -544,8 +495,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	 * @throws AcumosException
 	 *             On error
 	 */
-	public String updateSolnWithNewVersion(MLPSolution mlpSolution, DSCompositeSolution dscs)
-			throws IOException, AcumosException {
+	public String updateSolnWithNewVersion(MLPSolution mlpSolution, DSCompositeSolution dscs) throws IOException, AcumosException {
 
 		// Set solution active to true
 		mlpSolution.setActive(true);
@@ -568,9 +518,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		// 6.1 update the cdump file with cname = solution name and version = version
 		cdump.setCname(dscs.getSolutionName());
 		cdump.setVersion(dscs.getVersion());
+		cdump.setValidSolution(false);
 
-		// 6.2 Create new SolutionRevision using CDS : inputSolutionId, version : this
-		// will return the solutionrevisionid
+		// 6.2 Create new SolutionRevision using CDS : inputSolutionId, version : this will return the solutionrevisionid
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		try {
 			mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
@@ -581,14 +531,10 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			mlpSolutionRevision.setModified(currentDate);
 			mlpSolutionRevision = cdmsClient.createSolutionRevision(mlpSolutionRevision);
 
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					" Successfully Created the SolutionRevision :  {} ", mlpSolutionRevision.getRevisionId());
+			logger.debug(EELFLoggerDelegator.debugLogger," Successfully Created the SolutionRevision :  {} ", mlpSolutionRevision.getRevisionId());
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Error : Exception in updateSolnWithNewVersion() : Failed to create the Solution Revision",
-					e);
-			throw new ServiceException("  Exception in updateSolnWithNewVersion() ", "222",
-					"Failed to create the Solution");
+			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in updateSolnWithNewVersion() : Failed to create the Solution Revision", e);
+			throw new ServiceException("  Exception in updateSolnWithNewVersion() ", "222","Failed to create the Solution");
 		}
 
 		Gson gson = new Gson();
@@ -597,29 +543,20 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		DSUtil.writeDataToFile(path, cdumpFileName, "json", payload);
 		Artifact cdumpArtifact = new Artifact(cdumpFileName, "json", mlpSolution.getSolutionId(), dscs.getVersion(),
 				path, payload.length());
-		logger.debug(EELFLoggerDelegator.debugLogger,
-				" Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
-		// 5.3 upload the cdump file in Nexus Repositry. : this will return the nexus
-		// URI
+		logger.debug(EELFLoggerDelegator.debugLogger," Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
+		// 5.3 upload the cdump file in Nexus Repositry. : this will return the nexus URI
 
 		try {
 			uploadFilesToRepository(mlpSolution.getSolutionId(), dscs.getVersion(), cdumpArtifact);
 			dscs.setCdump(cdumpArtifact);
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"5. Successfully uploaded the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"5.1 Successfully deleted the local Cdump file for solution ID : "
-							+ mlpSolution.getSolutionId());
+			logger.debug(EELFLoggerDelegator.debugLogger,"5. Successfully uploaded the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
+			
+			logger.debug(EELFLoggerDelegator.debugLogger,"5.1 Successfully deleted the local Cdump file for solution ID : " + mlpSolution.getSolutionId());
 
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Error : Exception in updateSolnWithNewVersion() : Failed to upload the Cdump File to Nexus ",
-					e);
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"5.1 Successfully deleted the local Cdump file for solution ID : "
-							+ mlpSolution.getSolutionId());
-			throw new ServiceException("  Exception in updateSolnWithNewVersion() ", "222",
-					"Failed to create the Solution");
+			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in updateSolnWithNewVersion() : Failed to upload the Cdump File to Nexus ",e);
+			logger.debug(EELFLoggerDelegator.debugLogger,"5.1 Successfully deleted the local Cdump file for solution ID : " + mlpSolution.getSolutionId());
+			throw new ServiceException("  Exception in updateSolnWithNewVersion() ", "222","Failed to create the Solution");
 		}
 
 		// 6.3 Create new Artifact : set the artifact code, the URI
@@ -638,28 +575,20 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			// 6.4 Save the Artifact using CDS : this will return the artifactId
 			mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
 
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					" Successfully created the artifact for the cdumpfile for the solution : {0} artifact ID : {1}" ,mlpSolution.getSolutionId() , mlpArtifact.getArtifactId());
+			logger.debug(EELFLoggerDelegator.debugLogger," Successfully created the artifact for the cdumpfile for the solution : {0} artifact ID : {1}" ,mlpSolution.getSolutionId() , mlpArtifact.getArtifactId());
 			// 6.5 assocaite the artifact with solutionrevision using CDS.
 			cdmsClient.addSolutionRevisionArtifact(mlpSolution.getSolutionId(), mlpSolutionRevision.getRevisionId(),
 					mlpArtifact.getArtifactId());
 
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					" Successfully associated the Solution Revision Artifact for solution ID  : "
-							+ mlpSolution.getSolutionId());
+			logger.debug(EELFLoggerDelegator.debugLogger," Successfully associated the Solution Revision Artifact for solution ID  : " + mlpSolution.getSolutionId());
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Error : Exception in updateSolnWithNewVersion() : Failed to create the Solution Artifact ",
-					e);
-			throw new ServiceException("  Exception in updateSolnWithNewVersion() ", "222",
-					"Failed to create the Solution");
+			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in updateSolnWithNewVersion() : Failed to create the Solution Artifact ", e);
+			throw new ServiceException("  Exception in updateSolnWithNewVersion() ", "222","Failed to create the Solution");
 		}
-
 		// 5.5 Update the solution (i.e., to update the modified date of the solution).
 		mlpSolution.setModified(currentDate);
 		cdmsClient.updateSolution(mlpSolution);
-		result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \"" + dscs.getVersion()
-				+ "\" }";
+		result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \"" + dscs.getVersion() + "\" }";
 		logger.debug(EELFLoggerDelegator.debugLogger, " updateSolnWithNewVersion() End ");
 		return result;
 	}
@@ -677,8 +606,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		UploadArtifactInfo artifactInfo = null;
 		try {
 
-			// 1. group id ,2. artifact name, 3. version, 4. extension i.e., packaging, 5.
-			// size of content, 6. actual file input stream.
+			// 1. group id ,2. artifact name, 3. version, 4. extension i.e., packaging, 5. size of content, 6. actual file input stream.
 			fileInputStream = new FileInputStream(a.getPayloadURI());
 			artifactInfo = nexusArtifactClient.uploadArtifact(confprops.getNexusgroupid(),
 					a.getSolutionID() + "_" + a.getType(), a.getVersion(), a.getExtension(), a.getContentLength(),
@@ -1113,6 +1041,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String result = "";
 		String bluePrintFileName = "";
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 		logger.debug(EELFLoggerDelegator.debugLogger,"6. On successful validation generate the BluePrint file");
 		BluePrint bluePrint = new BluePrint();
