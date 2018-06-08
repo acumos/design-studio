@@ -1,0 +1,17 @@
+syntax = "proto3";
+package AEkCJBNeMZDZQVeNFxDHtiIWQPJzDTBi;
+
+service Model {
+  rpc op (ComputeInput) returns (ComputeResult);
+}
+
+message ComputeInput {
+  double f1 = 1;
+  double f2 = 2;
+  string s = 3;
+}
+
+message ComputeResult {
+  double f = 1;
+  string s = 2;
+}
