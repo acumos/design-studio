@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -55,6 +56,9 @@ import org.acumos.designstudio.ce.vo.cdump.Ndata;
 import org.acumos.designstudio.ce.vo.cdump.Nodes;
 import org.acumos.designstudio.ce.vo.cdump.Property;
 import org.acumos.designstudio.ce.vo.cdump.Relations;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMap;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapInput;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapOutput;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBInputField;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapInput;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapOutput;
@@ -64,6 +68,9 @@ import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMapInputField;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.FieldMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.MapInputs;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.MapOutput;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMap;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapInput;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapOutput;
 import org.acumos.designstudio.ce.vo.protobuf.MessageBody;
 import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
 import org.acumos.designstudio.ce.vo.tgif.Call;
@@ -73,10 +80,9 @@ import org.acumos.nexus.client.NexusArtifactClient;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.SessionScope;
+
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -85,11 +91,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
-/**
- * 
- *
- *
- */
 @Service("solutionServiceImpl")
 public class SolutionServiceImpl implements ISolutionService {
 	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(SolutionServiceImpl.class);
@@ -108,6 +109,8 @@ public class SolutionServiceImpl implements ISolutionService {
 
 	@Autowired
 	NexusArtifactClient nexusArtifactClient;
+	
+	private final ObjectMapper mapper = new ObjectMapper();
 
 	@Override
 	public String getSolutions(String userID) throws ServiceException {
@@ -121,8 +124,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
 		
 		try {
-			ObjectMapper mapperObj = new ObjectMapper();
-			mapperObj.setSerializationInclusion(Include.NON_NULL);
+			mapper.setSerializationInclusion(Include.NON_NULL);
 			
 			Map<String, Object> queryParameters = new HashMap<>();
 			queryParameters.put("active", Boolean.TRUE);
@@ -163,7 +165,7 @@ public class SolutionServiceImpl implements ISolutionService {
 
 			if (dsSolutionList.size() > 1) {
 				dsSolutionList = checkDuplicateSolution(dsSolutionList);
-				result = mapperObj.writeValueAsString(dsSolutionList);
+				result = mapper.writeValueAsString(dsSolutionList);
 			} else {
 				result = props.getSolutionErrorDescription();
 			}
@@ -317,7 +319,6 @@ public class SolutionServiceImpl implements ISolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, " addNode() : Begin  ");
 		Property[] propertyarray = node.getProperties();
 		try {
-			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 			mapper.configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true);
 			String id = "";
@@ -553,12 +554,11 @@ public class SolutionServiceImpl implements ISolutionService {
 
 	@Override
 	public String modifyNode(String userId, String solutionId, String version, String cid, String nodeId,
-			String nodeName, String ndata, FieldMap fieldmap, DataBrokerMap databrokerMap) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "------- modifyNode() ------- : Begin");
+			String nodeName, String ndata, FieldMap fieldmap, DataBrokerMap databrokerMap, CollatorMap collatorMap, SplitterMap splitterMap) {
+		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode() : Begin");
 		String results = "";
 		String resultTemplate = "{\"success\" : \"%s\", \"errorDescription\" : \"%s\"}";
 		try {
-			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
 			mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -570,12 +570,6 @@ public class SolutionServiceImpl implements ISolutionService {
 			} else if (null == cid) {
 				id = solutionId;
 			}
-			logger.debug(EELFLoggerDelegator.debugLogger, "userId  {} ", userId);
-			logger.debug(EELFLoggerDelegator.debugLogger, "solutionId  {} ", solutionId);
-			logger.debug(EELFLoggerDelegator.debugLogger, "version {} ", version);
-			logger.debug(EELFLoggerDelegator.debugLogger, "cid  {} ", cid);
-			logger.debug(EELFLoggerDelegator.debugLogger, "id  {} ", id);
-
 			String cdumpFileName = "acumos-cdump" + "-" + id;
 			String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 			cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
@@ -613,111 +607,21 @@ public class SolutionServiceImpl implements ISolutionService {
 							}
 						}
 						Property properties[] = nodesData.getProperties();
-						// to update the datamapper
+						// to update the DataMapper
 						if (null != fieldmap && fieldmap.toString().length() != 0) {
-							logger.debug(EELFLoggerDelegator.debugLogger, "Modifying the mappings for Datamapper ");
-							logger.debug(EELFLoggerDelegator.debugLogger,"Input_tag_Id {} ", fieldmap.getInput_field_tag_id());
-							logger.debug(EELFLoggerDelegator.debugLogger,"Input_tag_Id {} ", fieldmap.getOutput_field_tag_id());
-							logger.debug(EELFLoggerDelegator.debugLogger,"Input_field_message_name {} ", fieldmap.getInput_field_message_name());
-							logger.debug(EELFLoggerDelegator.debugLogger,"Output_field_message_name {} ", fieldmap.getOutput_field_message_name());
-							
-							if (null != properties && properties.length != 0) {
-								// iterate through each property
-								for (Property props : properties) {
-									DataMap datamap = props.getData_map();
-									if (null != datamap && !datamap.toString().isEmpty()) {
-										MapInputs[] mapInputs = datamap.getMap_inputs();
-										if (null != mapInputs && mapInputs.length != 0) {
-											// iterate through mapinputs
-											for (MapInputs mapInput : mapInputs) {
-												// Check if the input message name matches with the provided input meassage name
-												if (mapInput.getMessage_name()
-														.equals(fieldmap.getInput_field_message_name())) {
-													DataMapInputField[] dataMapInputFieldList = mapInput
-															.getInput_fields();
-													if (null != dataMapInputFieldList
-															&& dataMapInputFieldList.length != 0) {
-														// iterate through dataMapInput fields
-														for (DataMapInputField dataMapInputField : dataMapInputFieldList) {
-															//check if the output/destination tag id is already linked to any source 
-															//node remove the destination node from the object
-															if (dataMapInputField.getMapped_to_field()
-																	.equals(fieldmap.getOutput_field_tag_id())) {
-																// delete the mapping if any
-																dataMapInputField.setMapped_to_message("");
-																dataMapInputField.setMapped_to_field("");
-															}
-															// check if the input source tagid matches with the provided input/source tagid
-															if (dataMapInputField.getTag()
-																	.equals(fieldmap.getInput_field_tag_id())) {
-																// update the object with the latest mapping
-																dataMapInputField.setMapped_to_message(
-																		fieldmap.getOutput_field_message_name());
-																dataMapInputField.setMapped_to_field(
-																		fieldmap.getOutput_field_tag_id());
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						} else if (null != databrokerMap && databrokerMap.toString().length() != 0) {
-							Property newProperty = null;
-							if(null != properties){
-								// For New Solution Create the Property[]
-								newProperty = new Property();
-								newProperty.setData_broker_map(databrokerMap);
-								
-								//check if the databrokerMap already exist. 
-								ArrayList<Property> propertyList = new ArrayList<Property>(Arrays.asList(properties));
-								
-								if(propertyList.size() == 0){ //if the properties is empty then add the new property with databroket map. 
-									propertyList.add(newProperty);
-								} else {
-									for(Property p : propertyList){
-										if(p.getData_broker_map() != null){ //else if databroker map exist and update the same.
-											DataBrokerMap dataBrokerMap = p.getData_broker_map();
-											
-											if(null != databrokerMap.getCsv_file_field_separator()){
-												dataBrokerMap.setCsv_file_field_separator(databrokerMap.getCsv_file_field_separator());
-											}
-											if(null != databrokerMap.getData_broker_type()){
-												dataBrokerMap.setData_broker_type(databrokerMap.getData_broker_type());
-											}
-											if(null != databrokerMap.getFirst_row()){
-												dataBrokerMap.setFirst_row(databrokerMap.getFirst_row());
-											}
-											if(null != databrokerMap.getLocal_system_data_file_path()){
-												dataBrokerMap.setLocal_system_data_file_path(databrokerMap.getLocal_system_data_file_path());
-											}
-											if(null != databrokerMap.getScript()){
-												dataBrokerMap.setScript(databrokerMap.getScript());
-											}
-											if(null != databrokerMap.getTarget_system_url()){
-												dataBrokerMap.setTarget_system_url(databrokerMap.getTarget_system_url());
-											}
-											if (null != databrokerMap.getMap_inputs()
-													&& null != databrokerMap.getMap_outputs()) {
-												dataBrokerMap.setMap_inputs(databrokerMap.getMap_inputs());
-												dataBrokerMap.setMap_outputs(databrokerMap.getMap_outputs());
-											}
-											p.setData_broker_map(dataBrokerMap);
-										} else {
-											propertyList.add(newProperty); //else add the new databroker map to non empty properties. 
-										}
-									}
-								}
-								properties = new Property[propertyList.size()];
-								int cnt = 0;
-								for(Property p : propertyList){
-									properties[0] = p;
-									cnt++;
-								}
-								nodesData.setProperties(properties);
-							}
+							updateDataMapper(fieldmap, properties);
+						}
+						// to update the DataBroker
+						if (null != databrokerMap && databrokerMap.toString().length() != 0) {
+							updateDataBroker(databrokerMap, nodesData);
+						}
+						// to update the CollatorMap
+						if (null != collatorMap && collatorMap.toString().length() != 0) {
+							updateCollatorMap(collatorMap, nodesData);
+						}
+						// to update the SplitterMap
+						if (null != splitterMap && splitterMap.toString().length() != 0) {
+							updateSplitterMap(splitterMap, nodesData);
 						}
 						results = String.format(resultTemplate, true, "");
 						break;
@@ -732,8 +636,177 @@ public class SolutionServiceImpl implements ISolutionService {
 			logger.error(EELFLoggerDelegator.errorLogger, "Exception in  modifyNode() ", e);
 			results = String.format(resultTemplate, false, "Not able to modify the Node");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()   : End");
 		return results;
+	}
+
+	private void updateSplitterMap(SplitterMap splitterMap, Nodes nodesData) {
+		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : Begin");
+		Property properties[] = nodesData.getProperties();
+		Property newProperty = null;
+		// If In case of properties Contains SplitterMap 
+		if (null != properties && properties.length != 0) {
+			properties[0].setSplitter_map(splitterMap);
+			//newProperty = new Property();
+			//newProperty.setSplitter_map(splitterMap);
+			ArrayList<Property> propertyList = new ArrayList<Property>(Arrays.asList(properties));
+			ArrayList<Property> newPropertyList = new ArrayList<>(propertyList);
+			if(newPropertyList.size() >= 1){
+				properties = newPropertyList.toArray(new Property[newPropertyList.size()]);
+			}
+			nodesData.setProperties(properties);
+		} else {  //if in case properties for the node is empty. 
+			newProperty = new Property();
+			newProperty.setSplitter_map(splitterMap);
+			Property newproperties[] = new Property[1];
+			newproperties[0] = newProperty;
+			nodesData.setProperties(newproperties);
+			logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode() : End");
+		}
+	}
+
+	/**
+	 * @param collatorMap
+	 * @param nodesData
+	 * @param properties
+	 */
+	private void updateCollatorMap(CollatorMap collatorMap, Nodes nodesData) {
+		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : Begin");
+		Property properties[] = nodesData.getProperties();
+		Property newProperty = null;
+		// If In case of properties Contains CollatorMap 
+		if (null != properties && properties.length != 0) {
+			properties[0].setCollator_map(collatorMap);
+			ArrayList<Property> propertyList = new ArrayList<Property>(Arrays.asList(properties));
+			ArrayList<Property> newPropertyList = new ArrayList<>(propertyList);
+			if(newPropertyList.size() >= 1){
+				properties = newPropertyList.toArray(new Property[newPropertyList.size()]);
+			}
+			nodesData.setProperties(properties);
+		} else {  //if in case properties for the node is empty. 
+			newProperty = new Property();
+			newProperty.setCollator_map(collatorMap);
+			Property newproperties[] = new Property[1];
+			newproperties[0] = newProperty;
+			nodesData.setProperties(newproperties);
+			logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode() : End");
+		}
+	}
+
+	/**
+	 * @param databrokerMap
+	 * @param nodesData
+	 * @param properties
+	 */
+	private void updateDataBroker(DataBrokerMap databrokerMap, Nodes nodesData) {
+		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : Begin");
+		Property properties[] = nodesData.getProperties();
+		Property newProperty = null;
+		if(null != properties){
+			// For New Solution Create the Property[]
+			newProperty = new Property();
+			newProperty.setData_broker_map(databrokerMap);
+			
+			//check if the databrokerMap already exist. 
+			ArrayList<Property> propertyList = new ArrayList<Property>(Arrays.asList(properties));
+			
+			if(propertyList.size() == 0){ //if the properties is empty then add the new property with databroket map. 
+				propertyList.add(newProperty);
+			} else {
+				for(Property p : propertyList){
+					if(p.getData_broker_map() != null){ //else if data broker map exist and update the same.
+						DataBrokerMap dataBrokerMap = p.getData_broker_map();
+						
+						if(null != databrokerMap.getCsv_file_field_separator()){
+							dataBrokerMap.setCsv_file_field_separator(databrokerMap.getCsv_file_field_separator());
+						}
+						if(null != databrokerMap.getData_broker_type()){
+							dataBrokerMap.setData_broker_type(databrokerMap.getData_broker_type());
+						}
+						if(null != databrokerMap.getFirst_row()){
+							dataBrokerMap.setFirst_row(databrokerMap.getFirst_row());
+						}
+						if(null != databrokerMap.getLocal_system_data_file_path()){
+							dataBrokerMap.setLocal_system_data_file_path(databrokerMap.getLocal_system_data_file_path());
+						}
+						if(null != databrokerMap.getScript()){
+							dataBrokerMap.setScript(databrokerMap.getScript());
+						}
+						if(null != databrokerMap.getTarget_system_url()){
+							dataBrokerMap.setTarget_system_url(databrokerMap.getTarget_system_url());
+						}
+						if (null != databrokerMap.getMap_inputs()
+								&& null != databrokerMap.getMap_outputs()) {
+							dataBrokerMap.setMap_inputs(databrokerMap.getMap_inputs());
+							dataBrokerMap.setMap_outputs(databrokerMap.getMap_outputs());
+						}
+						p.setData_broker_map(dataBrokerMap);
+					} else {
+						propertyList.add(newProperty); //else add the new databroker map to non empty properties. 
+					}
+				}
+			}
+			properties = propertyList.toArray(new Property[propertyList.size()]);
+			int cnt = 0;
+			for(Property p : propertyList){
+				properties[cnt] = p;
+				cnt++;
+			}
+			logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : End");
+			nodesData.setProperties(properties);
+		}
+	}
+
+	/**
+	 * @param fieldmap
+	 * @param properties
+	 */
+	private void updateDataMapper(FieldMap fieldmap, Property[] properties) {
+		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode(): Begin");
+		if (null != properties && properties.length != 0) {
+			// iterate through each property
+			for (Property props : properties) {
+				DataMap datamap = props.getData_map();
+				if (null != datamap && !datamap.toString().isEmpty()) {
+					MapInputs[] mapInputs = datamap.getMap_inputs();
+					if (null != mapInputs && mapInputs.length != 0) {
+						// iterate through mapinputs
+						for (MapInputs mapInput : mapInputs) {
+							// Check if the input message name matches with the provided input meassage name
+							if (mapInput.getMessage_name()
+									.equals(fieldmap.getInput_field_message_name())) {
+								DataMapInputField[] dataMapInputFieldList = mapInput
+										.getInput_fields();
+								if (null != dataMapInputFieldList
+										&& dataMapInputFieldList.length != 0) {
+									// iterate through dataMapInput fields
+									for (DataMapInputField dataMapInputField : dataMapInputFieldList) {
+										//check if the output/destination tag id is already linked to any source 
+										//node remove the destination node from the object
+										if (dataMapInputField.getMapped_to_field()
+												.equals(fieldmap.getOutput_field_tag_id())) {
+											// delete the mapping if any
+											dataMapInputField.setMapped_to_message("");
+											dataMapInputField.setMapped_to_field("");
+										}
+										// check if the input source tagid matches with the provided input/source tagid
+										if (dataMapInputField.getTag()
+												.equals(fieldmap.getInput_field_tag_id())) {
+											// update the object with the latest mapping
+											dataMapInputField.setMapped_to_message(
+													fieldmap.getOutput_field_message_name());
+											dataMapInputField.setMapped_to_field(
+													fieldmap.getOutput_field_tag_id());
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : End");
 	}
 
 	@Override
@@ -743,7 +816,6 @@ public class SolutionServiceImpl implements ISolutionService {
 		String results = "";
 		String resultTemplate = "{\"success\" : \"%s\", \"errorDescription\" : \"%s\"}";
 		try {
-			ObjectMapper mapper = new ObjectMapper();
 			Cdump cdump = null;
 			String id = "";
 			if (null != cid && null == solutionId) {
@@ -792,7 +864,6 @@ public class SolutionServiceImpl implements ISolutionService {
 			String cdumpFileName = "acumos-cdump" + "-" + id + ".json";
 			String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 			File file = new File(path.concat(cdumpFileName));
-			ObjectMapper mapper = new ObjectMapper();
 			if (file.exists()) {
 				try {
 					Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName)), Cdump.class);
@@ -838,7 +909,7 @@ public class SolutionServiceImpl implements ISolutionService {
 														dbInField.setMapped_to_field("");
 													}
 												}
-											}
+											} 
 										}
 									}
 								}
@@ -1043,7 +1114,6 @@ public class SolutionServiceImpl implements ISolutionService {
 		Gson gson = new Gson();
 		Tgif tgif = new Tgif();
 		org.acumos.designstudio.ce.vo.tgif.Service service = new org.acumos.designstudio.ce.vo.tgif.Service();
-		ObjectMapper mapper = new ObjectMapper();
 		try {
 			tgif = mapper.readValue(protobufTgifOutput, Tgif.class);
 		} catch (Exception ex) {
@@ -1080,9 +1150,8 @@ public class SolutionServiceImpl implements ISolutionService {
 										listOfArgument.toArray().toString();
 									}
 									String jsonInString = gson.toJson(listOfArgument);
-									ObjectMapper mapper12 = new ObjectMapper();
-									JsonNode tree1 = mapper12.readTree(jsonInString);
-									JsonNode tree2 = mapper12.readTree(protobufJsonString.toString());
+									JsonNode tree1 = mapper.readTree(jsonInString);
+									JsonNode tree2 = mapper.readTree(protobufJsonString.toString());
 									boolean isItSame = tree1.equals(tree2);
 									if (isItSame) {
 										matchingPortIsFound = true;
@@ -1119,7 +1188,6 @@ public class SolutionServiceImpl implements ISolutionService {
 		Gson gson = new Gson();
 		Tgif tgif = new Tgif();
 		org.acumos.designstudio.ce.vo.tgif.Service service = new org.acumos.designstudio.ce.vo.tgif.Service();
-		ObjectMapper mapper = new ObjectMapper();
 		try {
 			tgif = mapper.readValue(protobufTgifOutput, Tgif.class);
 		} catch (Exception ex) {
@@ -1156,9 +1224,8 @@ public class SolutionServiceImpl implements ISolutionService {
 										listOfArgument.toArray().toString();
 									}
 									String jsonInString = gson.toJson(listOfArgument);
-									ObjectMapper mapper12 = new ObjectMapper();
-									JsonNode tree1 = mapper12.readTree(jsonInString);
-									JsonNode tree2 = mapper12.readTree(protobufJsonString.toString());
+									JsonNode tree1 = mapper.readTree(jsonInString);
+									JsonNode tree2 = mapper.readTree(protobufJsonString.toString());
 									boolean isItSame = tree1.equals(tree2);
 									if (isItSame) {
 										matchingPortIsFound = true;
@@ -1192,11 +1259,9 @@ public class SolutionServiceImpl implements ISolutionService {
 		Gson gson = new Gson();
 		String nodeToUpdate = "";
 		boolean addedLink = false;
-		ObjectMapper mapper = new ObjectMapper();
 		List<Nodes> nodesList = new ArrayList<>();
 
 		try {
-
 			if (null != cid && null == solutionId) {
 				id = cid;
 			} else if (null == cid) {
@@ -1205,9 +1270,10 @@ public class SolutionServiceImpl implements ISolutionService {
 			String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 			String cdumpFileName = "acumos-cdump" + "-" + id + ".json";
 			Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName)), Cdump.class);
+			nodesList = cdump.getNodes();
 
 			// update relations list, if link is created b/w 2 models
-			if (null == property || (null != property && null == property.getData_map())) {
+			if (null == property || (null != property && null == property.getData_map() && null == property.getSplitter_map())) {
 				updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName, targetNodeId,
 						sourceNodeRequirement, targetNodeCapabilityName, cdump);
 				addedLink = true;
@@ -1215,22 +1281,21 @@ public class SolutionServiceImpl implements ISolutionService {
 
 				nodesList = cdump.getNodes();
 				// Identify Data Mapper node to update
-				if (property.getData_map().getMap_inputs().length == 0) {
+				if (null != property.getData_map() && property.getData_map().getMap_inputs().length == 0) {
 					nodeToUpdate = sourceNodeId;
 				} else {
 					nodeToUpdate = targetNodeId;
 				}
 
-				// update the properties field of Data mapper node + update
-				// relations list with link details
+				// update the properties field of Data mapper node + update relations list with link details
 				if (nodesList != null && !nodesList.isEmpty()) {
 					for (Nodes node : nodesList) {
 						if (node.getNodeId().equals(nodeToUpdate)) {
 
-							Property[] propertyarray = node.getProperties();
-							logger.debug(EELFLoggerDelegator.debugLogger, "PropertyArray :  {} ", propertyarray.toString());
-							if (null == propertyarray || propertyarray.length == 0) {
-								logger.debug(EELFLoggerDelegator.debugLogger, "propertyarray  :  {} ", propertyarray.toString());
+							Property[] propertyArr = node.getProperties();
+							logger.debug(EELFLoggerDelegator.debugLogger, "PropertyArray :  {} ", propertyArr.toString());
+							if (null == propertyArr || propertyArr.length == 0) {
+								logger.debug(EELFLoggerDelegator.debugLogger, "propertyarray  :  {} ", propertyArr.toString());
 								Property[] propertyArray = new Property[1];
 								propertyArray[0] = property;
 								node.setProperties(propertyArray);
@@ -1241,11 +1306,10 @@ public class SolutionServiceImpl implements ISolutionService {
 								break;
 
 							} else {
-								// set map_outputs of data_map under properties
-								// field of DM
-								if (property.getData_map().getMap_inputs().length == 0) {
+								// set map_outputs of data_map under properties field of DM
+								if (null !=property.getData_map() && property.getData_map().getMap_inputs().length == 0) {
 
-									propertyarray[0].getData_map()
+									propertyArr[0].getData_map()
 											.setMap_outputs(property.getData_map().getMap_outputs());
 
 									updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
@@ -1254,10 +1318,9 @@ public class SolutionServiceImpl implements ISolutionService {
 									break;
 								}
 
-								// set map_inputs of data_map under properties
-								// field of DM
-								if (property.getData_map().getMap_outputs().length == 0) {
-									propertyarray[0].getData_map()
+								// set map_inputs of data_map under properties field of DM
+								if (null !=property.getData_map() && property.getData_map().getMap_outputs().length == 0) {
+									propertyArr[0].getData_map()
 											.setMap_inputs(property.getData_map().getMap_inputs());
 									updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
 											targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
@@ -1341,10 +1404,10 @@ public class SolutionServiceImpl implements ISolutionService {
 		String sourceNodeId = null;
 		String targetNodeId = null;
 		boolean deletedLink = false;
-		ObjectMapper mapper = new ObjectMapper();
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		List<Nodes> nodesList = new ArrayList<>();
 		String filePath = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
-
 		try {
 			if (null != cid && null == solutionId) {
 				id = cid;
@@ -1369,23 +1432,88 @@ public class SolutionServiceImpl implements ISolutionService {
 							nodesList = cdump.getNodes();
 							// delete properties field from DM
 							for (Nodes node : nodesList) {
+								
+								// For all NodeTypes input is SourceNodeId which is same as nodeId in Nodes
+								logger.debug(EELFLoggerDelegator.debugLogger, "1. For all NodeTypes input is SourceNodeId which is same as nodeId in Nodes ");
 								if (node.getNodeId().equals(sourceNodeId) && node.getProperties().length != 0) {
-									if(props.getGdmType().equals(node.getType().getName())){
+									if (props.getGdmType().equals(node.getType().getName())) {
 										node.getProperties()[0].getData_map().setMap_outputs(new MapOutput[0]);
-									}else if(props.getDatabrokerType().equals(node.getType().getName())){
+									} else if (props.getDatabrokerType().equals(node.getType().getName())) {
 										node.getProperties()[0].getData_broker_map().setMap_outputs(new DBMapOutput[0]);
-										DBMapInput[] dbMapInArr = node.getProperties()[0].getData_broker_map().getMap_inputs();
-										for(DBMapInput dbmInput : dbMapInArr){
+										DBMapInput[] dbMapInArr = node.getProperties()[0].getData_broker_map()
+												.getMap_inputs();
+										for (DBMapInput dbmInput : dbMapInArr) {
 											DBInputField dbiField = dbmInput.getInput_field();
 											dbiField.setChecked("NO");
 											dbiField.setMapped_to_field("");
 										}
+										// Collator map Output which have only one output link
+										logger.debug(EELFLoggerDelegator.debugLogger, " Collator map Output which have only one output link ");
+									} else if (props.getArrayBasedCollatorType().equals(node.getType().getName())) {
+										node.getProperties()[0].getCollator_map()
+												.setMap_outputs(new CollatorMapOutput[0]);
+
+										// Splitter Map Output which may have single or multiple link(s)
+										
+									} else if (props.getCopyBasedSplitterType().equals(node.getType().getName())) {
+										logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
+										splitterLink(linkId, relationsList, node);
+										logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : End ");
 									}
 								}
+								
+								// For all NodeTypes input is targetNodeId which is same as nodeId in Nodes
 								if (node.getNodeId().equals(targetNodeId) && node.getProperties().length != 0) {
-									if(props.getGdmType().equals(node.getType().getName())){
+									logger.debug(EELFLoggerDelegator.debugLogger, " For all NodeTypes input is targetNodeId which is same as nodeId in Nodes");
+									if (props.getGdmType().equals(node.getType().getName())) {
 										node.getProperties()[0].getData_map().setMap_inputs(new MapInputs[0]);
+									} else if (props.getCopyBasedSplitterType().equals(node.getType().getName())) {
+										node.getProperties()[0].getSplitter_map()
+												.setMap_inputs(new SplitterMapInput[0]);
+									} else {
+										List<String> targetNodeList = new ArrayList<String>();
+										String source = null;
+										for (Relations rel : relationsList) {
+											if (rel.getLinkId().equals(linkId)) {
+												source = rel.getSourceNodeId();
+											}
+											if (rel.getTargetNodeId().equals(node.getNodeId())
+													&& node.getType().getName().equals(props.getArrayBasedCollatorType())) {
+												targetNodeList.add(rel.getTargetNodeId());
+											}
+										}
+										// If the targetNodeId List size is having only one means collator contains one input
+										// and need to delete the entire mapInputs and Source table details
+										if (targetNodeList.size() == 0) {
+											logger.debug(EELFLoggerDelegator.debugLogger, " If the targetNodeId List size is having only one means collator contains one input.");
+											if (props.getArrayBasedCollatorType().equals(node.getType().getName())) {
+												node.getProperties()[0].getCollator_map()
+														.setMap_inputs(new CollatorMapInput[0]);
+											}
+											// If the targetNodeId List size is more than one means collator contains more than one inputs
+											// and need to delete the only deleted link related mapping details mapInputs and Source table details
+										} else {
+											logger.debug(EELFLoggerDelegator.debugLogger, " If the targetNodeId List size is more than one means collator contains more than one inputs.");
+											CollatorMapInput[] cmInput = node.getProperties()[0].getCollator_map()
+													.getMap_inputs();
+
+											List<CollatorMapInput> cim = new LinkedList<>(Arrays.asList(cmInput));
+
+											Iterator<CollatorMapInput> cmiItr = cim.iterator();
+											CollatorMapInput collatorMapInput = null;
+											while (cmiItr.hasNext()) {
+												collatorMapInput = (CollatorMapInput) cmiItr.next();
+												if (source.equals(collatorMapInput.getInput_field().getSource_name())) {
+													cmiItr.remove();
+													break;
+												}
+											}
+											CollatorMapInput newCmInput[] = cim
+													.toArray(new CollatorMapInput[cim.size()]);
+											node.getProperties()[0].getCollator_map().setMap_inputs(newCmInput);
+										}
 									}
+
 								}
 							}
 							// delete link details form relations list
@@ -1394,20 +1522,61 @@ public class SolutionServiceImpl implements ISolutionService {
 							break;
 						}
 					}
-					Gson gson = new Gson();
-					String jsonInString = gson.toJson(cdump);
+					cdump.setNodes(nodesList);
+					String jsonInString = mapper.writeValueAsString(cdump);
 					DSUtil.writeDataToFile(filePath, "acumos-cdump" + "-" + id, "json", jsonInString);
 				}
 			}
-		} catch (IOException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" IOException in deleteLink() in SolutionServiceImpl", e);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception in deleteLink() in SolutionServiceImpl", e);
+			logger.error(EELFLoggerDelegator.errorLogger," Exception in deleteLink() in SolutionServiceImpl", e);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, " deleteLink() in SolutionServiceImpl End ");
 		return deletedLink;
+	}
+
+	/**
+	 * @param linkId
+	 * @param relationsList
+	 * @param node
+	 */
+	private void splitterLink(String linkId, List<Relations> relationsList, Nodes node) {
+		logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
+		List<String> sourceNodeList = new ArrayList<String>();
+		String target = null;
+		for(Relations rel :relationsList){
+			if(rel.getLinkId().equals(linkId)){
+				target = rel.getTargetNodeId();
+			}
+			if(rel.getSourceNodeId().equals(node.getNodeId()) && node.getType().getName().equals(props.getCopyBasedSplitterType())){
+				sourceNodeList.add(rel.getSourceNodeId());
+			}
+		}
+		// If the sourceNodeId List size is having only one means splitter contains one output
+		// and need to delete the entire mapOutput and target table details
+		if(sourceNodeList.size() == 0){
+			if(props.getCopyBasedSplitterType().equals(node.getType().getName())){
+				node.getProperties()[0].getSplitter_map().setMap_outputs(new SplitterMapOutput[0]);
+			}
+		// If the sourceNodeId List size is more than one means splitter contains more than one output
+		// and need to delete the only, deleted link related mapping details mapOutput and target table details
+		}else {
+			SplitterMapOutput[] spOutput = node.getProperties()[0].getSplitter_map().getMap_outputs();
+			
+			List<SplitterMapOutput> spMapOut = new LinkedList<>(Arrays.asList(spOutput));
+			
+			Iterator<SplitterMapOutput> spMapOutItr = spMapOut.iterator();
+			SplitterMapOutput splitterMapOutput = null;
+			while (spMapOutItr.hasNext()) {
+				splitterMapOutput = (SplitterMapOutput) spMapOutItr.next();
+				if (target.equals(splitterMapOutput.getOutput_field().getTarget_name())) {
+					spMapOutItr.remove();
+					break;
+				}
+			}
+			SplitterMapOutput newSplOut[] = spMapOut.toArray(new SplitterMapOutput[spMapOut.size()]);
+			node.getProperties()[0].getSplitter_map().setMap_outputs(newSplOut);
+			logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
+		}
 	}
 
 	/**

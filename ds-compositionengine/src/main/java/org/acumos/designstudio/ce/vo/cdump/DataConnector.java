@@ -22,8 +22,10 @@ package org.acumos.designstudio.ce.vo.cdump;
 
 import java.io.Serializable;
 
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMap;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.FieldMap;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMap;
 
 public class DataConnector implements Serializable {
 	
@@ -31,6 +33,9 @@ public class DataConnector implements Serializable {
 	
 	private FieldMap fieldMap;
 	private DataBrokerMap databrokerMap;
+	private CollatorMap collatorMap;
+	private SplitterMap splitterMap;
+	
 	
 	/**
 	 * @return fieldMap
@@ -52,5 +57,22 @@ public class DataConnector implements Serializable {
 	public void setDatabrokerMap(DataBrokerMap databrokerMap) {
 		this.databrokerMap = databrokerMap;
 	}
+
+	public CollatorMap getCollatorMap() {
+		return collatorMap;
+	}
+
+	public void setCollatorMap(CollatorMap collatorMap) {
+		this.collatorMap = collatorMap;
+	}
+
+	public SplitterMap getSplitterMap() {
+		return splitterMap;
+	}
+
+	public void setSplitterMap(SplitterMap splitterMap) {
+		this.splitterMap = splitterMap;
+	}
+
 
 }
