@@ -1,0 +1,454 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d4673f2_eb7b3893",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/ISolutionService.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "Please add detailed javadoc to the Interface; i.e., here.",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "867587a8_2ddf3928",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "To convert to an array, you should use the list class\u0027s toArray() method",
+      "range": {
+        "startLine": 688,
+        "startChar": 0,
+        "endLine": 693,
+        "endChar": 10
+      },
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a74ac9c4_8e83d59f",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "Don\u0027t add useless characters in logger output",
+      "range": {
+        "startLine": 696,
+        "startChar": 50,
+        "endLine": 696,
+        "endChar": 60
+      },
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffbc9244_9e7ff622",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 707,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "ditto - and use the method name only, not the calling method name",
+      "range": {
+        "startLine": 707,
+        "startChar": 49,
+        "endLine": 707,
+        "endChar": 56
+      },
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "78bd5f7a_4d0a9690",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 739,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "don\u0027t reimplement toArray() -- and it\u0027s buggy",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6214420d_920e9fce",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "Should this be cnt instead of zero ???",
+      "range": {
+        "startLine": 740,
+        "startChar": 15,
+        "endLine": 740,
+        "endChar": 16
+      },
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a15f7e51_0d423a2e",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 771,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "Why do you need to copy each property individually here?  This seems so fragile, it has to be changed each time you add or remove a property.  Must be something I don\u0027t understand.",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3d47b70_9cd62421",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "Use toArray() instead of a buggy re-implementation",
+      "range": {
+        "startLine": 800,
+        "startChar": 3,
+        "endLine": 805,
+        "endChar": 4
+      },
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75194694_dffeee51",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 840,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "Why set an empty string?  Can you set to null?",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b8fa91d_e237adcd",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "Don\u0027t clutter the log output with useless characters",
+      "range": {
+        "startLine": 860,
+        "startChar": 48,
+        "endLine": 860,
+        "endChar": 58
+      },
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "513cb4b8_1923262b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1495,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "why create a new object mapper in each method? How about just creating a final instance as a class field and reusing it?",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d9c69b7_3153c58a",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1616,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "Why are you mixing Jackson mapper and Gson serializer??",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b41ab693_0a360b78",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1622,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "there\u0027s no need to separate into two clauses here, just catch Exception",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea9e660b_210f5ec6",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/Properties.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "pls avoid extra whitespace like this",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f30ba36_e3d4e417",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/cdump/DataConnector.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "What is a DataConnector?  Why does it have all the possible maps within it?",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0e867d0_5a6ba4db",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/cdump/Property.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "This is far too generic of a class name.  How is it different from a DataConnector which has many of the same maps in it?",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55547fe5_0e8f4068",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/cdump/collator/CollatorMapOutput.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "this class only has a single member field?",
+      "range": {
+        "startLine": 29,
+        "startChar": 29,
+        "endLine": 29,
+        "endChar": 41
+      },
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "acbfdf42_6e78ad2c",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/cdump/splitter/SplitterInputField.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "this name is plural but of type String; what is stored here?",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "099cd90e_e4f7a30d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/cdump/splitter/SplitterMapInput.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "Why is this just a single field?",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e22ef11_d32d9b33",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/cdump/splitter/SplitterMapOutput.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "I\u0027m trying to understand why this is just a single field?",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93441bc7_a1df20eb",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/cdump/splitter/SplitterOutputField.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "Same question as before - plural name but single String type, what is the content?",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64ea42d2_a9468d2a",
+        "filename": "ds-compositionengine/src/main/resources/application.properties",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "why is this a configuration property? what happens when multiple collators are supported?",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71bfed74_41dec061",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/ControllersTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 617,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "Assert not null is not sufficient.  Must call the getters and compare the result against the set value.",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3238336c_6527f6e9",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/SolutionControllerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 815,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-12T13:35:22Z",
+      "side": 1,
+      "message": "Must add this type of assertEquals for all the new fields in all the new classes/objects",
+      "revId": "c2ec1023efc1e56cf815ce75171a74f587ecb588",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
