@@ -26,11 +26,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-/**
- * 
- *
- *
- */
 @Component
 @PropertySource("classpath:application.properties")
 public class Properties implements Serializable {
@@ -96,7 +91,6 @@ public class Properties implements Serializable {
 	@Value("${protobufFileName}")
 	private String protobufFileName;
 	
-	
 	@Value("${packagepath}")
 	private String packagepath;
 
@@ -106,7 +100,6 @@ public class Properties implements Serializable {
 	@Value("${protobufjar}")
 	private String protobufjar;
 	
-	
 	@Value("${fieldMapping}")
 	private String fieldMapping;
 	
@@ -115,7 +108,6 @@ public class Properties implements Serializable {
 	
 	@Value("${gdmJarName}")
 	private String gdmJarName;
-	
 	
 	@Value("${solutionResultsetSize}")
 	private int solutionResultsetSize;
@@ -129,13 +121,34 @@ public class Properties implements Serializable {
 	@Value("${databrokerType}")
 	private String databrokerType;
 	
+	@Value("${arrayBasedCollatorType}")
+	private String arrayBasedCollatorType;
+	
+	@Value("${copyBasedSplitterType}")
+	private String copyBasedSplitterType;
+	
 	@Value("${modelImageArtifactType}")
 	private String modelImageArtifactType;
 
 	@Value("${protobuffFileExtention}")	
 	private String protobuffFileExtention;
 	
-	
+	public String getArrayBasedCollatorType() {
+		return arrayBasedCollatorType;
+	}
+
+	public void setArrayBasedCollatorType(String arrayBasedCollatorType) {
+		this.arrayBasedCollatorType = arrayBasedCollatorType;
+	}
+
+	public String getCopyBasedSplitterType() {
+		return copyBasedSplitterType;
+	}
+
+	public void setCopyBasedSplitterType(String copyBasedSplitterType) {
+		this.copyBasedSplitterType = copyBasedSplitterType;
+	}
+
 	/**
 	 * @return the protobuffFileExtention
 	 */

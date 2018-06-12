@@ -38,11 +38,13 @@ import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 import org.acumos.designstudio.ce.vo.cdump.DataConnector;
 import org.acumos.designstudio.ce.vo.cdump.Nodes;
 import org.acumos.designstudio.ce.vo.cdump.Property;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMap;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.FieldMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.MapInputs;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.MapOutput;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMap;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -337,9 +339,12 @@ public class SolutionController {
 			@RequestParam(value = "nodename", required = false) String nodeName,
 			@RequestParam(value = "ndata", required = false) String ndata,
 			@RequestBody(required = false) DataConnector dataConnector) {
+		
 		String result = null;
 		FieldMap fieldMap = null;
 		DataBrokerMap databrokerMap = null;
+		CollatorMap collatorMap = null;
+		SplitterMap  splitterMap = null;
 		logger.debug(EELFLoggerDelegator.debugLogger, "------- modifyNode() ------- : Begin");
 		try {
 			if(null != dataConnector){
@@ -349,8 +354,14 @@ public class SolutionController {
 				if(null != dataConnector.getDatabrokerMap()){
 					databrokerMap = dataConnector.getDatabrokerMap();
 				}
+				if(null != dataConnector.getCollatorMap()){
+					collatorMap = dataConnector.getCollatorMap();
+				}
+				if(null != dataConnector.getSplitterMap()){
+					splitterMap = dataConnector.getSplitterMap();
+				}
 			}
-			result = solutionService.modifyNode(userId, solutionId, version, cid, nodeId, nodeName, ndata, fieldMap, databrokerMap);
+			result = solutionService.modifyNode(userId, solutionId, version, cid, nodeId, nodeName, ndata, fieldMap, databrokerMap, collatorMap, splitterMap);
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  modifyNode() -------", e);
 		}

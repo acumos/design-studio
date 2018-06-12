@@ -27,6 +27,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,12 +51,22 @@ import org.acumos.designstudio.ce.vo.cdump.ReqCapability;
 import org.acumos.designstudio.ce.vo.cdump.Requirements;
 import org.acumos.designstudio.ce.vo.cdump.Target;
 import org.acumos.designstudio.ce.vo.cdump.Type;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorInputField;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMap;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapInput;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapOutput;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorOutputField;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMapInputField;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.FieldMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.MapInputs;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.MapOutput;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterInputField;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMap;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapInput;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapOutput;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterOutputField;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -534,15 +545,101 @@ public class ControllersTest {
 			fieldMap.setOutput_field_tag_id("2");
 			DataBrokerMap databrokerMap = new DataBrokerMap();
 			databrokerMap.setScript("this is the script");
+			
+			// CollatorMap
+			CollatorMap collatorMap = new CollatorMap();
+			collatorMap.setCollator_type("Array-based");
+			collatorMap.setOutput_message_signature("Json Format of Output msg Signature");
+			
+			CollatorMapInput cmi = new CollatorMapInput();
+			
+			CollatorInputField cmif = new CollatorInputField();
+			
+			cmif.setMapped_to_field("1.2");
+			cmif.setParameter_name("ParamName");
+			cmif.setParameter_tag("1");
+			cmif.setParameter_type("DataFrame");
+			cmif.setSource_name("Aggregator");
+			cmif.setError_indicator("Yes");
+			cmi.setInput_field(cmif);
+			List<CollatorMapInput> cmiList = new ArrayList<CollatorMapInput>();
+			cmiList.add(cmi);
+			CollatorMapInput[] cmiArray =cmiList.toArray(new CollatorMapInput[cmiList.size()]);
+			//CollatorMapInputs
+			collatorMap.setMap_inputs(cmiArray);
+			// CollatorMapOutputs
+			
+			CollatorMapOutput cmo = new CollatorMapOutput();
+			CollatorOutputField cof = new CollatorOutputField();
+			cof.setParameter_name("ParamName");
+			cof.setParameter_rule("ParamRule");
+			cof.setParameter_tag("ParamTag");
+			cof.setParameter_type("ParamType");
+			cmo.setOutput_field(cof);
+			
+			List<CollatorMapOutput> cmoList = new ArrayList<CollatorMapOutput>();
+			cmoList.add(cmo);
+			CollatorMapOutput[] cmoArray =cmoList.toArray(new CollatorMapOutput[cmoList.size()]);
+			collatorMap.setMap_outputs(cmoArray);
+			
+			//SplitterMap
+			SplitterMap splitterMap = new SplitterMap();
+			splitterMap.setInput_message_signature("Json Format of input msg Signature");
+			splitterMap.setSplitter_type("Copy-based");
+			
+			// SplitterMapInputs
+			SplitterMapInput smi = new SplitterMapInput();
+			// need to set Input Field
+			SplitterInputField sif = new SplitterInputField();
+			sif.setOther_attributes("For parameter based only");
+			sif.setParameter_name("parameter name in Source Protobuf file");
+			smi.setInput_field(sif);
+			// Take a List of SplitterMapInput to convert it into Array
+			List<SplitterMapInput> smiList = new ArrayList<SplitterMapInput>();
+			smiList.add(smi);
+			SplitterMapInput[] smiArr = smiList.toArray(new SplitterMapInput[smiList.size()]);
+			splitterMap.setMap_inputs(smiArr);
+			
+			// SplitterMapOutput
+			SplitterMapOutput smo = new SplitterMapOutput();
+			SplitterOutputField sof = new SplitterOutputField();
+			sof.setOther_attributes("For parameter based only");
+			sof.setTarget_name("parameter name in Source Protobuf file");
+			smo.setOutput_field(sof);
+			List<SplitterMapOutput> smoList = new ArrayList<SplitterMapOutput>();
+			smoList.add(smo);
+			SplitterMapOutput[] smoArr = smoList.toArray(new SplitterMapOutput[smoList.size()]);
+			splitterMap.setMap_outputs(smoArr);	
 
 			assertNotNull(databrokerMap);
+			assertNotNull(collatorMap);
+			assertNotNull(splitterMap);
 			assertNotNull(fieldMap);
+			
+			assertEquals("ParamName", cof.getParameter_name());
+			assertEquals("ParamRule", cof.getParameter_rule());
+			
+			assertEquals("ParamTag", cof.getParameter_tag());
+			assertEquals("ParamType", cof.getParameter_type());
+			
+			assertEquals("Json Format of input msg Signature", splitterMap.getInput_message_signature());
+			assertEquals("Copy-based", splitterMap.getSplitter_type());
+			
+			assertEquals("For parameter based only", sif.getOther_attributes());
+			assertEquals("parameter name in Source Protobuf file", sif.getParameter_name());
+			
+			assertEquals("For parameter based only", sof.getOther_attributes());
+			assertEquals("parameter name in Source Protobuf file", sof.getTarget_name());
+			
 			assertEquals("Prediction", fieldMap.getInput_field_message_name());
 
 			DataConnector dataConnector = new DataConnector();
 			dataConnector.setDatabrokerMap(databrokerMap);;
 			dataConnector.setFieldMap(fieldMap);
-			when(solutionService.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata, fieldMap, databrokerMap))
+			dataConnector.setCollatorMap(collatorMap);
+			dataConnector.setSplitterMap(splitterMap);
+			
+			when(solutionService.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata, fieldMap, databrokerMap,collatorMap,splitterMap))
 					.thenReturn("Node Modified");
 			String results = solutionController.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata,
 					dataConnector);
