@@ -129,6 +129,12 @@ public class Properties implements Serializable {
 	@Value("${databrokerType}")
 	private String databrokerType;
 	
+	@Value("${collatorType}")
+	private String collatorType;
+	
+	@Value("${splitterType}")
+	private String splitterType;
+	
 	@Value("${modelImageArtifactType}")
 	private String modelImageArtifactType;
 
@@ -136,6 +142,15 @@ public class Properties implements Serializable {
 	private String protobuffFileExtention;
 	
 	
+	
+	public String getSplitterType() {
+		return splitterType;
+	}
+
+	public void setSplitterType(String splitterType) {
+		this.splitterType = splitterType;
+	}
+
 	/**
 	 * @return the protobuffFileExtention
 	 */
@@ -150,6 +165,20 @@ public class Properties implements Serializable {
 		return modelImageArtifactType;
 	}
 	
+	/**
+	 * @return the collatorType
+	 */
+	public String getCollatorType() {
+		return collatorType;
+	}
+
+	/**
+	 * @param collatorType the collatorType to set
+	 */
+	public void setCollatorType(String collatorType) {
+		this.collatorType = collatorType;
+	}
+
 	/**
 	 * @return the gdmType
 	 */

@@ -1041,8 +1041,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String result = "";
 		String bluePrintFileName = "";
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.setSerializationInclusion(Include.NON_NULL);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		mapper.setSerializationInclusion(Include.NON_NULL);
 		String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 		logger.debug(EELFLoggerDelegator.debugLogger,"6. On successful validation generate the BluePrint file");
 		BluePrint bluePrint = new BluePrint();
