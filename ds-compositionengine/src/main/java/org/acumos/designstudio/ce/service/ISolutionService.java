@@ -24,8 +24,10 @@ import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.vo.cdump.Nodes;
 import org.acumos.designstudio.ce.vo.cdump.Property;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMap;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.FieldMap;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMap;
 import org.json.JSONArray;
 
 public interface ISolutionService {
@@ -41,7 +43,7 @@ public interface ISolutionService {
 	public String readCompositeSolutionGraph(String userId, String solutionID, String version) throws AcumosException;
 
 	public String modifyNode(String userId, String solutionId, String version, String cid, String nodeId,
-			String nodeName, String ndata, FieldMap field_map, DataBrokerMap databrokerMap);
+			String nodeName, String ndata, FieldMap field_map, DataBrokerMap databrokerMap, CollatorMap collatorMap, SplitterMap splitterMap);
 
 	public String modifyLink(String userId, String cid, String solutionId, String version, String linkId,
 			String linkName);

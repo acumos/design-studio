@@ -50,12 +50,18 @@ import org.acumos.designstudio.ce.vo.cdump.ReqCapability;
 import org.acumos.designstudio.ce.vo.cdump.Requirements;
 import org.acumos.designstudio.ce.vo.cdump.Target;
 import org.acumos.designstudio.ce.vo.cdump.Type;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorInputField;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMap;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapInput;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapOutput;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorOutputField;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMapInputField;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.FieldMap;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.MapInputs;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.MapOutput;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMap;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -534,15 +540,55 @@ public class ControllersTest {
 			fieldMap.setOutput_field_tag_id("2");
 			DataBrokerMap databrokerMap = new DataBrokerMap();
 			databrokerMap.setScript("this is the script");
+			
+			// CollatorMap
+			CollatorMap collatorMap = new CollatorMap();
+			collatorMap.setCollator_type("Collator");
+			
+			CollatorMapInput cmi = new CollatorMapInput();
+			
+			CollatorInputField cmif = new CollatorInputField();
+			
+			cmif.setMapped_to_field("1.2");
+			cmif.setParameter_name("ParamName");
+			cmif.setParameter_tag("1");
+			cmif.setParameter_type("DataFrame");
+			cmif.setSource_name("Aggregator");
+			cmif.setError_indicator("Yes");
+			cmi.setInput_field(cmif);
+			List<CollatorMapInput> cmiList = new ArrayList<CollatorMapInput>();
+			cmiList.add(cmi);
+			CollatorMapInput[] cmiArray = (CollatorMapInput[]) cmiList.toArray();
+			//CollatorMapInputs
+			collatorMap.setMap_inputs(cmiArray);
+			// CollatorMapOutputs
+			
+			CollatorMapOutput cmo = new CollatorMapOutput();
+			CollatorOutputField cof = new CollatorOutputField();
+			cof.setParameter_name("ParamName");
+			cof.setParameter_rule("ParamRule");
+			cof.setParameter_tag("ParamTag");
+			cof.setParameter_type("ParamType");
+			cmo.setOutput_field(cof);
+			
+			List<CollatorMapOutput> cmoList = new ArrayList<CollatorMapOutput>();
+			cmoList.add(cmo);
+			CollatorMapOutput[] cmoArray = (CollatorMapOutput[]) cmoList.toArray();
+			collatorMap.setMap_outputs(cmoArray);
+			
+			SplitterMap splitterMap = new SplitterMap();
 
 			assertNotNull(databrokerMap);
+			assertNotNull(collatorMap);
 			assertNotNull(fieldMap);
 			assertEquals("Prediction", fieldMap.getInput_field_message_name());
 
 			DataConnector dataConnector = new DataConnector();
 			dataConnector.setDatabrokerMap(databrokerMap);;
 			dataConnector.setFieldMap(fieldMap);
-			when(solutionService.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata, fieldMap, databrokerMap))
+			dataConnector.setCollatorMap(collatorMap);
+			dataConnector.setSplitterMap(splitterMap);
+			when(solutionService.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata, fieldMap, databrokerMap,collatorMap,splitterMap))
 					.thenReturn("Node Modified");
 			String results = solutionController.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata,
 					dataConnector);
