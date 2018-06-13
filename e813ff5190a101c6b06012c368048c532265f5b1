@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e681625c_8a656e18",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/SolutionControllerTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-13T14:17:11Z",
+      "side": 1,
+      "message": "Don\u0027t hardcode values, define constant fields (private final String) in this class to save yourself work.",
+      "revId": "e813ff5190a101c6b06012c368048c532265f5b1",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
