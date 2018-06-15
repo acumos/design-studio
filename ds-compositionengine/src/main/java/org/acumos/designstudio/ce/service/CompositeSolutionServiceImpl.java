@@ -54,8 +54,11 @@ import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.Artifact;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
 import org.acumos.designstudio.ce.vo.DSSolution;
+import org.acumos.designstudio.ce.vo.Result;
 import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
+import org.acumos.designstudio.ce.vo.blueprint.BPCollatorMap;
 import org.acumos.designstudio.ce.vo.blueprint.BPDataBrokerMap;
+import org.acumos.designstudio.ce.vo.blueprint.BPSplitterMap;
 import org.acumos.designstudio.ce.vo.blueprint.BaseOperationSignature;
 import org.acumos.designstudio.ce.vo.blueprint.BluePrint;
 import org.acumos.designstudio.ce.vo.blueprint.Container;
@@ -70,12 +73,19 @@ import org.acumos.designstudio.ce.vo.cdump.Property;
 import org.acumos.designstudio.ce.vo.cdump.Relations;
 import org.acumos.designstudio.ce.vo.cdump.ReqCapability;
 import org.acumos.designstudio.ce.vo.cdump.Requirements;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorInputField;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapInput;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapOutput;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorOutputField;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBInputField;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapInput;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapOutput;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBOTypeAndRoleHierarchy;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBOutputField;
-import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterInputField;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapInput;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapOutput;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterOutputField;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.acumos.nexus.client.data.UploadArtifactInfo;
 import org.json.JSONException;
@@ -95,6 +105,11 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
     private SuccessErrorMessage successErrorMessage = null;
     
+    private static final String NODE_TYPE_SPLITTER = "Copy-based";
+    
+    private static final String NODE_TYPE_COLLATOR = "Array-based";
+    
+    private static final String NODE_TYPE_MLMODEL = "MLModel";
     @Autowired
 	private Properties props;
 
@@ -877,14 +892,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	public String validateCompositeSolution(String userId, String solutionName, String solutionId, String version)
 			throws AcumosException {
 		String result = "";
+		Result resultVo = new Result();
 		logger.debug(EELFLoggerDelegator.debugLogger, "validateCompositeSolution() : Begin ");
 		String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(Include.NON_NULL);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		String type = null;
-		String nodeid = null;
-		boolean isDataBroker = false;
 		Date currentDate = new Date();
 		try {
 			Cdump cdump = null;
@@ -897,138 +910,487 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			List<Nodes> nodes = cdump.getNodes();
 			List<Relations> relationsList = cdump.getRelations();
 			// Check for the Nodes and Relations in the CDUMP is empty or not
-			if (null != nodes) {
-				ArrayList<String> idList = new ArrayList<>();
-				for (Nodes n : nodes) {
-					idList.add(n.getNodeId());
-				}
-				// 3. get the Relations(Links) from cdump file and collect the SourceNodeId and TargetNodeId and add those to set
-				logger.debug(EELFLoggerDelegator.debugLogger,"3. get the Relations(Links) from cdump file and collect the SourceNodeId and TargetNodeId and add those to set");
-				HashSet<String> nodeIdSet = new HashSet<String>(); 
-				if (null != relationsList) {
-					HashSet<Relations> relationsSet = new HashSet<Relations>(relationsList);
-						for (Relations rhs : relationsSet) {
-							nodeIdSet.add(rhs.getSourceNodeId());
-							nodeIdSet.add(rhs.getTargetNodeId());
-						}
-					// Check whether the nodes are Isolated or not
-					boolean isolateModelFound = false;
-					List<String> notConnectedNodes = new ArrayList<String>();
-					for (String nodeId : idList) {
-						if (!nodeIdSet.contains(nodeId)) {
-							notConnectedNodes.add(nodeId);
-							isolateModelFound = true;
-						}
-					}
-
-					// 4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.
-					logger.debug(EELFLoggerDelegator.debugLogger,"4. Verify the all the nodeId's and Relations(SourceNodeId and TargetNodeId) are there or not.");
-					if (!isolateModelFound) {
-						// 5. Checking the Composite Solution Nodes and Relations are connected or not.
-						logger.debug(EELFLoggerDelegator.debugLogger,"5. Checking the Composite Solution Nodes and Relations are connected or not.");
-						if (relationsList.size() >= idList.size() - 1) {
-							// Validation Case 1. Check Data Broker is present or not
-							logger.debug(EELFLoggerDelegator.debugLogger,"6. Checking Data Broker is present as first node of the solution.");
-							for (Nodes no : nodes) {
-								nodeid = no.getNodeId();
-								type = no.getType().getName();
-								// If node type is DataBroker then check for sourceNodeId of relations which is of different nodeId
-								if (props.getDatabrokerType().equals(type)) {
-									// Check whether data broker is first node or not
-									for (Relations rel : relationsList) {
-										if (nodeid.equals(rel.getTargetNodeId())) {
-											// For DataBroker if the targetNode is not connected to any other nodeId then solution first Node is DataBroker
-											isDataBroker = true;
-											break;
-										}
-									}
-								}
-							}
-							boolean dataBrokerMappingFlag = false;
-							for (Nodes n : nodes) {
-								if (props.getDatabrokerType().equals(n.getType().getName())) {
-									Property[] p = n.getProperties();
-									if (p.length == 0) {
-										dataBrokerMappingFlag = true;
-									}
-								}
-							}
-							if(dataBrokerMappingFlag){
-								result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : DataBroker Mapping Details are Incorrect\"}";
-							}else if(isDataBroker){
-								result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : DataBroker should be first Node. \"}";
-							} else {
-								// If DataBroker is true then check for one to one mapping for the SourceNodeId and TargetNodeId
-
-								// If output port for the Node is connected then its same input ports should be connected only if its not the first node.
-								boolean isCorrectPortsConnected = ValidateCorrectPortsConnected(cdump);
-
-								if (!isCorrectPortsConnected) {
-									result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : incorrect ports connected. \"}";
-								} else {
-									Set<String> dupSourceNodeSet = new HashSet<String>();
-									Set<String> dupTargetNodeSet = new HashSet<String>();
-									String sourceNodeId = "";
-									String targetNodeId = "";
-									boolean isConnectedToMultiple = false;
-									boolean isMultipleInput = false;
-
-									for (Relations rel : relationsList) {
-										// Validation Case 2: If Duplicate SourceNodeId's are found then solution is Invalid
-										sourceNodeId = rel.getSourceNodeId();
-										if (!dupSourceNodeSet.add(sourceNodeId)) {
-											isConnectedToMultiple = true;
-											break;
-										}
-										// Validation Case 3: If Duplicate TargetNodeId's are found then solution is Invalid
-										targetNodeId = rel.getTargetNodeId();
-										if (!dupTargetNodeSet.add(targetNodeId)) {
-											isMultipleInput = true;
-											break;
-										}
-									}
-									if (isConnectedToMultiple) {
-										result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot be connected to multiple nodes. \"}";
-									} else if (isMultipleInput) {
-										result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution: node cannot get input from multiple nodes. \"}";
-									} else {
-										// On successful validation generate the BluePrint file
-										// Update the Cdump file with validaSolution as true after successful validation conditions and Modified Time also
-										logger.debug(EELFLoggerDelegator.debugLogger,"On successful validation generate the BluePrint file.");
-										cdump.setValidSolution(true);
-										cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
-										Gson gson = new Gson();
-										String emptyCdumpJson = gson.toJson(cdump);
-										path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
-										// Write Data to File
-										DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionId, "json", emptyCdumpJson);
-										Artifact cdumpArtifact = new Artifact(cdumpFileName, "json",solutionId, version, path, emptyCdumpJson.length());
-										// upload the file to repository
-										uploadFilesToRepository(solutionId, version,cdumpArtifact);
-										result = createAndUploadBluePrint(userId, solutionId, solutionName, version,cdump);
-										
-									}
-								}
-							}
-
-						} else {
-							result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : all nodes are not connected\"}";
-						}
-					} else {
-						result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution  "+ notConnectedNodes + " : is Isolated Model(s) \"}";
-					}
-				} else {
-					result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : Composite Solution Relations can not be empty\"}";
+			if (null != nodes && null != relationsList) {
+				resultVo = validateComposition(cdump);
+				if(resultVo.getSuccess().equals("true")){
+					// On successful validation generate the BluePrint file
+					// Update the Cdump file with validaSolution as true after successful validation conditions and Modified Time also
+					logger.debug(EELFLoggerDelegator.debugLogger,"On successful validation generate the BluePrint file.");
+					cdump.setValidSolution(true);
+					cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
+					Gson gson = new Gson();
+					String emptyCdumpJson = gson.toJson(cdump);
+					path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
+					// Write Data to File
+					DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionId, "json", emptyCdumpJson);
+					Artifact cdumpArtifact = new Artifact(cdumpFileName, "json",solutionId, version, path, emptyCdumpJson.length());
+					// upload the file to repository
+					uploadFilesToRepository(solutionId, version,cdumpArtifact);
+					result = createAndUploadBluePrint(userId, solutionId, solutionName, version,cdump);
 				}
 			} else {
-				result = "{\"success\" : \"false\", \"errorDescription\" : \"Invalid Composite Solution : Composite Solution cannot be empty\"}";
+				 resultVo.setSuccess("false");
+                 resultVo.setErrorDescription("Invalid Composite Solution : Composite Solution cannot be empty");
 			}
+			 result = mapper.writeValueAsString(resultVo);
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, " Exception in validateCompositeSolution() in Service ", e);
 			throw new ServiceException("  Exception in validateCompositeSolution() ", "333","Failed to create the Solution Artifact");
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, " validateCompositeSolution() in Service  : End ");
 		return result;
+	}
+
+	private Result validateEachNode(Cdump cdump) {
+		 Result resultVo = new Result();
+		List<Nodes> nodes = cdump.getNodes();
+		List<Relations> relationsList = cdump.getRelations();
+		//Get the First and Last Model 
+		String firstNodeId = getNodeIdForPosition(cdump, "first");
+		String lastNodeId = getNodeIdForPosition(cdump,"last");
+           //For each Node : 
+		for(Nodes node : nodes){
+			//get the node type 
+		    String nodeType = node.getType().getName();
+		    String nodeId = node.getNodeId();
+		    switch (nodeType) {
+		        case NODE_TYPE_MLMODEL : 
+		        	 //check whether its first node
+		            if(nodeId.equals(firstNodeId)){ // Node--
+		            	//Then it should be source of only one link.
+		            	int connectedCnt = getSourceCountForNodeId(relationsList, nodeId);
+		            	if(connectedCnt == 1) {  
+		            		resultVo.setSuccess("true");
+		            	} else { //Indicates its connected to multiple nodes, and validation fails.
+		            		resultVo.setSuccess("false");
+		                    resultVo.setErrorDescription("Invalid Composite Solution : MLModel \"" + node.getName() + "\" is connected to multiple Nodes");
+		            	}
+		            } else if(node.getNodeId().equals(lastNodeId)){ // --Node
+		                //Then it should be target of only one link.
+		            	int connectedCnt = getTargetCountForNodeId(relationsList, nodeId);
+		            	if(connectedCnt == 1 ) { 
+		                	//Check for correct port connected
+		                	boolean isCorrectPortsConnected = correctPortsConnected(relationsList, nodeId);
+		                	if(isCorrectPortsConnected){
+		                		resultVo.setSuccess("true");
+		                	}else {
+		                		resultVo.setSuccess("false");
+		                        resultVo.setErrorDescription("Invalid Composite Solution : Incorrect ports connected connected to MLModel \"" + node.getName() + "\"");
+							}
+		            	} else {
+		            		//Indicates multiple nodes are connected to the Node and vlaidation fails. 
+		            		resultVo.setSuccess("false");
+		                    resultVo.setErrorDescription("Invalid Composite Solution : Multiple Nodes are connected to MLModel \""+ node.getName() +"\"");
+		            	}
+		            	
+		            } else { // --Node--
+		            	 //It should be source of one link and target of another one link. 
+		            	int connectedCnt = getTargetCountForNodeId(relationsList, nodeId);
+		            	if(connectedCnt == 1 ) {
+		            		connectedCnt = getSourceCountForNodeId(relationsList, nodeId);
+		                	if(connectedCnt == 1) {  
+		                		//Check for correct port connected
+		                    	boolean isCorrectPortsConnected = correctPortsConnected(relationsList, nodeId);
+		                    	if(isCorrectPortsConnected){
+		                    		resultVo.setSuccess("true");
+		                    		resultVo.setErrorDescription("");
+		                    	}else {
+		                    		resultVo.setSuccess("false");
+		                            resultVo.setErrorDescription("Invalid Composite Solution : Incorrect ports connected connected to MLModel \"" + node.getName() + "\"");
+								}
+		                	} else { //Indicates its connected to multiple nodes, and validation fails.
+		                		resultVo.setSuccess("false");
+		                        resultVo.setErrorDescription("Invalid Composite Solution : MLModel \"" + node.getName() + "\" is connected to multiple Nodes");
+		                	}
+		            	} else {
+		            		//Indicates multiple nodes are connected to the Node and vlaidation fails. 
+		            		resultVo.setSuccess("false");
+		                    resultVo.setErrorDescription("Invalid Composite Solution : Multiple Nodes are connected to MLModel \""+ node.getName() +"\"");
+		            	}
+					}
+		            break;
+		        case "SQLDataBroker": //TODO : Raman define Constants
+		        case "CSVDataBroker": //TODO : Raman define Constants
+		        	//DataBroker should be the first Node 
+		        	if(nodeId.equals(firstNodeId)){ // Node--
+		                // Then it should be source of only one link.
+		            	int connectedCnt = getSourceCountForNodeId(relationsList, nodeId);
+		            	if(connectedCnt == 1) {  
+		            		// It should not be connected to Splitter 
+		                    boolean connectedToSplitter = isConnectedToSplitter(nodes, relationsList, nodeId);
+						if (!connectedToSplitter) {
+							// It should not be connected to Collator
+							boolean connectedToCollator = isConnectedToCollator(nodes, relationsList, nodeId);
+							if (!connectedToCollator) {
+								// Validate mapping
+								Property[] p = node.getProperties();
+								if (p.length == 1) {
+									resultVo.setSuccess("true");
+									resultVo.setErrorDescription("");
+								} else {
+									resultVo.setSuccess("false");
+		                            resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" Mapping Details are Incorrect");
+								}
+							} else {
+		                    	resultVo.setSuccess("false");
+		                        resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" cannot be connected to Collator");
+							}
+						} else {
+		                    	resultVo.setSuccess("false");
+		                        resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" cannot be connected to Splitter");
+		                    }
+		                    
+		            	} else { //Indicates its connected to multiple nodes, and validation fails.
+		            		resultVo.setSuccess("false");
+		                    resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" is connected to multiple Nodes");
+		            	}
+		                
+		           } else {
+		        	   resultVo.setSuccess("false");
+		               resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" should be the first Node");
+		           }
+		        	break;
+				case "DataMapper": // TODO : Raman define Constants
+					// Datamapper should not be the first node
+					if (node.getNodeId().equals(firstNodeId)) {
+						resultVo.setSuccess("false");
+						resultVo.setErrorDescription("Invalid Composite Solution : DataMapper \""
+								+ node.getName() + "\" should not be the first Node");
+					} else if (node.getNodeId().equals(lastNodeId)) {
+						resultVo.setSuccess("false");
+						resultVo.setErrorDescription("Invalid Composite Solution : DataMapper \""
+								+ node.getName() + "\" should not be the Last Node");
+					} else {
+						// Then it should be Target of only one link.
+						int connectedCnt = getTargetCountForNodeId(relationsList, nodeId);
+		            	if(connectedCnt == 1 ) {
+		            		// Then it should be source of only one link.
+		            		connectedCnt = getSourceCountForNodeId(relationsList, nodeId);
+							if(connectedCnt == 1){
+								// It should not be connected to Splitter
+								boolean connectedToSplitter = isConnectedToSplitter(nodes, relationsList, nodeId);
+								if (!connectedToSplitter) {
+									// It should not be connected to Collator
+									boolean connectedToCollator = isConnectedToCollator(nodes, relationsList, nodeId);
+									if (!connectedToCollator) {
+										// Validate mapping
+										Property[] p = node.getProperties();
+										if (p.length == 1) {
+											resultVo.setSuccess("true");
+											resultVo.setErrorDescription("");
+										} else {
+											resultVo.setSuccess("false");
+											resultVo.setErrorDescription(
+													"Invalid Composite Solution : DataMapper \"" + node.getName()
+															+ "\" Mapping Details are Incorrect");
+										}
+									} else {
+										resultVo.setSuccess("false");
+										resultVo.setErrorDescription("Invalid Composite Solution : DataMapper \""
+												+ node.getName() + "\" cannot be connected to Collator");
+									}
+								} else {
+									resultVo.setSuccess("false");
+									resultVo.setErrorDescription("Invalid Composite Solution : DataMapper \""
+											+ node.getName() + "\" cannot be connected to Splitter");
+								}
+							} else {
+								resultVo.setSuccess("false");
+								resultVo.setErrorDescription("Invalid Composite Solution : Multiple Nodes are connected to output port of DataMapper \""
+										+ node.getName() + "\"");
+							}
+						} else { // Indicates its connected to multiple nodes, and validation fails.
+							resultVo.setSuccess("false");
+							resultVo.setErrorDescription("Invalid Composite Solution : DataMapper \""
+									+ node.getName() + "\" is connected to multiple Nodes");
+						}
+
+					}
+					break;
+				case NODE_TYPE_SPLITTER:
+					// Should not be the first node
+					if (node.getNodeId().equals(firstNodeId)) {
+						resultVo.setSuccess("false");
+						resultVo.setErrorDescription("Invalid Composite Solution : Splitter \""
+								+ node.getName() + "\" should not be the first Node");
+					} else if (node.getNodeId().equals(lastNodeId)) { // It should not be last node i.e, should be
+						// connected either one or more nodes.
+						resultVo.setSuccess("false");
+						resultVo.setErrorDescription("Invalid Composite Solution : Splitter \""
+								+ node.getName() + "\" should not be the Last Node");
+					} else {
+						// It should be target of only one link.
+						int connectedCnt = getTargetCountForNodeId(relationsList, nodeId);
+						Nodes sourceNode = null; 
+						Nodes targetNode = null;
+		            	if(connectedCnt == 1 ) {
+		            		// Source should not be Splitter/collator/DataBroker/DataMapper i.e, ML Model
+		            		boolean connectedToTool = false;
+		            		for(Relations rel: relationsList){
+		            			if(rel.getTargetNodeId().equals(nodeId)){
+		            				sourceNode = getNodeForId(nodes, rel.getSourceNodeId());
+		            				if(!sourceNode.getType().getName().equals(NODE_TYPE_MLMODEL)){
+		            					connectedToTool = true;
+		            					break;
+		            				}
+		            			}
+		            		}
+		            		if(!connectedToTool){
+		            			// Target Should not be Splitter/collator/DataBroker/DataMapper i.e, ML Model
+		            			connectedToTool = false;
+		                		for(Relations rel: relationsList){
+		                			if(rel.getSourceNodeId().equals(nodeId)){
+		                				targetNode = getNodeForId(nodes, rel.getTargetNodeId());
+		                				if(!targetNode.getType().getName().equals(NODE_TYPE_MLMODEL)){
+		                					connectedToTool = true;
+		                					break;
+		                				}
+		                			}
+		                		}
+		                		if(!connectedToTool){
+		                			resultVo.setSuccess("true");
+									resultVo.setErrorDescription("");
+		                		} else {
+		                			resultVo.setSuccess("false");
+									resultVo.setErrorDescription("Invalid Composite Solution : Splitter \""
+											+ node.getName() + "\" should not be connected to DS tool : \"" + sourceNode.getName() + "\"");
+		                		}
+		            		} else {
+		                		resultVo.setSuccess("false");
+								resultVo.setErrorDescription("Invalid Composite Solution : DS Tool \""
+										+ sourceNode.getName() + "\" should not be connected to Splitter : \"" + node.getName() + "\"");
+		            		}
+		            		
+		            	} else {
+		            		resultVo.setSuccess("false");
+							resultVo.setErrorDescription("Invalid Composite Solution : Multiple Nodes are connected to Input Port of Splitter \""
+									+ node.getName() + "\"");
+		            	}
+						
+					}
+					break;
+		        case NODE_TYPE_COLLATOR : 
+		        	// Should not be the first node
+					if (node.getNodeId().equals(firstNodeId)) {
+						resultVo.setSuccess("false");
+						resultVo.setErrorDescription("Invalid Composite Solution : Collator \""
+								+ node.getName() + "\" should not be the first Node");
+					} else if (node.getNodeId().equals(lastNodeId)) { // It should not be last node i.e, should be
+						// connected either one or more nodes.
+						resultVo.setSuccess("false");
+						resultVo.setErrorDescription("Invalid Composite Solution : Collator \""
+								+ node.getName() + "\" should not be the Last Node");
+					} else {
+						// It should be source of only one link.
+		        		int connectedCnt = getSourceCountForNodeId(relationsList, nodeId);
+		        		Nodes sourceNode = null; 
+						Nodes targetNode = null;
+						if(connectedCnt == 1){
+							// Source should not be Splitter/collator/DataBroker/DataMapper i.e, ML Model
+		            		boolean connectedToTool = false;
+		            		for(Relations rel: relationsList){
+		            			if(rel.getTargetNodeId().equals(nodeId)){
+		            				sourceNode = getNodeForId(nodes, rel.getSourceNodeId());
+		            				if(!sourceNode.getType().getName().equals(NODE_TYPE_MLMODEL)){
+		            					connectedToTool = true;
+		            					break;
+		            				}
+		            			}
+		            		}
+		            		if(!connectedToTool){
+		            			// Target Should not be Splitter/collator/DataBroker/DataMapper i.e, ML Model
+		            			connectedToTool = false;
+		                		for(Relations rel: relationsList){
+		                			if(rel.getSourceNodeId().equals(nodeId)){
+		                				targetNode = getNodeForId(nodes, rel.getTargetNodeId());
+		                				if(!targetNode.getType().getName().equals(NODE_TYPE_MLMODEL)){
+		                					connectedToTool = true;
+		                					break;
+		                				}
+		                			}
+		                		}
+		                		if(!connectedToTool){
+		                			resultVo.setSuccess("true");
+									resultVo.setErrorDescription("");
+		                		} else {
+		                			resultVo.setSuccess("false");
+									resultVo.setErrorDescription("Invalid Composite Solution : Collator \""
+											+ node.getName() + "\" should not be connected to DS tool : \"" + sourceNode.getName() + "\"");
+		                		}
+		            		} else {
+		                		resultVo.setSuccess("false");
+								resultVo.setErrorDescription("Invalid Composite Solution : DS Tool \""
+										+ sourceNode.getName() + "\" should not be connected to Collator : \"" + node.getName() + "\"");
+		            		}
+		            		
+						} else {
+							resultVo.setSuccess("false");
+							resultVo.setErrorDescription("Invalid Composite Solution : Multiple Nodes are connected to output port of Collator \""
+									+ node.getName() + "\"");
+						}
+					}
+					break;
+		        default:
+		    }
+		    if (resultVo.getSuccess().equals("false")) {
+				break;
+			}
+		}
+		
+		return resultVo;
+	}
+
+	private boolean isConnectedToCollator(List<Nodes> nodes, List<Relations> relationsList, String nodeId) {
+		boolean isConnected = false;
+		List<String> collatorNodeIds = new ArrayList<String>();
+		//1. Check if composite solution have splitter
+		for(Nodes n : nodes){
+			if(n.getType().getName().equals(NODE_TYPE_COLLATOR)){
+				collatorNodeIds.add(n.getNodeId());
+			}
+		}
+		
+		if(!collatorNodeIds.isEmpty()){ //Collator exists in the composite solution
+			//From relationsList get the links where source Node id is databroker
+			for(Relations link : relationsList){
+				if(link.getSourceNodeId().equals(nodeId)){
+					//check if target node id is splitter id 
+					for(String targetId : collatorNodeIds){
+						if(link.getTargetNodeId().equals(targetId)){
+							isConnected = true;
+						}
+					}
+				}
+			}
+		}
+		return isConnected;
+	}
+	private boolean isConnectedToSplitter(List<Nodes> nodes, List<Relations> relationsList, String nodeId) {
+		boolean isConnected = false;
+		List<String> splitterNodeIds = new ArrayList<String>();
+		//1. Check if composite solution have splitter
+		for(Nodes n : nodes){
+			if(n.getType().getName().equals(NODE_TYPE_SPLITTER)){
+				splitterNodeIds.add(n.getNodeId());
+			}
+		}
+		
+		if(!splitterNodeIds.isEmpty()){ //Splitter exists in the composite solution
+			//From relationsList get the links where source Node id is databroker
+			for(Relations link : relationsList){
+				if(link.getSourceNodeId().equals(nodeId)){
+					//check if target node id is splitter id 
+					for(String targetId : splitterNodeIds){
+						if(link.getTargetNodeId().equals(targetId)){
+							isConnected = true;
+						}
+					}
+				}
+			}
+		}
+		return isConnected;
+	}
+
+	private int getTargetCountForNodeId(List<Relations> relationsList, String nodeId) {
+		int connectedCnt = 0;
+		for(Relations rel : relationsList){
+			String sourceNodeId = rel.getTargetNodeId();
+			if(nodeId.equals(sourceNodeId)){
+				connectedCnt++;
+			}
+		}
+		return connectedCnt;
+	}
+
+	private int getSourceCountForNodeId(List<Relations> relationsList, String nodeId) {
+		int connectedCnt = 0;
+		for(Relations rel : relationsList){
+			String sourceNodeId = rel.getSourceNodeId();
+			if(nodeId.equals(sourceNodeId)){
+				connectedCnt++;
+			}
+		}
+		return connectedCnt;
+	}
+
+	/**
+	 * @param cdump
+	 * @return
+	 */
+	private Result validateComposition(Cdump cdump) {
+		Result result = new Result();
+		List<Nodes> nodes = cdump.getNodes();
+		List<Relations> relationsList = cdump.getRelations();
+		//check if any isolated node 
+		List<String> isolatedNodesName = getIsolatedNodesName(nodes, relationsList);
+		if(isolatedNodesName.isEmpty()){
+			//Composite solution should have only one first Node
+			List<String> firstNodeNames = getNodesForPosition(cdump, "first");
+			if(firstNodeNames.size() == 1){
+				//Composite solution should have only one last Node
+				List<String> lastNodeNames = getNodesForPosition(cdump, "last");
+				if(lastNodeNames.size() == 1){
+					result = validateEachNode(cdump);
+				} else {
+					result.setSuccess("false");
+					result.setErrorDescription("Invalid Composite Solution : Nodes " + lastNodeNames + " are not connected");
+				}
+			} else {
+				result.setSuccess("false");
+				result.setErrorDescription("Invalid Composite Solution : Nodes " + firstNodeNames + " are not connected");
+			}
+		} else {
+			result.setSuccess("false");
+			result.setErrorDescription("Invalid Composite Solution : " + isolatedNodesName + " are isolated nodes");
+		}
+		
+		return result;
+	}
+
+	private List<String> getIsolatedNodesName(List<Nodes> nodes, List<Relations> relationsList) {
+		//1. get the unique nodeids list from the relation
+		HashSet<String> relNodeIdSet = new HashSet<String>();
+		for (Relations rhs : relationsList) {
+			relNodeIdSet.add(rhs.getSourceNodeId());
+			relNodeIdSet.add(rhs.getTargetNodeId());
+		}
+		//2. Check Isolated nodes
+		List<String> isolatedNodesName = new ArrayList<String>();
+		for(Nodes node : nodes){
+			if (!relNodeIdSet.contains(node.getNodeId())) {
+				isolatedNodesName.add(node.getName());
+			}
+		}
+		return isolatedNodesName;
+	}
+
+	private boolean correctPortsConnected(List<Relations> relationsList, String nodeId) {
+		boolean isCorrectPortsConnected =  true;//ValidateCorrectPortsConnected(cdump);
+		String srcOperation = null;
+		String trgOperation = null;
+		for (Relations rel : relationsList) {
+			if(nodeId.equals(rel.getSourceNodeId())){
+				srcOperation = rel.getSourceNodeRequirement().replace("+", "%PLUS%");
+				srcOperation = srcOperation.split("%PLUS%")[0];
+				//Now check if same input port is connected or not and its not the first node. 
+					boolean isSameportConnected = false;
+					for (Relations rel2 : relationsList) {
+						if(nodeId.equals(rel2.getTargetNodeId())){ //Node is target of some other link
+							trgOperation = rel2.getTargetNodeCapability().replace("+", "%PLUS%");
+							trgOperation = trgOperation.split("%PLUS%")[0];
+							if(trgOperation.equals(srcOperation)){
+								isSameportConnected = true;
+								break;
+							}
+						}
+					}
+					if(!isSameportConnected){
+						isCorrectPortsConnected = false;
+						break;
+					}
+			}
+		}
+		return isCorrectPortsConnected;
 	}
 	
 
@@ -1142,12 +1504,39 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			
 			// Check for the Node type is DataBroker or not
 			if (node_type.equals(props.getDatabrokerType())) {
-
 				// Need to set all the values of DataBrokerMap
 				// Get the Property[] from Nodes
 				BPDataBrokerMap bpdbMap = getDataBrokerDetails(n);
 				bpnode.setData_broker_map(bpdbMap);
 			}
+			
+			// check for the Node type is ParameterBasedSplitterType or not
+			
+			if(node_type.equals(props.getParameterBasedSplitterType())){
+				// Need to set all the values of SplitterMap
+				// Get the Property[] from Nodes
+				BPSplitterMap bpsMap = getParameterBasedSplitterDetails(n);
+				bpnode.setSplitter_map(bpsMap);
+			}
+			// check for the Node type is CopyBasedSplitterType or not
+			else if(node_type.equals(props.getCopyBasedSplitterType())){
+				BPSplitterMap bpsMap = getCopyBasedSplitterDetails(n);
+				bpnode.setSplitter_map(bpsMap);
+			}
+			
+			// check for the Node type is ParameterBasedCollatorType or not
+			if(node_type.equals(props.getParameterBasedCollatorType())){
+				// Need to set all the values of CollatorMap
+				// Get the Property[] from Nodes
+				BPCollatorMap bpcMap = getParameterBasedCollatorDetails(n);
+				bpnode.setCollator_map(bpcMap);
+			}
+			// check for the Node type is ArrayBasedCollatorType or not
+			else if (node_type.equals(props.getArrayBasedCollatorType())) {
+				BPCollatorMap bpcMap = getArrayBasedCollatorDetails(n);
+				bpnode.setCollator_map(bpcMap);
+			}
+			
 			String protoUri = n.getProtoUri();
 			bpnode.setProto_uri(protoUri); 
 			
@@ -1281,6 +1670,197 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		return result;
 	}
 
+	private BPCollatorMap getArrayBasedCollatorDetails(Nodes n) {
+		Property[] prop = n.getProperties();
+		ArrayList<Property> propsList = new ArrayList<Property>(Arrays.asList(prop));
+		String collator_type = null;
+		String output_message_signature = null;
+		
+		BPCollatorMap bpcMap = new BPCollatorMap();
+		if (null != propsList) {
+			for (Property coprops : propsList) {
+				if (null != coprops.getCollator_map()) {
+					collator_type = coprops.getCollator_map().getCollator_type();
+					output_message_signature = coprops.getCollator_map().getOutput_message_signature();
+					bpcMap.setCollator_type(collator_type);
+					bpcMap.setOutput_message_signature(output_message_signature);
+				}
+			}
+		}
+		return bpcMap;
+	}
+
+	private BPSplitterMap getCopyBasedSplitterDetails(Nodes n) {
+		Property[] prop = n.getProperties();
+		ArrayList<Property> propsList = new ArrayList<Property>(Arrays.asList(prop));
+		String splitter_type = null;
+		String input_message_signature = null;
+		BPSplitterMap bpsMap = new BPSplitterMap();
+		if (null != propsList) {
+			for (Property spprops : propsList) {
+				if (null != spprops.getSplitter_map()) {
+					splitter_type = spprops.getSplitter_map().getSplitter_type();
+					input_message_signature = spprops.getSplitter_map().getInput_message_signature();
+					bpsMap.setInput_message_signature(input_message_signature);
+					bpsMap.setSplitter_type(splitter_type);
+				}
+			}
+		}
+		return bpsMap;
+	}
+
+	private BPCollatorMap getParameterBasedCollatorDetails(Nodes n) {
+		Property[] prop = n.getProperties();
+		ArrayList<Property> propsList = new ArrayList<Property>(Arrays.asList(prop));
+		String collator_type = null;
+		String output_message_signature = null;
+		
+		BPCollatorMap bpcMap = new BPCollatorMap();
+		
+		List<CollatorMapInput> coMapInputLst = new ArrayList<CollatorMapInput>();
+		List<CollatorMapOutput> coMapOutputLst = new ArrayList<CollatorMapOutput>();
+		
+		// Iterate over the PropertyList of the Node from Cdump
+		if (null != propsList) {
+			for (Property coprops : propsList) {
+				if (null != coprops.getCollator_map()) {
+					// Set all the values from Property List of cdump to Blueprint CollatorMap object
+					collator_type = coprops.getCollator_map().getCollator_type();
+					output_message_signature = coprops.getCollator_map().getOutput_message_signature();
+					
+					bpcMap.setCollator_type(collator_type);
+					bpcMap.setOutput_message_signature(output_message_signature);
+					
+					// Get the CollatorMapInput[] from CollatorMap from the Cdump file
+					CollatorMapInput[] coMapIn = coprops.getCollator_map().getMap_inputs();
+					// Convert CollatorMapInput[] to List
+					ArrayList<CollatorMapInput> coMapInLst = new ArrayList<CollatorMapInput>(Arrays.asList(coMapIn));
+					// Iterate over the CollatorMapInput List of the Cdump file
+					for (CollatorMapInput cmi : coMapInLst) {
+						
+						CollatorInputField coInField = new CollatorInputField();
+						CollatorMapInput coMapInput = new CollatorMapInput();
+						
+						// set the all values into CollatorInputField of BluePrint File
+						coInField.setParameter_name(cmi.getInput_field().getParameter_name());
+						coInField.setParameter_tag(cmi.getInput_field().getParameter_tag());
+						coInField.setParameter_type(cmi.getInput_field().getParameter_type());
+						coInField.setSource_name(cmi.getInput_field().getSource_name());
+						coInField.setMapped_to_field(cmi.getInput_field().getMapped_to_field());
+						coInField.setError_indicator(cmi.getInput_field().getError_indicator());
+						
+						coMapInput.setInput_field(coInField);
+						coMapInputLst.add(coMapInput);
+					}
+					// Convert the CollatorMapInput List to CollatorMapInput[]
+					CollatorMapInput[] coMapInArr = new CollatorMapInput[coMapInputLst.size()];
+					coMapInArr = coMapInputLst.toArray(coMapInArr);
+					bpcMap.setMap_inputs(coMapInArr);
+					
+					// Get the CollatorMapOutput[] from CollatorMap from the Cdump file
+					CollatorMapOutput[] coMapOut = coprops.getCollator_map().getMap_outputs();
+					ArrayList<CollatorMapOutput> coMapOutLst = new ArrayList<CollatorMapOutput>(Arrays.asList(coMapOut));
+					
+					// Iterate over CollatorMapOutput List of Cdump File
+					for (CollatorMapOutput cmo : coMapOutLst) {
+						
+						CollatorOutputField coOutField = new CollatorOutputField();
+						CollatorMapOutput coMapOutput = new CollatorMapOutput();
+						
+						// set the all values into CollatorOutputField of BluePrint File
+						coOutField.setParameter_name(cmo.getOutput_field().getParameter_name());
+						coOutField.setParameter_tag(cmo.getOutput_field().getParameter_tag());
+						coOutField.setParameter_type(cmo.getOutput_field().getParameter_type());
+						
+						coMapOutput.setOutput_field(coOutField);
+						coMapOutputLst.add(coMapOutput);
+					}
+					// Convert the CollatorMapOutput List to CollatorMapOutput[]
+					CollatorMapOutput[] coMapOutArr = new CollatorMapOutput[coMapOutputLst.size()];
+					coMapOutArr = coMapOutputLst.toArray(coMapOutArr);
+					bpcMap.setMap_outputs(coMapOutArr);
+					
+				}
+
+			}
+
+		}
+		
+		return bpcMap;
+	}
+
+	private BPSplitterMap getParameterBasedSplitterDetails(Nodes n) {
+		Property[] prop = n.getProperties();
+		ArrayList<Property> propsList = new ArrayList<Property>(Arrays.asList(prop));
+		String splitter_type = null;
+		String input_message_signature = null;
+		
+		BPSplitterMap bpsMap = new BPSplitterMap();
+		
+		List<SplitterMapInput> spMapInputLst = new ArrayList<SplitterMapInput>();
+		List<SplitterMapOutput> spMapOutputLst = new ArrayList<SplitterMapOutput>();
+		
+		// Iterate over the PropertyList of the Node from Cdump
+		if(null != propsList){
+			for (Property splprops : propsList) {
+				if (null != splprops.getSplitter_map()) {
+					// Set all the values from Property List of cdump to Blueprint SplitterMap object
+					splitter_type = splprops.getSplitter_map().getSplitter_type();
+					input_message_signature = splprops.getSplitter_map().getInput_message_signature();
+					
+					bpsMap.setSplitter_type(splitter_type);
+					bpsMap.setInput_message_signature(input_message_signature);
+					
+					// Get the SplitterMapInput[] from SplitterMap from the Cdump file
+					SplitterMapInput[] spMapIn = splprops.getSplitter_map().getMap_inputs();
+					// Convert SplitterMapInput[] to List
+					ArrayList<SplitterMapInput> spMapInLst = new ArrayList<SplitterMapInput>(Arrays.asList(spMapIn));
+					// Iterate over the SplitterMapInput List of the Cdump file
+					for (SplitterMapInput smi : spMapInLst) {
+						SplitterInputField spInField = new SplitterInputField();
+						SplitterMapInput spMapInput = new SplitterMapInput();
+						// set the all values into SplitterInputField of BluePrint File
+						spInField.setParameter_name(smi.getInput_field().getParameter_name());
+						spInField.setParameter_tag(smi.getInput_field().getParameter_tag());
+						spInField.setParameter_type(smi.getInput_field().getParameter_type());
+						spMapInput.setInput_field(spInField);
+						spMapInputLst.add(spMapInput);
+					}
+					// Convert the SplitterMapInput List to SplitterMapInput[]
+					SplitterMapInput[] spMapInArr = new SplitterMapInput[spMapInputLst.size()];
+					spMapInArr = spMapInputLst.toArray(spMapInArr);
+					bpsMap.setMap_inputs(spMapInArr);
+					
+					// Get the SplitterMapOutput[] from SplitterMap from the Cdump file
+					SplitterMapOutput[] spMapOut = splprops.getSplitter_map().getMap_outputs();
+					ArrayList<SplitterMapOutput> spMapOutLst = new ArrayList<SplitterMapOutput>(Arrays.asList(spMapOut));
+					
+					// Iterate over SplitterMapOutput of Cdump File
+					for (SplitterMapOutput smo : spMapOutLst) {
+						
+						SplitterOutputField spOutField = new SplitterOutputField();
+						SplitterMapOutput spMapOutput = new SplitterMapOutput();
+						
+						spOutField.setParameter_name(smo.getOutput_field().getParameter_name());
+						spOutField.setParameter_tag(smo.getOutput_field().getParameter_tag());
+						spOutField.setParameter_type(smo.getOutput_field().getParameter_type());
+						spOutField.setTarget_name(smo.getOutput_field().getTarget_name());
+						spOutField.setError_indicator(smo.getOutput_field().getError_indicator());
+						spOutField.setMapped_to_field(smo.getOutput_field().getMapped_to_field());
+						
+						spMapOutput.setOutput_field(spOutField);
+						spMapOutputLst.add(spMapOutput);
+					}
+					// Convert the SplitterMapOutput List to SplitterMapOutput[]
+					SplitterMapOutput[] spMapOutArr = new SplitterMapOutput[spMapOutputLst.size()];
+					spMapOutArr = spMapOutputLst.toArray(spMapOutArr);
+					bpsMap.setMap_outputs(spMapOutArr);
+				}
+			}
+		}
+		return bpsMap;
+	}
+
 	private BPDataBrokerMap getDataBrokerDetails(Nodes n) {
 		Property[] prop = n.getProperties();
 		// Convert the Property[] into List
@@ -1379,38 +1959,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		return bpdbMap;
 	}
 
-	/**
-	 * @param cdump
-	 * @return container List
-	 */
-	private List<Container> getInputPorts(Cdump cdump) {
-		Set<String> sourceNodeId = new HashSet<>();
-		Set<String> targetNodeId = new HashSet<>();
-		List<Relations> relationsList = cdump.getRelations();
-		for (Relations rlns : relationsList) {
-			sourceNodeId.add(rlns.getSourceNodeId());
-			targetNodeId.add(rlns.getTargetNodeId());
-		}
-		sourceNodeId.removeAll(targetNodeId);
-		List<Container> containerList = new ArrayList<Container>();
-		Container container = new Container();
-		BaseOperationSignature bos = new BaseOperationSignature();
-		String opearion = "";
-		for (Relations rltn : relationsList) {
-			if (sourceNodeId.contains(rltn.getSourceNodeId())) {
-				opearion = rltn.getSourceNodeRequirement().replace("+", "%PLUS%");
-				opearion = opearion.split("%PLUS%")[0];
-				logger.debug(EELFLoggerDelegator.debugLogger, "Opearion :  {} ", opearion);
-				bos.setOperation_name(opearion);
-				container.setOperation_signature(bos);
-				String containerName = rltn.getSourceNodeName();
-				container.setContainer_name(containerName);
-				containerList.add(container);
-			}
-		}
-		return containerList;
-	}
-	
 	/**
 	 * @param requirements
 	 * @param nodeOperationName
@@ -1561,62 +2109,56 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
         logger.debug(EELFLoggerDelegator.debugLogger, " setProbeIndicator() : End ");
 		return successErrorMessage;
 	}
-	
-	/**
-	 * @param cdump
-	 * @param nodes
-	 * @param relationsList
-	 */
-	private boolean ValidateCorrectPortsConnected(Cdump cdump) {
-		String nodeid;
-		boolean isCorrectPortsConnected = true;
-		String firstNodeId = getFirstNodeId(cdump);
-		String srcOperation = null;
-		String trgOperation = null;
-		List<Nodes> nodes = cdump.getNodes();
+		
+	private SuccessErrorMessage getResponseMessageStatus(String messagestatus, String messagedescription) {
+		return new SuccessErrorMessage(messagestatus, messagedescription);
+	}
+	 
+	private Nodes getNodeForId(List<Nodes> nodes, String nodeId){
+		Nodes node = null;
+		for(Nodes n : nodes){
+			if(n.getNodeId().equals(nodeId)){
+				node = n;
+				break;
+			}
+		}
+		return node;
+	}
+	private List<String> getNodesForPosition(Cdump cdump, String position){
+		List<String> nodeNames = new ArrayList<String>();
+		Set<String> sourceNodeId = new HashSet<>();
+		Set<String> targetNodeId = new HashSet<>();
 		List<Relations> relationsList = cdump.getRelations();
-		for (Nodes n : nodes) {
-			nodeid = n.getNodeId();
-			if(!firstNodeId.equals(nodeid)){
-				for (Relations rel : relationsList) {
-					if(nodeid.equals(rel.getSourceNodeId())){
-						srcOperation = rel.getSourceNodeRequirement().replace("+", "%PLUS%");
-						srcOperation = srcOperation.split("%PLUS%")[0];
-						//Now check if same input port is connected or not and its not the first node. 
-							boolean isSameportConnected = false;
-							for (Relations rel2 : relationsList) {
-								if(nodeid.equals(rel2.getTargetNodeId())){ //Node is target of some other link
-									trgOperation = rel2.getTargetNodeCapability().replace("+", "%PLUS%");
-									trgOperation = trgOperation.split("%PLUS%")[0];
-									if(trgOperation.equals(srcOperation)){
-										isSameportConnected = true;
-										break;
-									}
-								}
-							}
-							if(!isSameportConnected){
-								isCorrectPortsConnected = false;
-								break;
-							}
-					}
+		List<Nodes> nodes = cdump.getNodes();
+		Nodes node = null;
+		for (Relations rlns : relationsList) {
+			sourceNodeId.add(rlns.getSourceNodeId());
+			targetNodeId.add(rlns.getTargetNodeId());
+		}
+		
+		if (position.equals("first")) {
+			sourceNodeId.removeAll(targetNodeId);
+		} else {
+			targetNodeId.removeAll(sourceNodeId);
+		}
+		
+		for (Relations rltn : relationsList) {
+			if (position.equals("first")) {
+				if (sourceNodeId.contains(rltn.getSourceNodeId())) {
+					node = getNodeForId(nodes, rltn.getSourceNodeId());
+					nodeNames.add(node.getName());
 				}
-				if(!isCorrectPortsConnected){
-					break;
+			} else if (position.equals("last")) {
+				if (targetNodeId.contains(rltn.getTargetNodeId())) {
+					node = getNodeForId(nodes, rltn.getTargetNodeId());
+					nodeNames.add(node.getName());
 				}
 			}
 		}
-		return isCorrectPortsConnected;
+		return nodeNames;
 	}
-	 private SuccessErrorMessage getResponseMessageStatus(String messagestatus, String messagedescription){
-		return new SuccessErrorMessage(messagestatus,messagedescription);
-	 }
-
-	/**
-	 * @param cdump
-	 * @return container List
-	 */
-	private String getFirstNodeId(Cdump cdump) {
-		String firstNodeId = null;
+	private String getNodeIdForPosition(Cdump cdump, String position) {
+		String nodeId = null;
 		Set<String> sourceNodeId = new HashSet<>();
 		Set<String> targetNodeId = new HashSet<>();
 		List<Relations> relationsList = cdump.getRelations();
@@ -1624,13 +2166,25 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			sourceNodeId.add(rlns.getSourceNodeId());
 			targetNodeId.add(rlns.getTargetNodeId());
 		}
-		sourceNodeId.removeAll(targetNodeId);
+		
+		if (position.equals("first")) {
+			sourceNodeId.removeAll(targetNodeId);
+		} else {
+			targetNodeId.removeAll(sourceNodeId);
+		}
+		
 		for (Relations rltn : relationsList) {
-			if (sourceNodeId.contains(rltn.getSourceNodeId())) {
-				firstNodeId = rltn.getSourceNodeId();
+			if (position.equals("first")) {
+				if (sourceNodeId.contains(rltn.getSourceNodeId())) {
+					nodeId = rltn.getSourceNodeId();
+				}
+			} else if (position.equals("last")) {
+				if (targetNodeId.contains(rltn.getTargetNodeId())) {
+					nodeId = rltn.getTargetNodeId();
+				}
 			}
 		}
-		return firstNodeId;
+		return nodeId;
 	}
         public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
 		cdmsClient = commonDataServiceRestClient;
@@ -1647,118 +2201,4 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		this.gdmService = gdmService;
 	}
 	
-	/**
-	 * 
-	 * @param dscs
-	 * @return
-	 * @throws AcumosException
-	 * @throws IOException
-	 */
-	private String insertNewUpdatedCompositeSolution(DSCompositeSolution dscs, MLPSolution mlpSolution,MLPSolutionRevision mlpSolutionRevision ) throws AcumosException, IOException {
-
-		logger.debug(EELFLoggerDelegator.debugLogger, " insertCompositeSolution() Begin ");
-
-		String path = DSUtil.readCdumpPath(dscs.getAuthor(), confprops.getToscaOutputFolder());
-		String cdumpFileName = "acumos-cdump" + "-" + mlpSolution.getSolutionId(); 
-		String payload = "";
-
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
-			if (null == cdump) {
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						"Error : Cdump file not found for Solution ID :   {} ", mlpSolution.getSolutionId());
-			} else {
-				cdump.setCname(dscs.getSolutionName());
-				cdump.setVersion(dscs.getVersion());
-				cdump.setSolutionId(mlpSolution.getSolutionId());
-				SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
-				cdump.setMtime(sdf.format(new Date()));
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						"3. Successfully read the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
-				Gson gson = new Gson();
-				payload = gson.toJson(cdump);
-				cdumpFileName = "acumos-cdump" + "-" + mlpSolution.getSolutionId();
-				DSUtil.writeDataToFile(path, cdumpFileName, "json", payload);
-			}
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Error : Exception in insertCompositeSolution() : Failed to Find the Cdump File ",
-					e);
-			throw new ServiceException("  Exception in insertCompositeSolution() ", "222",
-					"Failed to create the Solution");
-		}
-
-		Artifact cdumpArtifact = new Artifact(cdumpFileName, "json", mlpSolution.getSolutionId(), dscs.getVersion(),
-				path, payload.length());
-
-		logger.debug(EELFLoggerDelegator.debugLogger,
-				"4. Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
-
-		try {
-			uploadFilesToRepository(mlpSolution.getSolutionId(), dscs.getVersion(), cdumpArtifact);
-			dscs.setCdump(cdumpArtifact);
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"5. Successfully uploaded the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
-			DSUtil.deleteFile(path.concat("acumos-cdump" + "-" + dscs.getcId()).concat(".json"));
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"5.1 Successfully deleted the local Cdump file for solution ID : "
-							+ mlpSolution.getSolutionId());
-
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Error : Exception in insertCompositeSolution() : Failed to upload the Cdump File to Nexus ",
-					e);
-			DSUtil.deleteFile(path.concat("acumos-cdump" + "-" + dscs.getcId()).concat(".json"));
-			if (null != mlpSolution.getSolutionId())
-				DSUtil.deleteFile(path.concat(cdumpFileName).concat(".json"));
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"5.1 Successfully deleted the local Cdump file for solution ID : "
-							+ mlpSolution.getSolutionId());
-			throw new ServiceException("  Exception in insertCompositeSolution() ", "222",
-					"Failed to create the Solution");
-		}
-
-		// 4. create the artifact
-		MLPArtifact mlpArtifact = null;
-		try {
-			mlpArtifact = new MLPArtifact();
-			mlpArtifact.setArtifactTypeCode(props.getArtifactTypeCode());
-			mlpArtifact.setDescription("Cdump File for : " + cdumpArtifact.getName() + " for SolutionID : "
-					+ cdumpArtifact.getSolutionID() + " with version : " + cdumpArtifact.getVersion());
-			mlpArtifact.setUri(cdumpArtifact.getNexusURI());
-			mlpArtifact.setName(cdumpArtifact.getName());
-			mlpArtifact.setOwnerId(dscs.getAuthor());
-			mlpArtifact.setVersion(cdumpArtifact.getVersion());
-			mlpArtifact.setSize(cdumpArtifact.getContentLength());
-
-			mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
-
-			// 5. associate articat to the solutionRevisionArtifact.
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"6. Successfully created the artifact for the cdumpfile for the solution : {0} artifact ID : {1}" ,mlpSolution.getSolutionId(), mlpArtifact.getArtifactId());
-
-			cdmsClient.addSolutionRevisionArtifact(mlpSolution.getSolutionId(), mlpSolutionRevision.getRevisionId(),
-					mlpArtifact.getArtifactId());
-
-			logger.debug(EELFLoggerDelegator.debugLogger,
-					"7. Successfully associated the Solution Revision Artifact for solution ID  : "
-							+ mlpSolution.getSolutionId());
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Error : Exception in insertCompositeSolution() : Failed to create the Solution Artifact ",
-					e);
-			throw new ServiceException("  Exception in insertCompositeSolution() ", "222",
-					"Failed to create the Solution");
-		}
-
-		// 5. Detete the cdump file
-
-		logger.debug(EELFLoggerDelegator.debugLogger, " insertCompositeSolution() End ");
-
-		return "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \"" + dscs.getVersion()
-				+ "\" }";
-
-	}
-
 }

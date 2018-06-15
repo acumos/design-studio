@@ -766,7 +766,6 @@ public class SolutionControllerTest {
 		CollatorMapOutput cmo = new CollatorMapOutput();
 		CollatorOutputField cof = new CollatorOutputField();
 		cof.setParameter_name("ParamName");
-		cof.setParameter_rule("ParamRule");
 		cof.setParameter_tag("ParamTag");
 		cof.setParameter_type("ParamType");
 		cmo.setOutput_field(cof);
@@ -830,7 +829,6 @@ public class SolutionControllerTest {
 
 		// assertEquals for CollatorOutputField
 		assertEquals("ParamName", cof.getParameter_name());
-		assertEquals("ParamRule", cof.getParameter_rule());
 		assertEquals("ParamTag", cof.getParameter_tag());
 		assertEquals("ParamType", cof.getParameter_type());
 
@@ -1446,11 +1444,7 @@ public class SolutionControllerTest {
 		when(properties.getAskToUpdateExistingCompSolnMsg())
 				.thenReturn("Do you want to update a previous version of this solution?");
 		when(properties.getSolutionResultsetSize()).thenReturn(10);
-		
 		String result = null;
-
-		
-
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("name", "Test");
 		RestPageRequest restPageRequets = new RestPageRequest(0,10);

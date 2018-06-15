@@ -18,36 +18,32 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.ce.vo.cdump.collator;
+
+package org.acumos.designstudio.ce.vo;
 
 import java.io.Serializable;
 
-public class CollatorOutputField implements Serializable {
+public class Result implements Serializable {
 
-	private static final long serialVersionUID = -1031380220547607130L;
+	private static final long serialVersionUID = -4449612967782242519L;
 	
-	private String parameter_tag;
-	private String parameter_name;
-	private String parameter_type;
+	private String success;
+	private String errorDescription;
 	
-	public String getParameter_tag() {
-		return parameter_tag;
+	public String getSuccess() {
+		return success;
 	}
-	public void setParameter_tag(String parameter_tag) {
-		this.parameter_tag = parameter_tag;
+	public void setSuccess(String success) {
+		this.success = success;
 	}
-	public String getParameter_name() {
-		return parameter_name;
+	public String getErrorDescription() {
+		return errorDescription;
 	}
-	public void setParameter_name(String parameter_name) {
-		this.parameter_name = parameter_name;
+	public void setErrorDescription(String errorDescription) {
+		this.errorDescription = errorDescription;
 	}
-	public String getParameter_type() {
-		return parameter_type;
-	}
-	public void setParameter_type(String parameter_type) {
-		this.parameter_type = parameter_type;
-	}
+	
+	
 	
 
 }

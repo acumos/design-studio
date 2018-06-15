@@ -127,12 +127,36 @@ public class Properties implements Serializable {
 	@Value("${copyBasedSplitterType}")
 	private String copyBasedSplitterType;
 	
+	@Value("${parameterBasedCollatorType}")
+	private String parameterBasedCollatorType;
+	
+	@Value("${parameterBasedSplitterType}")
+	private String parameterBasedSplitterType;
+	
+	
 	@Value("${modelImageArtifactType}")
 	private String modelImageArtifactType;
 
 	@Value("${protobuffFileExtention}")	
 	private String protobuffFileExtention;
 	
+	
+	public String getParameterBasedCollatorType() {
+		return parameterBasedCollatorType;
+	}
+
+	public void setParameterBasedCollatorType(String parameterBasedCollatorType) {
+		this.parameterBasedCollatorType = parameterBasedCollatorType;
+	}
+
+	public String getParameterBasedSplitterType() {
+		return parameterBasedSplitterType;
+	}
+
+	public void setParameterBasedSplitterType(String parameterBasedSplitterType) {
+		this.parameterBasedSplitterType = parameterBasedSplitterType;
+	}
+
 	public String getArrayBasedCollatorType() {
 		return arrayBasedCollatorType;
 	}

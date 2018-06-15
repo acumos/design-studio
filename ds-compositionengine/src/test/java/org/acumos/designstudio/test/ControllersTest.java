@@ -572,7 +572,6 @@ public class ControllersTest {
 			CollatorMapOutput cmo = new CollatorMapOutput();
 			CollatorOutputField cof = new CollatorOutputField();
 			cof.setParameter_name("ParamName");
-			cof.setParameter_rule("ParamRule");
 			cof.setParameter_tag("ParamTag");
 			cof.setParameter_type("ParamType");
 			cmo.setOutput_field(cof);
@@ -635,7 +634,6 @@ public class ControllersTest {
 			
 			// assertEquals for CollatorOutputField
 			assertEquals("ParamName", cof.getParameter_name());
-			assertEquals("ParamRule", cof.getParameter_rule());
 			assertEquals("ParamTag", cof.getParameter_tag());
 			assertEquals("ParamType", cof.getParameter_type());
 			

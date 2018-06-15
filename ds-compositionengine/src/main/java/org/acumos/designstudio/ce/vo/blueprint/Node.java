@@ -33,109 +33,64 @@ public class Node implements Serializable {
 	private String proto_uri;
 	private List<OperationSignatureList> operation_signature_list;
 	private BPDataBrokerMap data_broker_map;
+	private BPSplitterMap splitter_map;
+	private BPCollatorMap collator_map;
 	private List<DataSource> data_sources;
 
-	
-	/**
-	 * @return the container_name
-	 */
 	public String getContainer_name() {
 		return container_name;
 	}
-
-	/**
-	 * @param container_name the container_name to set
-	 */
 	public void setContainer_name(String container_name) {
 		this.container_name = container_name;
 	}
-
-	/**
-	 * @return the image
-	 */
 	public String getImage() {
 		return image;
 	}
-
-	/**
-	 * @param image
-	 *            the image to set
-	 */
 	public void setImage(String image) {
 		this.image = image;
 	}
-
-	/**
-	 * @return the node_type
-	 */
 	public String getNode_type() {
 		return node_type;
 	}
-
-	/**
-	 * @param node_type the node_type to set
-	 */
 	public void setNode_type(String node_type) {
 		this.node_type = node_type;
 	}
-
-	/**
-	 * @return the proto_uri
-	 */
 	public String getProto_uri() {
 		return proto_uri;
 	}
-
-	/**
-	 * @param proto_uri the proto_uri to set
-	 */
 	public void setProto_uri(String proto_uri) {
 		this.proto_uri = proto_uri;
 	}
-
-	/**
-	 * @return the operation_signature_list
-	 */
 	public List<OperationSignatureList> getOperation_signature_list() {
 		return operation_signature_list;
 	}
-
-	/**
-	 * @param operation_signature_list the operation_signature_list to set
-	 */
 	public void setOperation_signature_list(List<OperationSignatureList> operation_signature_list) {
 		this.operation_signature_list = operation_signature_list;
 	}
-	
-	/**
-	 * @return the data_sources
-	 */
 	public List<DataSource> getData_sources() {
 		return data_sources;
 	}
-
-	/**
-	 * @param data_sources the data_sources to set
-	 */
 	public void setData_sources(List<DataSource> data_sources) {
 		this.data_sources = data_sources;
 	}
-
-	/**
-	 * @return the data_broker_map
-	 */
 	public BPDataBrokerMap getData_broker_map() {
 		return data_broker_map;
 	}
-
-	/**
-	 * @param data_broker_map the data_broker_map to set
-	 */
 	public void setData_broker_map(BPDataBrokerMap data_broker_map) {
 		this.data_broker_map = data_broker_map;
 	}
-	
-	
+	public BPSplitterMap getSplitter_map() {
+		return splitter_map;
+	}
+	public void setSplitter_map(BPSplitterMap splitter_map) {
+		this.splitter_map = splitter_map;
+	}
+	public BPCollatorMap getCollator_map() {
+		return collator_map;
+	}
+	public void setCollator_map(BPCollatorMap collator_map) {
+		this.collator_map = collator_map;
+	}
 	
 
 }

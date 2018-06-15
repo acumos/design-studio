@@ -18,36 +18,12 @@
  * ===============LICENSE_END=========================================================
  */
 
-package org.acumos.designstudio.ce.vo.cdump.collator;
+package org.acumos.designstudio.ce.vo.blueprint;
 
-import java.io.Serializable;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMap;
 
-public class CollatorOutputField implements Serializable {
+public class BPCollatorMap extends CollatorMap {
 
-	private static final long serialVersionUID = -1031380220547607130L;
-	
-	private String parameter_tag;
-	private String parameter_name;
-	private String parameter_type;
-	
-	public String getParameter_tag() {
-		return parameter_tag;
-	}
-	public void setParameter_tag(String parameter_tag) {
-		this.parameter_tag = parameter_tag;
-	}
-	public String getParameter_name() {
-		return parameter_name;
-	}
-	public void setParameter_name(String parameter_name) {
-		this.parameter_name = parameter_name;
-	}
-	public String getParameter_type() {
-		return parameter_type;
-	}
-	public void setParameter_type(String parameter_type) {
-		this.parameter_type = parameter_type;
-	}
-	
+	private static final long serialVersionUID = 3744971168675736605L;
 
 }

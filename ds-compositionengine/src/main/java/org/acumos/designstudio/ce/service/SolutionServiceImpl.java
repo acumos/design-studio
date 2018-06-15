@@ -1436,7 +1436,6 @@ public class SolutionServiceImpl implements ISolutionService {
 											node.getProperties()[0].getCollator_map().setMap_inputs(newCmInput);
 										}
 									}
-
 								}
 							}
 							// delete link details form relations list

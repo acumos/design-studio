@@ -22,7 +22,7 @@ Design Studio Release Notes
 
 The Design Studio Composition Engine is deployed within a Docker image in the Docker registry.  TOSCAGenerator Client is uploaded in Nexus repository as a jar file.
 
-0.0.31-SNAPSHOT, 2018-06-12
+0.0.31-SNAPSHOT, 2018-06-15
 ---------------------------
 * ACUMOS-1003 : Update CE Modify Node API for Collator (BE).
 * ACUMOS-1004 : Update CE Delete Node API for Collator (BE).
@@ -30,6 +30,8 @@ The Design Studio Composition Engine is deployed within a Docker image in the Do
 * ACUMOS-1055 : Update Modify Node API for Splitter (BE).
 * ACUMOS-1056 : Update Add Link API for Splitter/Collator (BE).
 * ACUMOS-1057 : Update Delete Link API for Splitter (BE).
+* ACUMOS-1006 : Update CE Validate Composite Solution API.
+* ACUMOS-1058 : Update Validate Composite Solution API.
 
 
 0.0.30-SNAPSHOT, 2018-06-06
