@@ -54,7 +54,7 @@ import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.Artifact;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
 import org.acumos.designstudio.ce.vo.DSSolution;
-import org.acumos.designstudio.ce.vo.Result;
+import org.acumos.designstudio.ce.vo.DSResult;
 import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 import org.acumos.designstudio.ce.vo.blueprint.BPCollatorMap;
 import org.acumos.designstudio.ce.vo.blueprint.BPDataBrokerMap;
@@ -105,12 +105,23 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
     private SuccessErrorMessage successErrorMessage = null;
     
-    private static final String NODE_TYPE_SPLITTER = "Copy-based";
+    private static final String SPLITTER_TYPE = "Splitter";
     
-    private static final String NODE_TYPE_COLLATOR = "Array-based";
+    private static final String COLLATOR_TYPE = "Collator";
     
-    private static final String NODE_TYPE_MLMODEL = "MLModel";
-    @Autowired
+    private static final String MLMODEL_TYPE = "MLModel";
+    
+    private static final String DATAMAPPER_TYPE = "DataMapper";
+    
+    private static final String DATABROKER_TYPE = "DataBroker";
+    
+    private static final String OPERATION_EXTRACTOR = "%PLUS%";
+    
+    private static final String FIRST_NODE_POSITION = "first";
+    
+    private static final String LAST_NODE_POSITION = "last";
+    
+	@Autowired
 	private Properties props;
 
 	@Autowired
@@ -124,8 +135,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	@Autowired
 	private GenericDataMapperServiceImpl gdmService;
-	
-	@Autowired			
+
+	@Autowired
 	private DataBrokerServiceImpl dbService;
 
 	@Override
@@ -892,7 +903,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	public String validateCompositeSolution(String userId, String solutionName, String solutionId, String version)
 			throws AcumosException {
 		String result = "";
-		Result resultVo = new Result();
+		DSResult resultVo = new DSResult();
 		logger.debug(EELFLoggerDelegator.debugLogger, "validateCompositeSolution() : Begin ");
 		String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 		ObjectMapper mapper = new ObjectMapper();
@@ -941,20 +952,20 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		return result;
 	}
 
-	private Result validateEachNode(Cdump cdump) {
-		 Result resultVo = new Result();
+	private DSResult validateEachNode(Cdump cdump) {
+		 DSResult resultVo = new DSResult();
 		List<Nodes> nodes = cdump.getNodes();
 		List<Relations> relationsList = cdump.getRelations();
 		//Get the First and Last Model 
-		String firstNodeId = getNodeIdForPosition(cdump, "first");
-		String lastNodeId = getNodeIdForPosition(cdump,"last");
+		String firstNodeId = getNodeIdForPosition(cdump, FIRST_NODE_POSITION);
+		String lastNodeId = getNodeIdForPosition(cdump,LAST_NODE_POSITION);
            //For each Node : 
 		for(Nodes node : nodes){
 			//get the node type 
 		    String nodeType = node.getType().getName();
 		    String nodeId = node.getNodeId();
 		    switch (nodeType) {
-		        case NODE_TYPE_MLMODEL : 
+		        case MLMODEL_TYPE : 
 		        	 //check whether its first node
 		            if(nodeId.equals(firstNodeId)){ // Node--
 		            	//Then it should be source of only one link.
@@ -1009,8 +1020,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		            	}
 					}
 		            break;
-		        case "SQLDataBroker": //TODO : Raman define Constants
-		        case "CSVDataBroker": //TODO : Raman define Constants
+		        case DATABROKER_TYPE : 
 		        	//DataBroker should be the first Node 
 		        	if(nodeId.equals(firstNodeId)){ // Node--
 		                // Then it should be source of only one link.
@@ -1050,7 +1060,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		               resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" should be the first Node");
 		           }
 		        	break;
-				case "DataMapper": // TODO : Raman define Constants
+				case DATAMAPPER_TYPE : 
 					// Datamapper should not be the first node
 					if (node.getNodeId().equals(firstNodeId)) {
 						resultVo.setSuccess("false");
@@ -1080,8 +1090,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 											resultVo.setErrorDescription("");
 										} else {
 											resultVo.setSuccess("false");
-											resultVo.setErrorDescription(
-													"Invalid Composite Solution : DataMapper \"" + node.getName()
+											resultVo.setErrorDescription("Invalid Composite Solution : DataMapper \"" + node.getName()
 															+ "\" Mapping Details are Incorrect");
 										}
 									} else {
@@ -1104,10 +1113,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							resultVo.setErrorDescription("Invalid Composite Solution : DataMapper \""
 									+ node.getName() + "\" is connected to multiple Nodes");
 						}
-
 					}
 					break;
-				case NODE_TYPE_SPLITTER:
+				case SPLITTER_TYPE:
 					// Should not be the first node
 					if (node.getNodeId().equals(firstNodeId)) {
 						resultVo.setSuccess("false");
@@ -1129,7 +1137,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		            		for(Relations rel: relationsList){
 		            			if(rel.getTargetNodeId().equals(nodeId)){
 		            				sourceNode = getNodeForId(nodes, rel.getSourceNodeId());
-		            				if(!sourceNode.getType().getName().equals(NODE_TYPE_MLMODEL)){
+		            				if(!sourceNode.getType().getName().equals(MLMODEL_TYPE)){
 		            					connectedToTool = true;
 		            					break;
 		            				}
@@ -1141,7 +1149,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		                		for(Relations rel: relationsList){
 		                			if(rel.getSourceNodeId().equals(nodeId)){
 		                				targetNode = getNodeForId(nodes, rel.getTargetNodeId());
-		                				if(!targetNode.getType().getName().equals(NODE_TYPE_MLMODEL)){
+		                				if(!targetNode.getType().getName().equals(MLMODEL_TYPE)){
 		                					connectedToTool = true;
 		                					break;
 		                				}
@@ -1169,7 +1177,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						
 					}
 					break;
-		        case NODE_TYPE_COLLATOR : 
+		        case COLLATOR_TYPE : 
 		        	// Should not be the first node
 					if (node.getNodeId().equals(firstNodeId)) {
 						resultVo.setSuccess("false");
@@ -1191,7 +1199,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		            		for(Relations rel: relationsList){
 		            			if(rel.getTargetNodeId().equals(nodeId)){
 		            				sourceNode = getNodeForId(nodes, rel.getSourceNodeId());
-		            				if(!sourceNode.getType().getName().equals(NODE_TYPE_MLMODEL)){
+		            				if(!sourceNode.getType().getName().equals(MLMODEL_TYPE)){
 		            					connectedToTool = true;
 		            					break;
 		            				}
@@ -1203,7 +1211,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		                		for(Relations rel: relationsList){
 		                			if(rel.getSourceNodeId().equals(nodeId)){
 		                				targetNode = getNodeForId(nodes, rel.getTargetNodeId());
-		                				if(!targetNode.getType().getName().equals(NODE_TYPE_MLMODEL)){
+		                				if(!targetNode.getType().getName().equals(MLMODEL_TYPE)){
 		                					connectedToTool = true;
 		                					break;
 		                				}
@@ -1245,7 +1253,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		List<String> collatorNodeIds = new ArrayList<String>();
 		//1. Check if composite solution have splitter
 		for(Nodes n : nodes){
-			if(n.getType().getName().equals(NODE_TYPE_COLLATOR)){
+			if(n.getType().getName().equals(COLLATOR_TYPE)){
 				collatorNodeIds.add(n.getNodeId());
 			}
 		}
@@ -1270,7 +1278,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		List<String> splitterNodeIds = new ArrayList<String>();
 		//1. Check if composite solution have splitter
 		for(Nodes n : nodes){
-			if(n.getType().getName().equals(NODE_TYPE_SPLITTER)){
+			if(n.getType().getName().equals(SPLITTER_TYPE)){
 				splitterNodeIds.add(n.getNodeId());
 			}
 		}
@@ -1317,8 +1325,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	 * @param cdump
 	 * @return
 	 */
-	private Result validateComposition(Cdump cdump) {
-		Result result = new Result();
+	private DSResult validateComposition(Cdump cdump) {
+		DSResult result = new DSResult();
 		List<Nodes> nodes = cdump.getNodes();
 		List<Relations> relationsList = cdump.getRelations();
 		//check if any isolated node 
@@ -1370,14 +1378,14 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String trgOperation = null;
 		for (Relations rel : relationsList) {
 			if(nodeId.equals(rel.getSourceNodeId())){
-				srcOperation = rel.getSourceNodeRequirement().replace("+", "%PLUS%");
-				srcOperation = srcOperation.split("%PLUS%")[0];
+				srcOperation = rel.getSourceNodeRequirement().replace("+", OPERATION_EXTRACTOR);
+				srcOperation = srcOperation.split(OPERATION_EXTRACTOR)[0];
 				//Now check if same input port is connected or not and its not the first node. 
 					boolean isSameportConnected = false;
 					for (Relations rel2 : relationsList) {
 						if(nodeId.equals(rel2.getTargetNodeId())){ //Node is target of some other link
-							trgOperation = rel2.getTargetNodeCapability().replace("+", "%PLUS%");
-							trgOperation = trgOperation.split("%PLUS%")[0];
+							trgOperation = rel2.getTargetNodeCapability().replace("+", OPERATION_EXTRACTOR);
+							trgOperation = trgOperation.split(OPERATION_EXTRACTOR)[0];
 							if(trgOperation.equals(srcOperation)){
 								isSameportConnected = true;
 								break;
@@ -1435,9 +1443,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String opearion = "";
 		for (Relations rltn : relationsList) {
 			if (sourceNodeId.contains(rltn.getSourceNodeId())) {
-				opearion = rltn.getSourceNodeRequirement().replace("+", "%PLUS%");
-				opearion = opearion.split("%PLUS%")[0];
-				logger.debug(EELFLoggerDelegator.debugLogger, "Opearion :  {} ", opearion);
+				opearion = rltn.getSourceNodeRequirement().replace("+", OPERATION_EXTRACTOR);
+				opearion = opearion.split(OPERATION_EXTRACTOR)[0];
 				bos.setOperation_name(opearion);
 				container.setOperation_signature(bos);
 				String containerName = rltn.getSourceNodeName();
@@ -1510,35 +1517,33 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				bpnode.setData_broker_map(bpdbMap);
 			}
 			
-			// check for the Node type is ParameterBasedSplitterType or not
+			// check for the Node type is Splitter or not
 			
-			if(node_type.equals(props.getParameterBasedSplitterType())){
+			if(node_type.equals(props.getSplitterType())){
 				// Need to set all the values of SplitterMap
 				// Get the Property[] from Nodes
-				BPSplitterMap bpsMap = getParameterBasedSplitterDetails(n);
+				BPSplitterMap bpsMap = getSplitterDetails(n);
 				bpnode.setSplitter_map(bpsMap);
+				bpnode.setImage("");
 			}
-			// check for the Node type is CopyBasedSplitterType or not
-			else if(node_type.equals(props.getCopyBasedSplitterType())){
-				BPSplitterMap bpsMap = getCopyBasedSplitterDetails(n);
-				bpnode.setSplitter_map(bpsMap);
-			}
-			
-			// check for the Node type is ParameterBasedCollatorType or not
-			if(node_type.equals(props.getParameterBasedCollatorType())){
+			// check for the Node type is Collator or not
+			if(node_type.equals(props.getCollatorType())){
 				// Need to set all the values of CollatorMap
 				// Get the Property[] from Nodes
-				BPCollatorMap bpcMap = getParameterBasedCollatorDetails(n);
+				BPCollatorMap bpcMap = getCollatorDetails(n);
 				bpnode.setCollator_map(bpcMap);
-			}
-			// check for the Node type is ArrayBasedCollatorType or not
-			else if (node_type.equals(props.getArrayBasedCollatorType())) {
-				BPCollatorMap bpcMap = getArrayBasedCollatorDetails(n);
-				bpnode.setCollator_map(bpcMap);
+				bpnode.setImage("");
 			}
 			
 			String protoUri = n.getProtoUri();
-			bpnode.setProto_uri(protoUri); 
+			if(n.getType().getName().equals(props.getCollatorType())){
+				bpnode.setProto_uri(""); 
+			}else if (n.getType().getName().equals(props.getSplitterType())) {
+				bpnode.setProto_uri(""); 
+			}else{
+				bpnode.setProto_uri(protoUri); 
+			}
+			
 			
 			//Set operation_signature_list
 			List<Capabilities> capabilities = Arrays.asList(n.getCapabilities());
@@ -1670,46 +1675,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		return result;
 	}
 
-	private BPCollatorMap getArrayBasedCollatorDetails(Nodes n) {
-		Property[] prop = n.getProperties();
-		ArrayList<Property> propsList = new ArrayList<Property>(Arrays.asList(prop));
-		String collator_type = null;
-		String output_message_signature = null;
-		
-		BPCollatorMap bpcMap = new BPCollatorMap();
-		if (null != propsList) {
-			for (Property coprops : propsList) {
-				if (null != coprops.getCollator_map()) {
-					collator_type = coprops.getCollator_map().getCollator_type();
-					output_message_signature = coprops.getCollator_map().getOutput_message_signature();
-					bpcMap.setCollator_type(collator_type);
-					bpcMap.setOutput_message_signature(output_message_signature);
-				}
-			}
-		}
-		return bpcMap;
-	}
 
-	private BPSplitterMap getCopyBasedSplitterDetails(Nodes n) {
-		Property[] prop = n.getProperties();
-		ArrayList<Property> propsList = new ArrayList<Property>(Arrays.asList(prop));
-		String splitter_type = null;
-		String input_message_signature = null;
-		BPSplitterMap bpsMap = new BPSplitterMap();
-		if (null != propsList) {
-			for (Property spprops : propsList) {
-				if (null != spprops.getSplitter_map()) {
-					splitter_type = spprops.getSplitter_map().getSplitter_type();
-					input_message_signature = spprops.getSplitter_map().getInput_message_signature();
-					bpsMap.setInput_message_signature(input_message_signature);
-					bpsMap.setSplitter_type(splitter_type);
-				}
-			}
-		}
-		return bpsMap;
-	}
-
-	private BPCollatorMap getParameterBasedCollatorDetails(Nodes n) {
+	private BPCollatorMap getCollatorDetails(Nodes n) {
 		Property[] prop = n.getProperties();
 		ArrayList<Property> propsList = new ArrayList<Property>(Arrays.asList(prop));
 		String collator_type = null;
@@ -1732,64 +1699,67 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					bpcMap.setOutput_message_signature(output_message_signature);
 					
 					// Get the CollatorMapInput[] from CollatorMap from the Cdump file
-					CollatorMapInput[] coMapIn = coprops.getCollator_map().getMap_inputs();
-					// Convert CollatorMapInput[] to List
-					ArrayList<CollatorMapInput> coMapInLst = new ArrayList<CollatorMapInput>(Arrays.asList(coMapIn));
-					// Iterate over the CollatorMapInput List of the Cdump file
-					for (CollatorMapInput cmi : coMapInLst) {
+					// Check if the collator_type is Param based then mapInputs and mapOutputs should be populated, else not 
+					if(collator_type.equals(props.getDefaultCollatorType())){
+						bpcMap.setMap_inputs(null);
+						bpcMap.setMap_outputs(null);
+					}else {
+						CollatorMapInput[] coMapIn = coprops.getCollator_map().getMap_inputs();
+						// Convert CollatorMapInput[] to List
+						ArrayList<CollatorMapInput> coMapInLst = new ArrayList<CollatorMapInput>(Arrays.asList(coMapIn));
+						// Iterate over the CollatorMapInput List of the Cdump file
+						for (CollatorMapInput cmi : coMapInLst) {
+							
+							CollatorInputField coInField = new CollatorInputField();
+							CollatorMapInput coMapInput = new CollatorMapInput();
+							
+							// set the all values into CollatorInputField of BluePrint File
+							coInField.setParameter_name(cmi.getInput_field().getParameter_name());
+							coInField.setParameter_tag(cmi.getInput_field().getParameter_tag());
+							coInField.setParameter_type(cmi.getInput_field().getParameter_type());
+							coInField.setSource_name(cmi.getInput_field().getSource_name());
+							coInField.setMapped_to_field(cmi.getInput_field().getMapped_to_field());
+							coInField.setError_indicator(cmi.getInput_field().getError_indicator());
+							
+							coMapInput.setInput_field(coInField);
+							coMapInputLst.add(coMapInput);
+						}
+						// Convert the CollatorMapInput List to CollatorMapInput[]
+						CollatorMapInput[] coMapInArr = new CollatorMapInput[coMapInputLst.size()];
+						coMapInArr = coMapInputLst.toArray(coMapInArr);
+						bpcMap.setMap_inputs(coMapInArr);
 						
-						CollatorInputField coInField = new CollatorInputField();
-						CollatorMapInput coMapInput = new CollatorMapInput();
+						// Get the CollatorMapOutput[] from CollatorMap from the Cdump file
+						CollatorMapOutput[] coMapOut = coprops.getCollator_map().getMap_outputs();
+						ArrayList<CollatorMapOutput> coMapOutLst = new ArrayList<CollatorMapOutput>(Arrays.asList(coMapOut));
 						
-						// set the all values into CollatorInputField of BluePrint File
-						coInField.setParameter_name(cmi.getInput_field().getParameter_name());
-						coInField.setParameter_tag(cmi.getInput_field().getParameter_tag());
-						coInField.setParameter_type(cmi.getInput_field().getParameter_type());
-						coInField.setSource_name(cmi.getInput_field().getSource_name());
-						coInField.setMapped_to_field(cmi.getInput_field().getMapped_to_field());
-						coInField.setError_indicator(cmi.getInput_field().getError_indicator());
-						
-						coMapInput.setInput_field(coInField);
-						coMapInputLst.add(coMapInput);
+						// Iterate over CollatorMapOutput List of Cdump File
+						for (CollatorMapOutput cmo : coMapOutLst) {
+							
+							CollatorOutputField coOutField = new CollatorOutputField();
+							CollatorMapOutput coMapOutput = new CollatorMapOutput();
+							
+							// set the all values into CollatorOutputField of BluePrint File
+							coOutField.setParameter_name(cmo.getOutput_field().getParameter_name());
+							coOutField.setParameter_tag(cmo.getOutput_field().getParameter_tag());
+							coOutField.setParameter_type(cmo.getOutput_field().getParameter_type());
+							
+							coMapOutput.setOutput_field(coOutField);
+							coMapOutputLst.add(coMapOutput);
+						}
+						// Convert the CollatorMapOutput List to CollatorMapOutput[]
+						CollatorMapOutput[] coMapOutArr = new CollatorMapOutput[coMapOutputLst.size()];
+						coMapOutArr = coMapOutputLst.toArray(coMapOutArr);
+						bpcMap.setMap_outputs(coMapOutArr);
 					}
-					// Convert the CollatorMapInput List to CollatorMapInput[]
-					CollatorMapInput[] coMapInArr = new CollatorMapInput[coMapInputLst.size()];
-					coMapInArr = coMapInputLst.toArray(coMapInArr);
-					bpcMap.setMap_inputs(coMapInArr);
-					
-					// Get the CollatorMapOutput[] from CollatorMap from the Cdump file
-					CollatorMapOutput[] coMapOut = coprops.getCollator_map().getMap_outputs();
-					ArrayList<CollatorMapOutput> coMapOutLst = new ArrayList<CollatorMapOutput>(Arrays.asList(coMapOut));
-					
-					// Iterate over CollatorMapOutput List of Cdump File
-					for (CollatorMapOutput cmo : coMapOutLst) {
-						
-						CollatorOutputField coOutField = new CollatorOutputField();
-						CollatorMapOutput coMapOutput = new CollatorMapOutput();
-						
-						// set the all values into CollatorOutputField of BluePrint File
-						coOutField.setParameter_name(cmo.getOutput_field().getParameter_name());
-						coOutField.setParameter_tag(cmo.getOutput_field().getParameter_tag());
-						coOutField.setParameter_type(cmo.getOutput_field().getParameter_type());
-						
-						coMapOutput.setOutput_field(coOutField);
-						coMapOutputLst.add(coMapOutput);
-					}
-					// Convert the CollatorMapOutput List to CollatorMapOutput[]
-					CollatorMapOutput[] coMapOutArr = new CollatorMapOutput[coMapOutputLst.size()];
-					coMapOutArr = coMapOutputLst.toArray(coMapOutArr);
-					bpcMap.setMap_outputs(coMapOutArr);
-					
 				}
-
 			}
-
 		}
 		
 		return bpcMap;
 	}
 
-	private BPSplitterMap getParameterBasedSplitterDetails(Nodes n) {
+	private BPSplitterMap getSplitterDetails(Nodes n) {
 		Property[] prop = n.getProperties();
 		ArrayList<Property> propsList = new ArrayList<Property>(Arrays.asList(prop));
 		String splitter_type = null;
@@ -1812,49 +1782,55 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					bpsMap.setInput_message_signature(input_message_signature);
 					
 					// Get the SplitterMapInput[] from SplitterMap from the Cdump file
-					SplitterMapInput[] spMapIn = splprops.getSplitter_map().getMap_inputs();
-					// Convert SplitterMapInput[] to List
-					ArrayList<SplitterMapInput> spMapInLst = new ArrayList<SplitterMapInput>(Arrays.asList(spMapIn));
-					// Iterate over the SplitterMapInput List of the Cdump file
-					for (SplitterMapInput smi : spMapInLst) {
-						SplitterInputField spInField = new SplitterInputField();
-						SplitterMapInput spMapInput = new SplitterMapInput();
-						// set the all values into SplitterInputField of BluePrint File
-						spInField.setParameter_name(smi.getInput_field().getParameter_name());
-						spInField.setParameter_tag(smi.getInput_field().getParameter_tag());
-						spInField.setParameter_type(smi.getInput_field().getParameter_type());
-						spMapInput.setInput_field(spInField);
-						spMapInputLst.add(spMapInput);
+					// Check if the splitter_type is Param based then mapInputs and mapOutputs should be populated, else not 
+					if(splitter_type.equals(props.getDefaultSplitterType())){
+						bpsMap.setMap_inputs(null);
+						bpsMap.setMap_outputs(null);
+					}else {
+						SplitterMapInput[] spMapIn = splprops.getSplitter_map().getMap_inputs();
+						// Convert SplitterMapInput[] to List
+						ArrayList<SplitterMapInput> spMapInLst = new ArrayList<SplitterMapInput>(Arrays.asList(spMapIn));
+						// Iterate over the SplitterMapInput List of the Cdump file
+						for (SplitterMapInput smi : spMapInLst) {
+							SplitterInputField spInField = new SplitterInputField();
+							SplitterMapInput spMapInput = new SplitterMapInput();
+							// set the all values into SplitterInputField of BluePrint File
+							spInField.setParameter_name(smi.getInput_field().getParameter_name());
+							spInField.setParameter_tag(smi.getInput_field().getParameter_tag());
+							spInField.setParameter_type(smi.getInput_field().getParameter_type());
+							spMapInput.setInput_field(spInField);
+							spMapInputLst.add(spMapInput);
+						}
+						// Convert the SplitterMapInput List to SplitterMapInput[]
+						SplitterMapInput[] spMapInArr = new SplitterMapInput[spMapInputLst.size()];
+						spMapInArr = spMapInputLst.toArray(spMapInArr);
+						bpsMap.setMap_inputs(spMapInArr);
+						
+						// Get the SplitterMapOutput[] from SplitterMap from the Cdump file
+						SplitterMapOutput[] spMapOut = splprops.getSplitter_map().getMap_outputs();
+						ArrayList<SplitterMapOutput> spMapOutLst = new ArrayList<SplitterMapOutput>(Arrays.asList(spMapOut));
+						
+						// Iterate over SplitterMapOutput of Cdump File
+						for (SplitterMapOutput smo : spMapOutLst) {
+							
+							SplitterOutputField spOutField = new SplitterOutputField();
+							SplitterMapOutput spMapOutput = new SplitterMapOutput();
+							
+							spOutField.setParameter_name(smo.getOutput_field().getParameter_name());
+							spOutField.setParameter_tag(smo.getOutput_field().getParameter_tag());
+							spOutField.setParameter_type(smo.getOutput_field().getParameter_type());
+							spOutField.setTarget_name(smo.getOutput_field().getTarget_name());
+							spOutField.setError_indicator(smo.getOutput_field().getError_indicator());
+							spOutField.setMapped_to_field(smo.getOutput_field().getMapped_to_field());
+							
+							spMapOutput.setOutput_field(spOutField);
+							spMapOutputLst.add(spMapOutput);
+						}
+						// Convert the SplitterMapOutput List to SplitterMapOutput[]
+						SplitterMapOutput[] spMapOutArr = new SplitterMapOutput[spMapOutputLst.size()];
+						spMapOutArr = spMapOutputLst.toArray(spMapOutArr);
+						bpsMap.setMap_outputs(spMapOutArr);
 					}
-					// Convert the SplitterMapInput List to SplitterMapInput[]
-					SplitterMapInput[] spMapInArr = new SplitterMapInput[spMapInputLst.size()];
-					spMapInArr = spMapInputLst.toArray(spMapInArr);
-					bpsMap.setMap_inputs(spMapInArr);
-					
-					// Get the SplitterMapOutput[] from SplitterMap from the Cdump file
-					SplitterMapOutput[] spMapOut = splprops.getSplitter_map().getMap_outputs();
-					ArrayList<SplitterMapOutput> spMapOutLst = new ArrayList<SplitterMapOutput>(Arrays.asList(spMapOut));
-					
-					// Iterate over SplitterMapOutput of Cdump File
-					for (SplitterMapOutput smo : spMapOutLst) {
-						
-						SplitterOutputField spOutField = new SplitterOutputField();
-						SplitterMapOutput spMapOutput = new SplitterMapOutput();
-						
-						spOutField.setParameter_name(smo.getOutput_field().getParameter_name());
-						spOutField.setParameter_tag(smo.getOutput_field().getParameter_tag());
-						spOutField.setParameter_type(smo.getOutput_field().getParameter_type());
-						spOutField.setTarget_name(smo.getOutput_field().getTarget_name());
-						spOutField.setError_indicator(smo.getOutput_field().getError_indicator());
-						spOutField.setMapped_to_field(smo.getOutput_field().getMapped_to_field());
-						
-						spMapOutput.setOutput_field(spOutField);
-						spMapOutputLst.add(spMapOutput);
-					}
-					// Convert the SplitterMapOutput List to SplitterMapOutput[]
-					SplitterMapOutput[] spMapOutArr = new SplitterMapOutput[spMapOutputLst.size()];
-					spMapOutArr = spMapOutputLst.toArray(spMapOutArr);
-					bpsMap.setMap_outputs(spMapOutArr);
 				}
 			}
 		}
@@ -1994,12 +1970,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		if(null != nodeId && nodeId.trim() != ""){
 			for(Relations r : requirements) {
 				if(nodeId.equals(r.getSourceNodeId())){
-					result = r.getSourceNodeRequirement().replace("+", "%PLUS%");
-					result = result.split("%PLUS%")[0];
+					result = r.getSourceNodeRequirement().replace("+", OPERATION_EXTRACTOR);
+					result = result.split(OPERATION_EXTRACTOR)[0];
 					break;
 				} else if(nodeId.equals(r.getTargetNodeId())){
-					result = r.getTargetNodeCapability().replace("+", "%PLUS%");
-					result = result.split("%PLUS%")[0];
+					result = r.getTargetNodeCapability().replace("+", OPERATION_EXTRACTOR);
+					result = result.split(OPERATION_EXTRACTOR)[0];
 					break;
 				}
 			}
@@ -2068,8 +2044,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				connectedTo = new Container();
 				connectedTo.setContainer_name(cr.getTargetNodeName());
 				bos = new BaseOperationSignature();
-				operation = cr.getTargetNodeCapability().replace("+", "%PLUS%");
-				operation = operation.split("%PLUS%")[0];
+				operation = cr.getTargetNodeCapability().replace("+", OPERATION_EXTRACTOR);
+				operation = operation.split(OPERATION_EXTRACTOR)[0];
 				bos.setOperation_name(operation);
 				connectedTo.setOperation_signature(bos);
 				connectedToList.add(connectedTo);
@@ -2136,19 +2112,19 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			targetNodeId.add(rlns.getTargetNodeId());
 		}
 		
-		if (position.equals("first")) {
+		if (position.equals(FIRST_NODE_POSITION)) {
 			sourceNodeId.removeAll(targetNodeId);
 		} else {
 			targetNodeId.removeAll(sourceNodeId);
 		}
 		
 		for (Relations rltn : relationsList) {
-			if (position.equals("first")) {
+			if (position.equals(FIRST_NODE_POSITION)) {
 				if (sourceNodeId.contains(rltn.getSourceNodeId())) {
 					node = getNodeForId(nodes, rltn.getSourceNodeId());
 					nodeNames.add(node.getName());
 				}
-			} else if (position.equals("last")) {
+			} else if (position.equals(LAST_NODE_POSITION)) {
 				if (targetNodeId.contains(rltn.getTargetNodeId())) {
 					node = getNodeForId(nodes, rltn.getTargetNodeId());
 					nodeNames.add(node.getName());
@@ -2167,18 +2143,18 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			targetNodeId.add(rlns.getTargetNodeId());
 		}
 		
-		if (position.equals("first")) {
+		if (position.equals(FIRST_NODE_POSITION)) {
 			sourceNodeId.removeAll(targetNodeId);
 		} else {
 			targetNodeId.removeAll(sourceNodeId);
 		}
 		
 		for (Relations rltn : relationsList) {
-			if (position.equals("first")) {
+			if (position.equals(FIRST_NODE_POSITION)) {
 				if (sourceNodeId.contains(rltn.getSourceNodeId())) {
 					nodeId = rltn.getSourceNodeId();
 				}
-			} else if (position.equals("last")) {
+			} else if (position.equals(LAST_NODE_POSITION)) {
 				if (targetNodeId.contains(rltn.getTargetNodeId())) {
 					nodeId = rltn.getTargetNodeId();
 				}

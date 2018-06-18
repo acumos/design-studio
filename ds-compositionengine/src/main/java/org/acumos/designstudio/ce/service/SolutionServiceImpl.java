@@ -1208,7 +1208,7 @@ public class SolutionServiceImpl implements ISolutionService {
 			nodesList = cdump.getNodes();
 
 			// update relations list, if link is created b/w 2 models
-			if (null == property || (null != property && null == property.getData_map() && null == property.getSplitter_map())) {
+			if (null == property || (null != property && null == property.getData_map())) {
 				updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName, targetNodeId,
 						sourceNodeRequirement, targetNodeCapabilityName, cdump);
 				addedLink = true;
@@ -1419,9 +1419,7 @@ public class SolutionServiceImpl implements ISolutionService {
 											logger.debug(EELFLoggerDelegator.debugLogger, " If the targetNodeId List size is more than one means collator contains more than one inputs.");
 											CollatorMapInput[] cmInput = node.getProperties()[0].getCollator_map()
 													.getMap_inputs();
-
 											List<CollatorMapInput> cim = new LinkedList<>(Arrays.asList(cmInput));
-
 											Iterator<CollatorMapInput> cmiItr = cim.iterator();
 											CollatorMapInput collatorMapInput = null;
 											while (cmiItr.hasNext()) {
