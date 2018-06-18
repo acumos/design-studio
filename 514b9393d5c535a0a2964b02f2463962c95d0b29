@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a1dc470_23e516ca",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/Properties.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-18T12:24:49Z",
+      "side": 1,
+      "message": "Why is this still here since you now have getCollaterType and setCollatorType methods?",
+      "range": {
+        "startLine": 159,
+        "startChar": 15,
+        "endLine": 159,
+        "endChar": 40
+      },
+      "revId": "514b9393d5c535a0a2964b02f2463962c95d0b29",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6ebce4d_dc9a9bce",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/DSResult.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-18T12:24:49Z",
+      "side": 1,
+      "message": "Thank you for renaming this, I think a more specific class name is less prone to cause confusion.  Please add a comment \"Design Studio Back-End Result\" or something like that.",
+      "range": {
+        "startLine": 26,
+        "startChar": 13,
+        "endLine": 26,
+        "endChar": 21
+      },
+      "revId": "514b9393d5c535a0a2964b02f2463962c95d0b29",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eaec8b62_184f2a74",
+        "filename": "ds-compositionengine/src/main/resources/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-18T12:24:49Z",
+      "side": 1,
+      "message": "These items are databroker?  I don\u0027t think so\n\nPreviously I commented about having the tag and the value being almost the same \"array based \u003d array-based\".  Can this be refactored so you have something like \"CollaterTypeDefault \u003d Array\" ?",
+      "revId": "514b9393d5c535a0a2964b02f2463962c95d0b29",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
