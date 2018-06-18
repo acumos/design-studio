@@ -23,7 +23,7 @@ package org.acumos.designstudio.ce.vo;
 
 import java.io.Serializable;
 
-public class Result implements Serializable {
+public class DSResult implements Serializable {
 
 	private static final long serialVersionUID = -4449612967782242519L;
 	
