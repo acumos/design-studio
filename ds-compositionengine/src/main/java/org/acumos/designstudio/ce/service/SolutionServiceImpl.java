@@ -1208,7 +1208,7 @@ public class SolutionServiceImpl implements ISolutionService {
 			nodesList = cdump.getNodes();
 
 			// update relations list, if link is created b/w 2 models
-			if (null == property || (null != property && null == property.getData_map() && null == property.getSplitter_map())) {
+			if (null == property || (null != property && null == property.getData_map())) {
 				updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName, targetNodeId,
 						sourceNodeRequirement, targetNodeCapabilityName, cdump);
 				addedLink = true;
@@ -1372,13 +1372,13 @@ public class SolutionServiceImpl implements ISolutionService {
 										}
 										// Collator map Output which have only one output link
 										logger.debug(EELFLoggerDelegator.debugLogger, " Collator map Output which have only one output link ");
-									} else if (props.getArrayBasedCollatorType().equals(node.getType().getName())) {
+									} else if (props.getDefaultCollatorType().equals(node.getType().getName())) {
 										node.getProperties()[0].getCollator_map()
 												.setMap_outputs(new CollatorMapOutput[0]);
 
 										// Splitter Map Output which may have single or multiple link(s)
 										
-									} else if (props.getCopyBasedSplitterType().equals(node.getType().getName())) {
+									} else if (props.getDefaultSplitterType().equals(node.getType().getName())) {
 										logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
 										splitterLink(linkId, relationsList, node);
 										logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : End ");
@@ -1390,7 +1390,7 @@ public class SolutionServiceImpl implements ISolutionService {
 									logger.debug(EELFLoggerDelegator.debugLogger, " For all NodeTypes input is targetNodeId which is same as nodeId in Nodes");
 									if (props.getGdmType().equals(node.getType().getName())) {
 										node.getProperties()[0].getData_map().setMap_inputs(new MapInputs[0]);
-									} else if (props.getCopyBasedSplitterType().equals(node.getType().getName())) {
+									} else if (props.getDefaultSplitterType().equals(node.getType().getName())) {
 										node.getProperties()[0].getSplitter_map()
 												.setMap_inputs(new SplitterMapInput[0]);
 									} else {
@@ -1401,7 +1401,7 @@ public class SolutionServiceImpl implements ISolutionService {
 												source = rel.getSourceNodeId();
 											}
 											if (rel.getTargetNodeId().equals(node.getNodeId())
-													&& node.getType().getName().equals(props.getArrayBasedCollatorType())) {
+													&& node.getType().getName().equals(props.getDefaultCollatorType())) {
 												targetNodeList.add(rel.getTargetNodeId());
 											}
 										}
@@ -1409,7 +1409,7 @@ public class SolutionServiceImpl implements ISolutionService {
 										// and need to delete the entire mapInputs and Source table details
 										if (targetNodeList.size() == 0) {
 											logger.debug(EELFLoggerDelegator.debugLogger, " If the targetNodeId List size is having only one means collator contains one input.");
-											if (props.getArrayBasedCollatorType().equals(node.getType().getName())) {
+											if (props.getDefaultCollatorType().equals(node.getType().getName())) {
 												node.getProperties()[0].getCollator_map()
 														.setMap_inputs(new CollatorMapInput[0]);
 											}
@@ -1419,9 +1419,7 @@ public class SolutionServiceImpl implements ISolutionService {
 											logger.debug(EELFLoggerDelegator.debugLogger, " If the targetNodeId List size is more than one means collator contains more than one inputs.");
 											CollatorMapInput[] cmInput = node.getProperties()[0].getCollator_map()
 													.getMap_inputs();
-
 											List<CollatorMapInput> cim = new LinkedList<>(Arrays.asList(cmInput));
-
 											Iterator<CollatorMapInput> cmiItr = cim.iterator();
 											CollatorMapInput collatorMapInput = null;
 											while (cmiItr.hasNext()) {
@@ -1464,14 +1462,14 @@ public class SolutionServiceImpl implements ISolutionService {
 			if(rel.getLinkId().equals(linkId)){
 				target = rel.getTargetNodeId();
 			}
-			if(rel.getSourceNodeId().equals(node.getNodeId()) && node.getType().getName().equals(props.getCopyBasedSplitterType())){
+			if(rel.getSourceNodeId().equals(node.getNodeId()) && node.getType().getName().equals(props.getDefaultSplitterType())){
 				sourceNodeList.add(rel.getSourceNodeId());
 			}
 		}
 		// If the sourceNodeId List size is having only one means splitter contains one output
 		// and need to delete the entire mapOutput and target table details
 		if(sourceNodeList.size() == 0){
-			if(props.getCopyBasedSplitterType().equals(node.getType().getName())){
+			if(props.getDefaultSplitterType().equals(node.getType().getName())){
 				node.getProperties()[0].getSplitter_map().setMap_outputs(new SplitterMapOutput[0]);
 			}
 		// If the sourceNodeId List size is more than one means splitter contains more than one output

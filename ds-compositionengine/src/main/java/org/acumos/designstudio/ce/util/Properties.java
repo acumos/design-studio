@@ -121,18 +121,17 @@ public class Properties implements Serializable {
 	@Value("${databrokerType}")
 	private String databrokerType;
 	
-	@Value("${arrayBasedCollatorType}")
-	private String arrayBasedCollatorType;
+	@Value("${defaultCollatorType}")
+	private String defaultCollatorType;
 	
-	@Value("${copyBasedSplitterType}")
-	private String copyBasedSplitterType;
+	@Value("${defaultSplitterType}")
+	private String defaultSplitterType;
 	
-	@Value("${parameterBasedCollatorType}")
-	private String parameterBasedCollatorType;
+	@Value("${splitterType}")
+	private String splitterType;
 	
-	@Value("${parameterBasedSplitterType}")
-	private String parameterBasedSplitterType;
-	
+	@Value("${collatorType}")
+	private String collatorType;
 	
 	@Value("${modelImageArtifactType}")
 	private String modelImageArtifactType;
@@ -141,36 +140,37 @@ public class Properties implements Serializable {
 	private String protobuffFileExtention;
 	
 	
-	public String getParameterBasedCollatorType() {
-		return parameterBasedCollatorType;
+	public String getSplitterType() {
+		return splitterType;
 	}
 
-	public void setParameterBasedCollatorType(String parameterBasedCollatorType) {
-		this.parameterBasedCollatorType = parameterBasedCollatorType;
+	public void setSplitterType(String splitterType) {
+		this.splitterType = splitterType;
 	}
 
-	public String getParameterBasedSplitterType() {
-		return parameterBasedSplitterType;
+	public String getCollatorType() {
+		return collatorType;
 	}
 
-	public void setParameterBasedSplitterType(String parameterBasedSplitterType) {
-		this.parameterBasedSplitterType = parameterBasedSplitterType;
+	public void setCollatorType(String collatorType) {
+		this.collatorType = collatorType;
 	}
 
-	public String getArrayBasedCollatorType() {
-		return arrayBasedCollatorType;
+	
+	public String getDefaultCollatorType() {
+		return defaultCollatorType;
 	}
 
-	public void setArrayBasedCollatorType(String arrayBasedCollatorType) {
-		this.arrayBasedCollatorType = arrayBasedCollatorType;
+	public void setDefaultCollatorType(String defaultCollatorType) {
+		this.defaultCollatorType = defaultCollatorType;
 	}
 
-	public String getCopyBasedSplitterType() {
-		return copyBasedSplitterType;
+	public String getDefaultSplitterType() {
+		return defaultSplitterType;
 	}
 
-	public void setCopyBasedSplitterType(String copyBasedSplitterType) {
-		this.copyBasedSplitterType = copyBasedSplitterType;
+	public void setDefaultSplitterType(String defaultSplitterType) {
+		this.defaultSplitterType = defaultSplitterType;
 	}
 
 	/**
