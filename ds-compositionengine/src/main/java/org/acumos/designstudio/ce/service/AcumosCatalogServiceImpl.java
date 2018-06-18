@@ -266,6 +266,10 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 					}
 				}
 			}
+		} else {
+			throw new ServiceException(
+					"  Solution version details not found ", "501",
+					"Could not search the artifact URI for artifactType " + artifactType);
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, "readArtifact() : End");
 		return result;
