@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "00ff4dbf_fe6dbc0b",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/SolutionControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-19T15:33:50Z",
+      "side": 1,
+      "message": "You should have an assert at the end of your test to check it. Instead of removing it, correct it if it\u0027s failing.",
+      "revId": "fdb097efe1951d3b8c8efcdd31d834a91cdcb626",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
