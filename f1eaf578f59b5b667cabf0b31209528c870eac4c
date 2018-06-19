@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19fa70e7_8325295b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/ArtfactDetailsController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-19T09:28:26Z",
+      "side": 1,
+      "message": "you probably don\u0027t want to give back just this.  For example, the message for null-pointer exception is literally the null value.",
+      "revId": "f1eaf578f59b5b667cabf0b31209528c870eac4c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41e537fa_50a946a1",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/AcumosCatalogServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-19T09:28:26Z",
+      "side": 1,
+      "message": "Perhaps call the logger to report the error?",
+      "revId": "f1eaf578f59b5b667cabf0b31209528c870eac4c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64ba8a1_670886f6",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/AcumosCatalogServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-19T09:28:26Z",
+      "side": 1,
+      "message": "Why leading blanks?",
+      "range": {
+        "startLine": 271,
+        "startChar": 6,
+        "endLine": 271,
+        "endChar": 8
+      },
+      "revId": "f1eaf578f59b5b667cabf0b31209528c870eac4c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "580aa24e_298d8ceb",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/ArtfactDetailsControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-06-19T09:28:26Z",
+      "side": 1,
+      "message": "Need to assert more than not null.  What content does it have?",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 104,
+        "endChar": 32
+      },
+      "revId": "f1eaf578f59b5b667cabf0b31209528c870eac4c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
