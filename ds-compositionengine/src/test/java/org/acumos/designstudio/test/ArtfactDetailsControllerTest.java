@@ -26,6 +26,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.acumos.designstudio.ce.controller.ArtfactDetailsController;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.service.AcumosCatalogServiceImpl;
@@ -39,6 +41,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 
 public class ArtfactDetailsControllerTest {
@@ -94,20 +97,20 @@ public class ArtfactDetailsControllerTest {
 	@Test
 	public void fetchJsonTOSCA2() throws Exception {
 		
-		
+		HttpServletResponse response = new MockHttpServletResponse();
 		when(props.getArtifactType()).thenReturn("TG");	
 		when(acumosCatalogServiceImpl.readArtifact(userId, solutionId, version, "TG")).thenReturn("123");
-		Object result = artfactDetailsController.fetchJsonTOSCA(userId, solutionId, version);
+		Object result = artfactDetailsController.fetchJsonTOSCA(userId, solutionId, version, response);
 		assertNotNull((String)result);
 	}
 	
 	@Test
 	public void fetchJsonTOSCA3() throws Exception {
 		
-		
+		HttpServletResponse response = new MockHttpServletResponse();
 		when(props.getArtifactType()).thenReturn("TG");	
 		when(acumosCatalogServiceImpl.readArtifact(userId, solutionId, version, "TG")).thenReturn(null);
-		Object result = artfactDetailsController.fetchJsonTOSCA(userId, solutionId, version);
+		Object result = artfactDetailsController.fetchJsonTOSCA(userId, solutionId, version, response);
 		assertNotNull((String)result);
 		assertEquals("Failed to fetch the TOSCA details for specified solutionId and version", (String) result);
 	}
