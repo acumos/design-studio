@@ -1185,17 +1185,13 @@ public class SolutionServiceImpl implements ISolutionService {
 	@Override
 	public boolean addLink(String userId, String solutionId, String version, String linkName, String linkId,
 			String sourceNodeName, String sourceNodeId, String targetNodeName, String targetNodeId,
-			String sourceNodeRequirement, String targetNodeCapabilityName, String cid,
-			Property property) {
-
+			String sourceNodeRequirement, String targetNodeCapabilityName, String cid, Property property) {
 		logger.debug(EELFLoggerDelegator.debugLogger, " addLink() in SolutionServiceImpl : Begin ");
-
 		String id = "";
 		Gson gson = new Gson();
 		String nodeToUpdate = "";
 		boolean addedLink = false;
 		List<Nodes> nodesList = new ArrayList<>();
-
 		try {
 			if (null != cid && null == solutionId) {
 				id = cid;
@@ -1208,41 +1204,83 @@ public class SolutionServiceImpl implements ISolutionService {
 			nodesList = cdump.getNodes();
 
 			// update relations list, if link is created b/w 2 models
-			if (null == property || (null != property && null == property.getData_map())) {
+			if (null == property || (null != property && null == property.getData_map()
+					&& null == property.getCollator_map() && null == property.getSplitter_map())) {
 				updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName, targetNodeId,
 						sourceNodeRequirement, targetNodeCapabilityName, cdump);
 				addedLink = true;
-			} else { // set properties field of DM + update relations list, if link is b/w Model & Data Mapper
-
-				nodesList = cdump.getNodes();
+			}
+			if (null != property.getSplitter_map()) {
+				// Need to check for the SpliterMap
+				nodeToUpdate = targetNodeId;
+				if (nodesList != null && !nodesList.isEmpty()) {
+					for (Nodes node : nodesList) {
+						if (node.getNodeId().equals(nodeToUpdate)) {
+							Property[] propertyArray = new Property[1];
+							// Set SplitterMap Input Message Signature under Properties field in SplitterMap
+							if (null != property.getSplitter_map()
+									&& property.getSplitter_map().getInput_message_signature().length() != 0) {
+								SplitterMap sMap = new SplitterMap();
+								sMap.setInput_message_signature(
+										property.getSplitter_map().getInput_message_signature());
+								property.setSplitter_map(sMap);
+								propertyArray[0] = property;
+								node.setProperties(propertyArray);
+								updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
+										targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
+								addedLink = true;
+							}
+						}
+					}
+				}
+			}
+			if (null != property.getCollator_map()) {
+				nodeToUpdate = sourceNodeId;
+				if (nodesList != null && !nodesList.isEmpty()) {
+					for (Nodes node : nodesList) {
+						if (node.getNodeId().equals(nodeToUpdate)) {
+							Property[] propertyArray = new Property[1];
+							// Set CollatorMap Output Message Signature under Properties field in CollatorMap
+							if (null != property.getCollator_map()
+									&& property.getCollator_map().getOutput_message_signature().length() != 0) {
+								CollatorMap cmap = new CollatorMap();
+								cmap.setOutput_message_signature(
+										property.getCollator_map().getOutput_message_signature());
+								property.setCollator_map(cmap);
+								propertyArray[0] = property;
+								node.setProperties(propertyArray);
+								updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
+										targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
+								addedLink = true;
+							}
+						}
+					}
+				}
+			} else if (null != property.getData_map()) {
+				// set properties field of DM + update relations list, if link is b/w Model & Data Mapper
 				// Identify Data Mapper node to update
 				if (null != property.getData_map() && property.getData_map().getMap_inputs().length == 0) {
 					nodeToUpdate = sourceNodeId;
 				} else {
 					nodeToUpdate = targetNodeId;
 				}
-
 				// update the properties field of Data mapper node + update relations list with link details
 				if (nodesList != null && !nodesList.isEmpty()) {
 					for (Nodes node : nodesList) {
 						if (node.getNodeId().equals(nodeToUpdate)) {
-
 							Property[] propertyArr = node.getProperties();
-							logger.debug(EELFLoggerDelegator.debugLogger, "PropertyArray :  {} ", propertyArr.toString());
 							if (null == propertyArr || propertyArr.length == 0) {
-								logger.debug(EELFLoggerDelegator.debugLogger, "propertyarray  :  {} ", propertyArr.toString());
 								Property[] propertyArray = new Property[1];
 								propertyArray[0] = property;
 								node.setProperties(propertyArray);
-
 								updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
 										targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
 								addedLink = true;
 								break;
-
 							} else {
 								// set map_outputs of data_map under properties field of DM
-								if (null !=property.getData_map() && property.getData_map().getMap_inputs().length == 0) {
+								if (null != property.getData_map()
+										&& property.getData_map().getMap_inputs().length == 0) {
 
 									propertyArr[0].getData_map()
 											.setMap_outputs(property.getData_map().getMap_outputs());
@@ -1252,11 +1290,10 @@ public class SolutionServiceImpl implements ISolutionService {
 									addedLink = true;
 									break;
 								}
-
 								// set map_inputs of data_map under properties field of DM
-								if (null !=property.getData_map() && property.getData_map().getMap_outputs().length == 0) {
-									propertyArr[0].getData_map()
-											.setMap_inputs(property.getData_map().getMap_inputs());
+								if (null != property.getData_map()
+										&& property.getData_map().getMap_outputs().length == 0) {
+									propertyArr[0].getData_map().setMap_inputs(property.getData_map().getMap_inputs());
 									updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
 											targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
 									addedLink = true;
@@ -1355,7 +1392,6 @@ public class SolutionServiceImpl implements ISolutionService {
 							nodesList = cdump.getNodes();
 							// delete properties field from DM
 							for (Nodes node : nodesList) {
-								
 								// For all NodeTypes input is SourceNodeId which is same as nodeId in Nodes
 								logger.debug(EELFLoggerDelegator.debugLogger, "1. For all NodeTypes input is SourceNodeId which is same as nodeId in Nodes ");
 								if (node.getNodeId().equals(sourceNodeId) && node.getProperties().length != 0) {
@@ -1372,13 +1408,15 @@ public class SolutionServiceImpl implements ISolutionService {
 										}
 										// Collator map Output which have only one output link
 										logger.debug(EELFLoggerDelegator.debugLogger, " Collator map Output which have only one output link ");
-									} else if (props.getDefaultCollatorType().equals(node.getType().getName())) {
+									} else if (props.getCollatorType().equals(node.getType().getName())) {
+										logger.debug(EELFLoggerDelegator.debugLogger, "Output Message Signature set as empty for Collator");
+										node.getProperties()[0].getCollator_map().setOutput_message_signature("");
 										node.getProperties()[0].getCollator_map()
 												.setMap_outputs(new CollatorMapOutput[0]);
 
 										// Splitter Map Output which may have single or multiple link(s)
 										
-									} else if (props.getDefaultSplitterType().equals(node.getType().getName())) {
+									} else if (props.getSplitterType().equals(node.getType().getName())) {
 										logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
 										splitterLink(linkId, relationsList, node);
 										logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : End ");
@@ -1390,7 +1428,9 @@ public class SolutionServiceImpl implements ISolutionService {
 									logger.debug(EELFLoggerDelegator.debugLogger, " For all NodeTypes input is targetNodeId which is same as nodeId in Nodes");
 									if (props.getGdmType().equals(node.getType().getName())) {
 										node.getProperties()[0].getData_map().setMap_inputs(new MapInputs[0]);
-									} else if (props.getDefaultSplitterType().equals(node.getType().getName())) {
+									} else if (props.getSplitterType().equals(node.getType().getName())) {
+										logger.debug(EELFLoggerDelegator.debugLogger, "Input Message Signature set as empty for Splitter");
+										node.getProperties()[0].getSplitter_map().setInput_message_signature("");
 										node.getProperties()[0].getSplitter_map()
 												.setMap_inputs(new SplitterMapInput[0]);
 									} else {
@@ -1401,7 +1441,7 @@ public class SolutionServiceImpl implements ISolutionService {
 												source = rel.getSourceNodeId();
 											}
 											if (rel.getTargetNodeId().equals(node.getNodeId())
-													&& node.getType().getName().equals(props.getDefaultCollatorType())) {
+													&& node.getType().getName().equals(props.getCollatorType())) {
 												targetNodeList.add(rel.getTargetNodeId());
 											}
 										}
@@ -1409,7 +1449,7 @@ public class SolutionServiceImpl implements ISolutionService {
 										// and need to delete the entire mapInputs and Source table details
 										if (targetNodeList.size() == 0) {
 											logger.debug(EELFLoggerDelegator.debugLogger, " If the targetNodeId List size is having only one means collator contains one input.");
-											if (props.getDefaultCollatorType().equals(node.getType().getName())) {
+											if (props.getCollatorType().equals(node.getType().getName())) {
 												node.getProperties()[0].getCollator_map()
 														.setMap_inputs(new CollatorMapInput[0]);
 											}
@@ -1462,14 +1502,14 @@ public class SolutionServiceImpl implements ISolutionService {
 			if(rel.getLinkId().equals(linkId)){
 				target = rel.getTargetNodeId();
 			}
-			if(rel.getSourceNodeId().equals(node.getNodeId()) && node.getType().getName().equals(props.getDefaultSplitterType())){
+			if(rel.getSourceNodeId().equals(node.getNodeId()) && node.getType().getName().equals(props.getSplitterType())){
 				sourceNodeList.add(rel.getSourceNodeId());
 			}
 		}
 		// If the sourceNodeId List size is having only one means splitter contains one output
 		// and need to delete the entire mapOutput and target table details
 		if(sourceNodeList.size() == 0){
-			if(props.getDefaultSplitterType().equals(node.getType().getName())){
+			if(props.getSplitterType().equals(node.getType().getName())){
 				node.getProperties()[0].getSplitter_map().setMap_outputs(new SplitterMapOutput[0]);
 			}
 		// If the sourceNodeId List size is more than one means splitter contains more than one output
