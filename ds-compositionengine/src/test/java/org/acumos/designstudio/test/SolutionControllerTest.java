@@ -120,6 +120,8 @@ import org.springframework.core.io.ResourceLoader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
+import scala.annotation.meta.setter;
+
 /**
  *
  *
@@ -640,7 +642,7 @@ public class SolutionControllerTest {
 	public void linkShouldGetAddedBetweenOuputOfDMtoModel() throws Exception {
 		Property property = new Property();
 		DataMap data_map = new DataMap();
-		MapInputs[] map_inputs = new MapInputs[0];
+		
 		MapOutput[] map_outputs = new MapOutput[1];
 		MapOutput map_outputsObj = new MapOutput();
 		DataMapOutputField[] output_fields = new DataMapOutputField[1];
@@ -653,10 +655,27 @@ public class SolutionControllerTest {
 		map_outputsObj.setOutput_fields(output_fields);
 		map_outputsObj.setMessage_name("Classification");
 		map_outputs[0] = map_outputsObj;
+		
+		MapInputs[] map_inputs = new MapInputs[1];
+		MapInputs mi = new MapInputs();
+		mi.setMessage_name("MessageName");
+		DataMapInputField dmif = new DataMapInputField();
+		dmif.setMapped_to_field("1");
+		dmif.setMapped_to_message("DataFrame");
+		dmif.setName("DataMap");
+		dmif.setRole("repeated");
+		dmif.setTag("1");
+		dmif.setType("String");
+		
+		DataMapInputField[] dmiField = new DataMapInputField[1];
+		dmiField[0] = dmif;
+		mi.setInput_fields(dmiField);
+		map_inputs[0] = mi;
+		
 		data_map.setMap_inputs(map_inputs);
 		data_map.setMap_outputs(map_outputs);
 		property.setData_map(data_map);
-
+		
 		assertNotNull(property);
 		assertNotNull(data_map);
 		assertNotNull(output_fieldsObj);
@@ -668,7 +687,7 @@ public class SolutionControllerTest {
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		boolean result = solutionService.addLink(userId, null, null, "DM to Node2", "303", "DM", "3", "Model 2", "2",
 				"Req2", "Cap2", sessionId, property);
-		assertFalse(result);
+		assertTrue(result);
 		logger.debug(EELFLoggerDelegator.debugLogger, "true {} ", result);
 	}
 
