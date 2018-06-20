@@ -629,7 +629,7 @@ public class SolutionController {
 				map_inputsFlag = true;
 				map_outputsFlag = true;
 			} else {
-				// validat JSON structure if link is b/w model & Data mapper
+				// validate JSON structure if link is b/w model & Data mapper
 				parser.parse(gson.toJson(property));
 				// validate map_inputs
 				if (dMap.getMap_outputs().length == 0) {

@@ -1161,7 +1161,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		                		} else {
 		                			resultVo.setSuccess("false");
 									resultVo.setErrorDescription("Invalid Composite Solution : Splitter \""
-											+ node.getName() + "\" should not be connected to DS tool : \"" + sourceNode.getName() + "\"");
+											+ node.getName() + "\" should not be connected to DS tool : \"" + targetNode.getName() + "\"");
 		                		}
 		            		} else {
 		                		resultVo.setSuccess("false");
