@@ -1223,6 +1223,9 @@ public class SolutionServiceImpl implements ISolutionService {
 								SplitterMap sMap = new SplitterMap();
 								sMap.setInput_message_signature(
 										property.getSplitter_map().getInput_message_signature());
+								sMap.setSplitter_type(node.getProperties()[0].getSplitter_map().getSplitter_type());
+								sMap.setMap_inputs(node.getProperties()[0].getSplitter_map().getMap_inputs());
+								sMap.setMap_outputs(node.getProperties()[0].getSplitter_map().getMap_outputs());
 								property.setSplitter_map(sMap);
 								propertyArray[0] = property;
 								node.setProperties(propertyArray);
@@ -1246,6 +1249,9 @@ public class SolutionServiceImpl implements ISolutionService {
 								CollatorMap cmap = new CollatorMap();
 								cmap.setOutput_message_signature(
 										property.getCollator_map().getOutput_message_signature());
+								cmap.setCollator_type(node.getProperties()[0].getCollator_map().getCollator_type());
+								cmap.setMap_inputs(node.getProperties()[0].getCollator_map().getMap_inputs());
+								cmap.setMap_outputs(node.getProperties()[0].getCollator_map().getMap_outputs());
 								property.setCollator_map(cmap);
 								propertyArray[0] = property;
 								node.setProperties(propertyArray);
