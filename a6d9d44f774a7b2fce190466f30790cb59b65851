@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9656dd73_d5508586",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1231,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-06-20T17:17:12Z",
+      "side": 1,
+      "message": "user method updateSplitterMap()",
+      "range": {
+        "startLine": 1231,
+        "startChar": 8,
+        "endLine": 1231,
+        "endChar": 42
+      },
+      "revId": "a6d9d44f774a7b2fce190466f30790cb59b65851",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8d3626a_755c27d6",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1257,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-06-20T17:17:12Z",
+      "side": 1,
+      "message": "user method updateCollatorMap()",
+      "range": {
+        "startLine": 1257,
+        "startChar": 8,
+        "endLine": 1257,
+        "endChar": 41
+      },
+      "revId": "a6d9d44f774a7b2fce190466f30790cb59b65851",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
