@@ -941,7 +941,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				}
 			} else {
 				 resultVo.setSuccess("false");
-                 resultVo.setErrorDescription("Invalid Composite Solution : Composite Solution cannot be empty");
+                 resultVo.setErrorDescription("Invalid Composite Solution : Composite Solution should contain at least two models to connect");
 			}
 			 result = mapper.writeValueAsString(resultVo);
 		} catch (Exception e) {
