@@ -624,12 +624,25 @@ public class SolutionServiceImpl implements ISolutionService {
 		Property properties[] = nodesData.getProperties();
 		Property newProperty = null;
 		// If In case of properties Contains SplitterMap 
+		ArrayList<Property> propertyList = new ArrayList<Property>(Arrays.asList(properties));
 		if (null != properties && properties.length != 0) {
-			properties[0].setSplitter_map(splitterMap);
-			ArrayList<Property> propertyList = new ArrayList<Property>(Arrays.asList(properties));
-			ArrayList<Property> newPropertyList = new ArrayList<>(propertyList);
-			if(newPropertyList.size() >= 1){
-				properties = newPropertyList.toArray(new Property[newPropertyList.size()]);
+			for (Property p : propertyList) {
+				if (p.getSplitter_map() != null) {
+					SplitterMap sMap = p.getSplitter_map();
+					if (null != splitterMap.getSplitter_type()) {
+						sMap.setSplitter_type(splitterMap.getSplitter_type());
+					}
+					if (null != splitterMap.getMap_inputs()) {
+						sMap.setMap_inputs(splitterMap.getMap_inputs());
+					}
+					if (null != sMap.getMap_outputs()) {
+						sMap.setMap_outputs(splitterMap.getMap_outputs());
+					}
+					if(null != sMap.getInput_message_signature()){
+						sMap.setInput_message_signature(sMap.getInput_message_signature());
+					}
+					p.setSplitter_map(sMap);
+				} 
 			}
 			nodesData.setProperties(properties);
 		} else {  //if in case properties for the node is empty. 
@@ -646,13 +659,26 @@ public class SolutionServiceImpl implements ISolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : Begin");
 		Property properties[] = nodesData.getProperties();
 		Property newProperty = null;
+		ArrayList<Property> propertyList = new ArrayList<Property>(Arrays.asList(properties));
 		// If In case of properties Contains CollatorMap 
 		if (null != properties && properties.length != 0) {
-			properties[0].setCollator_map(collatorMap);
-			ArrayList<Property> propertyList = new ArrayList<Property>(Arrays.asList(properties));
-			ArrayList<Property> newPropertyList = new ArrayList<>(propertyList);
-			if(newPropertyList.size() >= 1){
-				properties = newPropertyList.toArray(new Property[newPropertyList.size()]);
+			for (Property p : propertyList) {
+				if (p.getCollator_map() != null) {
+					CollatorMap cMap = p.getCollator_map();
+					if (null != collatorMap.getCollator_type()) {
+						cMap.setCollator_type(collatorMap.getCollator_type());
+					}
+					if (null != collatorMap.getMap_inputs()) {
+						cMap.setMap_inputs(collatorMap.getMap_inputs());
+					}
+					if (null != collatorMap.getMap_outputs()) {
+						cMap.setMap_outputs(collatorMap.getMap_outputs());
+					}
+					if(null != collatorMap.getOutput_message_signature()){
+						cMap.setOutput_message_signature(collatorMap.getOutput_message_signature());
+					}
+					p.setCollator_map(cMap);
+				} 
 			}
 			nodesData.setProperties(properties);
 		} else {  //if in case properties for the node is empty. 
@@ -1211,25 +1237,15 @@ public class SolutionServiceImpl implements ISolutionService {
 				addedLink = true;
 			}
 			if (null != property.getSplitter_map()) {
-				// Need to check for the SpliterMap
 				nodeToUpdate = targetNodeId;
 				if (nodesList != null && !nodesList.isEmpty()) {
 					for (Nodes node : nodesList) {
 						if (node.getNodeId().equals(nodeToUpdate)) {
-							Property[] propertyArray = new Property[1];
-							// Set SplitterMap Input Message Signature under Properties field in SplitterMap
-							if (null != property.getSplitter_map()
-									&& property.getSplitter_map().getInput_message_signature().length() != 0) {
-								SplitterMap sMap = new SplitterMap();
-								sMap.setInput_message_signature(
-										property.getSplitter_map().getInput_message_signature());
-								property.setSplitter_map(sMap);
-								propertyArray[0] = property;
-								node.setProperties(propertyArray);
-								updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
-										targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
-								addedLink = true;
-							}
+							// update Splitter Input Message Signature
+							updateSplitterMap(property.getSplitter_map(), node);
+							updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
+									targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
+							addedLink = true;
 						}
 					}
 				}
@@ -1239,20 +1255,11 @@ public class SolutionServiceImpl implements ISolutionService {
 				if (nodesList != null && !nodesList.isEmpty()) {
 					for (Nodes node : nodesList) {
 						if (node.getNodeId().equals(nodeToUpdate)) {
-							Property[] propertyArray = new Property[1];
-							// Set CollatorMap Output Message Signature under Properties field in CollatorMap
-							if (null != property.getCollator_map()
-									&& property.getCollator_map().getOutput_message_signature().length() != 0) {
-								CollatorMap cmap = new CollatorMap();
-								cmap.setOutput_message_signature(
-										property.getCollator_map().getOutput_message_signature());
-								property.setCollator_map(cmap);
-								propertyArray[0] = property;
-								node.setProperties(propertyArray);
-								updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
-										targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
-								addedLink = true;
-							}
+							// update Collator Output Message Signature
+							updateCollatorMap(property.getCollator_map(), node);
+							updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
+									targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
+							addedLink = true;
 						}
 					}
 				}
