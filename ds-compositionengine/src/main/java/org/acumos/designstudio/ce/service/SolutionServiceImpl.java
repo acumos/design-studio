@@ -1436,49 +1436,52 @@ public class SolutionServiceImpl implements ISolutionService {
 									if (props.getGdmType().equals(node.getType().getName())) {
 										node.getProperties()[0].getData_map().setMap_inputs(new MapInputs[0]);
 									} else if (props.getSplitterType().equals(node.getType().getName())) {
-										logger.debug(EELFLoggerDelegator.debugLogger, "Input Message Signature set as empty for Splitter");
+										logger.debug(EELFLoggerDelegator.debugLogger,"Input Message Signature set as empty for Splitter");
 										node.getProperties()[0].getSplitter_map().setInput_message_signature("");
 										node.getProperties()[0].getSplitter_map()
 												.setMap_inputs(new SplitterMapInput[0]);
 									} else {
-										List<String> targetNodeList = new ArrayList<String>();
-										String source = null;
-										for (Relations rel : relationsList) {
-											if (rel.getLinkId().equals(linkId)) {
-												source = rel.getSourceNodeId();
-											}
-											if (rel.getTargetNodeId().equals(node.getNodeId())
-													&& node.getType().getName().equals(props.getCollatorType())) {
-												targetNodeList.add(rel.getTargetNodeId());
-											}
-										}
-										// If the targetNodeId List size is having only one means collator contains one input
-										// and need to delete the entire mapInputs and Source table details
-										if (targetNodeList.size() == 0) {
-											logger.debug(EELFLoggerDelegator.debugLogger, " If the targetNodeId List size is having only one means collator contains one input.");
-											if (props.getCollatorType().equals(node.getType().getName())) {
-												node.getProperties()[0].getCollator_map()
-														.setMap_inputs(new CollatorMapInput[0]);
-											}
-											// If the targetNodeId List size is more than one means collator contains more than one inputs
-											// and need to delete the only deleted link related mapping details mapInputs and Source table details
-										} else {
-											logger.debug(EELFLoggerDelegator.debugLogger, " If the targetNodeId List size is more than one means collator contains more than one inputs.");
-											CollatorMapInput[] cmInput = node.getProperties()[0].getCollator_map()
-													.getMap_inputs();
-											List<CollatorMapInput> cim = new LinkedList<>(Arrays.asList(cmInput));
-											Iterator<CollatorMapInput> cmiItr = cim.iterator();
-											CollatorMapInput collatorMapInput = null;
-											while (cmiItr.hasNext()) {
-												collatorMapInput = (CollatorMapInput) cmiItr.next();
-												if (source.equals(collatorMapInput.getInput_field().getSource_name())) {
-													cmiItr.remove();
-													break;
+										if (null != node.getProperties()[0].getCollator_map().getMap_inputs()) {
+											List<String> targetNodeList = new ArrayList<String>();
+											String source = null;
+											for (Relations rel : relationsList) {
+												if (rel.getLinkId().equals(linkId)) {
+													source = rel.getSourceNodeId();
+												}
+												if (rel.getTargetNodeId().equals(node.getNodeId())
+														&& node.getType().getName().equals(props.getCollatorType())) {
+													targetNodeList.add(rel.getTargetNodeId());
 												}
 											}
-											CollatorMapInput newCmInput[] = cim
-													.toArray(new CollatorMapInput[cim.size()]);
-											node.getProperties()[0].getCollator_map().setMap_inputs(newCmInput);
+											// If the targetNodeId List size is having only one means collator contains one input and need to delete
+											// the entire mapInputs and Source table details
+											if (targetNodeList.size() == 0) {
+												logger.debug(EELFLoggerDelegator.debugLogger," If the targetNodeId List size is having only one means collator contains one input.");
+												if (props.getCollatorType().equals(node.getType().getName())) {
+													node.getProperties()[0].getCollator_map()
+															.setMap_inputs(new CollatorMapInput[0]);
+												}
+												// If the targetNodeId List size is more than one means collator contains more than one inputs and need to
+												// delete the only deleted link related mapping details mapInputs and Source table details
+											} else {
+												logger.debug(EELFLoggerDelegator.debugLogger," If the targetNodeId List size is more than one means collator contains more than one inputs.");
+												CollatorMapInput[] cmInput = node.getProperties()[0].getCollator_map()
+														.getMap_inputs();
+												List<CollatorMapInput> cim = new LinkedList<>(Arrays.asList(cmInput));
+												Iterator<CollatorMapInput> cmiItr = cim.iterator();
+												CollatorMapInput collatorMapInput = null;
+												while (cmiItr.hasNext()) {
+													collatorMapInput = (CollatorMapInput) cmiItr.next();
+													if (source.equals(
+															collatorMapInput.getInput_field().getSource_name())) {
+														cmiItr.remove();
+														break;
+													}
+												}
+												CollatorMapInput newCmInput[] = cim
+														.toArray(new CollatorMapInput[cim.size()]);
+												node.getProperties()[0].getCollator_map().setMap_inputs(newCmInput);
+											}
 										}
 									}
 								}
@@ -1505,39 +1508,42 @@ public class SolutionServiceImpl implements ISolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
 		List<String> sourceNodeList = new ArrayList<String>();
 		String target = null;
-		for(Relations rel :relationsList){
-			if(rel.getLinkId().equals(linkId)){
-				target = rel.getTargetNodeId();
-			}
-			if(rel.getSourceNodeId().equals(node.getNodeId()) && node.getType().getName().equals(props.getSplitterType())){
-				sourceNodeList.add(rel.getSourceNodeId());
-			}
-		}
-		// If the sourceNodeId List size is having only one means splitter contains one output
-		// and need to delete the entire mapOutput and target table details
-		if(sourceNodeList.size() == 0){
-			if(props.getSplitterType().equals(node.getType().getName())){
-				node.getProperties()[0].getSplitter_map().setMap_outputs(new SplitterMapOutput[0]);
-			}
-		// If the sourceNodeId List size is more than one means splitter contains more than one output
-		// and need to delete the only, deleted link related mapping details mapOutput and target table details
-		}else {
-			SplitterMapOutput[] spOutput = node.getProperties()[0].getSplitter_map().getMap_outputs();
-			
-			List<SplitterMapOutput> spMapOut = new LinkedList<>(Arrays.asList(spOutput));
-			
-			Iterator<SplitterMapOutput> spMapOutItr = spMapOut.iterator();
-			SplitterMapOutput splitterMapOutput = null;
-			while (spMapOutItr.hasNext()) {
-				splitterMapOutput = (SplitterMapOutput) spMapOutItr.next();
-				if (target.equals(splitterMapOutput.getOutput_field().getTarget_name())) {
-					spMapOutItr.remove();
-					break;
+		if (null != node.getProperties()[0].getSplitter_map().getMap_outputs()) {
+			for (Relations rel : relationsList) {
+				if (rel.getLinkId().equals(linkId)) {
+					target = rel.getTargetNodeId();
+				}
+				if (rel.getSourceNodeId().equals(node.getNodeId())
+						&& node.getType().getName().equals(props.getSplitterType())) {
+					sourceNodeList.add(rel.getSourceNodeId());
 				}
 			}
-			SplitterMapOutput newSplOut[] = spMapOut.toArray(new SplitterMapOutput[spMapOut.size()]);
-			node.getProperties()[0].getSplitter_map().setMap_outputs(newSplOut);
-			logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
+			// If the sourceNodeId List size is having only one means splitter contains one output
+			// and need to delete the entire mapOutput and target table details
+			if (sourceNodeList.size() == 0) {
+				if (props.getSplitterType().equals(node.getType().getName())) {
+					node.getProperties()[0].getSplitter_map().setMap_outputs(new SplitterMapOutput[0]);
+				}
+				// If the sourceNodeId List size is more than one means splitter  contains more than one output
+				// and need to delete the only, deleted link related mapping details mapOutput and target table details
+			} else {
+				SplitterMapOutput[] spOutput = node.getProperties()[0].getSplitter_map().getMap_outputs();
+
+				List<SplitterMapOutput> spMapOut = new LinkedList<>(Arrays.asList(spOutput));
+
+				Iterator<SplitterMapOutput> spMapOutItr = spMapOut.iterator();
+				SplitterMapOutput splitterMapOutput = null;
+				while (spMapOutItr.hasNext()) {
+					splitterMapOutput = (SplitterMapOutput) spMapOutItr.next();
+					if (target.equals(splitterMapOutput.getOutput_field().getTarget_name())) {
+						spMapOutItr.remove();
+						break;
+					}
+				}
+				SplitterMapOutput newSplOut[] = spMapOut.toArray(new SplitterMapOutput[spMapOut.size()]);
+				node.getProperties()[0].getSplitter_map().setMap_outputs(newSplOut);
+				logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
+			}
 		}
 	}
 
