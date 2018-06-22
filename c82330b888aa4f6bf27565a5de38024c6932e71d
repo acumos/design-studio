@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ec801b4_34474a0d",
+        "filename": "INFO.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 94
+      },
+      "writtenOn": "2018-06-22T17:24:02Z",
+      "side": 1,
+      "message": "Kazi Farooqui (ATT) is the acting PTL. Should his name be listed here just so there is a contact?\nhttps://wiki.acumos.org/display/TSC/PTL+Nominations",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 16
+      },
+      "revId": "c82330b888aa4f6bf27565a5de38024c6932e71d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eff1af9e_f52f663c",
+        "filename": "INFO.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 94
+      },
+      "writtenOn": "2018-06-22T17:24:02Z",
+      "side": 1,
+      "message": "I\u0027m seeing #releng in a lot of these INFO files - perhaps #acumos would be better for the repos/projects that don\u0027t have an IRC channel set up?",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 22
+      },
+      "revId": "c82330b888aa4f6bf27565a5de38024c6932e71d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
