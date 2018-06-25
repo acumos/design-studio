@@ -56,6 +56,7 @@ import org.acumos.designstudio.ce.vo.cdump.Ndata;
 import org.acumos.designstudio.ce.vo.cdump.Nodes;
 import org.acumos.designstudio.ce.vo.cdump.Property;
 import org.acumos.designstudio.ce.vo.cdump.Relations;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorInputField;
 import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMap;
 import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapInput;
 import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapOutput;
@@ -71,6 +72,7 @@ import org.acumos.designstudio.ce.vo.cdump.datamapper.MapOutput;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMap;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapInput;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapOutput;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterOutputField;
 import org.acumos.designstudio.ce.vo.protobuf.MessageBody;
 import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
 import org.acumos.designstudio.ce.vo.tgif.Call;
@@ -840,7 +842,8 @@ public class SolutionServiceImpl implements ISolutionService {
 	}
 
 	@Override
-	public boolean deleteNode(String userId, String solutionId, String version, String cid, String nodeId) throws AcumosException {
+	public boolean deleteNode(String userId, String solutionId, String version, String cid, String nodeId)
+			throws AcumosException {
 		logger.debug(EELFLoggerDelegator.debugLogger, " deleteNode() in SolutionServiceImpl : Begin ");
 		boolean deletedNode = false;
 		try {
@@ -867,40 +870,19 @@ public class SolutionServiceImpl implements ISolutionService {
 							Nodes node = nodeitr.next();
 							if (node.getNodeId().equals(nodeId)) {
 								deletedNode = true;
-								nodeitr.remove();	
+								nodeitr.remove();
 								break;
 							}
 						}
 						if (null != relationsList) {
 							for (Relations relations : relationsList) {
 								if (relations.getTargetNodeId().equals(nodeId)) {
-									String sourceNodeId = relations.getSourceNodeId();
-									for (Nodes no : nodesList) {
-										if (no.getNodeId().equals(sourceNodeId)) {
-											String nodeType = no.getType().getName();
-											if (props.getDatabrokerType().equals(nodeType)) {
-												Property[] propArr = no.getProperties();
-												ArrayList<Property> arrayList = new ArrayList<Property>(
-														Arrays.asList(propArr));
-												Iterator<Property> propertyItr = arrayList.iterator();
-												while (propertyItr.hasNext()) {
-													Property prop = propertyItr.next();
-													DBMapOutput[] dbMapOutputArr = prop.getData_broker_map()
-															.getMap_outputs();
-													for (int i = 0; i < dbMapOutputArr.length; i++) {
-														dbMapOutputArr[i].setOutput_field(null);
-													}
-													DBMapInput[] dbMapInputArr = prop.getData_broker_map()
-															.getMap_inputs();
-													for (DBMapInput dbMapIp : dbMapInputArr) {
-														DBInputField dbInField = dbMapIp.getInput_field();
-														dbInField.setChecked("NO");
-														dbInField.setMapped_to_field("");
-													}
-												}
-											} 
-										}
-									}
+									// delete the LinkId related TargetNodeId
+									deleteLinksTargetNode(nodeId, nodesList, relations);
+								}
+								if (relations.getSourceNodeId().equals(nodeId)) {
+									// delete the LinkId related SourceNodeId
+									deleteLinksSourceNode(nodeId, nodesList, relations);
 								}
 							}
 						}
@@ -921,12 +903,10 @@ public class SolutionServiceImpl implements ISolutionService {
 						DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
 					}
 				} catch (JsonParseException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, " JsonParseException in deleteNode() ",
-							e);
-					throw e; 
+					logger.error(EELFLoggerDelegator.errorLogger, " JsonParseException in deleteNode() ", e);
+					throw e;
 				} catch (JsonMappingException e) {
-					logger.error(EELFLoggerDelegator.errorLogger,
-							" JsonMappingException in deleteNode() ", e);
+					logger.error(EELFLoggerDelegator.errorLogger, " JsonMappingException in deleteNode() ", e);
 					throw e;
 				} catch (IOException e) {
 					logger.error(EELFLoggerDelegator.errorLogger, " IOException in deleteNode() ", e);
@@ -940,6 +920,116 @@ public class SolutionServiceImpl implements ISolutionService {
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, " deleteNode() in SolutionServiceImpl : Ends ");
 		return deletedNode;
+	}
+
+	private void deleteLinksTargetNode(String nodeId, List<Nodes> nodesList, Relations relations) {
+		String sourceNodeId = relations.getSourceNodeId();
+		for (Nodes no : nodesList) {
+			if (no.getNodeId().equals(sourceNodeId)) {
+				String nodeType = no.getType().getName();
+				// check if its of DataBroker or not
+				if (props.getDatabrokerType().equals(nodeType)) {
+					Property[] propArr = no.getProperties();
+					ArrayList<Property> arrayList = new ArrayList<Property>(Arrays.asList(propArr));
+					Iterator<Property> propertyItr = arrayList.iterator();
+					while (propertyItr.hasNext()) {
+						Property prop = propertyItr.next();
+						DBMapOutput[] dbMapOutputArr = prop.getData_broker_map().getMap_outputs();
+						for (int i = 0; i < dbMapOutputArr.length; i++) {
+							dbMapOutputArr[i].setOutput_field(null);
+						}
+						DBMapInput[] dbMapInputArr = prop.getData_broker_map().getMap_inputs();
+						for (DBMapInput dbMapIp : dbMapInputArr) {
+							DBInputField dbInField = dbMapIp.getInput_field();
+							dbInField.setChecked("NO");
+							dbInField.setMapped_to_field("");
+						}
+					}
+				}
+				// check if its of Collator(Array-based/Param-based) or not if
+				// yes need to delete the corresponding entries in the collator_map
+				else if (props.getCollatorType().equals(nodeType)) {
+					Property[] propArr = no.getProperties();
+					ArrayList<Property> arrayList = new ArrayList<Property>(Arrays.asList(propArr));
+					Iterator<Property> propertyItr = arrayList.iterator();
+					while (propertyItr.hasNext()) {
+						Property prop = propertyItr.next();
+						if (null != prop.getCollator_map().getMap_inputs()) {
+							CollatorMapInput[] cMapInArr = prop.getCollator_map().getMap_inputs();
+							for (int i = 0; i < cMapInArr.length; i++) {
+								if (cMapInArr[i].getInput_field().getSource_name().equals(nodeId)) {
+									cMapInArr[i].setInput_field(new CollatorInputField());
+								}
+
+							}
+						}
+					}
+				}
+				// check if its of Splitter(Copy-based/Param-based) or not if
+				// yes need to delete the corresponding entries in the splitter_map
+				else if (props.getSplitterType().equals(nodeType)) {
+					Property[] propArr = no.getProperties();
+					ArrayList<Property> arrayList = new ArrayList<Property>(Arrays.asList(propArr));
+					Iterator<Property> propertyItr = arrayList.iterator();
+					while (propertyItr.hasNext()) {
+						Property prop = propertyItr.next();
+						if (null != prop.getSplitter_map().getMap_outputs()) {
+							SplitterMapOutput[] sMapOutArr = prop.getSplitter_map().getMap_outputs();
+							for (int i = 0; i < sMapOutArr.length; i++) {
+								if (sMapOutArr[i].getOutput_field().getTarget_name().equals(nodeId)) {
+									sMapOutArr[i].setOutput_field(new SplitterOutputField());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void deleteLinksSourceNode(String nodeId, List<Nodes> nodesList, Relations relations) {
+		String targetNodeId = relations.getTargetNodeId();
+		for (Nodes no : nodesList) {
+			if (no.getNodeId().equals(targetNodeId)) {
+				String nodeType = no.getType().getName();
+				// check if its of Collator(Array-based/Param-based) or not if
+				// yes need to delete the corresponding entries in the collator_map
+				if (props.getCollatorType().equals(nodeType)) {
+					Property[] propArr = no.getProperties();
+					ArrayList<Property> arrayList = new ArrayList<Property>(Arrays.asList(propArr));
+					Iterator<Property> propertyItr = arrayList.iterator();
+					while (propertyItr.hasNext()) {
+						Property prop = propertyItr.next();
+						if (null != prop.getCollator_map().getMap_inputs()) {
+							CollatorMapInput[] cMapInArr = prop.getCollator_map().getMap_inputs();
+							for (int i = 0; i < cMapInArr.length; i++) {
+								if (cMapInArr[i].getInput_field().getSource_name().equals(nodeId)) {
+									cMapInArr[i].setInput_field(new CollatorInputField());
+								}
+							}
+						}
+					}
+				}
+				// check if its of Splitter(Copy-based/Param-based) or not if
+				// yes need to delete the corresponding entries in the splitter_map
+				else if (props.getSplitterType().equals(nodeType)) {
+					Property[] propArr = no.getProperties();
+					ArrayList<Property> arrayList = new ArrayList<Property>(Arrays.asList(propArr));
+					Iterator<Property> propertyItr = arrayList.iterator();
+					while (propertyItr.hasNext()) {
+						Property prop = propertyItr.next();
+						if (null != prop.getSplitter_map().getMap_outputs()) {
+							SplitterMapOutput[] sMapOutArr = prop.getSplitter_map().getMap_outputs();
+							for (int i = 0; i < sMapOutArr.length; i++) {
+								if (sMapOutArr[i].getOutput_field().getTarget_name().equals(nodeId)) {
+									sMapOutArr[i].setOutput_field(new SplitterOutputField());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	@Override
