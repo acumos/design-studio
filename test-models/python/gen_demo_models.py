@@ -25,6 +25,17 @@ import os, shutil
 from acumos.modeling import List, Model, NamedTuple
 from acumos.session import AcumosSession
 
+# Named Tuples
+
+class CatenateInput(NamedTuple):
+    '''Type representing an input to a string operation'''
+    s: str
+    d: float
+
+class CatenateOutput(NamedTuple):
+    '''Type representing an output from a string operation'''
+    joined: str
+
 class ComputeInput(NamedTuple):
     '''Type representing an input to a computation'''
     f1: float
@@ -40,6 +51,18 @@ class ComputeResultList(NamedTuple):
     '''Type representing a list of computation results'''
     l: List[ComputeResult]
 
+class ManipulateMessage(NamedTuple):
+    '''Type representing an input or output in a value manipulation'''
+    difference: float 
+    product: float
+    average: float
+
+class SquareMessage(NamedTuple):
+    '''Type representing an input or output in a computation'''
+    d: float
+
+# Methods
+
 def add(i: ComputeInput) -> ComputeResult:
     '''Returns a named tuple with the sum of the numeric arguments, and a revised string argument.'''
     return ComputeResult(i.f1 + i.f2, i.s + ' sum')
@@ -48,17 +71,37 @@ def average(i: ComputeInput) -> ComputeResult:
     '''Returns a named tuple with the mean of the numeric arguments, and a revised string argument.'''
     return ComputeResult((i.f1 + i.f2)/2.0, i.s + ' mean')
 
+def catenate(i: CatenateInput) -> CatenateOutput:
+    '''Stringify a double and concatenate it with the another string input'''
+    return CatenateOutput(i.s + str(i.d))
+
 def classify(dci: ComputeInput) -> ComputeInput:
     '''Passes thru a named tuple with two numeric values and one string value.'''
     return dci
+
+def ingest(i: ComputeInput) -> ComputeInput:
+    '''Returns its input.'''
+    return i
+
+def manipulate(i: ManipulateMessage) -> ManipulateMessage:
+    '''Returns its input.'''
+    return i
 
 def multiply(i: ComputeInput) -> ComputeResult:
     '''Returns a named tuple with the product of the numeric arguments, and a revised string argument.'''
     return ComputeResult(i.f1 * i.f2, i.s + ' product')
 
+def output(i: ManipulateMessage) -> ManipulateMessage:
+    '''Returns its input.'''
+    return i
+
 def predict(l : ComputeResultList) -> ComputeResultList:
     '''Passes thru a list of named tuple, each with one numeric value and one string value.'''
     return l
+
+def square(i: SquareMessage) -> SquareMessage:
+    '''Returns a named tuple with the square of the numeric argument.'''
+    return ComputeResult(i.d * i.d)
 
 def subtract(i: ComputeInput) -> ComputeResult:
     '''Returns a named tuple with the difference of the numeric arguments, and a revised string argument.'''
@@ -70,7 +113,7 @@ push='http://cognita-dev1-vm01-core.eastus.cloudapp.azure.com:8090/onboarding-ap
 auth='http://cognita-dev1-vm01-core.eastus.cloudapp.azure.com:8090/onboarding-app/v2/auth'
 session=AcumosSession(push_api=push, auth_api=auth)
 
-for f in add, average, classify, multiply, predict, subtract:
+for f in add, average, catenate, classify, ingest, manipulate, multiply, output, predict, square, subtract:
     d = { f.__name__: f }
     model = Model(**d)
     subdir = 'dump_' + f.__name__
