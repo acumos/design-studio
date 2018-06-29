@@ -31,9 +31,16 @@ public class SplitterOutputField implements Serializable {
 	private String parameter_tag;
 	private String parameter_name;
 	private String parameter_type;
+	private String parameter_role;
 	private String mapped_to_field;
 	private String error_indicator;
 	
+	public String getParameter_role() {
+		return parameter_role;
+	}
+	public void setParameter_role(String parameter_role) {
+		this.parameter_role = parameter_role;
+	}
 	public String getTarget_name() {
 		return target_name;
 	}

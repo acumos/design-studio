@@ -1717,6 +1717,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							coInField.setParameter_name(cmi.getInput_field().getParameter_name());
 							coInField.setParameter_tag(cmi.getInput_field().getParameter_tag());
 							coInField.setParameter_type(cmi.getInput_field().getParameter_type());
+							coInField.setParameter_role(cmi.getInput_field().getParameter_role());
 							coInField.setSource_name(cmi.getInput_field().getSource_name());
 							coInField.setMapped_to_field(cmi.getInput_field().getMapped_to_field());
 							coInField.setError_indicator(cmi.getInput_field().getError_indicator());
@@ -1743,6 +1744,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							coOutField.setParameter_name(cmo.getOutput_field().getParameter_name());
 							coOutField.setParameter_tag(cmo.getOutput_field().getParameter_tag());
 							coOutField.setParameter_type(cmo.getOutput_field().getParameter_type());
+							coOutField.setParameter_role(cmo.getOutput_field().getParameter_role());
 							
 							coMapOutput.setOutput_field(coOutField);
 							coMapOutputLst.add(coMapOutput);
@@ -1798,6 +1800,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							spInField.setParameter_name(smi.getInput_field().getParameter_name());
 							spInField.setParameter_tag(smi.getInput_field().getParameter_tag());
 							spInField.setParameter_type(smi.getInput_field().getParameter_type());
+							spInField.setParameter_role(smi.getInput_field().getParameter_role());
 							spMapInput.setInput_field(spInField);
 							spMapInputLst.add(spMapInput);
 						}
@@ -1819,6 +1822,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							spOutField.setParameter_name(smo.getOutput_field().getParameter_name());
 							spOutField.setParameter_tag(smo.getOutput_field().getParameter_tag());
 							spOutField.setParameter_type(smo.getOutput_field().getParameter_type());
+							spOutField.setParameter_role(smo.getOutput_field().getParameter_role());
 							spOutField.setTarget_name(smo.getOutput_field().getTarget_name());
 							spOutField.setError_indicator(smo.getOutput_field().getError_indicator());
 							spOutField.setMapped_to_field(smo.getOutput_field().getMapped_to_field());

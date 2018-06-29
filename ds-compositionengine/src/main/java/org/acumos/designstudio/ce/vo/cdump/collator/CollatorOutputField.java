@@ -29,7 +29,14 @@ public class CollatorOutputField implements Serializable {
 	private String parameter_tag;
 	private String parameter_name;
 	private String parameter_type;
+	private String parameter_role;
 	
+	public String getParameter_role() {
+		return parameter_role;
+	}
+	public void setParameter_role(String parameter_role) {
+		this.parameter_role = parameter_role;
+	}
 	public String getParameter_tag() {
 		return parameter_tag;
 	}
