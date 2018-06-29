@@ -57,6 +57,15 @@ class ManipulateMessage(NamedTuple):
     product: float
     average: float
 
+class ParmInput(NamedTuple):
+    '''Type representing an input to a simple math operation'''
+    f1: float
+    f2: float
+
+class ParmOutput(NamedTuple):
+    '''Type representing an output from a simple math operation'''
+    f: float
+
 class SquareMessage(NamedTuple):
     '''Type representing an input or output in a computation'''
     d: float
@@ -95,9 +104,25 @@ def output(i: ManipulateMessage) -> ManipulateMessage:
     '''Returns its input.'''
     return i
 
+def padd(l : ParmInput) -> ParmOutput:
+    '''Returns a named tuple with the sum of the numeric arguments'''
+    return ParmOutput(l.f1 + l.f2)
+
+def paverage(l : ParmInput) -> ParmOutput:
+    '''Returns a named tuple with the mean of the numeric arguments'''
+    return ParmOutput((l.f1 + l.f2) / 2.0)
+
+def pmultiply(i: ParmInput) -> ParmOutput:
+    '''Returns a named tuple with the product of the numeric arguments'''
+    return ParmOutput(i.f1 * i.f2)
+
 def predict(l : ComputeResultList) -> ComputeResultList:
     '''Passes thru a list of named tuple, each with one numeric value and one string value.'''
     return l
+
+def psubtract(i: ParmInput) -> ParmOutput:
+    '''Returns a named tuple with the difference of the numeric arguments'''
+    return ParmOutput(i.f1 - i.f2)
 
 def square(i: SquareMessage) -> SquareMessage:
     '''Returns a named tuple with the square of the numeric argument.'''
@@ -149,11 +174,31 @@ ci = ManipulateMessage(1.0, 2.0, 3.0)
 res = output(ci)
 assert(res.difference == ci.difference and res.product == ci.product and res.average == ci.average)
 
+print('Test padd')
+ci = ParmInput(1.0, 2.0)
+res = padd(ci)
+assert(res.f >= 3.0)
+
+print('Test paverage')
+ci = ParmInput(1.0, 2.0)
+res = paverage(ci)
+assert(res.f > 1.0 and res.f < 2.0)
+
+print('Test pmultiply')
+ci = ParmInput(1.0, 2.0)
+res = pmultiply(ci)
+assert(res.f >= 2.0)
+
 print('Test predict')
 cr = ComputeResult(1.0, "str")
 ci = ComputeResultList( [ cr ] )
 res = predict(ci)
 assert(res == ci)
+
+print('Test psubstract')
+ci = ParmInput(1.0, 2.0)
+res = psubtract(ci)
+assert(res.f < 1.0)
 
 print('Test square')
 ci = SquareMessage(2.0)
@@ -165,13 +210,18 @@ ci = ComputeInput(1.0, 2.0, "string")
 res = subtract(ci)
 assert(res.f < ci.f1 and res.f < ci.f2)
 
+print('Test psubtract')
+ci = ComputeInput(1.0, 2.0, "string")
+res = psubtract(ci)
+assert(res.f < ci.f1 and res.f < ci.f2)
+
 # Dump and on-board the methods as models
 # This relies on the user entering a password on the command line
 push='http://cognita-dev1-vm01-core.eastus.cloudapp.azure.com:8090/onboarding-app/v2/models'
 auth='http://cognita-dev1-vm01-core.eastus.cloudapp.azure.com:8090/onboarding-app/v2/auth'
 session=AcumosSession(push_api=push, auth_api=auth)
 
-for f in add, average, concatenate, classify, ingest, manipulate, multiply, output, predict, square, subtract:
+for f in add, average, concatenate, classify, ingest, manipulate, multiply, output, padd, paverage, pmultiply, predict, psubtract, square, subtract:
     d = { f.__name__: f }
     model = Model(**d)
     subdir = 'dump_' + f.__name__
