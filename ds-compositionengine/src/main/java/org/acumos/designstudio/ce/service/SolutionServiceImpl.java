@@ -637,11 +637,11 @@ public class SolutionServiceImpl implements ISolutionService {
 					if (null != splitterMap.getMap_inputs()) {
 						sMap.setMap_inputs(splitterMap.getMap_inputs());
 					}
-					if (null != sMap.getMap_outputs()) {
+					if (null != splitterMap.getMap_outputs()) {
 						sMap.setMap_outputs(splitterMap.getMap_outputs());
 					}
-					if(null != sMap.getInput_message_signature()){
-						sMap.setInput_message_signature(sMap.getInput_message_signature());
+					if(null != splitterMap.getInput_message_signature()){
+						sMap.setInput_message_signature(splitterMap.getInput_message_signature());
 					}
 					p.setSplitter_map(sMap);
 				} 
