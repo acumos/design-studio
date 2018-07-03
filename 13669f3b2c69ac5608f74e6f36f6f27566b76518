@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c1edd07_2b35c84b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1131,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-03T12:36:11Z",
+      "side": 1,
+      "message": "You may be surprised to learn that you can iterate over an array just like a list:\n\nfor (SplitterMapOutput item : mapOutput) {\n  // do work\n}\n\nNo need for the loop index variable, no need to increment it, etc.",
+      "range": {
+        "startLine": 1131,
+        "startChar": 10,
+        "endLine": 1131,
+        "endChar": 13
+      },
+      "revId": "13669f3b2c69ac5608f74e6f36f6f27566b76518",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
