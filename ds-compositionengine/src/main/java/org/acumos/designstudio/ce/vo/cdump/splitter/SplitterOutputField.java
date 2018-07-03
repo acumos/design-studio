@@ -28,6 +28,7 @@ public class SplitterOutputField implements Serializable {
 	private static final long serialVersionUID = -4275181023124297430L;
 	
 	private String target_name;
+	private String message_signature;
 	private String parameter_tag;
 	private String parameter_name;
 	private String parameter_type;
@@ -35,6 +36,13 @@ public class SplitterOutputField implements Serializable {
 	private String mapped_to_field;
 	private String error_indicator;
 	
+	
+	public String getMessage_signature() {
+		return message_signature;
+	}
+	public void setMessage_signature(String message_signature) {
+		this.message_signature = message_signature;
+	}
 	public String getParameter_role() {
 		return parameter_role;
 	}

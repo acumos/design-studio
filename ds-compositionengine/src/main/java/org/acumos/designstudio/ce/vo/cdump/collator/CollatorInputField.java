@@ -27,6 +27,7 @@ public class CollatorInputField implements Serializable {
 	private static final long serialVersionUID = 718850551686460066L;
 	
 	private String source_name;
+	private String message_signature;
 	private String parameter_name;
 	private String parameter_type;
 	private String parameter_tag;
@@ -35,6 +36,14 @@ public class CollatorInputField implements Serializable {
 	private String error_indicator;
 
 	
+	public String getMessage_signature() {
+		return message_signature;
+	}
+
+	public void setMessage_signature(String message_signature) {
+		this.message_signature = message_signature;
+	}
+
 	public String getParameter_role() {
 		return parameter_role;
 	}
