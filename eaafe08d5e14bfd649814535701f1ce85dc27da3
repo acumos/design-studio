@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16f9b2b9_1be07e32",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1131,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-03T12:01:25Z",
+      "side": 1,
+      "message": "Why convert to a list? you can iterate over the array just the same as a list",
+      "range": {
+        "startLine": 1131,
+        "startChar": 0,
+        "endLine": 1131,
+        "endChar": 66
+      },
+      "revId": "eaafe08d5e14bfd649814535701f1ce85dc27da3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "becbec9d_e7f9323d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-03T12:01:25Z",
+      "side": 1,
+      "message": "Again don\u0027t convert to a list.  Iterate over the array instead.",
+      "range": {
+        "startLine": 1205,
+        "startChar": 0,
+        "endLine": 1205,
+        "endChar": 66
+      },
+      "revId": "eaafe08d5e14bfd649814535701f1ce85dc27da3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b2b7b4d_b3a32879",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1759,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-03T12:01:25Z",
+      "side": 1,
+      "message": "this name is so very similar to coMapInLst that it\u0027s easy for a person to get confused.  Please make the names clearly distinct.",
+      "range": {
+        "startLine": 1759,
+        "startChar": 20,
+        "endLine": 1759,
+        "endChar": 33
+      },
+      "revId": "eaafe08d5e14bfd649814535701f1ce85dc27da3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8006b9b0_69e1157f",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1770,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-03T12:01:25Z",
+      "side": 1,
+      "message": "Here are again are two lists with nearly identical names coMapOutLst and coMapOutputLst, please make them less similar",
+      "range": {
+        "startLine": 1770,
+        "startChar": 36,
+        "endLine": 1770,
+        "endChar": 47
+      },
+      "revId": "eaafe08d5e14bfd649814535701f1ce85dc27da3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0e8d951_e5843c6a",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1804,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-03T12:01:25Z",
+      "side": 1,
+      "message": "see below",
+      "range": {
+        "startLine": 1804,
+        "startChar": 25,
+        "endLine": 1804,
+        "endChar": 38
+      },
+      "revId": "eaafe08d5e14bfd649814535701f1ce85dc27da3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4797eed2_0e710995",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1805,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-03T12:01:25Z",
+      "side": 1,
+      "message": "see below",
+      "range": {
+        "startLine": 1805,
+        "startChar": 26,
+        "endLine": 1805,
+        "endChar": 40
+      },
+      "revId": "eaafe08d5e14bfd649814535701f1ce85dc27da3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d62ad1a7_38220618",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1831,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-03T12:01:25Z",
+      "side": 1,
+      "message": "Same as above",
+      "range": {
+        "startLine": 1831,
+        "startChar": 35,
+        "endLine": 1831,
+        "endChar": 45
+      },
+      "revId": "eaafe08d5e14bfd649814535701f1ce85dc27da3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "464b19ea_eb631800",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1937,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-03T12:01:25Z",
+      "side": 1,
+      "message": "See comments above about name similarity",
+      "range": {
+        "startLine": 1937,
+        "startChar": 19,
+        "endLine": 1937,
+        "endChar": 32
+      },
+      "revId": "eaafe08d5e14bfd649814535701f1ce85dc27da3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
