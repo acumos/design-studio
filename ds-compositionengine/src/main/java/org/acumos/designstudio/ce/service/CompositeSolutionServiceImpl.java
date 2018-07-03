@@ -1126,7 +1126,18 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						resultVo.setSuccess("false");
 						resultVo.setErrorDescription("Invalid Composite Solution : Splitter \""
 								+ node.getName() + "\" should not be the Last Node");
-					} else {
+					}else if(null != node.getProperties()[0].getSplitter_map().getMap_outputs() && node.getProperties()[0].getSplitter_map().getMap_outputs().length != 0){
+						SplitterMapOutput mapOutput[] = node.getProperties()[0].getSplitter_map().getMap_outputs();
+						for(SplitterMapOutput smo : mapOutput){
+							String errorIndicator = smo.getOutput_field().getError_indicator();
+							if(errorIndicator.equals("false")){
+								resultVo.setSuccess("false");
+								resultVo.setErrorDescription("Invalid Composite Solution : Splitter \""
+										+ node.getName() + "\" Mapping Contains Error Indicator as False");
+								break;
+							}
+						}
+					}else {
 						// It should be target of only one link.
 						int connectedCnt = getTargetCountForNodeId(relationsList, nodeId);
 						Nodes sourceNode = null; 
@@ -1188,7 +1199,18 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						resultVo.setSuccess("false");
 						resultVo.setErrorDescription("Invalid Composite Solution : Collator \""
 								+ node.getName() + "\" should not be the Last Node");
-					} else {
+					}else if(null != node.getProperties()[0].getCollator_map().getMap_inputs() && node.getProperties()[0].getCollator_map().getMap_inputs().length != 0){
+						CollatorMapInput mapInput[] = node.getProperties()[0].getCollator_map().getMap_inputs();
+						for(CollatorMapInput cmi : mapInput){
+							String errorIndicator = cmi.getInput_field().getError_indicator();
+							if(errorIndicator.equals("false")){
+								resultVo.setSuccess("false");
+								resultVo.setErrorDescription("Invalid Composite Solution : Collator \""
+										+ node.getName() + "\" Mapping Contains Error Indicator as False");
+								break;
+							}
+						}
+					}else {
 						// It should be source of only one link.
 		        		int connectedCnt = getSourceCountForNodeId(relationsList, nodeId);
 		        		Nodes sourceNode = null; 
@@ -1684,8 +1706,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		
 		BPCollatorMap bpcMap = new BPCollatorMap();
 		
-		List<CollatorMapInput> coMapInputLst = new ArrayList<CollatorMapInput>();
-		List<CollatorMapOutput> coMapOutputLst = new ArrayList<CollatorMapOutput>();
+		List<CollatorMapInput> collatorMapInputLst = new ArrayList<CollatorMapInput>();
+		List<CollatorMapOutput> collatorMapOutputLst = new ArrayList<CollatorMapOutput>();
 		
 		// Iterate over the PropertyList of the Node from Cdump
 		if (null != propsList) {
@@ -1694,70 +1716,78 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					// Set all the values from Property List of cdump to Blueprint CollatorMap object
 					collator_type = coprops.getCollator_map().getCollator_type();
 					output_message_signature = coprops.getCollator_map().getOutput_message_signature();
-					
+
 					bpcMap.setCollator_type(collator_type);
 					bpcMap.setOutput_message_signature(output_message_signature);
-					
+
 					// Get the CollatorMapInput[] from CollatorMap from the Cdump file
-					// Check if the collator_type is Param based then mapInputs and mapOutputs should be populated, else not 
-					if(collator_type.equals(props.getDefaultCollatorType())){
+					// Check if the collator_type is Param based then mapInputs
+					// and mapOutputs should be populated, else not
+					if (collator_type.equals(props.getDefaultCollatorType())) {
 						bpcMap.setMap_inputs(null);
 						bpcMap.setMap_outputs(null);
-					}else {
-						CollatorMapInput[] coMapIn = coprops.getCollator_map().getMap_inputs();
-						// Convert CollatorMapInput[] to List
-						ArrayList<CollatorMapInput> coMapInLst = new ArrayList<CollatorMapInput>(Arrays.asList(coMapIn));
-						// Iterate over the CollatorMapInput List of the Cdump file
-						for (CollatorMapInput cmi : coMapInLst) {
-							
-							CollatorInputField coInField = new CollatorInputField();
-							CollatorMapInput coMapInput = new CollatorMapInput();
-							
-							// set the all values into CollatorInputField of BluePrint File
-							coInField.setParameter_name(cmi.getInput_field().getParameter_name());
-							coInField.setParameter_tag(cmi.getInput_field().getParameter_tag());
-							coInField.setParameter_type(cmi.getInput_field().getParameter_type());
-							coInField.setParameter_role(cmi.getInput_field().getParameter_role());
-							coInField.setSource_name(cmi.getInput_field().getSource_name());
-							coInField.setMapped_to_field(cmi.getInput_field().getMapped_to_field());
-							coInField.setError_indicator(cmi.getInput_field().getError_indicator());
-							
-							coMapInput.setInput_field(coInField);
-							coMapInputLst.add(coMapInput);
+					} else {
+						if (null != coprops.getCollator_map().getMap_inputs() && coprops.getCollator_map().getMap_inputs().length != 0) {
+							CollatorMapInput[] coMapIn = coprops.getCollator_map().getMap_inputs();
+							// Convert CollatorMapInput[] to List
+							ArrayList<CollatorMapInput> cmiLst = new ArrayList<CollatorMapInput>(
+									Arrays.asList(coMapIn));
+							// Iterate over the CollatorMapInput List of the
+							// Cdump file
+							for (CollatorMapInput cmi : cmiLst) {
+
+								CollatorInputField coInField = new CollatorInputField();
+								CollatorMapInput coMapInput = new CollatorMapInput();
+
+								// set the all values into CollatorInputField of
+								// BluePrint File
+								coInField.setParameter_name(cmi.getInput_field().getParameter_name());
+								coInField.setParameter_tag(cmi.getInput_field().getParameter_tag());
+								coInField.setParameter_type(cmi.getInput_field().getParameter_type());
+								coInField.setParameter_role(cmi.getInput_field().getParameter_role());
+								coInField.setSource_name(cmi.getInput_field().getSource_name());
+								coInField.setMapped_to_field(cmi.getInput_field().getMapped_to_field());
+								coInField.setError_indicator(cmi.getInput_field().getError_indicator());
+
+								coMapInput.setInput_field(coInField);
+								collatorMapInputLst.add(coMapInput);
+							}
+							// Convert the CollatorMapInput List to CollatorMapInput[]
+							CollatorMapInput[] coMapInArr = new CollatorMapInput[collatorMapInputLst.size()];
+							coMapInArr = collatorMapInputLst.toArray(coMapInArr);
+							bpcMap.setMap_inputs(coMapInArr);
 						}
-						// Convert the CollatorMapInput List to CollatorMapInput[]
-						CollatorMapInput[] coMapInArr = new CollatorMapInput[coMapInputLst.size()];
-						coMapInArr = coMapInputLst.toArray(coMapInArr);
-						bpcMap.setMap_inputs(coMapInArr);
-						
+
 						// Get the CollatorMapOutput[] from CollatorMap from the Cdump file
-						CollatorMapOutput[] coMapOut = coprops.getCollator_map().getMap_outputs();
-						ArrayList<CollatorMapOutput> coMapOutLst = new ArrayList<CollatorMapOutput>(Arrays.asList(coMapOut));
-						
-						// Iterate over CollatorMapOutput List of Cdump File
-						for (CollatorMapOutput cmo : coMapOutLst) {
-							
-							CollatorOutputField coOutField = new CollatorOutputField();
-							CollatorMapOutput coMapOutput = new CollatorMapOutput();
-							
-							// set the all values into CollatorOutputField of BluePrint File
-							coOutField.setParameter_name(cmo.getOutput_field().getParameter_name());
-							coOutField.setParameter_tag(cmo.getOutput_field().getParameter_tag());
-							coOutField.setParameter_type(cmo.getOutput_field().getParameter_type());
-							coOutField.setParameter_role(cmo.getOutput_field().getParameter_role());
-							
-							coMapOutput.setOutput_field(coOutField);
-							coMapOutputLst.add(coMapOutput);
+						if (null != coprops.getCollator_map().getMap_outputs() && coprops.getCollator_map().getMap_outputs().length != 0) {
+							CollatorMapOutput[] coMapOut = coprops.getCollator_map().getMap_outputs();
+							ArrayList<CollatorMapOutput> cmoLst = new ArrayList<CollatorMapOutput>(
+									Arrays.asList(coMapOut));
+
+							// Iterate over CollatorMapOutput List of Cdump File
+							for (CollatorMapOutput cmo : cmoLst) {
+
+								CollatorOutputField coOutField = new CollatorOutputField();
+								CollatorMapOutput coMapOutput = new CollatorMapOutput();
+
+								// set the all values into CollatorOutputField of BluePrint File
+								coOutField.setParameter_name(cmo.getOutput_field().getParameter_name());
+								coOutField.setParameter_tag(cmo.getOutput_field().getParameter_tag());
+								coOutField.setParameter_type(cmo.getOutput_field().getParameter_type());
+								coOutField.setParameter_role(cmo.getOutput_field().getParameter_role());
+
+								coMapOutput.setOutput_field(coOutField);
+								collatorMapOutputLst.add(coMapOutput);
+							}
+							// Convert the CollatorMapOutput List to CollatorMapOutput[]
+							CollatorMapOutput[] coMapOutArr = new CollatorMapOutput[collatorMapOutputLst.size()];
+							coMapOutArr = collatorMapOutputLst.toArray(coMapOutArr);
+							bpcMap.setMap_outputs(coMapOutArr);
 						}
-						// Convert the CollatorMapOutput List to CollatorMapOutput[]
-						CollatorMapOutput[] coMapOutArr = new CollatorMapOutput[coMapOutputLst.size()];
-						coMapOutArr = coMapOutputLst.toArray(coMapOutArr);
-						bpcMap.setMap_outputs(coMapOutArr);
 					}
 				}
 			}
 		}
-		
 		return bpcMap;
 	}
 
@@ -1769,71 +1799,78 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		
 		BPSplitterMap bpsMap = new BPSplitterMap();
 		
-		List<SplitterMapInput> spMapInputLst = new ArrayList<SplitterMapInput>();
-		List<SplitterMapOutput> spMapOutputLst = new ArrayList<SplitterMapOutput>();
+		List<SplitterMapInput> splitterMapInputLst = new ArrayList<SplitterMapInput>();
+		List<SplitterMapOutput> splitterMapOutputLst = new ArrayList<SplitterMapOutput>();
 		
 		// Iterate over the PropertyList of the Node from Cdump
-		if(null != propsList){
+		if (null != propsList) {
 			for (Property splprops : propsList) {
 				if (null != splprops.getSplitter_map()) {
 					// Set all the values from Property List of cdump to Blueprint SplitterMap object
 					splitter_type = splprops.getSplitter_map().getSplitter_type();
 					input_message_signature = splprops.getSplitter_map().getInput_message_signature();
-					
+
 					bpsMap.setSplitter_type(splitter_type);
 					bpsMap.setInput_message_signature(input_message_signature);
-					
+
 					// Get the SplitterMapInput[] from SplitterMap from the Cdump file
-					// Check if the splitter_type is Param based then mapInputs and mapOutputs should be populated, else not 
-					if(splitter_type.equals(props.getDefaultSplitterType())){
+					// Check if the splitter_type is Param based then mapInputs
+					// and mapOutputs should be populated, else not
+					if (splitter_type.equals(props.getDefaultSplitterType())) {
 						bpsMap.setMap_inputs(null);
 						bpsMap.setMap_outputs(null);
-					}else {
-						SplitterMapInput[] spMapIn = splprops.getSplitter_map().getMap_inputs();
-						// Convert SplitterMapInput[] to List
-						ArrayList<SplitterMapInput> spMapInLst = new ArrayList<SplitterMapInput>(Arrays.asList(spMapIn));
-						// Iterate over the SplitterMapInput List of the Cdump file
-						for (SplitterMapInput smi : spMapInLst) {
-							SplitterInputField spInField = new SplitterInputField();
-							SplitterMapInput spMapInput = new SplitterMapInput();
-							// set the all values into SplitterInputField of BluePrint File
-							spInField.setParameter_name(smi.getInput_field().getParameter_name());
-							spInField.setParameter_tag(smi.getInput_field().getParameter_tag());
-							spInField.setParameter_type(smi.getInput_field().getParameter_type());
-							spInField.setParameter_role(smi.getInput_field().getParameter_role());
-							spMapInput.setInput_field(spInField);
-							spMapInputLst.add(spMapInput);
+					} else {
+						if (null != splprops.getSplitter_map().getMap_inputs() && splprops.getSplitter_map().getMap_inputs().length !=0) {
+							SplitterMapInput[] spMapIn = splprops.getSplitter_map().getMap_inputs();
+							// Convert SplitterMapInput[] to List
+							ArrayList<SplitterMapInput> smiLst = new ArrayList<SplitterMapInput>(
+									Arrays.asList(spMapIn));
+							// Iterate over the SplitterMapInput List of the Cdump file
+							for (SplitterMapInput smi : smiLst) {
+								SplitterInputField spInField = new SplitterInputField();
+								SplitterMapInput spMapInput = new SplitterMapInput();
+								// set the all values into SplitterInputField of BluePrint File
+								spInField.setParameter_name(smi.getInput_field().getParameter_name());
+								spInField.setParameter_tag(smi.getInput_field().getParameter_tag());
+								spInField.setParameter_type(smi.getInput_field().getParameter_type());
+								spInField.setParameter_role(smi.getInput_field().getParameter_role());
+								spMapInput.setInput_field(spInField);
+								splitterMapInputLst.add(spMapInput);
+							}
+							// Convert the SplitterMapInput List to SplitterMapInput[]
+							SplitterMapInput[] spMapInArr = new SplitterMapInput[splitterMapInputLst.size()];
+							spMapInArr = splitterMapInputLst.toArray(spMapInArr);
+							bpsMap.setMap_inputs(spMapInArr);
 						}
-						// Convert the SplitterMapInput List to SplitterMapInput[]
-						SplitterMapInput[] spMapInArr = new SplitterMapInput[spMapInputLst.size()];
-						spMapInArr = spMapInputLst.toArray(spMapInArr);
-						bpsMap.setMap_inputs(spMapInArr);
-						
+
 						// Get the SplitterMapOutput[] from SplitterMap from the Cdump file
-						SplitterMapOutput[] spMapOut = splprops.getSplitter_map().getMap_outputs();
-						ArrayList<SplitterMapOutput> spMapOutLst = new ArrayList<SplitterMapOutput>(Arrays.asList(spMapOut));
-						
-						// Iterate over SplitterMapOutput of Cdump File
-						for (SplitterMapOutput smo : spMapOutLst) {
-							
-							SplitterOutputField spOutField = new SplitterOutputField();
-							SplitterMapOutput spMapOutput = new SplitterMapOutput();
-							
-							spOutField.setParameter_name(smo.getOutput_field().getParameter_name());
-							spOutField.setParameter_tag(smo.getOutput_field().getParameter_tag());
-							spOutField.setParameter_type(smo.getOutput_field().getParameter_type());
-							spOutField.setParameter_role(smo.getOutput_field().getParameter_role());
-							spOutField.setTarget_name(smo.getOutput_field().getTarget_name());
-							spOutField.setError_indicator(smo.getOutput_field().getError_indicator());
-							spOutField.setMapped_to_field(smo.getOutput_field().getMapped_to_field());
-							
-							spMapOutput.setOutput_field(spOutField);
-							spMapOutputLst.add(spMapOutput);
+						if (null != splprops.getSplitter_map().getMap_outputs() && splprops.getSplitter_map().getMap_outputs().length != 0) {
+							SplitterMapOutput[] spMapOut = splprops.getSplitter_map().getMap_outputs();
+							ArrayList<SplitterMapOutput> smoLst = new ArrayList<SplitterMapOutput>(
+									Arrays.asList(spMapOut));
+
+							// Iterate over SplitterMapOutput of Cdump File
+							for (SplitterMapOutput smo : smoLst) {
+
+								SplitterOutputField spOutField = new SplitterOutputField();
+								SplitterMapOutput spMapOutput = new SplitterMapOutput();
+
+								spOutField.setParameter_name(smo.getOutput_field().getParameter_name());
+								spOutField.setParameter_tag(smo.getOutput_field().getParameter_tag());
+								spOutField.setParameter_type(smo.getOutput_field().getParameter_type());
+								spOutField.setParameter_role(smo.getOutput_field().getParameter_role());
+								spOutField.setTarget_name(smo.getOutput_field().getTarget_name());
+								spOutField.setError_indicator(smo.getOutput_field().getError_indicator());
+								spOutField.setMapped_to_field(smo.getOutput_field().getMapped_to_field());
+
+								spMapOutput.setOutput_field(spOutField);
+								splitterMapOutputLst.add(spMapOutput);
+							}
+							// Convert the SplitterMapOutput List to SplitterMapOutput[]
+							SplitterMapOutput[] spMapOutArr = new SplitterMapOutput[splitterMapOutputLst.size()];
+							spMapOutArr = splitterMapOutputLst.toArray(spMapOutArr);
+							bpsMap.setMap_outputs(spMapOutArr);
 						}
-						// Convert the SplitterMapOutput List to SplitterMapOutput[]
-						SplitterMapOutput[] spMapOutArr = new SplitterMapOutput[spMapOutputLst.size()];
-						spMapOutArr = spMapOutputLst.toArray(spMapOutArr);
-						bpsMap.setMap_outputs(spMapOutArr);
 					}
 				}
 			}
@@ -1854,8 +1891,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 		// BluePrint DataBrokerMap object
 		BPDataBrokerMap bpdbMap = new BPDataBrokerMap();
-		List<DBMapInput> dbmapInputLst = new ArrayList<DBMapInput>();
-		List<DBMapOutput> dbmapOutputLst = new ArrayList<DBMapOutput>();
+		List<DBMapInput> dataBrokerMapInputLst = new ArrayList<DBMapInput>();
+		List<DBMapOutput> dataBrokerMapOutputLst = new ArrayList<DBMapOutput>();
 
 		// Iterate over the PropertyList of the Node from Cdump
 		if (null != propslst) {
@@ -1877,62 +1914,66 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					bpdbMap.setCsv_file_field_separator(csv_file_field_Separator);
 
 					// Get the DBMapInput[] from DataBrokerMap from the Cdump file
-					DBMapInput[] dmapIn = dbprops.getData_broker_map().getMap_inputs();
-					// Convert MapInputs[] to List
-					ArrayList<DBMapInput> dbMapInLst = new ArrayList<DBMapInput>(Arrays.asList(dmapIn));
-					// Iterate over the DBMapInput List of the Cdump file
-					for (DBMapInput db : dbMapInLst) {
-						DBInputField dbInField = new DBInputField();
-						DBMapInput dbMapInput = new DBMapInput();
-						// set the all values into DataBroker Input Field of BluePrint File
-						dbInField.setName(db.getInput_field().getName());
-						dbInField.setType(db.getInput_field().getType());
-						dbInField.setChecked(db.getInput_field().getChecked());
-						dbInField.setMapped_to_field(db.getInput_field().getMapped_to_field());
-						dbMapInput.setInput_field(dbInField);
-						dbmapInputLst.add(dbMapInput);
+					if (null != dbprops.getData_broker_map().getMap_inputs()) {
+						DBMapInput[] dmapIn = dbprops.getData_broker_map().getMap_inputs();
+						// Convert MapInputs[] to List
+						ArrayList<DBMapInput> dbmiLst = new ArrayList<DBMapInput>(Arrays.asList(dmapIn));
+						// Iterate over the DBMapInput List of the Cdump file
+						for (DBMapInput db : dbmiLst) {
+							DBInputField dbInField = new DBInputField();
+							DBMapInput dbMapInput = new DBMapInput();
+							// set the all values into DataBroker Input Field of BluePrint File
+							dbInField.setName(db.getInput_field().getName());
+							dbInField.setType(db.getInput_field().getType());
+							dbInField.setChecked(db.getInput_field().getChecked());
+							dbInField.setMapped_to_field(db.getInput_field().getMapped_to_field());
+							dbMapInput.setInput_field(dbInField);
+							dataBrokerMapInputLst.add(dbMapInput);
+						}
+						// Convert the DataBrokerMapInput Lsit to DBMapInput[]
+						DBMapInput[] dbMapInArr = new DBMapInput[dataBrokerMapInputLst.size()];
+						dbMapInArr = dataBrokerMapInputLst.toArray(dbMapInArr);
+						bpdbMap.setMap_inputs(dbMapInArr);
 					}
-					// Convert the DataBrokerMapInput Lsit to DBMapInput[]
-					DBMapInput[] dbMapInArr = new DBMapInput[dbmapInputLst.size()];
-					dbMapInArr = dbmapInputLst.toArray(dbMapInArr);
-					bpdbMap.setMap_inputs(dbMapInArr);
 
 					// Get the DBMapOutput[] from DataBrokerMap from the Cdump file
-					DBMapOutput[] dbMapOutArr = dbprops.getData_broker_map().getMap_outputs();
-					ArrayList<DBMapOutput> dbMapOutLst = new ArrayList<DBMapOutput>(Arrays.asList(dbMapOutArr));
+					if (null != dbprops.getData_broker_map().getMap_outputs()) {
+						DBMapOutput[] dbMapOutArr = dbprops.getData_broker_map().getMap_outputs();
+						ArrayList<DBMapOutput> dbmoLst = new ArrayList<DBMapOutput>(Arrays.asList(dbMapOutArr));
 
-					DBOTypeAndRoleHierarchy[] dboTypeAndRoleHierarchyArr = null;
+						DBOTypeAndRoleHierarchy[] dboTypeAndRoleHierarchyArr = null;
 
-					// Iterate over DBMapOutput List of Cdump File
-					for (DBMapOutput dbOut : dbMapOutLst) {
-						// Set DBMapOutput values of Cdump into DBOutputField values of BluePrint File
-						DBMapOutput dbMapOutput = new DBMapOutput();
-						DBOutputField dbOutField = new DBOutputField();
-						dbOutField.setName(dbOut.getOutput_field().getName());
-						dbOutField.setTag(dbOut.getOutput_field().getTag());
+						// Iterate over DBMapOutput List of Cdump File
+						for (DBMapOutput dbOut : dbmoLst) {
+							// Set DBMapOutput values of Cdump into DBOutputField values of BluePrint File
+							DBMapOutput dbMapOutput = new DBMapOutput();
+							DBOutputField dbOutField = new DBOutputField();
+							dbOutField.setName(dbOut.getOutput_field().getName());
+							dbOutField.setTag(dbOut.getOutput_field().getTag());
 
-						List<DBOTypeAndRoleHierarchy> dboList = new ArrayList<DBOTypeAndRoleHierarchy>();
-						// Iterate over DBOTypeAndRoleHierarchy List of Cdump File
-						for (DBOTypeAndRoleHierarchy dboTypeAndRoleHierarchy : dbOut.getOutput_field()
-								.getType_and_role_hierarchy_list()) {
+							List<DBOTypeAndRoleHierarchy> dboList = new ArrayList<DBOTypeAndRoleHierarchy>();
+							// Iterate over DBOTypeAndRoleHierarchy List of Cdump File
+							for (DBOTypeAndRoleHierarchy dboTypeAndRoleHierarchy : dbOut.getOutput_field()
+									.getType_and_role_hierarchy_list()) {
 
-							DBOTypeAndRoleHierarchy dboTypeAndRole = new DBOTypeAndRoleHierarchy();
-							dboTypeAndRole.setName(dboTypeAndRoleHierarchy.getName());
-							dboTypeAndRole.setRole(dboTypeAndRoleHierarchy.getRole());
-							dboList.add(dboTypeAndRole);
+								DBOTypeAndRoleHierarchy dboTypeAndRole = new DBOTypeAndRoleHierarchy();
+								dboTypeAndRole.setName(dboTypeAndRoleHierarchy.getName());
+								dboTypeAndRole.setRole(dboTypeAndRoleHierarchy.getRole());
+								dboList.add(dboTypeAndRole);
+							}
+							dboTypeAndRoleHierarchyArr = new DBOTypeAndRoleHierarchy[dboList.size()];
+							dboTypeAndRoleHierarchyArr = dboList.toArray(dboTypeAndRoleHierarchyArr);
+							dbOutField.setType_and_role_hierarchy_list(dboTypeAndRoleHierarchyArr);
+
+							dbMapOutput.setOutput_field(dbOutField);
+							dataBrokerMapOutputLst.add(dbMapOutput);
 						}
-						dboTypeAndRoleHierarchyArr = new DBOTypeAndRoleHierarchy[dboList.size()];
-						dboTypeAndRoleHierarchyArr = dboList.toArray(dboTypeAndRoleHierarchyArr);
-						dbOutField.setType_and_role_hierarchy_list(dboTypeAndRoleHierarchyArr);
 
-						dbMapOutput.setOutput_field(dbOutField);
-						dbmapOutputLst.add(dbMapOutput);
+						// Convert DBMapOutPutList to DBMapOutput[]
+						DBMapOutput[] dbMapOutputArr = new DBMapOutput[dataBrokerMapOutputLst.size()];
+						dbMapOutputArr = dataBrokerMapOutputLst.toArray(dbMapOutputArr);
+						bpdbMap.setMap_outputs(dbMapOutputArr);
 					}
-
-					// Convert DBMapOutPutList to DBMapOutput[]
-					DBMapOutput[] dbMapOutputArr = new DBMapOutput[dbmapOutputLst.size()];
-					dbMapOutputArr = dbmapOutputLst.toArray(dbMapOutputArr);
-					bpdbMap.setMap_outputs(dbMapOutputArr);
 				}
 			}
 		}
