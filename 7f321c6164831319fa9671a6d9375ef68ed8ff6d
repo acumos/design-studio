@@ -22,6 +22,30 @@
       "revId": "7f321c6164831319fa9671a6d9375ef68ed8ff6d",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "49e3b99c_59e37c05",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-05T15:01:52Z",
+      "side": 1,
+      "message": "In UI side we need to consider every revision of Solution as individual Solution. As each solution need to listed in one level.",
+      "parentUuid": "1f8e8841_1fb94843",
+      "range": {
+        "startLine": 273,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 68
+      },
+      "revId": "7f321c6164831319fa9671a6d9375ef68ed8ff6d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
     }
   ]
 }
