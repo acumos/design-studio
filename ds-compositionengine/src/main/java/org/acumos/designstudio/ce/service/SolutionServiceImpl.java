@@ -152,11 +152,14 @@ public class SolutionServiceImpl implements ISolutionService {
 				// For each solution where toolkittypeCode is not null and not equal to "CP".
 				for (MLPSolution mlpsolution : mlpSolutionsList) {
 					if (mlpsolution.getToolkitTypeCode() != null && (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
-						String accessTypeCode = mlpsolution.getAccessTypeCode();
-						if ((accessTypeCode.equals(pbAccessTypeCode)) || (mlpsolution.getOwnerId().equals(userID) && accessTypeCode.equals(prAccessTypeCode)) 
-								 || (accessTypeCode.equals(orAccessTypeCode)) ) {
-							dsSolutionList.addAll(buildSolutionDetails(mlpsolution, cmnDataService, solutionId, sdf));
-							matchingModelsolutionList.add(mlpsolution);
+						List<MLPSolutionRevision> mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
+						for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
+							String accessTypeCode = mlpSolRevision.getAccessTypeCode();
+							if ((accessTypeCode.equals(pbAccessTypeCode)) || (mlpSolRevision.getOwnerId().equals(userID) && accessTypeCode.equals(prAccessTypeCode)) 
+									 || (accessTypeCode.equals(orAccessTypeCode)) ) {
+								dsSolutionList.addAll(buildSolutionDetails(mlpsolution, cmnDataService, solutionId, sdf));
+								matchingModelsolutionList.add(mlpsolution);
+							}
 						}
 					}
 				}
@@ -267,7 +270,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		// 8. Solution Description
 		dssolution.setDescription(mlpsolution.getDescription());
 		// 9. Solution Visibility
-		dssolution.setVisibilityLevel(mlpsolution.getAccessTypeCode());
+		dssolution.setVisibilityLevel(mlpSolRevision.getAccessTypeCode());
 		// 10. Solution Version
 		dssolution.setVersion(mlpSolRevision.getVersion());
 		// 11. Solution On boarder
@@ -1783,17 +1786,20 @@ public class SolutionServiceImpl implements ISolutionService {
 			// For each solution where toolkittypeCode is not null and not equal to "CP".
 			
 			for (MLPSolution mlpsolution : mlpSolutionsList) {
-				if (mlpsolution.getToolkitTypeCode() != null
-						&& (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
-                        String accessTypeCode = mlpsolution.getAccessTypeCode();
-					if (accessTypeCode.equals(pbAccessTypeCode)) {
-						matchingModelsolutionList.add(mlpsolution);
-					}
-                    if (mlpsolution.getOwnerId().equals(userId) && accessTypeCode.equals(prAccessTypeCode)) {
-						matchingModelsolutionList.add(mlpsolution);
-					}
-                    if (accessTypeCode.equals(orAccessTypeCode)) {
-						matchingModelsolutionList.add(mlpsolution);
+				List<MLPSolutionRevision> mlpSolRevisions = cmnDataService.getSolutionRevisions(mlpsolution.getSolutionId());
+				for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
+					if (mlpsolution.getToolkitTypeCode() != null
+							&& (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
+	                        String accessTypeCode = mlpSolRevision.getAccessTypeCode();
+						if (accessTypeCode.equals(pbAccessTypeCode)) {
+							matchingModelsolutionList.add(mlpsolution);
+						}
+	                    if (mlpSolRevision.getOwnerId().equals(userId) && accessTypeCode.equals(prAccessTypeCode)) {
+							matchingModelsolutionList.add(mlpsolution);
+						}
+	                    if (accessTypeCode.equals(orAccessTypeCode)) {
+							matchingModelsolutionList.add(mlpsolution);
+						}
 					}
 				}
 

@@ -1251,6 +1251,8 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setOwnerId(userId);
 		mlpSolutionRevision.setVersion("1.0.0");
 		mlpSolutionRevision.setRevisionId("111");
+		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		mlpSolRevisions.add(mlpSolutionRevision);
 		List<MLPArtifact> artifacts = new ArrayList<MLPArtifact>();
@@ -1436,9 +1438,7 @@ public class SolutionControllerTest {
 		mlpSolution.setName(dscs.getSolutionName());
 		mlpSolution.setDescription(dscs.getDescription());
 		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolution.setProvider(dscs.getProvider());
-		mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
@@ -1447,6 +1447,8 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setDescription(dscs.getDescription());
 		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion(dscs.getVersion());
+		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		
 		mlpSols.add(mlpSolution);
@@ -1575,8 +1577,6 @@ public class SolutionControllerTest {
 			mlpSolution.setName("Test");
 			mlpSolution.setDescription("sample");
 			mlpSolution.setOwnerId(userId);
-			mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
-			mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
 			mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 			mlpSolution.setToolkitTypeCode("CP");
 			
@@ -1586,6 +1586,8 @@ public class SolutionControllerTest {
 			mlpSolutionRevision.setDescription("test"); 
 			mlpSolutionRevision.setOwnerId(userId);
 			mlpSolutionRevision.setVersion("1.0.0");
+			mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+			mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 			
 			CompositeSolutionServiceImpl csimpl = new CompositeSolutionServiceImpl();
 			List<MLPArtifact> artifacts = new ArrayList<MLPArtifact>();
@@ -1691,8 +1693,6 @@ public class SolutionControllerTest {
 		mlpSolution.setName("Test");
 		mlpSolution.setDescription("sample");
 		mlpSolution.setOwnerId(userId);
-		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
-		mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
@@ -1763,7 +1763,6 @@ public class SolutionControllerTest {
            image_classifier.setToolkitTypeCode("SK");
            image_classifier.setModelTypeCode("CL");
            image_classifier.setDescription("image_classifier");
-           image_classifier.setAccessTypeCode("PB");
            image_classifier.setOwnerId("c4e4d366-8ed8-40e1-b61e-1e103de9699b");
            assertNotNull(image_classifier);
            mlpSolList.add(image_classifier);
@@ -1881,9 +1880,7 @@ public class SolutionControllerTest {
 		mlpSolution.setName("Test");
 		mlpSolution.setDescription(dscs.getDescription());
 		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolution.setProvider(dscs.getProvider());
-		mlpSolution.setAccessTypeCode(AccessTypeCode.PB.toString());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
@@ -1892,7 +1889,8 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setDescription(dscs.getDescription()); 
 		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion("1.0.0");
-		
+		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -1902,9 +1900,7 @@ public class SolutionControllerTest {
 		mlpSolNew.setName("sample1");
 		mlpSolNew.setDescription(dscs.getDescription());
 		mlpSolNew.setOwnerId(dscs.getAuthor());
-		mlpSolNew.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolNew.setProvider(dscs.getProvider());
-		mlpSolNew.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew.setToolkitTypeCode("CP");
 		
@@ -1913,9 +1909,7 @@ public class SolutionControllerTest {
 		mlpSolNew1.setName("sample1");
 		mlpSolNew1.setDescription(dscs.getDescription());
 		mlpSolNew1.setOwnerId(dscs.getAuthor());
-		mlpSolNew1.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolNew1.setProvider(dscs.getProvider());
-		mlpSolNew1.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew1.setToolkitTypeCode("CP");
 		
@@ -1976,9 +1970,7 @@ public class SolutionControllerTest {
 		mlpSolution.setName("Test2");
 		mlpSolution.setDescription(dscs.getDescription());
 		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolution.setProvider(dscs.getProvider());
-		mlpSolution.setAccessTypeCode(AccessTypeCode.PB.toString());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
@@ -1987,7 +1979,8 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setDescription(dscs.getDescription()); 
 		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion("1.0.0");
-		
+		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -1997,9 +1990,7 @@ public class SolutionControllerTest {
 		mlpSolNew.setName("sample1");
 		mlpSolNew.setDescription(dscs.getDescription());
 		mlpSolNew.setOwnerId(dscs.getAuthor());
-		mlpSolNew.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolNew.setProvider(dscs.getProvider());
-		mlpSolNew.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew.setToolkitTypeCode("CP");
 		
@@ -2008,9 +1999,7 @@ public class SolutionControllerTest {
 		mlpSolNew1.setName("sample1");
 		mlpSolNew1.setDescription(dscs.getDescription());
 		mlpSolNew1.setOwnerId(dscs.getAuthor());
-		mlpSolNew1.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolNew1.setProvider(dscs.getProvider());
-		mlpSolNew1.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew1.setToolkitTypeCode("CP");
 		
@@ -2071,9 +2060,7 @@ public class SolutionControllerTest {
 		mlpSolution.setName("Test");
 		mlpSolution.setDescription(dscs.getDescription());
 		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolution.setProvider(dscs.getProvider());
-		mlpSolution.setAccessTypeCode(AccessTypeCode.PB.toString());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
@@ -2082,7 +2069,8 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setDescription(dscs.getDescription()); 
 		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion("1.0.0");
-		
+		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -2092,9 +2080,7 @@ public class SolutionControllerTest {
 		mlpSolNew.setName("sample1");
 		mlpSolNew.setDescription(dscs.getDescription());
 		mlpSolNew.setOwnerId(dscs.getAuthor());
-		mlpSolNew.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolNew.setProvider(dscs.getProvider());
-		mlpSolNew.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew.setToolkitTypeCode("CP");
 		
@@ -2103,9 +2089,7 @@ public class SolutionControllerTest {
 		mlpSolNew1.setName("sample1");
 		mlpSolNew1.setDescription(dscs.getDescription());
 		mlpSolNew1.setOwnerId(dscs.getAuthor());
-		mlpSolNew1.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolNew1.setProvider(dscs.getProvider());
-		mlpSolNew1.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew1.setToolkitTypeCode("CP");
 		
@@ -2166,9 +2150,7 @@ public class SolutionControllerTest {
 		mlpSolution.setName("Test");
 		mlpSolution.setDescription(dscs.getDescription());
 		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolution.setProvider(dscs.getProvider());
-		mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
@@ -2177,7 +2159,8 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setDescription(dscs.getDescription()); 
 		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion(dscs.getVersion());
-		
+		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -2187,9 +2170,7 @@ public class SolutionControllerTest {
 		mlpSolNew.setName("sample1");
 		mlpSolNew.setDescription(dscs.getDescription());
 		mlpSolNew.setOwnerId(dscs.getAuthor());
-		mlpSolNew.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolNew.setProvider(dscs.getProvider());
-		mlpSolNew.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew.setToolkitTypeCode("CP");
 		
@@ -2198,9 +2179,7 @@ public class SolutionControllerTest {
 		mlpSolNew1.setName("sample1");
 		mlpSolNew1.setDescription(dscs.getDescription());
 		mlpSolNew1.setOwnerId(dscs.getAuthor());
-		mlpSolNew1.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolNew1.setProvider(dscs.getProvider());
-		mlpSolNew1.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew1.setToolkitTypeCode("CP");
 		
@@ -2262,9 +2241,7 @@ public class SolutionControllerTest {
 		mlpSolution.setName("Test2");
 		mlpSolution.setDescription(dscs.getDescription());
 		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolution.setProvider(dscs.getProvider());
-		mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
@@ -2273,7 +2250,8 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setDescription(dscs.getDescription()); 
 		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion(dscs.getVersion());
-		
+		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -2283,9 +2261,7 @@ public class SolutionControllerTest {
 		mlpSolNew.setName("sample1");
 		mlpSolNew.setDescription(dscs.getDescription());
 		mlpSolNew.setOwnerId(dscs.getAuthor());
-		mlpSolNew.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolNew.setProvider(dscs.getProvider());
-		mlpSolNew.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew.setToolkitTypeCode("CP");
 		
@@ -2294,9 +2270,7 @@ public class SolutionControllerTest {
 		mlpSolNew1.setName("sample1");
 		mlpSolNew1.setDescription(dscs.getDescription());
 		mlpSolNew1.setOwnerId(dscs.getAuthor());
-		mlpSolNew1.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolNew1.setProvider(dscs.getProvider());
-		mlpSolNew1.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew1.setToolkitTypeCode("CP");
 		
@@ -2357,9 +2331,7 @@ public class SolutionControllerTest {
 		mlpSolution.setName("Test");
 		mlpSolution.setDescription(dscs.getDescription());
 		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolution.setProvider(dscs.getProvider());
-		mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
@@ -2368,7 +2340,8 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setDescription(dscs.getDescription()); 
 		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion("1.0.2");
-		
+		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -2378,9 +2351,7 @@ public class SolutionControllerTest {
 		mlpSolNew.setName("sample1");
 		mlpSolNew.setDescription(dscs.getDescription());
 		mlpSolNew.setOwnerId(dscs.getAuthor());
-		mlpSolNew.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolNew.setProvider(dscs.getProvider());
-		mlpSolNew.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew.setToolkitTypeCode("CP");
 		
@@ -2389,9 +2360,7 @@ public class SolutionControllerTest {
 		mlpSolNew1.setName("sample1");
 		mlpSolNew1.setDescription(dscs.getDescription());
 		mlpSolNew1.setOwnerId(dscs.getAuthor());
-		mlpSolNew1.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolNew1.setProvider(dscs.getProvider());
-		mlpSolNew1.setAccessTypeCode(AccessTypeCode.PR.toString());
 		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew1.setToolkitTypeCode("CP");
 		
@@ -2427,6 +2396,9 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setOwnerId(userId);
 		mlpSolutionRevision.setVersion(version);
 		mlpSolutionRevision.setRevisionId("111");
+		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
+		
 		
 		List<MLPArtifact> artifacts = new ArrayList<MLPArtifact>();
 		MLPArtifact artifact = new MLPArtifact();

@@ -224,9 +224,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			mlpSolution.setName(dscs.getSolutionName());
 			mlpSolution.setDescription(dscs.getDescription());
 			mlpSolution.setOwnerId(dscs.getAuthor());
-			mlpSolution.setValidationStatusCode(ValidationStatusCode.IP.toString());
 			mlpSolution.setProvider(dscs.getProvider());
-			mlpSolution.setAccessTypeCode(AccessTypeCode.PR.toString());
 			mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 			mlpSolution.setToolkitTypeCode("CP");
 			mlpSolution.setActive(true);
@@ -244,7 +242,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			mlpSolutionRevision.setDescription(dscs.getDescription());
 			mlpSolutionRevision.setOwnerId(dscs.getAuthor());
 			mlpSolutionRevision.setVersion(dscs.getVersion());
-
+			mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+			mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
+			
 			mlpSolutionRevision = cdmsClient.createSolutionRevision(mlpSolutionRevision);
 
 			logger.debug(EELFLoggerDelegator.debugLogger,"2. Successfully Created the SolutionRevision :  {} ", mlpSolutionRevision.getRevisionId());
@@ -373,9 +373,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 				if (null != mlpSolutionList && !mlpSolutionList.isEmpty()) {
 					// 4. get the first solutionRevision and check the solution version with input solution version
-					if ("PR".equals(mlpSolution.getAccessTypeCode())) {
+					if ("PR".equals(mlpSolutionList.get(0).getAccessTypeCode())) {
 						if (mlpSolutionList.get(0).getVersion().equals(dscs.getVersion())
-								&& "PR".equals(mlpSolution.getAccessTypeCode())) {
+								&& "PR".equals(mlpSolutionList.get(0).getAccessTypeCode())) {
 							logger.debug(EELFLoggerDelegator.debugLogger, "Upadating Existing Solution");
 							result = updateExistingSolution(mlpSolutionList.get(0), mlpSolution, dscs);
 
@@ -553,6 +553,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			mlpSolutionRevision.setDescription(dscs.getDescription());
 			mlpSolutionRevision.setOwnerId(dscs.getAuthor());
 			mlpSolutionRevision.setVersion(dscs.getVersion());
+			mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+			mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
+			
 			// Get the latest date in to variable and then use it.
 			mlpSolutionRevision.setModified(currentDate);
 			mlpSolutionRevision = cdmsClient.createSolutionRevision(mlpSolutionRevision);
@@ -829,62 +832,66 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						" CommonDataService returned Solution list of size :  {} ", mlpSolutions.size());
 				mlpSolRevisions = new ArrayList<>();
 
-				for (MLPSolution mlpsol : mlpSolutions) {
-					if (visibilityLevel.contains(mlpsol.getAccessTypeCode())) {
-						String userId = mlpsol.getOwnerId();
-						MLPUser user = cdmsClient.getUser(userId);
-						if (null != mlpsol.getAccessTypeCode()
-								&& (("PR".equals(mlpsol.getAccessTypeCode()) && userId.equals(userID))
-										|| ("PB".equals(mlpsol.getAccessTypeCode()))
-										|| ("OR".equals(mlpsol.getAccessTypeCode())))) {
-							solutionId = mlpsol.getSolutionId();
-							solutionIds.add(solutionId);
-							mlpSolRevisions = cdmsClient.getSolutionRevisions(solutionId);
-							String userName = user.getFirstName() + " " + user.getLastName();
-							if (mlpSolRevisions == null) {
-								logger.debug(EELFLoggerDelegator.debugLogger,
-										" CommonDataService returned null SolutionRevision list");
-							} else if (mlpSolRevisions.isEmpty()) {
-								logger.debug(EELFLoggerDelegator.debugLogger,
-										" CommonDataService returned empty SolutionRevision list");
-							} else {
-								logger.debug(EELFLoggerDelegator.debugLogger,
-										" CommonDataService returned SolutionRevision list of size : "
-												+ mlpSolRevisions.size());
-								for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
-									dssolution = new DSSolution();
-									dssolution.setSolutionId(mlpsol.getSolutionId());
-									dssolution.setSolutionRevisionId(mlpSolRevision.getRevisionId());
-									dssolution.setCreatedDate(sdf.format(mlpSolRevision.getCreated().getTime()));
-									dssolution.setIcon(null);
-									// 1. Solution Name
-									dssolution.setSolutionName(mlpsol.getName());
-									// 5. Solution Provider
-									dssolution.setProvider(mlpsol.getProvider());
-									// 6. Solution Tool Kit
-									dssolution.setToolKit(mlpsol.getToolkitTypeCode());
-									// 7. Solution Category
-									dssolution.setCategory(mlpsol.getModelTypeCode());
-									// 8. Solution Description
-									dssolution.setDescription(mlpsol.getDescription());
-									// 9. Solution Visibility
-									dssolution.setVisibilityLevel(mlpsol.getAccessTypeCode());
-									// 2. Solution Version
-									dssolution.setVersion(mlpSolRevision.getVersion());
-									// 3. Solution On boarder
-									dssolution.setOnBoarder(userName);
-									// 4. Solution Author
-									dssolution.setAuthor(userName);
-									dsSolutions.add(dssolution);
-									strBuilder.append(dssolution.toJsonString());
-									strBuilder.append(",");
+					for (MLPSolution mlpsol : mlpSolutions) {
+						
+						mlpSolRevisions = cdmsClient.getSolutionRevisions(mlpsol.getSolutionId());
+						for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
+								
+							if (visibilityLevel.contains(mlpSolRevision.getAccessTypeCode())) {
+								String userId = mlpSolRevision.getOwnerId();
+								MLPUser user = cdmsClient.getUser(userId);
+								if (null != mlpSolRevision.getAccessTypeCode()
+										&& (("PR".equals(mlpSolRevision.getAccessTypeCode()) && userId.equals(userID))
+												|| ("PB".equals(mlpSolRevision.getAccessTypeCode()))
+												|| ("OR".equals(mlpSolRevision.getAccessTypeCode())))) {
+									solutionId = mlpsol.getSolutionId();
+									solutionIds.add(solutionId);
+									
+									String userName = user.getFirstName() + " " + user.getLastName();
+									if (mlpSolRevisions == null) {
+										logger.debug(EELFLoggerDelegator.debugLogger,
+												" CommonDataService returned null SolutionRevision list");
+									} else if (mlpSolRevisions.isEmpty()) {
+										logger.debug(EELFLoggerDelegator.debugLogger,
+												" CommonDataService returned empty SolutionRevision list");
+									} else {
+										logger.debug(EELFLoggerDelegator.debugLogger,
+												" CommonDataService returned SolutionRevision list of size : "
+														+ mlpSolRevisions.size());
+										
+											dssolution = new DSSolution();
+											dssolution.setSolutionId(mlpsol.getSolutionId());
+											dssolution.setSolutionRevisionId(mlpSolRevision.getRevisionId());
+											dssolution.setCreatedDate(sdf.format(mlpSolRevision.getCreated().getTime()));
+											dssolution.setIcon(null);
+											// 1. Solution Name
+											dssolution.setSolutionName(mlpsol.getName());
+											// 5. Solution Provider
+											dssolution.setProvider(mlpsol.getProvider());
+											// 6. Solution Tool Kit
+											dssolution.setToolKit(mlpsol.getToolkitTypeCode());
+											// 7. Solution Category
+											dssolution.setCategory(mlpsol.getModelTypeCode());
+											// 8. Solution Description
+											dssolution.setDescription(mlpsol.getDescription());
+											// 9. Solution Visibility
+											dssolution.setVisibilityLevel(mlpSolRevision.getAccessTypeCode());
+											// 2. Solution Version
+											dssolution.setVersion(mlpSolRevision.getVersion());
+											// 3. Solution On boarder
+											dssolution.setOnBoarder(userName);
+											// 4. Solution Author
+											dssolution.setAuthor(userName);
+											dsSolutions.add(dssolution);
+											strBuilder.append(dssolution.toJsonString());
+											strBuilder.append(",");
+										}
+									}
 								}
 							}
 						}
-					}
-				}
-			}
-			if (strBuilder.length() > 1) {
+
+					}			if (strBuilder.length() > 1) {
 				result = result + strBuilder.substring(0, strBuilder.length() - 1);
 			}
 			result = result + "]";
