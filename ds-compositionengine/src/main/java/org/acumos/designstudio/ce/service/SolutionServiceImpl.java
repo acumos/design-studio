@@ -142,8 +142,6 @@ public class SolutionServiceImpl implements ISolutionService {
 			} else {
 				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned Solution list of size :  {} ", mlpSolutionsList.size());
 				List<MLPSolution> matchingModelsolutionList  = new ArrayList<MLPSolution>();
-				MLPUser mlpUser = cmnDataService.getUser(userID);
-				logger.debug(EELFLoggerDelegator.debugLogger, "MLPUSer  {} ", mlpUser);
 				// Get the TypeCodes from Properties file
 				String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
 				String pbAccessTypeCode = props.getPublicAccessTypeCode();
@@ -157,7 +155,10 @@ public class SolutionServiceImpl implements ISolutionService {
 							String accessTypeCode = mlpSolRevision.getAccessTypeCode();
 							if ((accessTypeCode.equals(pbAccessTypeCode)) || (mlpSolRevision.getOwnerId().equals(userID) && accessTypeCode.equals(prAccessTypeCode)) 
 									 || (accessTypeCode.equals(orAccessTypeCode)) ) {
-								dsSolutionList.addAll(buildSolutionDetails(mlpsolution, cmnDataService, solutionId, sdf));
+								String revisionUserID = mlpSolRevision.getOwnerId();
+								MLPUser mlpUser = cmnDataService.getUser(revisionUserID);
+								String userName = mlpUser.getFirstName() + " " + mlpUser.getLastName();
+								dsSolutionList.add(populateDsSolution(mlpsolution, sdf, userName, mlpSolRevision));
 								matchingModelsolutionList.add(mlpsolution);
 							}
 						}
