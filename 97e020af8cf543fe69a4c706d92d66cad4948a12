@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29adb33c_a1d8dc86",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 931,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-06T11:48:03Z",
+      "side": 1,
+      "message": "Sonar recommends this style:\n\n   (! relationsList.isEmpty())",
+      "range": {
+        "startLine": 931,
+        "startChar": 50,
+        "endLine": 931,
+        "endChar": 51
+      },
+      "revId": "97e020af8cf543fe69a4c706d92d66cad4948a12",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5215b91_fffdce2f",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-06T11:48:03Z",
+      "side": 1,
+      "message": "Are you possibly missing a set of parentheses here?  This will trigger a NPE if relationsList is null",
+      "range": {
+        "startLine": 949,
+        "startChar": 72,
+        "endLine": 949,
+        "endChar": 75
+      },
+      "revId": "97e020af8cf543fe69a4c706d92d66cad4948a12",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92db9f3e_24690b47",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-06T11:48:03Z",
+      "side": 1,
+      "message": "What does this mean!?",
+      "range": {
+        "startLine": 965,
+        "startChar": 96,
+        "endLine": 965,
+        "endChar": 123
+      },
+      "revId": "97e020af8cf543fe69a4c706d92d66cad4948a12",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
