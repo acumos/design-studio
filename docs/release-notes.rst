@@ -25,7 +25,7 @@ The Design Studio Composition Engine is deployed within a Docker image in the Do
 0.0.32-SNAPSHOT, 2018-07-05
 ---------------------------
 * ACUMOS-1065 : Update DS Modules code to point to CDS 1.15.3
-
+* ACUMOS-1197 : DS allow single-model composite solution.
 
 0.0.31-SNAPSHOT, 2018-06-15
 ---------------------------
