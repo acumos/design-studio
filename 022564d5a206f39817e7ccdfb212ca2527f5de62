@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9e4824c_64870135",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-06T12:23:12Z",
+      "side": 1,
+      "message": "\u0026\u0026 ( null \u003d\u003d relationList || relationsList.isEmpty())) {",
+      "range": {
+        "startLine": 949,
+        "startChar": 50,
+        "endLine": 949,
+        "endChar": 100
+      },
+      "revId": "022564d5a206f39817e7ccdfb212ca2527f5de62",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93e4b090_ff9ee9cc",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1489,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-06T12:23:12Z",
+      "side": 1,
+      "message": "use !relationList.isEmpty()",
+      "range": {
+        "startLine": 1489,
+        "startChar": 30,
+        "endLine": 1489,
+        "endChar": 55
+      },
+      "revId": "022564d5a206f39817e7ccdfb212ca2527f5de62",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
