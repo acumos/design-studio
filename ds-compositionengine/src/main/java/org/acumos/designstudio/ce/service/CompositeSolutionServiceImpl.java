@@ -928,7 +928,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			List<Nodes> nodes = cdump.getNodes();
 			List<Relations> relationsList = cdump.getRelations();
 			// Check for the Nodes and Relations in the CDUMP is empty or not
-			if (null != nodes && null != relationsList) {
+			if (null != nodes && null != relationsList && relationsList.size() != 0) {
 				resultVo = validateComposition(cdump);
 				if(resultVo.getSuccess().equals("true")){
 					// On successful validation generate the BluePrint file
@@ -945,6 +945,25 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					// upload the file to repository
 					uploadFilesToRepository(solutionId, version,cdumpArtifact);
 					result = createAndUploadBluePrint(userId, solutionId, solutionName, version,cdump);
+				}
+			}else if(null != nodes && nodes.size() == 1 && null == relationsList || relationsList.size() == 0){
+				for(Nodes no : nodes){
+					if(no.getType().getName().equals(MLMODEL_TYPE)){
+						cdump.setValidSolution(true);
+						cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
+						Gson gson = new Gson();
+						String emptyCdumpJson = gson.toJson(cdump);
+						path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
+						// Write Data to File
+						DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionId, "json", emptyCdumpJson);
+						Artifact cdumpArtifact = new Artifact(cdumpFileName, "json",solutionId, version, path, emptyCdumpJson.length());
+						// upload the file to repository
+						uploadFilesToRepository(solutionId, version,cdumpArtifact);
+						result = createAndUploadBluePrint(userId, solutionId, solutionName, version,cdump);
+					}else {
+						resultVo.setSuccess("false");
+		                resultVo.setErrorDescription("Invalid Composite Solution : Composite Solution which if of not ML Model");
+					}
 				}
 			} else {
 				 resultVo.setSuccess("false");
@@ -1456,28 +1475,41 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		pIndicator.setValue(probeIndicator);
 		List<ProbeIndicator> probeLst = new ArrayList<ProbeIndicator>();
 		probeLst.add(pIndicator);
-		bluePrint.setProbeIndicator(probeLst); // In cdump probeIndicator is a string, in blueprint it should not be an array just a string 
-		Set<String> sourceNodeId = new HashSet<>();
-		Set<String> targetNodeId = new HashSet<>();
-		List<Relations> relationsList = cdump.getRelations();
-		for (Relations rlns : relationsList) {
-			sourceNodeId.add(rlns.getSourceNodeId());
-			targetNodeId.add(rlns.getTargetNodeId());
-		}
-		sourceNodeId.removeAll(targetNodeId);
+		bluePrint.setProbeIndicator(probeLst); // In cdump probeIndicator is a string, in blueprint it should not be an array just a string
 		
 		List<Container> containerList = new ArrayList<Container>();
 		Container container = new Container();
 		BaseOperationSignature bos = new BaseOperationSignature();
 		String opearion = "";
-		for (Relations rltn : relationsList) {
-			if (sourceNodeId.contains(rltn.getSourceNodeId())) {
-				opearion = rltn.getSourceNodeRequirement().replace("+", OPERATION_EXTRACTOR);
-				opearion = opearion.split(OPERATION_EXTRACTOR)[0];
-				bos.setOperation_name(opearion);
+		List<Nodes> nodes = cdump.getNodes();
+		List<Relations> relationsList = cdump.getRelations();
+		Set<String> sourceNodeId = new HashSet<>();
+		Set<String> targetNodeId = new HashSet<>();
+		// if relations not equal to null i.e its contains more than one model in canvas
+		if(null != relationsList && relationsList.size() != 0){
+			for (Relations rlns : relationsList) {
+				sourceNodeId.add(rlns.getSourceNodeId());
+				targetNodeId.add(rlns.getTargetNodeId());
+			}
+			sourceNodeId.removeAll(targetNodeId);
+			for (Relations rltn : relationsList) {
+				if (sourceNodeId.contains(rltn.getSourceNodeId())) {
+					opearion = rltn.getSourceNodeRequirement().replace("+", OPERATION_EXTRACTOR);
+					opearion = opearion.split(OPERATION_EXTRACTOR)[0];
+					bos.setOperation_name(opearion);
+					container.setOperation_signature(bos);
+					String containerName = rltn.getSourceNodeName();
+					container.setContainer_name(containerName);
+					containerList.add(container);
+				}
+			}
+		}else{
+			// canvas contains only one model which is ML Model only
+			for(Nodes no : nodes){
+				String reqOperationName = no.getRequirements()[0].getCapability().getId();
+				bos.setOperation_name(reqOperationName);
 				container.setOperation_signature(bos);
-				String containerName = rltn.getSourceNodeName();
-				container.setContainer_name(containerName);
+				container.setContainer_name(no.getName());
 				containerList.add(container);
 			}
 		}
@@ -1540,25 +1572,21 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			
 			// Check for the Node type is DataBroker or not
 			if (node_type.equals(props.getDatabrokerType())) {
-				// Need to set all the values of DataBrokerMap
-				// Get the Property[] from Nodes
+				// Need to set all the values of DataBrokerMap Get the Property[] from Nodes
 				BPDataBrokerMap bpdbMap = getDataBrokerDetails(n);
 				bpnode.setData_broker_map(bpdbMap);
 			}
 			
 			// check for the Node type is Splitter or not
-			
 			if(node_type.equals(props.getSplitterType())){
-				// Need to set all the values of SplitterMap
-				// Get the Property[] from Nodes
+				// Need to set all the values of SplitterMap Get the Property[] from Nodes
 				BPSplitterMap bpsMap = getSplitterDetails(n);
 				bpnode.setSplitter_map(bpsMap);
 				bpnode.setImage("");
 			}
 			// check for the Node type is Collator or not
 			if(node_type.equals(props.getCollatorType())){
-				// Need to set all the values of CollatorMap
-				// Get the Property[] from Nodes
+				// Need to set all the values of CollatorMap Get the Property[] from Nodes
 				BPCollatorMap bpcMap = getCollatorDetails(n);
 				bpnode.setCollator_map(bpcMap);
 				bpnode.setImage("");
@@ -1572,8 +1600,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			}else{
 				bpnode.setProto_uri(protoUri); 
 			}
-			
-			
 			//Set operation_signature_list
 			List<Capabilities> capabilities = Arrays.asList(n.getCapabilities());
 			String nodeOperationName = null;
@@ -1582,37 +1608,48 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			List<OperationSignatureList> oslList = new ArrayList<>();
 			OperationSignatureList osll = null;
 			NodeOperationSignature nos = null;
-			
-			//Get the connected port 
-			String connectedPort = getConnectedPort(cdump.getRelations(), n.getNodeId());
-			
-			for(Capabilities c : capabilities ){
-				nodeOperationName = c.getTarget().getId();
-				if(nodeOperationName.equals(connectedPort)){
+			List<Container> connectedToList;
+			connectedToList = new ArrayList<>();
+			// If the relations are null or empty i.e single ML model is there in Canvas 
+			if(null != relationsList && relationsList.size() != 0){
+				//Get the connected port 
+				String connectedPort = getConnectedPort(cdump.getRelations(), n.getNodeId());
+				for(Capabilities c : capabilities ){
+					nodeOperationName = c.getTarget().getId();
+					if(nodeOperationName.equals(connectedPort)){
+						osll = new OperationSignatureList();
+						nos = new NodeOperationSignature();
+						nos.setOperation_name(nodeOperationName);
+						nos.setInput_message_name(c.getTarget().getName()[0].getMessageName());  
+						//NodeOperationSignature input_message_name should have been array, as operation can have multiple input messages.  
+						//Its seems to be some gap
+						nos.setOutput_message_name(getOutputMessage(n.getRequirements(), nodeOperationName));
+						osll.setOperation_signature(nos);
+						containerLst = getRelations(cdump, nodeId);
+						osll.setConnected_to(containerLst);
+						oslList.add(osll);
+					}
+				}
+			}else {
+				
+				// canvas contains only one Model which is ML Model only
+				for(Capabilities c : capabilities ){
+					nodeOperationName = c.getTarget().getId();
 					osll = new OperationSignatureList();
 					nos = new NodeOperationSignature();
 					nos.setOperation_name(nodeOperationName);
-
 					nos.setInput_message_name(c.getTarget().getName()[0].getMessageName());  
-					//NodeOperationSignature input_message_name should have been array, as operation can have multiple input messages.  
-					//Its seems to be some gap
-					
 					nos.setOutput_message_name(getOutputMessage(n.getRequirements(), nodeOperationName));
-					
 					osll.setOperation_signature(nos);
-					
-					containerLst = getRelations(cdump, nodeId);
-					osll.setConnected_to(containerLst);
+					osll.setConnected_to(connectedToList);
 					oslList.add(osll);
 				}
 			}
 			bpnode.setOperation_signature_list(oslList);
-
 			// 14. Add the nodedetails to bluepring nodes list
 			logger.debug(EELFLoggerDelegator.debugLogger,"14. Add the nodedetails to blueprint nodes list");
 			bpnodes.add(bpnode);
 		}
-
 		bluePrint.setNodes(bpnodes);
 
 		// 20. Create the MLPArtifact
