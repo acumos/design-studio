@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a454c71b_a09e760b",
+        "filename": "docs/release-notes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-09T13:10:35Z",
+      "side": 1,
+      "message": "Why is this section empty?  If 0.0.31 was never released, maybe you can drop this?",
+      "revId": "d637331f6052ec808f376517e62e78bcf6c92937",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
