@@ -24,17 +24,19 @@ The Design Studio Composition Engine is deployed within a Docker image in the Do
 
 0.0.32-SNAPSHOT, 2018-07-05
 ---------------------------
-* ACUMOS-1065 : Update DS Modules code to point to CDS 1.15.3.
-* ACUMOS-1197 : DS allow single-model composite solution.
+* ACUMOS-1002 : To allow to connect output of multiple model to Collator.
 * ACUMOS-1003 : Update CE Modify Node API for Collator (BE).
 * ACUMOS-1004 : Update CE Delete Node API for Collator (BE).
 * ACUMOS-1005 : Update CE Delete Link API for Collator (BE).
+* ACUMOS-1006 : Update CE Validate Composite Solution API.
+* ACUMOS-1127 : Enhance DS back end to return error when model cannot be dropped on canvas.(EPIC)
+* ACUMOS-1039 : Design Studio Composition Engine (CE) to support message splitting (broadcast and parameter splitting capability).(EPIC)
 * ACUMOS-1055 : Update Modify Node API for Splitter (BE).
 * ACUMOS-1056 : Update Add Link API for Splitter/Collator (BE).
 * ACUMOS-1057 : Update Delete Link API for Splitter (BE).
-* ACUMOS-1006 : Update CE Validate Composite Solution API.
 * ACUMOS-1058 : Update Validate Composite Solution API.
-* ACUMOS-1127 : Enhance DS back end to return error when model cannot be dropped on canvas.
+* ACUMOS-1065 : Update DS Modules code to point to CDS 1.15.3.
+* ACUMOS-1197 : DS allow single-model composite solution.
 
 
 0.0.30-SNAPSHOT, 2018-06-06
