@@ -81,67 +81,115 @@ class SquareMessage(NamedTuple):
 
 def add(i: ComputeInput) -> ComputeResult:
     '''Returns a named tuple with the sum of the numeric arguments, and a revised string argument.'''
-    return ComputeResult(i.f1 + i.f2, i.s + ' sum')
+    print('add: received {0}'.format(i))
+    r = ComputeResult(i.f1 + i.f2, i.s + ' sum')
+    print('add: returning {0}'.format(r))
+    return r
 
 def average(i: ComputeInput) -> ComputeResult:
     '''Returns a named tuple with the mean of the numeric arguments, and a revised string argument.'''
-    return ComputeResult((i.f1 + i.f2)/2.0, i.s + ' mean')
+    print('average: received {0}'.format(i))
+    r = ComputeResult((i.f1 + i.f2)/2.0, i.s + ' mean')
+    print('average: returning {0}'.format(r))
+    return r
 
 def concatenate(i: ConcatenateInput) -> ConcatenateOutput:
     '''Stringify a double and concatenate it with the another string input'''
-    return ConcatenateOutput(i.s + str(i.d))
+    print('concatenate: received {0}'.format(i))
+    r = ConcatenateOutput(i.s + str(i.d))
+    print('concatenate: returning {0}'.format(r))
+    return r
 
-def classify(dci: ComputeInput) -> ComputeInput:
+def classify(i: ComputeInput) -> ComputeInput:
     '''Passes thru a named tuple with two numeric values and one string value.'''
-    return dci
+    print('classify: received {0}'.format(i))
+    r = i
+    print('classify: returning {0}'.format(r))
+    return r
 
 def ingest(i: ComputeInput) -> ComputeInput:
     '''Returns its input.'''
-    return i
+    print('ingest: received {0}'.format(i))
+    r = i
+    print('ingest: returning {0}'.format(r))
+    return r
 
 def manipulate(i: ManipulateMessage) -> ManipulateMessage:
     '''Returns its input.'''
-    return i
+    print('manipulate: received {0}'.format(i))
+    r = i
+    print('manipulate: returning {0}'.format(r))
+    return r
 
 def multiply(i: ComputeInput) -> ComputeResult:
     '''Returns a named tuple with the product of the numeric arguments, and a revised string argument.'''
-    return ComputeResult(i.f1 * i.f2, i.s + ' product')
+    print('multiply: received {0}'.format(i))
+    r = ComputeResult(i.f1 * i.f2, i.s + ' product')
+    print('multiply: returning {0}'.format(r))
+    return r
 
 def output(i: ManipulateMessage) -> ManipulateMessage:
     '''Returns its input.'''
-    return i
+    print('output: received {0}'.format(i))
+    r = i
+    print('output: returning {0}'.format(r))
+    return r
 
-def padd(l : ParmInput) -> ParmOutput:
+def padd(i : ParmInput) -> ParmOutput:
     '''Returns a named tuple with the sum of the numeric arguments'''
-    return ParmOutput(l.f1 + l.f2)
+    print('padd: received {0}'.format(i))
+    r = ParmOutput(i.f1 + i.f2)
+    print('padd: returning {0}'.format(r))
+    return r
 
-def paverage(l : ParmInput) -> ParmOutput:
+def paverage(i : ParmInput) -> ParmOutput:
     '''Returns a named tuple with the mean of the numeric arguments'''
-    return ParmOutput((l.f1 + l.f2) / 2.0)
+    print('paverage: received {0}'.format(i))
+    r = ParmOutput((i.f1 + i.f2) / 2.0)
+    print('paverage: returning {0}'.format(r))
+    return r
 
 def pmultiply(i: ParmInput) -> ParmOutput:
     '''Returns a named tuple with the product of the numeric arguments'''
-    return ParmOutput(i.f1 * i.f2)
+    print('pmultiply: received {0}'.format(i))
+    r = ParmOutput(i.f1 * i.f2)
+    print('pmultiply: returning {0}'.format(r))
+    return r
 
-def predict(l : ComputeResultList) -> ComputeResultList:
-    '''Passes thru a list of named tuple, each with one numeric value and one string value.'''
-    return l
+def predict(i : ComputeResultList) -> ComputeResultList:
+    '''Returns its input, a list of named tuple, each with one numeric value and one string value.'''
+    print('predict: received {0}'.format(i))
+    r = i
+    print('predict: returning {0}'.format(r))
+    return r
 
 def poutput(i: ParmMessage) -> ParmMessage:
     '''Returns its input.'''
-    return i
+    print('poutput: received {0}'.format(i))
+    r = i
+    print('poutput: returning {0}'.format(r))
+    return r
 
 def psubtract(i: ParmInput) -> ParmOutput:
     '''Returns a named tuple with the difference of the numeric arguments'''
-    return ParmOutput(i.f1 - i.f2)
+    print('psubtract: received {0}'.format(i))
+    r = ParmOutput(i.f1 - i.f2)
+    print('psubtract: returning {0}'.format(r))
+    return r
 
 def square(i: SquareMessage) -> SquareMessage:
     '''Returns a named tuple with the square of the numeric argument.'''
-    return SquareMessage(i.d * i.d)
+    print('square: received {0}'.format(i))
+    r = SquareMessage(i.d * i.d)
+    print('square: returning {0}'.format(r))
+    return r
 
 def subtract(i: ComputeInput) -> ComputeResult:
     '''Returns a named tuple with the difference of the numeric arguments, and a revised string argument.'''
-    return ComputeResult(i.f1 - i.f2, i.s + ' difference')
+    print('subtract: received {0}'.format(i))
+    r = ComputeResult(i.f1 - i.f2, i.s + ' difference')
+    print('subtract: returning {0}'.format(r))
+    return r
 
 # Test the methods
 
@@ -176,9 +224,9 @@ res = manipulate(ci)
 assert(res.difference == ci.difference and res.product == ci.product and res.average == ci.average)
 
 print('Test multiply')
-ci = ComputeInput(1.0, 2.0, "string")
+ci = ComputeInput(2.0, 3.0, "string")
 res = multiply(ci)
-assert(res.f >= 2.0)
+assert(res.f >= 6.0)
 
 print('Test output')
 ci = ManipulateMessage(1.0, 2.0, 3.0)
@@ -196,9 +244,9 @@ res = paverage(ci)
 assert(res.f > 1.0 and res.f < 2.0)
 
 print('Test pmultiply')
-ci = ParmInput(1.0, 2.0)
+ci = ParmInput(3.0, 4.0)
 res = pmultiply(ci)
-assert(res.f >= 2.0)
+assert(res.f >= 12.0)
 
 print('Test poutput')
 ci = ParmMessage(1.0, 2.0, 3.0, 4.0, "string")
@@ -224,11 +272,6 @@ assert(res.d >= ci.d * ci.d)
 print('Test subtract')
 ci = ComputeInput(1.0, 2.0, "string")
 res = subtract(ci)
-assert(res.f < ci.f1 and res.f < ci.f2)
-
-print('Test psubtract')
-ci = ComputeInput(1.0, 2.0, "string")
-res = psubtract(ci)
 assert(res.f < ci.f1 and res.f < ci.f2)
 
 # Dump and on-board the methods as models
