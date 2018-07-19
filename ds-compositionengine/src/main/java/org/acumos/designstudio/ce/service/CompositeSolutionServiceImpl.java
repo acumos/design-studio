@@ -475,6 +475,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				}
 				// 5.4 update the solutionRevisoin (i.e., to update the modified date of the solutionrevision)
 				mlpSR.setModified(currentDate);
+				mlpSR.setDescription(dscs.getDescription());
 				cdmsClient.updateSolutionRevision(mlpSR);
 	
 				// 5.5 Update the solution (i.e., to update the modified date of the solution).
