@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed5f7a69_221acb2a",
+        "filename": "taus",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-19T15:02:03Z",
+      "side": 1,
+      "message": "Please remove this file!",
+      "revId": "4bbd55d28ef437849e35c5eddedf9cc79cadf833",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
