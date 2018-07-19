@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "20c954c5_47f8ebaa",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-19T09:49:51Z",
+      "side": 1,
+      "message": "Typo",
+      "range": {
+        "startLine": 476,
+        "startChar": 22,
+        "endLine": 476,
+        "endChar": 38
+      },
+      "revId": "e4d3c7f2077755068c4def3890e4c8f222b63cd3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb0c06b6_d53a4a9c",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-19T09:49:51Z",
+      "side": 1,
+      "message": "This will not yield the result you expect.  But you don\u0027t want to print a byte array, not ever.",
+      "revId": "e4d3c7f2077755068c4def3890e4c8f222b63cd3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f907461d_4119db84",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-19T09:49:51Z",
+      "side": 1,
+      "message": "don\u0027t dump the entire CDUMP file to the log every time",
+      "revId": "e4d3c7f2077755068c4def3890e4c8f222b63cd3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22fc3f24_9ebf7ced",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/DSPayload.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-19T09:49:51Z",
+      "side": 1,
+      "message": "This is a transport model?  The usual convention is to use the suffix \"Dto\" for \"Data transfer object\".  Then use a descriptive name.  Payload could be a missile, a television, a byte array.",
+      "range": {
+        "startLine": 24,
+        "startChar": 13,
+        "endLine": 24,
+        "endChar": 22
+      },
+      "revId": "e4d3c7f2077755068c4def3890e4c8f222b63cd3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b0dc01d_3861ee0b",
+        "filename": "taus",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-19T09:49:51Z",
+      "side": 1,
+      "message": "Please remove this file",
+      "revId": "e4d3c7f2077755068c4def3890e4c8f222b63cd3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
