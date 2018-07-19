@@ -475,6 +475,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				}
 				// 5.4 update the solutionRevisoin (i.e., to update the modified date of the solutionrevision)
 				mlpSR.setModified(currentDate);
+				mlpSR.setDescription(dscs.getDescription());
 				cdmsClient.updateSolutionRevision(mlpSR);
 	
 				// 5.5 Update the solution (i.e., to update the modified date of the solution).
@@ -988,7 +989,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		                		resultVo.setSuccess("true");
 		                	}else {
 		                		resultVo.setSuccess("false");
-		                        resultVo.setErrorDescription("Invalid Composite Solution : Incorrect ports connected connected to MLModel \"" + node.getName() + "\"");
+		                        resultVo.setErrorDescription("Invalid Composite Solution : Incorrect ports are connected to MLModel \"" + node.getName() + "\"");
 							}
 		            	} else {
 		            		//Indicates multiple nodes are connected to the Node and vlaidation fails. 
@@ -1009,7 +1010,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		                    		resultVo.setErrorDescription("");
 		                    	}else {
 		                    		resultVo.setSuccess("false");
-		                            resultVo.setErrorDescription("Invalid Composite Solution : Incorrect ports connected connected to MLModel \"" + node.getName() + "\"");
+		                            resultVo.setErrorDescription("Invalid Composite Solution : Incorrect ports are connected to MLModel \"" + node.getName() + "\"");
 								}
 		                	} else { //Indicates its connected to multiple nodes, and validation fails.
 		                		resultVo.setSuccess("false");

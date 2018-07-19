@@ -22,6 +22,11 @@ Design Studio Release Notes
 
 The Design Studio Composition Engine is deployed within a Docker image in the Docker registry.  TOSCAGenerator Client is uploaded in Nexus repository as a jar file.
 
+0.0.33-SNAPSHOT, 2018-07-20
+---------------------------
+* ACUMOS-1357 : Save the Composite Solution Description at Revision Level.
+
+
 0.0.32-SNAPSHOT, 2018-07-05
 ---------------------------
 * ACUMOS-1002 : To allow to connect output of multiple model to Collator.
