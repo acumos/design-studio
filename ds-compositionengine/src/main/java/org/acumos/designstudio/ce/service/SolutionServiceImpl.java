@@ -49,6 +49,7 @@ import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.DSUtil;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
+import org.acumos.designstudio.ce.vo.DSPayload;
 import org.acumos.designstudio.ce.vo.DSSolution;
 import org.acumos.designstudio.ce.vo.MatchingModel;
 import org.acumos.designstudio.ce.vo.cdump.Cdump;
@@ -423,6 +424,8 @@ public class SolutionServiceImpl implements ISolutionService {
 	public String readCompositeSolutionGraph(String userId, String solutionID, String version) throws AcumosException {
 		boolean isValidVersion = false;
 		String solutionRevisionId = "";
+		String description = "";
+		DSPayload dsPayload = new DSPayload();
 		logger.debug(EELFLoggerDelegator.debugLogger, " fetchJsonTOSCA()  : Begin ");
 		String result = "";
 		ByteArrayOutputStream byteArrayOutputStream = null;
@@ -431,6 +434,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				List<MLPSolutionRevision> rev = getSolutionRevisions(solutionID);
 				if (null != rev && !rev.isEmpty()) {
 					for (MLPSolutionRevision mlp : rev) {
+						description = mlp.getDescription();
 						if (mlp.getVersion().equalsIgnoreCase(version)) {
 							solutionRevisionId = mlp.getRevisionId();
 							isValidVersion = true;
@@ -462,10 +466,14 @@ public class SolutionServiceImpl implements ISolutionService {
 			if (null != nexusURI && !"".equals(nexusURI)) {
 				byteArrayOutputStream = getPayload(nexusURI);
 				result = byteArrayOutputStream.toString();
+				logger.debug(EELFLoggerDelegator.debugLogger," ByteArrayOutputStream from Nexus  : ", result );
+				dsPayload.setPayload(result);
+				dsPayload.setDescription(description);
+				result = mapper.writeValueAsString(dsPayload);
+				logger.debug(EELFLoggerDelegator.debugLogger," DS Payload in Json String format :  ", result );
 				String path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
 				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionID, "json", result);
-				logger.debug(EELFLoggerDelegator.debugLogger,
-						" Response in String Format :  {} ", result );
+				logger.debug(EELFLoggerDelegator.debugLogger," Response in String Format :  {} ", result );
 
 			} else {
 				result = "{\"error\": \"CDUMP Artifact Not Found for this solution\"}";

@@ -1,0 +1,21 @@
+[1mdiff --git a/ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java b/ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java[m
+[1mindex 9ab8abe..0b04ef1 100644[m
+[1m--- a/ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java[m
+[1m+++ b/ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java[m
+[36m@@ -478,7 +478,7 @@[m [mpublic class CompositeSolutionServiceImpl implements ICompositeSolutionService {[m
+ 					path, payload.length());[m
+ 			logger.debug(EELFLoggerDelegator.debugLogger,"4. Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());[m
+ 			// 5.3 upload the cdump file in Nexus Repositry. (file name should be the same as previous one).[m
+[31m-			uploadFilesToRepository(mlpSolution.getSolutionId(), dscs.getVersion(), cdumpArtifact);[m
+[32m+[m			[32m//uploadFilesToRepository(mlpSolution.getSolutionId(), dscs.getVersion(), cdumpArtifact);[m
+ [m
+ 			// Fetch the existing artifact[m
+ 			List<MLPArtifact> artfactsList = cdmsClient.getSolutionRevisionArtifacts(mlpSR.getSolutionId(), mlpSR.getRevisionId());[m
+[36m@@ -500,6 +500,7 @@[m [mpublic class CompositeSolutionServiceImpl implements ICompositeSolutionService {[m
+ 			}[m
+ 			// 5.4 update the solutionRevisoin (i.e., to update the modified date of the solutionrevision)[m
+ 			mlpSR.setModified(currentDate);[m
+[32m+[m			[32mmlpSR.setDescription(dscs.getDescription());[m
+ 			cdmsClient.updateSolutionRevision(mlpSR);[m
+ [m
+ 			// 5.5 Update the solution (i.e., to update the modified date of the solution).[m
