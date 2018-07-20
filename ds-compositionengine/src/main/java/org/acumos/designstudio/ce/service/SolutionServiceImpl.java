@@ -468,9 +468,9 @@ public class SolutionServiceImpl implements ISolutionService {
 				result = byteArrayOutputStream.toString();
 				dsPayload.setPayload(result);
 				dsPayload.setDescription(description);
-				result = mapper.writeValueAsString(dsPayload);
 				String path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
 				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionID, "json", result);
+				result = mapper.writeValueAsString(dsPayload);
 				logger.debug(EELFLoggerDelegator.debugLogger," Response in String Format :  {} ", result );
 
 			} else {
