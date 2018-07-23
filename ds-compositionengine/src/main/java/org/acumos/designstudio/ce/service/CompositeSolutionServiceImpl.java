@@ -277,6 +277,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				payload = gson.toJson(cdump);
 				cdumpFileName = "acumos-cdump" + "-" + mlpSolution.getSolutionId();
 				DSUtil.writeDataToFile(path, cdumpFileName, "json", payload);
+				// store members (parent-child relationships) of composite solutions into CDS.
+				boolean flag = storeCompositeSolutionMembers(cdump);
+				logger.debug(EELFLoggerDelegator.debugLogger,"Store members (parent-child relationships) of composite solutions into CDS : Status : {}", flag);
 			}
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in insertCompositeSolution() : Failed to Find the Cdump File ",e);
@@ -401,7 +404,10 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						}
 					}
 				}
-				
+				// update members (parent-child relationships) of composite solutions into CDS.
+				boolean flag = storeCompositeSolutionMembers(cdump);
+				logger.debug(EELFLoggerDelegator.debugLogger,"Store members (parent-child relationships) of composite solutions into CDS : Status : {}", flag);
+			
 			} else {
 				// New Case: When user tries to update the existting solution with a different name Update the dscs with the new values
 				dscs.setcId(dscs.getSolutionId());
@@ -680,6 +686,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								" Successfully Deleted the Solution Revision ");
 						solutionFound = true;
 						result = true;
+						deleteMember(solutionId);
 					}
 				}
 
@@ -2240,6 +2247,49 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	
 	public void setGenericDataMapperServiceImpl(GenericDataMapperServiceImpl gdmService){
 		this.gdmService = gdmService;
+	}
+	
+	private boolean storeCompositeSolutionMembers(Cdump cdump) throws ServiceException {
+
+		boolean flag = false;
+		try {
+			List<Nodes> nodes = cdump.getNodes();
+			List<String> parentChildList = cdmsClient.getCompositeSolutionMembers(cdump.getSolutionId());
+			if (!parentChildList.isEmpty() & parentChildList != null) {
+				for (String childNode : parentChildList) {
+					cdmsClient.dropCompositeSolutionMember(cdump.getSolutionId(), childNode);
+				}
+			}
+
+			if (!nodes.isEmpty() & nodes != null) {
+				for (Nodes node : nodes) {
+					cdmsClient.addCompositeSolutionMember(cdump.getSolutionId(), node.getNodeSolutionId());
+				}
+				flag = true;
+			}
+		} catch (Exception e) {
+			flag = false;
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured in storeCompositeSolutionMembers() ", e);
+			throw new ServiceException(" Exception in updateCompositeSolution() ", "333","Failed to add CompositeSolution Member");
+		}
+		return flag;
+	}
+	
+	private void deleteMember(String solutionId) throws ServiceException {
+		
+		try {
+		List<String> parentChildList = cdmsClient.getCompositeSolutionMembers(solutionId);
+			if(!parentChildList.isEmpty() & parentChildList != null){
+				for(String childNode: parentChildList){
+					cdmsClient.dropCompositeSolutionMember(solutionId, childNode);
+				}
+			}
+			
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured in deleteMember() ", e);
+			throw new ServiceException(" Exception in updateCompositeSolution() ", "333","Failed to drop CompositeSolution Member");
+		}		
+		
 	}
 	
 }
