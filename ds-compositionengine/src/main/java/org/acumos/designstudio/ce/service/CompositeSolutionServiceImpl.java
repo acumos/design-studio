@@ -277,6 +277,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				payload = gson.toJson(cdump);
 				cdumpFileName = "acumos-cdump" + "-" + mlpSolution.getSolutionId();
 				DSUtil.writeDataToFile(path, cdumpFileName, "json", payload);
+				// store members (parent-child relationships) of composite solutions into CDS.
+				getMember(cdump);
 			}
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in insertCompositeSolution() : Failed to Find the Cdump File ",e);
@@ -401,7 +403,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						}
 					}
 				}
-				
+				// update members (parent-child relationships) of composite solutions into CDS.
+				getMember(cdump);
 			} else {
 				// New Case: When user tries to update the existting solution with a different name Update the dscs with the new values
 				dscs.setcId(dscs.getSolutionId());
@@ -680,6 +683,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								" Successfully Deleted the Solution Revision ");
 						solutionFound = true;
 						result = true;
+						deleteMember(solutionId, userId);
 					}
 				}
 
@@ -2240,6 +2244,45 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	
 	public void setGenericDataMapperServiceImpl(GenericDataMapperServiceImpl gdmService){
 		this.gdmService = gdmService;
+	}
+	
+	private void getMember(Cdump cdump){
+		List<Nodes> nodes = cdump.getNodes();
+		List<String> parentChildList = cdmsClient.getCompositeSolutionMembers(cdump.getSolutionId());
+		if(parentChildList.isEmpty() & parentChildList != null){
+			if(nodes != null && !nodes.isEmpty()){
+				for(Nodes node: nodes){
+					cdmsClient.dropCompositeSolutionMember(cdump.getSolutionId(), node.getNodeSolutionId());
+				}
+			}
+		}
+		if(nodes != null && !nodes.isEmpty()){
+			for(Nodes node: nodes){
+				cdmsClient.addCompositeSolutionMember(cdump.getSolutionId(), node.getNodeSolutionId());
+			}
+		}
+	}
+	
+	private void deleteMember(String solutionId, String UserId){
+		
+		String path = DSUtil.readCdumpPath(UserId, confprops.getToscaOutputFolder());
+		String cdumpFileName = "acumos-cdump" + "-" + solutionId;
+		ObjectMapper mapper = new ObjectMapper();
+		Cdump cdump = null;
+		try {
+			cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);		
+			
+			List<Nodes> nodes = cdump.getNodes();
+			if(nodes != null && !nodes.isEmpty()){
+				for(Nodes node: nodes){
+					cdmsClient.dropCompositeSolutionMember(cdump.getSolutionId(), node.getNodeSolutionId());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured in deleteMember() ", e);
+		}		
+		
 	}
 	
 }
