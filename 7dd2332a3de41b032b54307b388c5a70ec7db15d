@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5e3a490_921981bb",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-23T11:33:55Z",
+      "side": 1,
+      "message": "get method should return some value",
+      "range": {
+        "startLine": 281,
+        "startChar": 4,
+        "endLine": 281,
+        "endChar": 13
+      },
+      "revId": "7dd2332a3de41b032b54307b388c5a70ec7db15d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98df9c81_9ca6c34e",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-23T11:33:55Z",
+      "side": 1,
+      "message": "get method should return some value. The above comment the method name does not match",
+      "range": {
+        "startLine": 407,
+        "startChar": 4,
+        "endLine": 407,
+        "endChar": 13
+      },
+      "revId": "7dd2332a3de41b032b54307b388c5a70ec7db15d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59c7141b_d89f9487",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2249,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-23T11:33:55Z",
+      "side": 1,
+      "message": "change method name to : processMember(Cdump cdump).  Also update the call reference accordingly.",
+      "range": {
+        "startLine": 2249,
+        "startChar": 14,
+        "endLine": 2249,
+        "endChar": 23
+      },
+      "revId": "7dd2332a3de41b032b54307b388c5a70ec7db15d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6773a5b4_5903e78d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2252,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-23T11:33:55Z",
+      "side": 1,
+      "message": "should be if(!parentChildList.isEmpty() \u0026 .....",
+      "range": {
+        "startLine": 2252,
+        "startChar": 5,
+        "endLine": 2252,
+        "endChar": 20
+      },
+      "revId": "7dd2332a3de41b032b54307b388c5a70ec7db15d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ba06e6a_6e41deba",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2257,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-23T11:33:55Z",
+      "side": 1,
+      "message": "Logic is not correct",
+      "range": {
+        "startLine": 2253,
+        "startChar": 3,
+        "endLine": 2257,
+        "endChar": 4
+      },
+      "revId": "7dd2332a3de41b032b54307b388c5a70ec7db15d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d959666_156561ca",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2266,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-23T11:33:55Z",
+      "side": 1,
+      "message": "Logic is not correct",
+      "range": {
+        "startLine": 2266,
+        "startChar": 14,
+        "endLine": 2266,
+        "endChar": 26
+      },
+      "revId": "7dd2332a3de41b032b54307b388c5a70ec7db15d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b2e6f56_f1f52cf1",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2273,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-23T11:33:55Z",
+      "side": 1,
+      "message": "No need to read cdump",
+      "range": {
+        "startLine": 2273,
+        "startChar": 3,
+        "endLine": 2273,
+        "endChar": 8
+      },
+      "revId": "7dd2332a3de41b032b54307b388c5a70ec7db15d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61adb701_519aad40",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2275,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-23T11:33:55Z",
+      "side": 1,
+      "message": "get the solutions members from DB and drop one by one.",
+      "range": {
+        "startLine": 2275,
+        "startChar": 15,
+        "endLine": 2275,
+        "endChar": 20
+      },
+      "revId": "7dd2332a3de41b032b54307b388c5a70ec7db15d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
