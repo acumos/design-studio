@@ -53,8 +53,8 @@ import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.Artifact;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
-import org.acumos.designstudio.ce.vo.DSSolution;
 import org.acumos.designstudio.ce.vo.DSResult;
+import org.acumos.designstudio.ce.vo.DSSolution;
 import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 import org.acumos.designstudio.ce.vo.blueprint.BPCollatorMap;
 import org.acumos.designstudio.ce.vo.blueprint.BPDataBrokerMap;
@@ -86,8 +86,6 @@ import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterInputField;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapInput;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapOutput;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterOutputField;
-import org.acumos.nexus.client.NexusArtifactClient;
-import org.acumos.nexus.client.data.UploadArtifactInfo;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -277,6 +275,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				payload = gson.toJson(cdump);
 				cdumpFileName = "acumos-cdump" + "-" + mlpSolution.getSolutionId();
 				DSUtil.writeDataToFile(path, cdumpFileName, "json", payload);
+				// store members (parent-child relationships) of composite solutions into CDS.
+				boolean flag = processMember(cdump);
+				logger.debug(EELFLoggerDelegator.debugLogger,"Store members (parent-child relationships) of composite solutions into CDS :  Status :", flag);
 			}
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in insertCompositeSolution() : Failed to Find the Cdump File ",e);
@@ -401,7 +402,10 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						}
 					}
 				}
-				
+				// update members (parent-child relationships) of composite solutions into CDS.
+				boolean flag = processMember(cdump);
+				logger.debug(EELFLoggerDelegator.debugLogger,"Store members (parent-child relationships) of composite solutions into CDS :  Status :", flag);
+			
 			} else {
 				// New Case: When user tries to update the existting solution with a different name Update the dscs with the new values
 				dscs.setcId(dscs.getSolutionId());
@@ -680,6 +684,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								" Successfully Deleted the Solution Revision ");
 						solutionFound = true;
 						result = true;
+						deleteMember(solutionId);
 					}
 				}
 
@@ -2240,6 +2245,50 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	
 	public void setGenericDataMapperServiceImpl(GenericDataMapperServiceImpl gdmService){
 		this.gdmService = gdmService;
+	}
+	
+	private boolean processMember(Cdump cdump) {
+
+		boolean flag = false;
+		try {
+			List<Nodes> nodes = cdump.getNodes();
+			List<String> parentChildList = cdmsClient.getCompositeSolutionMembers(cdump.getSolutionId());
+			if (!parentChildList.isEmpty() & parentChildList != null) {
+				for (String childNode : parentChildList) {
+					cdmsClient.dropCompositeSolutionMember(cdump.getSolutionId(), childNode);
+				}
+			}
+
+			if (!nodes.isEmpty() & nodes != null) {
+				for (Nodes node : nodes) {
+					cdmsClient.addCompositeSolutionMember(cdump.getSolutionId(), node.getNodeSolutionId());
+				}
+				flag = true;
+			}
+
+			return flag;
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured in deleteMember() ", e);
+			flag = false;
+		}
+		return flag;
+	}
+	
+	private void deleteMember(String solutionId){
+		
+		try {
+		List<String> parentChildList = cdmsClient.getCompositeSolutionMembers(solutionId);
+			if(!parentChildList.isEmpty() & parentChildList != null){
+				for(String childNode: parentChildList){
+					cdmsClient.dropCompositeSolutionMember(solutionId, childNode);
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured in deleteMember() ", e);
+		}		
+		
 	}
 	
 }
