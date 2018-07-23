@@ -25,6 +25,7 @@ The Design Studio Composition Engine is deployed within a Docker image in the Do
 0.0.33-SNAPSHOT, 2018-07-20
 ---------------------------
 * ACUMOS-1357 : Save the Composite Solution Description at Revision Level.
+* ACUMOS-1236 : Enhance design studio to store members (parent-child relationships) of composite solutions.
 
 
 0.0.32-SNAPSHOT, 2018-07-05
