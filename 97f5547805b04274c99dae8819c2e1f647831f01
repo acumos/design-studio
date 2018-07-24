@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebb022a8_3049090f",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 2271,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-24T14:28:19Z",
+      "side": 1,
+      "message": "throw new ServiceException",
+      "range": {
+        "startLine": 2271,
+        "startChar": 3,
+        "endLine": 2271,
+        "endChar": 9
+      },
+      "revId": "97f5547805b04274c99dae8819c2e1f647831f01",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85006b6e_b2600c85",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 2288,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-24T14:28:19Z",
+      "side": 1,
+      "message": "please remove e.printStackTrace();",
+      "range": {
+        "startLine": 2288,
+        "startChar": 20,
+        "endLine": 2288,
+        "endChar": 23
+      },
+      "revId": "97f5547805b04274c99dae8819c2e1f647831f01",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
