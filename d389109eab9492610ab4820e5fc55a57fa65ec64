@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fae36a94_f6de5983",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2266,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-24T12:55:53Z",
+      "side": 1,
+      "message": "no need to set flag for each node add.  After for loop you can set it to true.  In catch block you can set it to false again in case of any error it will be set to false.",
+      "range": {
+        "startLine": 2266,
+        "startChar": 15,
+        "endLine": 2266,
+        "endChar": 16
+      },
+      "revId": "d389109eab9492610ab4820e5fc55a57fa65ec64",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a3dcf64_298d98fc",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2269,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-24T12:55:53Z",
+      "side": 1,
+      "message": "return flag instead of check and then returning value \"true\"",
+      "range": {
+        "startLine": 2269,
+        "startChar": 10,
+        "endLine": 2269,
+        "endChar": 12
+      },
+      "revId": "d389109eab9492610ab4820e5fc55a57fa65ec64",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1827350_2b69b345",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2273,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-24T12:55:53Z",
+      "side": 1,
+      "message": "remove e.printStackTrace();",
+      "range": {
+        "startLine": 2273,
+        "startChar": 20,
+        "endLine": 2273,
+        "endChar": 23
+      },
+      "revId": "d389109eab9492610ab4820e5fc55a57fa65ec64",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8a6f2c1_3c2cefdc",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2276,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-24T12:55:53Z",
+      "side": 1,
+      "message": "return flag, not value",
+      "range": {
+        "startLine": 2276,
+        "startChar": 14,
+        "endLine": 2276,
+        "endChar": 15
+      },
+      "revId": "d389109eab9492610ab4820e5fc55a57fa65ec64",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
