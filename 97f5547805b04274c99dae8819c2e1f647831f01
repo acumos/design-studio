@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "e75d1715_05de3ef6",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-24T14:29:28Z",
+      "side": 1,
+      "message": "This will not print the value of the flag. Must use {}",
+      "range": {
+        "startLine": 280,
+        "startChar": 128,
+        "endLine": 280,
+        "endChar": 134
+      },
+      "revId": "97f5547805b04274c99dae8819c2e1f647831f01",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5712fae8_0943725b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-24T14:29:28Z",
+      "side": 1,
+      "message": "See above missing {}",
+      "range": {
+        "startLine": 407,
+        "startChar": 128,
+        "endLine": 407,
+        "endChar": 134
+      },
+      "revId": "97f5547805b04274c99dae8819c2e1f647831f01",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e87e5b62_ab334527",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 2250,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-24T14:29:28Z",
+      "side": 1,
+      "message": "Please pick a good method name.  Like storeCompositeSolutionmembers or something.",
+      "range": {
+        "startLine": 2250,
+        "startChar": 17,
+        "endLine": 2250,
+        "endChar": 30
+      },
+      "revId": "97f5547805b04274c99dae8819c2e1f647831f01",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ebb022a8_3049090f",
         "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
         "patchSetId": 4
@@ -41,6 +110,29 @@
         "startChar": 20,
         "endLine": 2288,
         "endChar": 23
+      },
+      "revId": "97f5547805b04274c99dae8819c2e1f647831f01",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "785c1ee8_e5d16559",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 2288,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-07-24T14:29:28Z",
+      "side": 1,
+      "message": "Remove printStackTrace",
+      "range": {
+        "startLine": 2288,
+        "startChar": 5,
+        "endLine": 2288,
+        "endChar": 20
       },
       "revId": "97f5547805b04274c99dae8819c2e1f647831f01",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
