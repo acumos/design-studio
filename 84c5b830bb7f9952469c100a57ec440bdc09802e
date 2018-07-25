@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b173bd4e_017606be",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1377,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-25T12:16:11Z",
+      "side": 1,
+      "message": "In correct logic, this code has to be after check if only one last node. In case of multiple last node, no need to check whether its collator or not.",
+      "range": {
+        "startLine": 1372,
+        "startChar": 4,
+        "endLine": 1377,
+        "endChar": 5
+      },
+      "revId": "84c5b830bb7f9952469c100a57ec440bdc09802e",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
