@@ -138,7 +138,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	@Autowired
 	private DataBrokerServiceImpl dbService;
-
+	
 	@Override
 	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException {
 
@@ -963,7 +963,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	}
 
 	private DSResult validateEachNode(Cdump cdump) {
-		 DSResult resultVo = new DSResult();
+		DSResult resultVo = new DSResult();
 		List<Nodes> nodes = cdump.getNodes();
 		List<Relations> relationsList = cdump.getRelations();
 		//Get the First and Last Model 
@@ -1369,7 +1369,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			if(firstNodeNames.size() == 1){
 				//Composite solution should have only one last Node
 				List<String> lastNodeNames = getNodesForPosition(cdump, "last");
-				if(lastNodeNames.size() == 1){
+				String lastNodeId = getNodeIdForPosition(cdump,LAST_NODE_POSITION);
+				Nodes finalNode = getNodeForId(nodes, lastNodeId);
+				if(finalNode.getType().getName().equals(COLLATOR_TYPE)){
+					result.setSuccess("false");
+					result.setErrorDescription("Invalid Composite Solution : Collator \"" + finalNode.getName() + "\" should not be the Last Node");
+				}else if(lastNodeNames.size() == 1){
 					result = validateEachNode(cdump);
 				} else {
 					result.setSuccess("false");
@@ -1383,7 +1388,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			result.setSuccess("false");
 			result.setErrorDescription("Invalid Composite Solution : " + isolatedNodesName + " are isolated nodes");
 		}
-		
 		return result;
 	}
 
