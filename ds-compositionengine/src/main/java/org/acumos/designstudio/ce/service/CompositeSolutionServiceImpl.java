@@ -138,7 +138,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	@Autowired
 	private DataBrokerServiceImpl dbService;
-
+	
 	@Override
 	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException {
 
@@ -963,7 +963,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	}
 
 	private DSResult validateEachNode(Cdump cdump) {
-		 DSResult resultVo = new DSResult();
+		DSResult resultVo = new DSResult();
 		List<Nodes> nodes = cdump.getNodes();
 		List<Relations> relationsList = cdump.getRelations();
 		//Get the First and Last Model 
@@ -1365,12 +1365,19 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		List<String> isolatedNodesName = getIsolatedNodesName(nodes, relationsList);
 		if(isolatedNodesName.isEmpty()){
 			//Composite solution should have only one first Node
-			List<String> firstNodeNames = getNodesForPosition(cdump, "first");
+			List<String> firstNodeNames = getNodesForPosition(cdump, FIRST_NODE_POSITION);
 			if(firstNodeNames.size() == 1){
 				//Composite solution should have only one last Node
-				List<String> lastNodeNames = getNodesForPosition(cdump, "last");
+				List<String> lastNodeNames = getNodesForPosition(cdump, LAST_NODE_POSITION);
 				if(lastNodeNames.size() == 1){
-					result = validateEachNode(cdump);
+					String lastNodeId = getNodeIdForPosition(cdump,LAST_NODE_POSITION);
+					Nodes lastNode = getNodeForId(nodes, lastNodeId);
+					if(lastNode.getType().getName().equals(COLLATOR_TYPE)){
+						result.setSuccess("false");
+						result.setErrorDescription("Invalid Composite Solution : Collator \"" + lastNode.getName() + "\" should not be the Last Node");
+					}else {
+						result = validateEachNode(cdump);
+					}
 				} else {
 					result.setSuccess("false");
 					result.setErrorDescription("Invalid Composite Solution : Nodes " + lastNodeNames + " are not connected");
@@ -1383,7 +1390,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			result.setSuccess("false");
 			result.setErrorDescription("Invalid Composite Solution : " + isolatedNodesName + " are isolated nodes");
 		}
-		
 		return result;
 	}
 
