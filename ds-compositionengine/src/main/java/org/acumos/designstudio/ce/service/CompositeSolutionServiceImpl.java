@@ -138,7 +138,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	@Autowired
 	private DataBrokerServiceImpl dbService;
-
+	
 	@Override
 	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException {
 
@@ -963,7 +963,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	}
 
 	private DSResult validateEachNode(Cdump cdump) {
-		 DSResult resultVo = new DSResult();
+		DSResult resultVo = new DSResult();
 		List<Nodes> nodes = cdump.getNodes();
 		List<Relations> relationsList = cdump.getRelations();
 		//Get the First and Last Model 
@@ -1365,16 +1365,19 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		List<String> isolatedNodesName = getIsolatedNodesName(nodes, relationsList);
 		if(isolatedNodesName.isEmpty()){
 			//Composite solution should have only one first Node
-			List<String> firstNodeNames = getNodesForPosition(cdump, "first");
+			List<String> firstNodeNames = getNodesForPosition(cdump, FIRST_NODE_POSITION);
 			if(firstNodeNames.size() == 1){
 				//Composite solution should have only one last Node
-				List<String> lastNodeNames = getNodesForPosition(cdump, "last");
+				List<String> lastNodeNames = getNodesForPosition(cdump, LAST_NODE_POSITION);
 				if(lastNodeNames.size() == 1){
-					result = validateEachNode(cdump);
+						result = validateEachNode(cdump);
 				} else {
 					result.setSuccess("false");
 					result.setErrorDescription("Invalid Composite Solution : Nodes " + lastNodeNames + " are not connected");
 				}
+			} else if (firstNodeNames.size() == 0) { 
+				result.setSuccess("false");
+				result.setErrorDescription("Invalid Composite Solution : Cyclic Graph is not permitted");
 			} else {
 				result.setSuccess("false");
 				result.setErrorDescription("Invalid Composite Solution : Nodes " + firstNodeNames + " are not connected");
@@ -1383,7 +1386,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			result.setSuccess("false");
 			result.setErrorDescription("Invalid Composite Solution : " + isolatedNodesName + " are isolated nodes");
 		}
-		
 		return result;
 	}
 
@@ -2172,7 +2174,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		}
 		return node;
 	}
-	private List<String> getNodesForPosition(Cdump cdump, String position){
+
+	private List<String> getNodesForPosition(Cdump cdump, String position) {
 		List<String> nodeNames = new ArrayList<String>();
 		Set<String> sourceNodeId = new HashSet<>();
 		Set<String> targetNodeId = new HashSet<>();
@@ -2183,28 +2186,23 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			sourceNodeId.add(rlns.getSourceNodeId());
 			targetNodeId.add(rlns.getTargetNodeId());
 		}
-		
+
 		if (position.equals(FIRST_NODE_POSITION)) {
 			sourceNodeId.removeAll(targetNodeId);
-		} else {
+			for (String nodeId : sourceNodeId) {
+				node = getNodeForId(nodes, nodeId);
+				nodeNames.add(node.getName());
+			}
+		} else if(position.equals(LAST_NODE_POSITION)){
 			targetNodeId.removeAll(sourceNodeId);
-		}
-		
-		for (Relations rltn : relationsList) {
-			if (position.equals(FIRST_NODE_POSITION)) {
-				if (sourceNodeId.contains(rltn.getSourceNodeId())) {
-					node = getNodeForId(nodes, rltn.getSourceNodeId());
-					nodeNames.add(node.getName());
-				}
-			} else if (position.equals(LAST_NODE_POSITION)) {
-				if (targetNodeId.contains(rltn.getTargetNodeId())) {
-					node = getNodeForId(nodes, rltn.getTargetNodeId());
-					nodeNames.add(node.getName());
-				}
+			for (String nodeId : targetNodeId) {
+				node = getNodeForId(nodes, nodeId);
+				nodeNames.add(node.getName());
 			}
 		}
 		return nodeNames;
 	}
+
 	private String getNodeIdForPosition(Cdump cdump, String position) {
 		String nodeId = null;
 		Set<String> sourceNodeId = new HashSet<>();
@@ -2214,27 +2212,17 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			sourceNodeId.add(rlns.getSourceNodeId());
 			targetNodeId.add(rlns.getTargetNodeId());
 		}
-		
 		if (position.equals(FIRST_NODE_POSITION)) {
 			sourceNodeId.removeAll(targetNodeId);
-		} else {
+			nodeId = (sourceNodeId.iterator().hasNext() ? sourceNodeId.iterator().next() : nodeId);
+		} else if(position.equals(LAST_NODE_POSITION)){
 			targetNodeId.removeAll(sourceNodeId);
-		}
-		
-		for (Relations rltn : relationsList) {
-			if (position.equals(FIRST_NODE_POSITION)) {
-				if (sourceNodeId.contains(rltn.getSourceNodeId())) {
-					nodeId = rltn.getSourceNodeId();
-				}
-			} else if (position.equals(LAST_NODE_POSITION)) {
-				if (targetNodeId.contains(rltn.getTargetNodeId())) {
-					nodeId = rltn.getTargetNodeId();
-				}
-			}
+			nodeId = (targetNodeId.iterator().hasNext() ? targetNodeId.iterator().next() : nodeId);
 		}
 		return nodeId;
 	}
-        public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
+
+	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
 		cdmsClient = commonDataServiceRestClient;
 	}
 
@@ -2293,3 +2281,4 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	}
 	
 }
+
