@@ -1370,18 +1370,14 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				//Composite solution should have only one last Node
 				List<String> lastNodeNames = getNodesForPosition(cdump, LAST_NODE_POSITION);
 				if(lastNodeNames.size() == 1){
-					String lastNodeId = getNodeIdForPosition(cdump,LAST_NODE_POSITION);
-					Nodes lastNode = getNodeForId(nodes, lastNodeId);
-					if(lastNode.getType().getName().equals(COLLATOR_TYPE)){
-						result.setSuccess("false");
-						result.setErrorDescription("Invalid Composite Solution : Collator \"" + lastNode.getName() + "\" should not be the Last Node");
-					}else {
 						result = validateEachNode(cdump);
-					}
 				} else {
 					result.setSuccess("false");
 					result.setErrorDescription("Invalid Composite Solution : Nodes " + lastNodeNames + " are not connected");
 				}
+			} else if (firstNodeNames.size() == 0) { 
+				result.setSuccess("false");
+				result.setErrorDescription("Invalid Composite Solution : Cyclic Graph is not permitted");
 			} else {
 				result.setSuccess("false");
 				result.setErrorDescription("Invalid Composite Solution : Nodes " + firstNodeNames + " are not connected");
@@ -2178,7 +2174,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		}
 		return node;
 	}
-	private List<String> getNodesForPosition(Cdump cdump, String position){
+
+	private List<String> getNodesForPosition(Cdump cdump, String position) {
 		List<String> nodeNames = new ArrayList<String>();
 		Set<String> sourceNodeId = new HashSet<>();
 		Set<String> targetNodeId = new HashSet<>();
@@ -2189,28 +2186,23 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			sourceNodeId.add(rlns.getSourceNodeId());
 			targetNodeId.add(rlns.getTargetNodeId());
 		}
-		
+
 		if (position.equals(FIRST_NODE_POSITION)) {
 			sourceNodeId.removeAll(targetNodeId);
-		} else {
+			for (String nodeId : sourceNodeId) {
+				node = getNodeForId(nodes, nodeId);
+				nodeNames.add(node.getName());
+			}
+		} else if(position.equals(LAST_NODE_POSITION)){
 			targetNodeId.removeAll(sourceNodeId);
-		}
-		
-		for (Relations rltn : relationsList) {
-			if (position.equals(FIRST_NODE_POSITION)) {
-				if (sourceNodeId.contains(rltn.getSourceNodeId())) {
-					node = getNodeForId(nodes, rltn.getSourceNodeId());
-					nodeNames.add(node.getName());
-				}
-			} else if (position.equals(LAST_NODE_POSITION)) {
-				if (targetNodeId.contains(rltn.getTargetNodeId())) {
-					node = getNodeForId(nodes, rltn.getTargetNodeId());
-					nodeNames.add(node.getName());
-				}
+			for (String nodeId : targetNodeId) {
+				node = getNodeForId(nodes, nodeId);
+				nodeNames.add(node.getName());
 			}
 		}
 		return nodeNames;
 	}
+
 	private String getNodeIdForPosition(Cdump cdump, String position) {
 		String nodeId = null;
 		Set<String> sourceNodeId = new HashSet<>();
@@ -2220,27 +2212,17 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			sourceNodeId.add(rlns.getSourceNodeId());
 			targetNodeId.add(rlns.getTargetNodeId());
 		}
-		
 		if (position.equals(FIRST_NODE_POSITION)) {
 			sourceNodeId.removeAll(targetNodeId);
-		} else {
+			nodeId = (sourceNodeId.iterator().hasNext() ? sourceNodeId.iterator().next() : nodeId);
+		} else if(position.equals(LAST_NODE_POSITION)){
 			targetNodeId.removeAll(sourceNodeId);
-		}
-		
-		for (Relations rltn : relationsList) {
-			if (position.equals(FIRST_NODE_POSITION)) {
-				if (sourceNodeId.contains(rltn.getSourceNodeId())) {
-					nodeId = rltn.getSourceNodeId();
-				}
-			} else if (position.equals(LAST_NODE_POSITION)) {
-				if (targetNodeId.contains(rltn.getTargetNodeId())) {
-					nodeId = rltn.getTargetNodeId();
-				}
-			}
+			nodeId = (targetNodeId.iterator().hasNext() ? targetNodeId.iterator().next() : nodeId);
 		}
 		return nodeId;
 	}
-        public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
+
+	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
 		cdmsClient = commonDataServiceRestClient;
 	}
 
@@ -2298,4 +2280,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		
 	}
 	
+	public static void testValidate(){
+		
+	}
+	
 }
+
