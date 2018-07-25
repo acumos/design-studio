@@ -138,6 +138,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	@Autowired
 	private DataBrokerServiceImpl dbService;
+	
+	DSResult resultVo = new DSResult();
+	
 
 	@Override
 	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException {
@@ -894,7 +897,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	public String validateCompositeSolution(String userId, String solutionName, String solutionId, String version)
 			throws AcumosException {
 		String result = "";
-		DSResult resultVo = new DSResult();
 		logger.debug(EELFLoggerDelegator.debugLogger, "validateCompositeSolution() : Begin ");
 		String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 		ObjectMapper mapper = new ObjectMapper();
@@ -963,7 +965,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	}
 
 	private DSResult validateEachNode(Cdump cdump) {
-		 DSResult resultVo = new DSResult();
 		List<Nodes> nodes = cdump.getNodes();
 		List<Relations> relationsList = cdump.getRelations();
 		//Get the First and Last Model 
@@ -1369,11 +1370,16 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			if(firstNodeNames.size() == 1){
 				//Composite solution should have only one last Node
 				List<String> lastNodeNames = getNodesForPosition(cdump, "last");
-				if(lastNodeNames.size() == 1){
-					result = validateEachNode(cdump);
-				} else {
+				if(resultVo.getSuccess().equals("false")){
 					result.setSuccess("false");
-					result.setErrorDescription("Invalid Composite Solution : Nodes " + lastNodeNames + " are not connected");
+					result.setErrorDescription(resultVo.getErrorDescription());
+				}else{
+					if(lastNodeNames.size() == 1){
+						result = validateEachNode(cdump);
+					} else {
+						result.setSuccess("false");
+						result.setErrorDescription("Invalid Composite Solution : Nodes " + lastNodeNames + " are not connected.");
+					}
 				}
 			} else {
 				result.setSuccess("false");
@@ -2199,7 +2205,14 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			} else if (position.equals(LAST_NODE_POSITION)) {
 				if (targetNodeId.contains(rltn.getTargetNodeId())) {
 					node = getNodeForId(nodes, rltn.getTargetNodeId());
-					nodeNames.add(node.getName());
+					if(node.getType().getName().equals(COLLATOR_TYPE)){
+						resultVo.setSuccess("false");
+						resultVo.setErrorDescription("Invalid Composite Solution : Collator \""
+								+ node.getName() + "\" should not be the Last Node");
+						break;
+					}else{
+						nodeNames.add(node.getName());
+					}
 				}
 			}
 		}
