@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ce58055_998361cf",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-25T10:29:36Z",
+      "side": 1,
+      "message": "make it private",
+      "range": {
+        "startLine": 142,
+        "startChar": 1,
+        "endLine": 142,
+        "endChar": 9
+      },
+      "revId": "543854455d379ebbb5e8140cb307119be906ad1d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b7a91e2_18fd225c",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1372,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-25T10:29:36Z",
+      "side": 1,
+      "message": "method return last node/s and should not do any validation.  Once you get last node,then check if its collator or not. If needed define new method checkCollatorNode.",
+      "range": {
+        "startLine": 1372,
+        "startChar": 33,
+        "endLine": 1372,
+        "endChar": 52
+      },
+      "revId": "543854455d379ebbb5e8140cb307119be906ad1d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
