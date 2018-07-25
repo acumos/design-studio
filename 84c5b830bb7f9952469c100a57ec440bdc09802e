@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "12dd6261_97aec023",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1373,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-25T12:17:17Z",
+      "side": 1,
+      "message": "Change variable name",
+      "range": {
+        "startLine": 1373,
+        "startChar": 10,
+        "endLine": 1373,
+        "endChar": 19
+      },
+      "revId": "84c5b830bb7f9952469c100a57ec440bdc09802e",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b173bd4e_017606be",
         "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
         "patchSetId": 2
