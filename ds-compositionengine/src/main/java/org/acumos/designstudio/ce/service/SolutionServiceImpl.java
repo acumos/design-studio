@@ -525,7 +525,6 @@ public class SolutionServiceImpl implements ISolutionService {
 			outputStream = nexusArtifactClient.getArtifact(uri);
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getPayload()", e);
-			throw e;
 		}
 		return outputStream;
 	}
@@ -1140,19 +1139,22 @@ public class SolutionServiceImpl implements ISolutionService {
 		boolean matchingPortisFound = false;
 		ByteArrayOutputStream byteArrayOutputStream = null;
 		try {
-			if (null != artifactURI && !"".equals(artifactURI)) {
-				byteArrayOutputStream = getPayload(artifactURI);
-				String result = byteArrayOutputStream.toString();
-				if ("input".equals(portType)) {
-					matchingPortisFound = validateProviderPort(result, protobufJsonString);
-				} else if ("output".equals(portType)) {
-					matchingPortisFound = validateConsumerPort(result, protobufJsonString);
-				}
-			} else { 
-				logger.error(EELFLoggerDelegator.errorLogger,"validateTheMatchingPort() : artifactURI is null or empty");
-			}
-
-		} catch (JsonParseException e) {
+            if (null != artifactURI && !"".equals(artifactURI)) {
+                byteArrayOutputStream = getPayload(artifactURI);
+                if(null != byteArrayOutputStream){
+                    String result = byteArrayOutputStream.toString();
+                    if ("input".equals(portType)) {
+                        matchingPortisFound = validateProviderPort(result, protobufJsonString);
+                    } else if ("output".equals(portType)) {
+                        matchingPortisFound = validateConsumerPort(result, protobufJsonString);
+                    }
+                }else {
+                    logger.error(EELFLoggerDelegator.errorLogger,"validateTheMatchingPort() : getPayload is returning null");
+                }
+            } else { 
+                logger.error(EELFLoggerDelegator.errorLogger,"validateTheMatchingPort() : artifactURI is null or empty");
+            }
+        } catch (JsonParseException e) {
 			logger.error(EELFLoggerDelegator.errorLogger, "JsonParseException in validateTheMatchingPort() method : ",e);
 			throw e;
 		} catch (JsonMappingException e) {
