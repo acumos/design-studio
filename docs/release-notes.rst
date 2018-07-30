@@ -22,10 +22,11 @@ Design Studio Release Notes
 
 The Design Studio Composition Engine is deployed within a Docker image in the Docker registry.  TOSCAGenerator Client is uploaded in Nexus repository as a jar file.
 
-0.0.33-SNAPSHOT, 2018-07-20
+0.0.33-SNAPSHOT, 2018-07-30
 ---------------------------
 * ACUMOS-1357 : Save the Composite Solution Description at Revision Level.
-* ACUMOS-1236 : Enhance design studio to store members (parent-child relationships) of composite solutions. 
+* ACUMOS-1236 : Enhance design studio to store members (parent-child relationships) of composite solutions.
+* ACUMOS-1471 : Update DS Composition engine w.r.t CDS 1.16.0.
 
 
 0.0.32-SNAPSHOT, 2018-07-05
