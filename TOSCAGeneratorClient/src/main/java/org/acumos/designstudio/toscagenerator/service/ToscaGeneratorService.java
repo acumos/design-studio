@@ -240,7 +240,7 @@ public class ToscaGeneratorService {
 			throws AcumosException {
 
 		logger.debug("-------------- postArtifact() strated ---------------");
-		CommonDataServiceRestClientImpl cdmsClient = new CommonDataServiceRestClientImpl(
+		CommonDataServiceRestClientImpl cdmsClient = (CommonDataServiceRestClientImpl) CommonDataServiceRestClientImpl.getInstance(
 				Properties.getCmnDataSvcEndPoinURL(), Properties.getCmnDataSvcUser(), Properties.getCmnDataSvcPwd());
 		MLPArtifact cArtifact = null;
 		MLPArtifact result = null;
@@ -256,7 +256,7 @@ public class ToscaGeneratorService {
 						+ " with version : " + a.getVersion());
 				cArtifact.setUri(a.getNexusURI());
 				cArtifact.setName(a.getName());
-				cArtifact.setOwnerId(ownerID);
+				cArtifact.setUserId(ownerID);
 				cArtifact.setVersion(a.getVersion());
 				cArtifact.setSize(a.getContentLength());
 				try {
