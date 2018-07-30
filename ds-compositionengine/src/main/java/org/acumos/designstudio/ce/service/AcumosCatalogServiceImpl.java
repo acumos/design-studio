@@ -284,8 +284,8 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 	 * @param pass
 	 *            Passwor
 	 */
-	public void getRestClient(String url, String user, String pass) {
-		cmnDataService = new CommonDataServiceRestClientImpl(url, user, pass);
+	public void getRestClient(String url, String user, String pass, String proxiUrl) {
+		cmnDataService = new CommonDataServiceRestClientImpl(url, user, pass, proxiUrl);
 	}
 
 	/**

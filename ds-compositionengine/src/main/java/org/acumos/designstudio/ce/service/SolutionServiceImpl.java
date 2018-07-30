@@ -155,9 +155,9 @@ public class SolutionServiceImpl implements ISolutionService {
 						List<MLPSolutionRevision> mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
 						for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
 							String accessTypeCode = mlpSolRevision.getAccessTypeCode();
-							if ((accessTypeCode.equals(pbAccessTypeCode)) || (mlpSolRevision.getOwnerId().equals(userID) && accessTypeCode.equals(prAccessTypeCode)) 
+							if ((accessTypeCode.equals(pbAccessTypeCode)) || (mlpSolRevision.getUserId().equals(userID) && accessTypeCode.equals(prAccessTypeCode)) 
 									 || (accessTypeCode.equals(orAccessTypeCode)) ) {
-								String revisionUserID = mlpSolRevision.getOwnerId();
+								String revisionUserID = mlpSolRevision.getUserId();
 								MLPUser mlpUser = cmnDataService.getUser(revisionUserID);
 								String userName = mlpUser.getFirstName() + " " + mlpUser.getLastName();
 								dsSolutionList.add(populateDsSolution(mlpsolution, sdf, userName, mlpSolRevision));
@@ -230,7 +230,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		try {
 			solutionId = mlpsolution.getSolutionId();
 			List<MLPSolutionRevision>  mlpSolRevisionList = cmnDataService.getSolutionRevisions(solutionId);
-			String userId = mlpsolution.getOwnerId();
+			String userId = mlpsolution.getUserId();
 			MLPUser user = cmnDataService.getUser(userId);
 			String userName = user.getFirstName() + " " + user.getLastName();
 			if (null == mlpSolRevisionList) {
@@ -265,7 +265,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		// 4. Solution Name
 		dssolution.setSolutionName(mlpsolution.getName());
 		// 5. Solution Provider
-		dssolution.setProvider(mlpsolution.getProvider());
+		dssolution.setProvider(mlpsolution.getUserId());
 		// 6. Solution Tool Kit
 		dssolution.setToolKit(mlpsolution.getToolkitTypeCode());
 		// 7. Solution Category
@@ -1804,7 +1804,7 @@ public class SolutionServiceImpl implements ISolutionService {
 						if (accessTypeCode.equals(pbAccessTypeCode)) {
 							matchingModelsolutionList.add(mlpsolution);
 						}
-	                    if (mlpSolRevision.getOwnerId().equals(userId) && accessTypeCode.equals(prAccessTypeCode)) {
+	                    if (mlpSolRevision.getUserId().equals(userId) && accessTypeCode.equals(prAccessTypeCode)) {
 							matchingModelsolutionList.add(mlpsolution);
 						}
 	                    if (accessTypeCode.equals(orAccessTypeCode)) {

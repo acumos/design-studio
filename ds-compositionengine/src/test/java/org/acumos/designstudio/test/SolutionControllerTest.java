@@ -1248,7 +1248,7 @@ public class SolutionControllerTest {
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		mlpSolutionRevision.setSolutionId("222");
 		mlpSolutionRevision.setDescription("Testing Save Function");
-		mlpSolutionRevision.setOwnerId(userId);
+		mlpSolutionRevision.setUserId(userId);
 		mlpSolutionRevision.setVersion("1.0.0");
 		mlpSolutionRevision.setRevisionId("111");
 		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
@@ -1322,7 +1322,7 @@ public class SolutionControllerTest {
 					+ mlpSolutionRevision.getSolutionId() + " with version : " + mlpSolutionRevision.getVersion());
 			mlpArtifact.setUri("xyz.com");
 			mlpArtifact.setName("test");
-			mlpArtifact.setOwnerId("8fcc3384-e3f8-4520-af1c-413d9495a154");
+			mlpArtifact.setUserId("8fcc3384-e3f8-4520-af1c-413d9495a154");
 			mlpArtifact.setVersion("1.0.0");
 			mlpArtifact.setSize(1);
 			mlpArtifact.setArtifactId("333");
@@ -1437,19 +1437,18 @@ public class SolutionControllerTest {
 		mlpSolution = new MLPSolution();
 		mlpSolution.setName(dscs.getSolutionName());
 		mlpSolution.setDescription(dscs.getDescription());
-		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setProvider(dscs.getProvider());
+		mlpSolution.setUserId(dscs.getAuthor());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
 		mlpSolutionRevision.setDescription(dscs.getDescription());
-		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion(dscs.getVersion());
 		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
-		
+		mlpSolutionRevision.setPublisher(dscs.getProvider());
 		
 		mlpSols.add(mlpSolution);
 		RestPageResponse<MLPSolution> pageResponse = new RestPageResponse<MLPSolution>(mlpSols);
@@ -1576,7 +1575,7 @@ public class SolutionControllerTest {
 			mlpSolution.setSolutionId("710d881b-e926-4412-831c-10b0bf04c354yyy");
 			mlpSolution.setName("Test");
 			mlpSolution.setDescription("sample");
-			mlpSolution.setOwnerId(userId);
+			mlpSolution.setUserId(userId);
 			mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 			mlpSolution.setToolkitTypeCode("CP");
 			
@@ -1584,7 +1583,7 @@ public class SolutionControllerTest {
 			mlpSolutionRevision.setRevisionId("84874435-d103-44c1-9451-d2b660fae766");
 			mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
 			mlpSolutionRevision.setDescription("test"); 
-			mlpSolutionRevision.setOwnerId(userId);
+			mlpSolutionRevision.setUserId(userId);
 			mlpSolutionRevision.setVersion("1.0.0");
 			mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 			mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
@@ -1692,7 +1691,7 @@ public class SolutionControllerTest {
 		mlpSolution.setSolutionId(sId);
 		mlpSolution.setName("Test");
 		mlpSolution.setDescription("sample");
-		mlpSolution.setOwnerId(userId);
+		mlpSolution.setUserId(userId);
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
@@ -1759,11 +1758,10 @@ public class SolutionControllerTest {
            MLPSolution image_classifier = new MLPSolution();
            image_classifier.setSolutionId("1cb9e77e-43dd-4add-bf29-648f2420c621");
            image_classifier.setName("image_classifier");
-           image_classifier.setProvider(null);
            image_classifier.setToolkitTypeCode("SK");
            image_classifier.setModelTypeCode("CL");
            image_classifier.setDescription("image_classifier");
-           image_classifier.setOwnerId("c4e4d366-8ed8-40e1-b61e-1e103de9699b");
+           image_classifier.setUserId("c4e4d366-8ed8-40e1-b61e-1e103de9699b");
            assertNotNull(image_classifier);
            mlpSolList.add(image_classifier);
 
@@ -1879,18 +1877,18 @@ public class SolutionControllerTest {
 		mlpSolution.setSolutionId("12345");
 		mlpSolution.setName("Test");
 		mlpSolution.setDescription(dscs.getDescription());
-		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setProvider(dscs.getProvider());
+		mlpSolution.setUserId(dscs.getAuthor());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
 		mlpSolutionRevision.setDescription(dscs.getDescription()); 
-		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion("1.0.0");
 		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolutionRevision.setPublisher(dscs.getProvider());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -1899,8 +1897,7 @@ public class SolutionControllerTest {
 		MLPSolution mlpSolNew = new MLPSolution();
 		mlpSolNew.setName("sample1");
 		mlpSolNew.setDescription(dscs.getDescription());
-		mlpSolNew.setOwnerId(dscs.getAuthor());
-		mlpSolNew.setProvider(dscs.getProvider());
+		mlpSolNew.setUserId(dscs.getAuthor());
 		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew.setToolkitTypeCode("CP");
 		
@@ -1908,8 +1905,7 @@ public class SolutionControllerTest {
 		mlpSolNew1.setSolutionId("545545a-e674-46af-a4ad-d6514f41de9b");
 		mlpSolNew1.setName("sample1");
 		mlpSolNew1.setDescription(dscs.getDescription());
-		mlpSolNew1.setOwnerId(dscs.getAuthor());
-		mlpSolNew1.setProvider(dscs.getProvider());
+		mlpSolNew1.setUserId(dscs.getAuthor());
 		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew1.setToolkitTypeCode("CP");
 		
@@ -1969,18 +1965,18 @@ public class SolutionControllerTest {
 		mlpSolution.setSolutionId("12345");
 		mlpSolution.setName("Test2");
 		mlpSolution.setDescription(dscs.getDescription());
-		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setProvider(dscs.getProvider());
+		mlpSolution.setUserId(dscs.getAuthor());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
 		mlpSolutionRevision.setDescription(dscs.getDescription()); 
-		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion("1.0.0");
 		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolutionRevision.setPublisher(dscs.getProvider());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -1989,8 +1985,7 @@ public class SolutionControllerTest {
 		MLPSolution mlpSolNew = new MLPSolution();
 		mlpSolNew.setName("sample1");
 		mlpSolNew.setDescription(dscs.getDescription());
-		mlpSolNew.setOwnerId(dscs.getAuthor());
-		mlpSolNew.setProvider(dscs.getProvider());
+		mlpSolNew.setUserId(dscs.getAuthor());
 		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew.setToolkitTypeCode("CP");
 		
@@ -1998,8 +1993,7 @@ public class SolutionControllerTest {
 		mlpSolNew1.setSolutionId("545545a-e674-46af-a4ad-d6514f41de9b");
 		mlpSolNew1.setName("sample1");
 		mlpSolNew1.setDescription(dscs.getDescription());
-		mlpSolNew1.setOwnerId(dscs.getAuthor());
-		mlpSolNew1.setProvider(dscs.getProvider());
+		mlpSolNew1.setUserId(dscs.getAuthor());
 		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew1.setToolkitTypeCode("CP");
 		
@@ -2059,18 +2053,18 @@ public class SolutionControllerTest {
 		mlpSolution.setSolutionId("12345");
 		mlpSolution.setName("Test");
 		mlpSolution.setDescription(dscs.getDescription());
-		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setProvider(dscs.getProvider());
+		mlpSolution.setUserId(dscs.getAuthor());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
 		mlpSolutionRevision.setDescription(dscs.getDescription()); 
-		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion("1.0.0");
 		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolutionRevision.setPublisher(dscs.getProvider());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -2079,8 +2073,7 @@ public class SolutionControllerTest {
 		MLPSolution mlpSolNew = new MLPSolution();
 		mlpSolNew.setName("sample1");
 		mlpSolNew.setDescription(dscs.getDescription());
-		mlpSolNew.setOwnerId(dscs.getAuthor());
-		mlpSolNew.setProvider(dscs.getProvider());
+		mlpSolNew.setUserId(dscs.getAuthor());
 		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew.setToolkitTypeCode("CP");
 		
@@ -2088,8 +2081,7 @@ public class SolutionControllerTest {
 		mlpSolNew1.setSolutionId("545545a-e674-46af-a4ad-d6514f41de9b");
 		mlpSolNew1.setName("sample1");
 		mlpSolNew1.setDescription(dscs.getDescription());
-		mlpSolNew1.setOwnerId(dscs.getAuthor());
-		mlpSolNew1.setProvider(dscs.getProvider());
+		mlpSolNew1.setUserId(dscs.getAuthor());
 		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew1.setToolkitTypeCode("CP");
 		
@@ -2149,18 +2141,18 @@ public class SolutionControllerTest {
 		mlpSolution.setSolutionId("1234");
 		mlpSolution.setName("Test");
 		mlpSolution.setDescription(dscs.getDescription());
-		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setProvider(dscs.getProvider());
+		mlpSolution.setUserId(dscs.getAuthor());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
 		mlpSolutionRevision.setDescription(dscs.getDescription()); 
-		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion(dscs.getVersion());
 		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolutionRevision.setPublisher(dscs.getProvider());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -2169,8 +2161,7 @@ public class SolutionControllerTest {
 		MLPSolution mlpSolNew = new MLPSolution();
 		mlpSolNew.setName("sample1");
 		mlpSolNew.setDescription(dscs.getDescription());
-		mlpSolNew.setOwnerId(dscs.getAuthor());
-		mlpSolNew.setProvider(dscs.getProvider());
+		mlpSolNew.setUserId(dscs.getAuthor());
 		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew.setToolkitTypeCode("CP");
 		
@@ -2178,8 +2169,7 @@ public class SolutionControllerTest {
 		mlpSolNew1.setSolutionId("545545a-e674-46af-a4ad-d6514f41de9b");
 		mlpSolNew1.setName("sample1");
 		mlpSolNew1.setDescription(dscs.getDescription());
-		mlpSolNew1.setOwnerId(dscs.getAuthor());
-		mlpSolNew1.setProvider(dscs.getProvider());
+		mlpSolNew1.setUserId(dscs.getAuthor());
 		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew1.setToolkitTypeCode("CP");
 		
@@ -2240,18 +2230,18 @@ public class SolutionControllerTest {
 		mlpSolution.setSolutionId("1234");
 		mlpSolution.setName("Test2");
 		mlpSolution.setDescription(dscs.getDescription());
-		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setProvider(dscs.getProvider());
+		mlpSolution.setUserId(dscs.getAuthor());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		mlpSolutionRevision.setSolutionId(dscs.getSolutionId());
 		mlpSolutionRevision.setDescription(dscs.getDescription()); 
-		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion(dscs.getVersion());
 		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolutionRevision.setPublisher(dscs.getProvider());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -2260,8 +2250,7 @@ public class SolutionControllerTest {
 		MLPSolution mlpSolNew = new MLPSolution();
 		mlpSolNew.setName("sample1");
 		mlpSolNew.setDescription(dscs.getDescription());
-		mlpSolNew.setOwnerId(dscs.getAuthor());
-		mlpSolNew.setProvider(dscs.getProvider());
+		mlpSolNew.setUserId(dscs.getAuthor());
 		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew.setToolkitTypeCode("CP");
 		
@@ -2269,8 +2258,7 @@ public class SolutionControllerTest {
 		mlpSolNew1.setSolutionId("545545a-e674-46af-a4ad-d6514f41de9b");
 		mlpSolNew1.setName("sample1");
 		mlpSolNew1.setDescription(dscs.getDescription());
-		mlpSolNew1.setOwnerId(dscs.getAuthor());
-		mlpSolNew1.setProvider(dscs.getProvider());
+		mlpSolNew1.setUserId(dscs.getAuthor());
 		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew1.setToolkitTypeCode("CP");
 		
@@ -2330,18 +2318,18 @@ public class SolutionControllerTest {
 		mlpSolution.setSolutionId("1234");
 		mlpSolution.setName("Test");
 		mlpSolution.setDescription(dscs.getDescription());
-		mlpSolution.setOwnerId(dscs.getAuthor());
-		mlpSolution.setProvider(dscs.getProvider());
+		mlpSolution.setUserId(dscs.getAuthor());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
 		
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		mlpSolutionRevision.setSolutionId(dscs.getSolutionId());
 		mlpSolutionRevision.setDescription(dscs.getDescription()); 
-		mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion("1.0.2");
 		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
+		mlpSolutionRevision.setPublisher(dscs.getProvider());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -2350,8 +2338,7 @@ public class SolutionControllerTest {
 		MLPSolution mlpSolNew = new MLPSolution();
 		mlpSolNew.setName("sample1");
 		mlpSolNew.setDescription(dscs.getDescription());
-		mlpSolNew.setOwnerId(dscs.getAuthor());
-		mlpSolNew.setProvider(dscs.getProvider());
+		mlpSolNew.setUserId(dscs.getAuthor());
 		mlpSolNew.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew.setToolkitTypeCode("CP");
 		
@@ -2359,8 +2346,7 @@ public class SolutionControllerTest {
 		mlpSolNew1.setSolutionId("545545a-e674-46af-a4ad-d6514f41de9b");
 		mlpSolNew1.setName("sample1");
 		mlpSolNew1.setDescription(dscs.getDescription());
-		mlpSolNew1.setOwnerId(dscs.getAuthor());
-		mlpSolNew1.setProvider(dscs.getProvider());
+		mlpSolNew1.setUserId(dscs.getAuthor());
 		mlpSolNew1.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolNew1.setToolkitTypeCode("CP");
 		
@@ -2393,7 +2379,7 @@ public class SolutionControllerTest {
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		mlpSolutionRevision.setSolutionId(solutionID);
 		mlpSolutionRevision.setDescription("Testing Save Function");
-		mlpSolutionRevision.setOwnerId(userId);
+		mlpSolutionRevision.setUserId(userId);
 		mlpSolutionRevision.setVersion(version);
 		mlpSolutionRevision.setRevisionId("111");
 		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
