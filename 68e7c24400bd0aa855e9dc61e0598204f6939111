@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b2631f6_b118ec70",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ToscaGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-30T10:17:29Z",
+      "side": 1,
+      "message": "this should be : (CommonDataServiceRestClientImpl) CommonDataServiceRestClientImpl.getInstance(url,username,password value);",
+      "range": {
+        "startLine": 243,
+        "startChar": 51,
+        "endLine": 243,
+        "endChar": 82
+      },
+      "revId": "68e7c24400bd0aa855e9dc61e0598204f6939111",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3eaa9205_5b06f254",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/config/AppConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-30T10:17:29Z",
+      "side": 1,
+      "message": "Why expected changes are commented?  Please check",
+      "range": {
+        "startLine": 53,
+        "startChar": 2,
+        "endLine": 53,
+        "endChar": 4
+      },
+      "revId": "68e7c24400bd0aa855e9dc61e0598204f6939111",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3430988b_5a58c0aa",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/AcumosCatalogServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-30T10:17:29Z",
+      "side": 1,
+      "message": "expected : (CommonDataServiceRestClientImpl) CommonDataServiceRestClientImpl.getInstance(url, user, pass);",
+      "range": {
+        "startLine": 288,
+        "startChar": 19,
+        "endLine": 288,
+        "endChar": 22
+      },
+      "revId": "68e7c24400bd0aa855e9dc61e0598204f6939111",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13c4d382_ff588553",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-07-30T10:17:29Z",
+      "side": 1,
+      "message": "Please correct :  dssolution.setProvider(mlpSolRevision.getPublisher()); instead of userId.",
+      "revId": "68e7c24400bd0aa855e9dc61e0598204f6939111",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
