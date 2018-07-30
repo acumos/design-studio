@@ -54,7 +54,7 @@ public class ConfigurationProperties {
 
 	@Value("${cmndatasvc.cmndatasvcpwd}")
 	private String cmndatasvcpwd;
-
+	
 	@Value("${dateformat}")
 	private String dateFormat;
 	

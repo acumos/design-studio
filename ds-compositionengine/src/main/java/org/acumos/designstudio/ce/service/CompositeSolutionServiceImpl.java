@@ -219,12 +219,11 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, " insertCompositeSolution() Begin ");
 		MLPSolution mlpSolution = new MLPSolution();
 		try {
-
+ 
 			mlpSolution = new MLPSolution();
 			mlpSolution.setName(dscs.getSolutionName());
 			mlpSolution.setDescription(dscs.getDescription());
-			mlpSolution.setOwnerId(dscs.getAuthor());
-			mlpSolution.setProvider(dscs.getProvider());
+			mlpSolution.setUserId(dscs.getAuthor());
 			mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 			mlpSolution.setToolkitTypeCode("CP");
 			mlpSolution.setActive(true);
@@ -240,10 +239,11 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		try {
 			mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
 			mlpSolutionRevision.setDescription(dscs.getDescription());
-			mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+			mlpSolutionRevision.setUserId(dscs.getAuthor());
 			mlpSolutionRevision.setVersion(dscs.getVersion());
 			mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 			mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
+			mlpSolutionRevision.setPublisher(dscs.getProvider());
 			
 			mlpSolutionRevision = cdmsClient.createSolutionRevision(mlpSolutionRevision);
 
@@ -316,7 +316,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					+ cdumpArtifact.getSolutionID() + " with version : " + cdumpArtifact.getVersion());
 			mlpArtifact.setUri(cdumpArtifact.getNexusURI());
 			mlpArtifact.setName(cdumpArtifact.getName());
-			mlpArtifact.setOwnerId(dscs.getAuthor());
+			mlpArtifact.setUserId(dscs.getAuthor());
 			mlpArtifact.setVersion(cdumpArtifact.getVersion());
 			mlpArtifact.setSize(cdumpArtifact.getContentLength());
 
@@ -534,10 +534,11 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		try {
 			mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
 			mlpSolutionRevision.setDescription(dscs.getDescription());
-			mlpSolutionRevision.setOwnerId(dscs.getAuthor());
+			mlpSolutionRevision.setUserId(dscs.getAuthor());
 			mlpSolutionRevision.setVersion(dscs.getVersion());
 			mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 			mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
+			mlpSolutionRevision.setPublisher(dscs.getProvider());
 			
 			// Get the latest date in to variable and then use it.
 			mlpSolutionRevision.setModified(currentDate);
@@ -581,7 +582,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					+ cdumpArtifact.getSolutionID() + " with version : " + cdumpArtifact.getVersion());
 			mlpArtifact.setUri(cdumpArtifact.getNexusURI());
 			mlpArtifact.setName(cdumpArtifact.getName());
-			mlpArtifact.setOwnerId(dscs.getAuthor());
+			mlpArtifact.setUserId(dscs.getAuthor());
 			mlpArtifact.setVersion(cdumpArtifact.getVersion());
 			mlpArtifact.setSize(cdumpArtifact.getContentLength());
 			// 6.4 Save the Artifact using CDS : this will return the artifactId
@@ -655,7 +656,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 				for (MLPSolutionRevision mlpSolRevision : mlpSolutionRevisions) {
 					// 2. match the Author with the input userId.
-					if (mlpSolRevision.getVersion().equals(version) && mlpSolRevision.getOwnerId().equals(userId)) {
+					if (mlpSolRevision.getVersion().equals(version) && mlpSolRevision.getUserId().equals(userId)) {
 						// get the list of artifact for the Revision
 						String revisionId = mlpSolRevision.getRevisionId();
 						List<MLPArtifact> mlpArtifacts = cdmsClient.getSolutionRevisionArtifacts(solutionId,
@@ -822,7 +823,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
 								
 							if (visibilityLevel.contains(mlpSolRevision.getAccessTypeCode())) {
-								String userId = mlpSolRevision.getOwnerId();
+								String userId = mlpSolRevision.getUserId();
 								MLPUser user = cdmsClient.getUser(userId);
 								if (null != mlpSolRevision.getAccessTypeCode()
 										&& (("PR".equals(mlpSolRevision.getAccessTypeCode()) && userId.equals(userID))
@@ -851,7 +852,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 											// 1. Solution Name
 											dssolution.setSolutionName(mlpsol.getName());
 											// 5. Solution Provider
-											dssolution.setProvider(mlpsol.getProvider());
+											dssolution.setProvider(mlpSolRevision.getPublisher());
 											// 6. Solution Tool Kit
 											dssolution.setToolKit(mlpsol.getToolkitTypeCode());
 											// 7. Solution Category
@@ -1665,7 +1666,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					+ solutionId + " with version : " + version);
 			mlpArtifact.setUri(bluePrintArtifact.getNexusURI());
 			mlpArtifact.setName(bluePrintArtifact.getName());
-			mlpArtifact.setOwnerId(userId);
+			mlpArtifact.setUserId(userId);
 			mlpArtifact.setVersion(version);
 			mlpArtifact.setSize(bluePrintJson.length());
 
