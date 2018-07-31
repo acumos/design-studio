@@ -14,9 +14,11 @@
 	<modules>
 		<!-- Child modules do NOT name this parent. -->
 		<module>TOSCAGeneratorClient</module>
+		<!-- REMOVE ME
 		<module>ds-compositionengine</module>
 		<module>csvdatabroker</module>
 		<module>gdmservice</module>
+		REMOVE ME -->
 	</modules>
 	<build>
 		<plugins>
