@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12931088_479e86e5",
+        "filename": "docs/release-notes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-02T15:51:42Z",
+      "side": 1,
+      "message": "Please create new entry dont update existing one. \n\n0.0.34-SNAPSHOT, 2018-08-02\n\nAnd then add the JIRA item under it",
+      "range": {
+        "startLine": 25,
+        "startChar": 25,
+        "endLine": 25,
+        "endChar": 27
+      },
+      "revId": "b93f388322f1a75ee76696ea9d3e8b1636accaa5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
