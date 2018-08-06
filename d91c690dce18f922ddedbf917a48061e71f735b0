@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8386509f_234a7eb4",
+        "filename": "ds-compositionengine/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-08-06T11:33:17Z",
+      "side": 1,
+      "message": "Suggest you put the version number in a property up top",
+      "range": {
+        "startLine": 271,
+        "startChar": 94,
+        "endLine": 271,
+        "endChar": 99
+      },
+      "revId": "d91c690dce18f922ddedbf917a48061e71f735b0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c0edf87_083ed708",
+        "filename": "ds-compositionengine/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-08-06T11:33:17Z",
+      "side": 1,
+      "message": "You could direct curl to write the artifact directly to /maven and skip this extra step",
+      "range": {
+        "startLine": 274,
+        "startChar": 0,
+        "endLine": 274,
+        "endChar": 44
+      },
+      "revId": "d91c690dce18f922ddedbf917a48061e71f735b0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2cfa723c_feac14fd",
+        "filename": "ds-compositionengine/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-08-06T11:33:17Z",
+      "side": 1,
+      "message": "Suggest you put the version number in a property up top",
+      "range": {
+        "startLine": 277,
+        "startChar": 119,
+        "endLine": 277,
+        "endChar": 124
+      },
+      "revId": "d91c690dce18f922ddedbf917a48061e71f735b0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ddfbb93_99e27a90",
+        "filename": "ds-compositionengine/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-08-06T11:33:17Z",
+      "side": 1,
+      "message": "See above",
+      "range": {
+        "startLine": 280,
+        "startChar": 10,
+        "endLine": 280,
+        "endChar": 12
+      },
+      "revId": "d91c690dce18f922ddedbf917a48061e71f735b0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
