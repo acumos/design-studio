@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1268de1c_1178f7c6",
+        "filename": "test-models/java/tools/datasource/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-08-07T12:00:21Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 2,
+        "startChar": 93,
+        "endLine": 2,
+        "endChar": 94
+      },
+      "revId": "0dd49a8b1102f60bb0991b459ec4bb3976b2a374",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
