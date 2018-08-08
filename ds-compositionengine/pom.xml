@@ -46,6 +46,12 @@
 		<docker.pull.registry>nexus3.acumos.org:10001</docker.pull.registry>
 		<!-- Supplied by Jenkins -->
 		<docker.push.registry>${env.NEXUS3_PUSH_REGISTRY}</docker.push.registry>
+		<!-- Protobuf java -->
+		<protobuf.java.version>3.4.0</protobuf.java.version>
+		<protobuf.java.jar.name>protobuf-java-${protobuf.java.version}.jar</protobuf.java.jar.name>
+		<!-- Generic Datamapper Service -->
+		<gdmservice.version>0.0.1</gdmservice.version>
+		<gdmservice.jar.name>gdmservice-${gdmservice.version}.jar</gdmservice.jar.name>
 	</properties>
 
 	<dependencies>
@@ -268,16 +274,10 @@
 								</assembly>
 								<runCmds>
 									<runCmd>
-										<![CDATA[curl -OL http://central.maven.org/maven2/com/google/protobuf/protobuf-java/3.4.0/protobuf-java-3.4.0.jar]]>
-									</runCmd>
-									<runCmd> 
-										mv protobuf-java-3.4.0.jar /maven/
+										<![CDATA[curl --output /maven/${protobuf.java.jar.name} http://central.maven.org/maven2/com/google/protobuf/protobuf-java/${protobuf.java.version}/${protobuf.java.jar.name}]]>
 									</runCmd>
 									<runCmd>
-										<![CDATA[curl -OL https://nexus.acumos.org/content/repositories/releases/org/acumos/design-studio/gdmservice/0.0.1/gdmservice-0.0.1.jar]]>
-									</runCmd>
-									<runCmd>
-										mv gdmservice-0.0.1.jar /maven/
+										<![CDATA[curl --output /maven/${gdmservice.jar.name} https://nexus.acumos.org/content/repositories/releases/org/acumos/design-studio/gdmservice/${gdmservice.version}/${gdmservice.jar.name}]]>
 									</runCmd>
 									<runCmd>
 										<!-- CDATA prevents Eclipse formatter from breaking line -->
