@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c81c12c2_d0acae81",
+        "filename": "ds-compositionengine/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-08-08T12:13:54Z",
+      "side": 1,
+      "message": "Suggest dropping both -O and -L.  They are not needed.",
+      "range": {
+        "startLine": 277,
+        "startChar": 65,
+        "endLine": 277,
+        "endChar": 68
+      },
+      "revId": "b8e47fe67c9f6bf4ddd7fa7564a505d0dcf91bb7",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05682adb_059e1b36",
+        "filename": "ds-compositionengine/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-08-08T12:13:54Z",
+      "side": 1,
+      "message": "See above.",
+      "range": {
+        "startLine": 280,
+        "startChar": 63,
+        "endLine": 280,
+        "endChar": 66
+      },
+      "revId": "b8e47fe67c9f6bf4ddd7fa7564a505d0dcf91bb7",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
