@@ -54,25 +54,30 @@ public class ProtobufToJsonConversionTest {
 		File alarmgenProto = new File("alarm-generator-proto.proto");
 		File clasProto = new File("classifier-proto.proto");
 		File predProto = new File("predictor-proto.proto");
+		File testProto = new File("test-demo.proto");
 
 		String aggrProto1 = protoService.createProtoJson("1234", "1.0.0", aggrProto);
 		String alarmgenProto2 = protoService.createProtoJson("1234", "1.0.0", alarmgenProto);
 		String clasProto3 = protoService.createProtoJson("1234", "1.0.0", clasProto);
 		String predProto4 = protoService.createProtoJson("1234", "1.0.0", predProto);
+		String testProto5 = protoService.createProtoJson("1234", "1.0.0", testProto);
 
 		assertTrue(aggrProto.exists());
 		assertTrue(alarmgenProto.exists());
 		assertTrue(clasProto.exists());
 		assertTrue(predProto.exists());
+		assertTrue(testProto.exists());
 
 		assertNotNull(aggrProto1);
 		assertNotNull(alarmgenProto2);
 		assertNotNull(clasProto3);
 		assertNotNull(predProto4);
+		assertNotNull(testProto5);
 
 		logger.debug("Aggregator Result :" + aggrProto1);
 		logger.debug("Alarm Generator Result :" + alarmgenProto2);
 		logger.debug("Classifier Result :" + clasProto3);
 		logger.debug("Predictor Result :" + predProto4);
+		logger.debug("Test Demo Result :" + testProto5);
 	}
 }
