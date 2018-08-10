@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29d35fe4_10752707",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-08-10T15:41:21Z",
+      "side": 1,
+      "message": "I would write it like this:\n\n    if (!compSolnTlkitTypeCode.equals(mlpSolution.getToolkitTypeCode())\n\nBcos that handles null elegantly.",
+      "range": {
+        "startLine": 155,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 124
+      },
+      "revId": "749fb572a1469343691e4561a17cb9113492ede9",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
