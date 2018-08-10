@@ -148,10 +148,11 @@ public class SolutionServiceImpl implements ISolutionService {
 				String pbAccessTypeCode = props.getPublicAccessTypeCode();
 				String prAccessTypeCode = props.getPrivateAccessTypeCode();
 				String orAccessTypeCode = props.getOrganizationAccessTypeCode();
-				// For each solution where toolkittypeCode is not null and not equal to "CP".
+				// For each solution check toolkittypeCode is not null and not equal to "CP".
 				for (MLPSolution mlpsolution : mlpSolutionsList) {
 					solutionId = mlpsolution.getSolutionId();
-					if (mlpsolution.getToolkitTypeCode() != null && (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
+					//allow for null toolkitType but if its not null then it should not be "CP"
+					if (!compoSolnTlkitTypeCode.equals(mlpsolution.getToolkitTypeCode())) {
 						List<MLPSolutionRevision> mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
 						for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
 							String accessTypeCode = mlpSolRevision.getAccessTypeCode();
