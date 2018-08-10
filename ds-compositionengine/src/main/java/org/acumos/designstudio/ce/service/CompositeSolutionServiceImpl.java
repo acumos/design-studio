@@ -442,7 +442,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String result = "";
 		Date currentDate = new Date();
 		
-		if("PB".equals(mlpSR.getAccessTypeCode())){
+		if("PB".equals(mlpSR.getAccessTypeCode()) || "OR".equals(mlpSR.getAccessTypeCode())){
 			result = "{\"duplicateErrorCode\" : \"219\", \"duplicate\" : \"Solution In Public/Company. Please change either solution name, version or both.\"}";
 		} else {
 			if (null == cdump) {
