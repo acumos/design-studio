@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+message DataFrame {
+repeated DataFrameRow rows = 1;
+repeated MyFrameRow myRow = 2;
+}
+
+message SubFrameRow {
+repeated string row_1 = 1;
+repeated string row_2 = 2;
+}
+
+message DataFrameRow {
+string sepal_len = 1;
+int32 sepal_wid = 2;
+SubFrameRow petal_len = 3;
+string petal_wid = 4;
+}
+
+message MyFrameRow {
+repeated int64 row_1 = 1;
+repeated string row_2 = 2;
+}
