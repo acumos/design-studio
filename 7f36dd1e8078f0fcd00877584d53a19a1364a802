@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "524af0c3_6178df66",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ToscaGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-08-16T15:35:45Z",
+      "side": 1,
+      "message": "Will you ever have two files of the same type within this group?",
+      "range": {
+        "startLine": 164,
+        "startChar": 9,
+        "endLine": 164,
+        "endChar": 20
+      },
+      "revId": "7f36dd1e8078f0fcd00877584d53a19a1364a802",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
