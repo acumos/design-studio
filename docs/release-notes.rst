@@ -28,6 +28,7 @@ repository as a jar file.
 ---------------------------
 * ACUMOS-1484 : Remove jar files from DS Gerrit repository
 * ACUMOS-1599 : Update DS Composition engine w.r.t CDS 1.17.1
+* ACUMOS-1585 : Rename TOSCA artifacts - TOSCATGIF and TOSCAPROTOBUF
 
 
 0.0.34-SNAPSHOT, 2018-08-03
