@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1de282a1_f98b5c54",
+        "filename": "docs/release-notes.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-16T08:43:04Z",
+      "side": 1,
+      "message": "Please keep version 0.0.35-SNAPSHOT same, as its not be rolled out to IST, instead of creating new version 0.0.36",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 6
+      },
+      "revId": "8bb05fa70d8903f39e544954e9c03cfa0438270e",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
