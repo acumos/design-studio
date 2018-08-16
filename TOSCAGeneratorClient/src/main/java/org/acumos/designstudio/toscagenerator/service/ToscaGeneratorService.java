@@ -35,6 +35,7 @@ import java.util.List;
 
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.domain.MLPArtifact;
+import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.designstudio.toscagenerator.exceptionhandler.AcumosException;
 import org.acumos.designstudio.toscagenerator.exceptionhandler.ServiceException;
 import org.acumos.designstudio.toscagenerator.util.Properties;
@@ -47,6 +48,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 
@@ -55,7 +57,9 @@ import org.slf4j.LoggerFactory;
  */
 public class ToscaGeneratorService {
 	private static final Logger logger = LoggerFactory.getLogger(ToscaGeneratorService.class);
-
+	
+	@Autowired
+	private CommonDataServiceRestClientImpl cdmsClient;
 	/**
 	 * 
 	 * @param solutionID
@@ -137,6 +141,7 @@ public class ToscaGeneratorService {
 		NexusArtifactClient artifactClient = new NexusArtifactClient(repositoryLocation);
 		FileInputStream fileInputStream = null;
 		UploadArtifactInfo artifactInfo = null;
+		String revisionId = null; 
 		try {
 			if (toscaFiles != null && !toscaFiles.isEmpty()) {
 				for (Artifact a : toscaFiles) {
@@ -144,11 +149,21 @@ public class ToscaGeneratorService {
 					// 1. group id ,2. artifact name, 3. version, 4. extension
 					// i.e., packaging, 5. size of content, 6. actual file input
 					// stream.
+					List<MLPSolutionRevision> mlpSolnRevision = cdmsClient.getSolutionRevisions(solutionID);
+					if (null != mlpSolnRevision && !mlpSolnRevision.isEmpty()) {
+						for (MLPSolutionRevision mlpSolRev : mlpSolnRevision) {
+							if (mlpSolRev.getVersion().equalsIgnoreCase(version)) {
+								revisionId = mlpSolRev.getRevisionId();
+							}
+						}
+					} 
+					
 					fileInputStream = new FileInputStream(a.getPayloadURI());
-					artifactInfo = artifactClient.uploadArtifact(Properties.getNexusGropuId(),
-							a.getSolutionID() + "_" + a.getType(), a.getVersion(), a.getExtension(),
-							a.getContentLength(), fileInputStream);
-					a.setNexusURI(artifactInfo.getArtifactMvnPath());
+					if(null != revisionId) {
+						artifactInfo = artifactClient.uploadArtifact(Properties.getNexusGropuId()+"."+a.getSolutionID()+"."+revisionId,
+								 a.getType(), a.getVersion(), a.getExtension(),	a.getContentLength(), fileInputStream);
+						a.setNexusURI(artifactInfo.getArtifactMvnPath());
+					}
 				}
 			}
 			logger.debug("--------------- uploadFilesToRepository() ended --------------");

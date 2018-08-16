@@ -617,14 +617,25 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, "  uploadFilesToRepository() started ");
 		FileInputStream fileInputStream = null;
 		UploadArtifactInfo artifactInfo = null;
+		String revisionId = null; 
 		try {
+			
+			List<MLPSolutionRevision> mlpSolnRevision = cdmsClient.getSolutionRevisions(solutionID);
+			if (null != mlpSolnRevision && !mlpSolnRevision.isEmpty()) {
+				for (MLPSolutionRevision mlpSolRev : mlpSolnRevision) {
+					if (mlpSolRev.getVersion().equalsIgnoreCase(version)) {
+						revisionId = mlpSolRev.getRevisionId();
+					}
+				}
+			} 
 
 			// 1. group id ,2. artifact name, 3. version, 4. extension i.e., packaging, 5. size of content, 6. actual file input stream.
 			fileInputStream = new FileInputStream(a.getPayloadURI());
-			artifactInfo = nexusArtifactClient.uploadArtifact(confprops.getNexusgroupid(),
-					a.getSolutionID() + "_" + a.getType(), a.getVersion(), a.getExtension(), a.getContentLength(),
-					fileInputStream);
-			a.setNexusURI(artifactInfo.getArtifactMvnPath());
+			if(null != revisionId) {
+				artifactInfo = nexusArtifactClient.uploadArtifact(confprops.getNexusgroupid()+"."+a.getSolutionID()+"."+revisionId,
+						a.getType(), a.getVersion(), a.getExtension(), a.getContentLength(),
+						fileInputStream);
+			}
 
 			logger.debug(EELFLoggerDelegator.debugLogger, " uploadFilesToRepository() ended ");
 		} catch (Exception e) {
