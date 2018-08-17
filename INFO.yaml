@@ -33,7 +33,7 @@ meetings:
 repositories:
     - 'design-studio'
 committers:
-      - name: 'Aimee Ukasick'
+    - name: 'Aimee Ukasick'
       email: 'aimeeu@research.att.com'
       company: 'ATT'
       id: 'aimeeu'
