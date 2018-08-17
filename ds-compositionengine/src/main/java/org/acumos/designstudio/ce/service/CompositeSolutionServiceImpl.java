@@ -292,7 +292,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger,"4. Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
 
 		try {
-			uploadFilesToRepository(mlpSolution.getSolutionId(), dscs.getVersion(), cdumpArtifact);
+			uploadFilesToRepository(mlpSolution.getSolutionId(), mlpSolutionRevision.getRevisionId(), dscs.getVersion(), cdumpArtifact);
 			dscs.setCdump(cdumpArtifact);
 			logger.debug(EELFLoggerDelegator.debugLogger,"5. Successfully uploaded the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
 			DSUtil.deleteFile(path.concat("acumos-cdump" + "-" + dscs.getcId()).concat(".json"));
@@ -459,7 +459,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						path, payload.length());
 				logger.debug(EELFLoggerDelegator.debugLogger,"4. Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
 				// 5.3 upload the cdump file in Nexus Repositry. (file name should be the same as previous one).
-				uploadFilesToRepository(mlpSolution.getSolutionId(), dscs.getVersion(), cdumpArtifact);
+				uploadFilesToRepository(mlpSolution.getSolutionId(), mlpSR.getRevisionId(), dscs.getVersion(), cdumpArtifact);
 	
 				// Fetch the existing artifact
 				List<MLPArtifact> artfactsList = cdmsClient.getSolutionRevisionArtifacts(mlpSR.getSolutionId(), mlpSR.getRevisionId());
@@ -560,7 +560,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		// 5.3 upload the cdump file in Nexus Repositry. : this will return the nexus URI
 
 		try {
-			uploadFilesToRepository(mlpSolution.getSolutionId(), dscs.getVersion(), cdumpArtifact);
+			uploadFilesToRepository(mlpSolution.getSolutionId(), mlpSolutionRevision.getRevisionId(), dscs.getVersion(), cdumpArtifact);
 			dscs.setCdump(cdumpArtifact);
 			logger.debug(EELFLoggerDelegator.debugLogger,"5. Successfully uploaded the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
 			
@@ -613,28 +613,18 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	 * @param a
 	 * @throws AcumosException
 	 */
-	private void uploadFilesToRepository(String solutionID, String version, Artifact a) throws AcumosException {
+	private void uploadFilesToRepository(String solutionID, String revisionId, String version, Artifact a) throws AcumosException {
 		logger.debug(EELFLoggerDelegator.debugLogger, "  uploadFilesToRepository() started ");
 		FileInputStream fileInputStream = null;
 		UploadArtifactInfo artifactInfo = null;
-		String revisionId = null; 
 		try {
-			
-			List<MLPSolutionRevision> mlpSolnRevision = cdmsClient.getSolutionRevisions(solutionID);
-			if (null != mlpSolnRevision && !mlpSolnRevision.isEmpty()) {
-				for (MLPSolutionRevision mlpSolRev : mlpSolnRevision) {
-					if (mlpSolRev.getVersion().equalsIgnoreCase(version)) {
-						revisionId = mlpSolRev.getRevisionId();
-					}
-				}
-			} 
-
 			// 1. group id ,2. artifact name, 3. version, 4. extension i.e., packaging, 5. size of content, 6. actual file input stream.
 			fileInputStream = new FileInputStream(a.getPayloadURI());
 			if(null != revisionId) {
 				artifactInfo = nexusArtifactClient.uploadArtifact(confprops.getNexusgroupid()+"."+a.getSolutionID()+"."+revisionId,
 						a.getType(), a.getVersion(), a.getExtension(), a.getContentLength(),
 						fileInputStream);
+				a.setNexusURI(artifactInfo.getArtifactMvnPath());
 			}
 
 			logger.debug(EELFLoggerDelegator.debugLogger, " uploadFilesToRepository() ended ");
@@ -923,6 +913,17 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			logger.debug(EELFLoggerDelegator.debugLogger,"2. get the Nodes from the cdump file and collect the nodeId's");
 			List<Nodes> nodes = cdump.getNodes();
 			List<Relations> relationsList = cdump.getRelations();
+			String revisionId = null;
+			
+			List<MLPSolutionRevision> mlpSolnRevision = cdmsClient.getSolutionRevisions(solutionId);
+			if (null != mlpSolnRevision && !mlpSolnRevision.isEmpty()) {
+				for (MLPSolutionRevision mlpSolRev : mlpSolnRevision) {
+					if (mlpSolRev.getVersion().equalsIgnoreCase(version)) {
+						revisionId = mlpSolRev.getRevisionId();
+					}
+				}
+			} 
+
 			// Check for the Nodes and Relations in the CDUMP is empty or not
 			if (null != nodes && null != relationsList && !relationsList.isEmpty()) {
 				resultVo = validateComposition(cdump);
@@ -939,7 +940,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionId, "json", emptyCdumpJson);
 					Artifact cdumpArtifact = new Artifact(cdumpFileName, "json",solutionId, version, path, emptyCdumpJson.length());
 					// upload the file to repository
-					uploadFilesToRepository(solutionId, version,cdumpArtifact);
+					uploadFilesToRepository(solutionId, revisionId, version,cdumpArtifact);
 					result = createAndUploadBluePrint(userId, solutionId, solutionName, version,cdump);
 				}
 			}else if(null != nodes && nodes.size() == 1 && (null == relationsList || relationsList.isEmpty())){
@@ -954,7 +955,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionId, "json", emptyCdumpJson);
 						Artifact cdumpArtifact = new Artifact(cdumpFileName, "json",solutionId, version, path, emptyCdumpJson.length());
 						// upload the file to repository
-						uploadFilesToRepository(solutionId, version,cdumpArtifact);
+						uploadFilesToRepository(solutionId, revisionId, version,cdumpArtifact);
 						result = createAndUploadBluePrint(userId, solutionId, solutionName, version,cdump);
 					}else {
 						resultVo.setSuccess("false");
@@ -1669,7 +1670,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					path, bluePrintJson.length());
 			// 19. Upload the file to Nexus
 			logger.debug(EELFLoggerDelegator.debugLogger,"19. Upload the file to Nexus");
-			uploadFilesToRepository(solutionId, version, bluePrintArtifact);
+			uploadFilesToRepository(solutionId, mlpSolRevision.getRevisionId(), version, bluePrintArtifact);
 			
 			mlpArtifact = new MLPArtifact();
 			mlpArtifact.setArtifactTypeCode("BP");
