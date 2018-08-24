@@ -29,6 +29,11 @@ repository as a jar file.
 * ACUMOS-1484 : Remove jar files from DS Gerrit repository
 * ACUMOS-1599 : Update DS Composition engine w.r.t CDS 1.17.1
 * ACUMOS-1585 : Rename TOSCA artifacts - TOSCATGIF and TOSCAPROTOBUF
+* ACUMOS-1520 : Restriction pop up is missing if user tries to modify and the public solution.
+* ACUMOS-1610 : Revised CSV Databroker, user is no more required to share IP, Location of data file and credentials to access data file
+*  ACUMOS-1619 : Revised CSV Databroker : User is no more required to share IP, path and credential to access data file
+*   ACUMOS-1627 : Switch between local and Remote Script executor
+*   ACUMOS-1634 : Data broker should no more use any kind of script to read the local or remote file
 
 
 0.0.34-SNAPSHOT, 2018-08-03
