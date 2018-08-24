@@ -524,4 +524,12 @@ public class ProtobufServiceImpl implements ProtobufService {
 	}
 
 
+	/**
+	 * This method is to support JUnit
+	 * @param confService
+	 *        Instance of ConfigurationService
+	 */
+	public void setConfService(ConfigurationService confService){
+		this.confService = confService;
+	}
 }

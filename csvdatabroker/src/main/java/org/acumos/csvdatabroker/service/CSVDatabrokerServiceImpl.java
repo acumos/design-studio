@@ -24,6 +24,7 @@ import java.io.OutputStream;
 
 import org.acumos.csvdatabroker.exceptionhandler.ServiceException;
 import org.acumos.csvdatabroker.util.EELFLoggerDelegator;
+import org.acumos.csvdatabroker.util.LocalScriptExecutor;
 import org.acumos.csvdatabroker.util.RemoteScriptExecutor;
 import org.acumos.csvdatabroker.vo.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,23 +44,28 @@ public class CSVDatabrokerServiceImpl implements CSVDatabrokerService {
 	@Qualifier("ProtobufServiceImpl")
 	private ProtobufService protoService;
 	
-	private RemoteScriptExecutor executor ;
+	private RemoteScriptExecutor remoteExecutor;
+	
+	private LocalScriptExecutor localExecutor;
 	@Override
 	public void writeDataTo(OutputStream out) throws ServiceException {
 		Configuration conf = null;
 		
 		try {
 			conf = confService.getConf();
-			if (null == executor) {
-				executor = new RemoteScriptExecutor(conf.getHost(), conf.getPort(), conf.getUserName(),
-						conf.getPassword(), conf.getRemoteDir(), "default.sh");
+			if(conf.isRemoteFile()) { 
+				if (null == remoteExecutor) {
+					remoteExecutor = new RemoteScriptExecutor(conf.getHost(), conf.getPort(), conf.getUserName(),
+							conf.getPassword(), conf.getRemoteDir(), "default.sh");
+				}
+				remoteExecutor.setProtobufService(protoService);
+				remoteExecutor.getData(out, conf.getRemoteFilePath());
+			} else {
+				if(null == localExecutor) {
+					localExecutor = new LocalScriptExecutor(conf.getLocalPath(),protoService);
+				}
+				localExecutor.getData(out, conf.getLocalFilePath());
 			}
-			executor.setProtobufService(protoService);
-			if (!confService.isShellFileCreated()) {
-				executor.createshellFile(conf.getData_broker_map().getScript());
-				confService.setShellFileCreated(true);
-			}
-			executor.executeShell(out);
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, "No environment configuration found!!", e);
 			throw new ServiceException("No environment configuration found!  Please set the Environment configuration.","401", "Exception in writeDataTo()", e);
@@ -72,16 +78,19 @@ public class CSVDatabrokerServiceImpl implements CSVDatabrokerService {
 		byte[] result = null;
 		try {
 			conf = confService.getConf();
-			if (null == executor) {
-				executor = new RemoteScriptExecutor(conf.getHost(), conf.getPort(), conf.getUserName(),
-						conf.getPassword(), conf.getRemoteDir(), "default.sh");
+			if(conf.isRemoteFile()){ //data file is at remote host.
+				if(null == remoteExecutor) {
+					remoteExecutor = new RemoteScriptExecutor(conf.getHost(), conf.getPort(), conf.getUserName(),
+								conf.getPassword(), conf.getRemoteDir(), "default.sh");
+					remoteExecutor.setProtobufService(protoService);
+				}
+				result = remoteExecutor.getData(confService.getStart(), conf.getRemoteFilePath());
+			} else { //data file is local.
+				if(null == localExecutor) {
+					localExecutor = new LocalScriptExecutor(conf.getLocalPath(),protoService);
+				}
+				result = localExecutor.getData(confService.getStart(), conf.getLocalFilePath());
 			}
-			executor.setProtobufService(protoService);
-			if(!confService.isShellFileCreated()){
-				executor.createshellFile(conf.getData_broker_map().getScript());
-				confService.setShellFileCreated(true);
-			}
-			result = executor.executeShell(confService.getStart());
 			confService.incrementStart();
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, "No environment configuration found!!", e);
@@ -92,10 +101,10 @@ public class CSVDatabrokerServiceImpl implements CSVDatabrokerService {
 
 	/**
 	 * Used for Junit Test case
-	 * @param executor
-	 * 		This method accepts executor
+	 * @param remoteExecutor
+	 * 		This method accepts remoteExecutor
 	 */
-	public void setRemoteScriptExecutor(RemoteScriptExecutor executor){
-		this.executor = executor;
+	public void setRemoteScriptExecutor(RemoteScriptExecutor remoteExecutor){
+		this.remoteExecutor = remoteExecutor;
 	}
 }

@@ -21,11 +21,11 @@
 package org.acumos.csvdatabroker.util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
 
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -89,19 +89,27 @@ public class DSUtil {
 	 */
 	public static void writeDataToFile(String path, String fileName, String extension, String data) throws IOException {
 		logger.debug(EELFLoggerDelegator.debugLogger, " writeDataToFile() started ");
-		PrintWriter writer = null;
+		FileWriter fileWriter = null;
+		BufferedWriter bufferedWriter = null;
+		
 		String completeFileName = path + fileName;
 		if (null != extension && !extension.trim().equals("")) {
 			completeFileName = completeFileName + "." + extension;
 		}
 		try {
-			writer = new PrintWriter(completeFileName, "UTF-8");
-			writer.write(data);
+			fileWriter = new FileWriter(completeFileName);
+			bufferedWriter = new BufferedWriter(fileWriter);
+			bufferedWriter.write(data);
 
 			logger.debug(EELFLoggerDelegator.debugLogger, " writeDataToFile() ended ");
 		} finally {
-			if (null != writer) {
-				writer.close();
+			
+			if (null != bufferedWriter) {
+				bufferedWriter.close();
+			}
+			
+			if (null != fileWriter) {
+				fileWriter.close();
 			}
 		}
 	}

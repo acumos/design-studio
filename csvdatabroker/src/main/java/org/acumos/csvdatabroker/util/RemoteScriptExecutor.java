@@ -29,9 +29,6 @@ import java.io.OutputStreamWriter;
 
 import org.acumos.csvdatabroker.exceptionhandler.ServiceException;
 import org.acumos.csvdatabroker.service.ProtobufService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -131,6 +128,7 @@ public class RemoteScriptExecutor {
 	 * @throws Exception
 	 * 		This method throws the Exception
 	 */
+	@Deprecated
 	public void createshellFile(String script) throws Exception {
 		OutputStreamWriter writer = null;
 		try {
@@ -166,6 +164,7 @@ public class RemoteScriptExecutor {
 	 * @throws Exception
 	 * 		This method throws the Exception
 	 */
+	@Deprecated
 	public byte[] executeShell(int start) throws Exception {
 		BufferedReader reader = null;
 		byte[] output = null;
@@ -224,6 +223,57 @@ public class RemoteScriptExecutor {
 		return output;
 	}
 	
+	
+	/**
+	 * This method read the file on remote server and return the records at "start" converting it into protob binary format.
+	 * @param start
+	 * 		This method accepts script
+	 * @param filePath
+	 * 		Remote server file path
+	 * @return byte[]
+	 * 		This method returns byte[]
+	 * @throws Exception
+	 * 		This method throws the Exception
+	 */
+	public byte[] getData(int start, String filePath) throws Exception {
+		BufferedReader reader = null;
+		byte[] output = null;
+		InputStream in = null;
+		try{
+			connect("sftp");
+			in = sftpChannel.get(filePath);
+            reader = new BufferedReader(new InputStreamReader(in));
+            String line;
+            int cnt = 0;
+            while ((line = reader.readLine()) != null) {
+            	if(cnt < start){
+            		cnt++;
+            		continue;
+            	}
+            	if(cnt == start ){
+            		output = protoService.convertToProtobufFormat(line);
+            		break;
+            	}
+            }
+		} catch (Exception e){
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getData()", e);
+			throw new ServiceException("Not able to read remote File ","401", "Not able to read remote File", e);
+		} finally {
+			if(null != reader){
+				try {
+					reader.close();
+				} catch (IOException e) {
+					logger.error(EELFLoggerDelegator.errorLogger, "Exception in getData()", e);
+				}
+			}
+			if(null != in ){
+				in.close();
+			}
+		}
+		disconnect("sftp");
+		return output;
+	}
+	
 	/**
 	 * This method execute the shell on the remote server and writes data to the OutputStream
 	 * @param out
@@ -232,6 +282,7 @@ public class RemoteScriptExecutor {
 	 * 		This method throws the Exception
 	 * 
 	 */
+	@Deprecated
 	public void executeShell(OutputStream out) throws Exception {
 
 		BufferedReader reader = null;
@@ -280,5 +331,48 @@ public class RemoteScriptExecutor {
 			}
 		}
 		disconnect("exec");
+	}
+	
+	/**
+	 * This method read file on the remote server and writes data to the OutputStream
+	 * @param out
+	 * 		This method accepts out
+	 * @throws Exception
+	 * 		This method throws the Exception
+	 * 
+	 */
+	public void getData(OutputStream out, String filePath) throws Exception {
+
+		BufferedReader reader = null;
+		InputStream in = null;
+		try{
+			connect("sftp");
+			in = sftpChannel.get(filePath);
+			reader = new BufferedReader(new InputStreamReader(in));
+            String line;
+            byte[] output = null;
+            while ((line = reader.readLine()) != null) {
+            	logger.debug(line);
+            	output = protoService.convertToProtobufFormat(line);
+            	//out.write(line.getBytes());
+                out.write(output);
+                out.flush();
+            }
+		} catch (Exception e){
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getData()", e);
+			throw new ServiceException("Not able to read remote File ","401", "Not able to read remote File", e);
+		} finally {
+			if(null != reader){
+				try {
+					reader.close();
+				} catch (IOException e) {
+					logger.error(EELFLoggerDelegator.errorLogger, "Exception in getData()", e);
+				}
+			}
+			if(null != in){
+				in.close();
+			}
+		}
+		disconnect("sftp");
 	}
 }

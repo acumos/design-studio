@@ -136,4 +136,67 @@ public class Configuration implements Serializable, Cloneable {
 		return remoteDir;
 	}
 	
+	public String getRemoteFilePath() throws ServiceException {
+		String remotePath = null;
+		try {
+			URI uri = new URI(data_broker_map.getTarget_system_url());
+			remotePath = uri.getPath();
+		} catch (URISyntaxException e) {
+			throw new ServiceException("  Exception in getRemoteDir() ","401", "Invalid Target system URL ");
+		}
+		return remotePath;
+	}
+	
+	public String getLocalFilePath() throws ServiceException { 
+		String localPath = null;
+		try {
+			localPath = data_broker_map.getTarget_system_url();
+			
+			//Path may contain "\" so replace it with "/"
+			if(localPath.contains("\\")){
+				localPath = localPath.replace("\\", "/");
+			}
+			if(localPath.startsWith("file")){
+				localPath = localPath.replace("file://", "");
+			}
+			
+		} catch(Exception e){
+			throw new ServiceException(" Exceptio in getLocalPath() ", "401", "Invalid local Path");
+		}
+		return localPath; 
+	}
+	
+	public String getLocalPath() throws ServiceException { 
+		String localPath = null;
+		try {
+			localPath = data_broker_map.getTarget_system_url();
+			
+			//Path may contain "\" so replace it with "/"
+			if(localPath.contains("\\")){
+				localPath = localPath.replace("\\", "/");
+			}
+			if(localPath.indexOf(".") > 0){
+				localPath = localPath.substring(0, localPath.lastIndexOf("/")+1);
+			}
+			if(!localPath.endsWith("/")){
+				localPath = localPath+ "/";
+			}
+			if(localPath.startsWith("file")){
+				localPath = localPath.replace("file://", "");
+			}
+			
+		} catch(Exception e){
+			throw new ServiceException(" Exceptio in getLocalPath() ", "401", "Invalid local Path");
+		}
+		return localPath; 
+	}
+	
+	public boolean isRemoteFile() { 
+		boolean result = false; 
+		
+		if((null != host && null != port) && ( !host.isEmpty() && port != 0)){
+			result = true;
+		}
+		return result;
+	}
 }
