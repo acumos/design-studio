@@ -43,15 +43,19 @@ public class ArtfactDetailsController {
 	@Autowired
 	Properties props;
 
+	
 	/**
 	 * 
 	 * @param userId
-	 *            User ID
+	 * 			User ID
 	 * @param solutionId
-	 *            Solution ID
+	 * 			solutionId
 	 * @param version
-	 *            Version
-	 * @return TOSCA details
+	 * 			version
+	 * @param response
+	 * 			response
+	 * @return
+	 * 			Json Response
 	 */
 	@ApiOperation(value = "Gets TOSCA details for specified solutionId and version")
 	@RequestMapping(value = "/fetchJsonTOSCA", method = RequestMethod.GET, produces = "text/plain")

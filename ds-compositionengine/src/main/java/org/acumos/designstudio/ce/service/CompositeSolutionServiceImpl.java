@@ -342,17 +342,18 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	}
 
+	
 	/**
 	 * 
 	 * @param dscs
-	 *            DSCompositeSolution
-	 * @return Success or error message
+	 * 		DSCompositeSolution
+	 * @return
+	 * 		returns JsonResponse
 	 * @throws AcumosException
-	 *             On failure
+	 * 		In Exception Case
 	 * @throws IOException
-	 *             On failure
+	 * 		In Exception Case
 	 */
-	
 	public String updateCompositeSolution(DSCompositeSolution dscs) throws AcumosException, IOException {
 		logger.debug(EELFLoggerDelegator.debugLogger, " updateCompositeSolution() Begin ");
 
@@ -425,16 +426,23 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	/**
 	 * 
 	 * @param mlpSR
-	 *            MLPSolutionRevision
+	 * 		MLPSolutionRevision
 	 * @param mlpSolution
-	 *            MLPSolution
+	 * 		MLPSolution
 	 * @param dscs
-	 *            DSCompositeSolution
-	 * @return Success or error
+	 * 		DSCompositeSolution
+	 * @param cdump
+	 * 		cdump
+	 * @param cdumpFileName
+	 * 		cdumpFileName
+	 * @param path
+	 * 		File Path
+	 * @return
+	 * 		Returns JsonResponse
 	 * @throws IOException
-	 *             On error
+	 * 		In Exception Case
 	 * @throws AcumosException
-	 *             On error
+	 * 		In Exception Case
 	 */
 	public String updateExistingSolution(MLPSolutionRevision mlpSR, MLPSolution mlpSolution, DSCompositeSolution dscs, Cdump cdump, String cdumpFileName, String path)
 			throws IOException, AcumosException {
