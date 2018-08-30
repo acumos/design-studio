@@ -23,7 +23,7 @@
 
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>ds-compositionengine</artifactId>
-	<version>0.0.35-SNAPSHOT</version>
+	<version>0.0.36-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Design Studio Composition Engine</name>
 
@@ -147,15 +147,15 @@
 			<version>3.0.10</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.maven.wagon</groupId>
-			<artifactId>wagon-provider-api</artifactId>
-			<version>2.12</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-commons</artifactId>
-			<version>1.13.7.RELEASE</version>
-		</dependency>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-provider-api</artifactId>
+            <version>2.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <version>1.13.7.RELEASE</version>
+        </dependency>
 	</dependencies>
 	<build>
 		<resources>
