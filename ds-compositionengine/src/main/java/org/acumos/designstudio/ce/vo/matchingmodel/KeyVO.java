@@ -17,54 +17,55 @@
  * limitations under the License.
  * ===============LICENSE_END=========================================================
  */
+ 
 
-package org.acumos.designstudio.ce.vo.cdump;
+package org.acumos.designstudio.ce.vo.matchingmodel;
 
 import java.io.Serializable;
-import java.util.List;
 
-import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
+public class KeyVO implements Serializable {
 
-
-public class ComplexType implements Serializable {
-
-	private static final long serialVersionUID = -8550690156793239836L;
+	private static final long serialVersionUID = 6428821893743872728L;
 	
-	private String messageName ="";
-	private List<MessageargumentList> messageargumentList;
+	private String portType;
+	private int numberofFields;
+	private boolean nestedMessage;
 	
-	/**
-	 * @return the messageName
-	 */
-	public String getMessageName() {
-		return messageName;
+	public String getPortType() {
+		return portType;
 	}
-	/**
-	 * @param messageName the messageName to set
-	 */
-	public void setMessageName(String messageName) {
-		this.messageName = messageName;
+	
+	public void setPortType(String portType) {
+		this.portType = portType;
 	}
-	/**
-	 * @return the messageargumentList
-	 */
-	public List<MessageargumentList> getMessageargumentList() {
-		return messageargumentList;
+	
+	public int getNumberofFields() {
+		return numberofFields;
 	}
-	/**
-	 * @param messageargumentList the messageargumentList to set
-	 */
-	public void setMessageargumentList(List<MessageargumentList> messageargumentList) {
-		this.messageargumentList = messageargumentList;
+	
+	public void setNumberofFields(int numberofFields) {
+		this.numberofFields = numberofFields;
 	}
+	
+	public boolean isNestedMessage() {
+		return nestedMessage;
+	}
+	
+	public void setNestedMessage(boolean nestedMessage) {
+		this.nestedMessage = nestedMessage;
+	}
+
 	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((messageargumentList == null) ? 0 : messageargumentList.hashCode());
+		result = prime * result + (nestedMessage ? 1231 : 1237);
+		result = prime * result + numberofFields;
+		result = prime * result + ((portType == null) ? 0 : portType.hashCode());
 		return result;
 	}
+
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -74,14 +75,19 @@ public class ComplexType implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ComplexType other = (ComplexType) obj;
-		if (messageargumentList == null) {
-			if (other.messageargumentList != null)
+		KeyVO other = (KeyVO) obj;
+		if (nestedMessage != other.nestedMessage)
+			return false;
+		if (numberofFields != other.numberofFields)
+			return false;
+		if (portType == null) {
+			if (other.portType != null)
 				return false;
-		} else if (!messageargumentList.equals(other.messageargumentList))
+		} else if (!portType.equals(other.portType))
 			return false;
 		return true;
 	}
 	
 	
+
 }

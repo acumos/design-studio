@@ -53,8 +53,8 @@ import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.Artifact;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
-import org.acumos.designstudio.ce.vo.DSSolution;
 import org.acumos.designstudio.ce.vo.DSResult;
+import org.acumos.designstudio.ce.vo.DSSolution;
 import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 import org.acumos.designstudio.ce.vo.blueprint.BPCollatorMap;
 import org.acumos.designstudio.ce.vo.blueprint.BPDataBrokerMap;
@@ -342,17 +342,18 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	}
 
-	/**
-	 * 
-	 * @param dscs
-	 *            DSCompositeSolution
-	 * @return Success or error message
-	 * @throws AcumosException
-	 *             On failure
-	 * @throws IOException
-	 *             On failure
-	 */
 	
+	/**
+	 * This method will update the CompositeSolution
+	 * @param dscs
+	 * 		DSCompositeSolution
+	 * @return
+	 * 		returns JsonResponse
+	 * @throws AcumosException
+	 * 		In Exception Case
+	 * @throws IOException
+	 * 		In Exception Case
+	 */
 	public String updateCompositeSolution(DSCompositeSolution dscs) throws AcumosException, IOException {
 		logger.debug(EELFLoggerDelegator.debugLogger, " updateCompositeSolution() Begin ");
 
@@ -423,18 +424,25 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	}
 
 	/**
-	 * 
+	 * This method will update the ExistingSolution
 	 * @param mlpSR
-	 *            MLPSolutionRevision
+	 * 		MLPSolutionRevision
 	 * @param mlpSolution
-	 *            MLPSolution
+	 * 		MLPSolution
 	 * @param dscs
-	 *            DSCompositeSolution
-	 * @return Success or error
+	 * 		DSCompositeSolution
+	 * @param cdump
+	 * 		cdump
+	 * @param cdumpFileName
+	 * 		cdumpFileName
+	 * @param path
+	 * 		File Path
+	 * @return
+	 * 		Returns JsonResponse
 	 * @throws IOException
-	 *             On error
+	 * 		In Exception Case
 	 * @throws AcumosException
-	 *             On error
+	 * 		In Exception Case
 	 */
 	public String updateExistingSolution(MLPSolutionRevision mlpSR, MLPSolution mlpSolution, DSCompositeSolution dscs, Cdump cdump, String cdumpFileName, String path)
 			throws IOException, AcumosException {

@@ -24,6 +24,18 @@ The Design Studio Composition Engine is packaged within a Docker image and avail
 Acumos docker registry.  The TOSCAGenerator Client library is published in the Acumos Nexus
 repository as a jar file.
 
+0.0.36-SNAPSHOT, 2018-08-31
+---------------------------
+* ACUMOS-1191 DS should ignore model's toolkit type attribute when populating selection palette
+* ACUMOS-1566 : At some configurable time interval refresh the HashMap of Models (published to Public and company) for matching
+* ACUMOS-1568 : Construct the Java POJO classes KeyVO and ModelDetailVO
+* ACUMOS-1570 : Implement logic to fetch all the public and company level Models from CDS
+* ACUMOS-1571 : Populate models into HashMap and push it to the Application Context
+* ACUMOS-1572 : Get the updated models using CDS API : findSolutionsByDate
+* ACUMOS-1573 : Find the matching from HashMap (from Application Context)
+* ACUMOS-1574 : Find the matching model in the private user model list
+
+
 0.0.35-SNAPSHOT, 2018-08-16
 ---------------------------
 * ACUMOS-1484 : Remove jar files from DS Gerrit repository

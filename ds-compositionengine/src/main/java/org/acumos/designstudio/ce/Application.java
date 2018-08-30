@@ -21,32 +21,65 @@
 package org.acumos.designstudio.ce;
 
 import java.io.File;
+import java.util.List;
 
+import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
+import org.acumos.designstudio.ce.service.MatchingModelServiceImpl;
+import org.acumos.designstudio.ce.service.SolutionServiceImpl;
 import org.acumos.designstudio.ce.util.DSUtil;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
+import org.acumos.designstudio.ce.vo.matchingmodel.DSModelVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * 
- * 
- *
- */
+
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
+@EnableScheduling
 public class Application {
 
 	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(Application.class);
 	public static final String CONFIG_ENV_VAR_NAME = "SPRING_APPLICATION_JSON";
+	
+	
+	@Autowired
+	private MatchingModelServiceImpl matchingModelServiceImpl;
+	
+	@Autowired
+	private SolutionServiceImpl solutionServiceImpl;
+	
+	/**
+	 * This method is Execute the Cron job i.e triggers for every 6 hours
+	 * @throws ServiceException
+	 * 		This method throws Service Exception
+	 */
+	@Scheduled(cron = "* * 6 * * *")
+	public void ExecuteForHour() throws ServiceException {
+		logger.debug(EELFLoggerDelegator.debugLogger, " Scheduled on ExecuteForHour() Begin ");
+		try {
+			solutionServiceImpl.getUpdatedModelsbyDate();
+		} catch (Exception e) {
+			logger.error("Interrupted Exception Occured in ExecuteForHour() {}", e);
+			throw new ServiceException("Failed for Creating the Cache");
+		}
+		logger.debug(EELFLoggerDelegator.debugLogger, " Scheduled on ExecuteForHour() End ");
+	}
+
+	
 
 	/**
-	 * 
+	 * Stating point of Design Studio Application
 	 * @param args
 	 *            Command-line arguments
 	 * @throws Exception
@@ -66,8 +99,24 @@ public class Application {
 		} else {
 			logger.warn("main: no configuration found in environment {}", CONFIG_ENV_VAR_NAME);
 		}
-		// Clean the output Folder :
-
 		SpringApplication.run(Application.class, args);
 	}
+	
+	/**
+	 * This method will do the event handling for ContextRefreshedEvent
+	 * @param event
+	 * 		This method accepts event as parameter
+	 * @throws ServiceException
+	 * 		This method throws Service Exception
+	 */
+	@EventListener
+    public void onApplicationEvent(ContextRefreshedEvent event) throws ServiceException {
+		logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() Begin ");
+		List<DSModelVO> dsModels = matchingModelServiceImpl.getPublicDSModels();
+		matchingModelServiceImpl.populatePublicModelCacheForMatching(dsModels);
+		logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() begin ");
+		
+    }
+	
+	
 }

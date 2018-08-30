@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.domain.MLPArtifact;
@@ -48,11 +49,13 @@ import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.DSUtil;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
+import org.acumos.designstudio.ce.util.ModelCacheForMatching;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.DSPayloadDto;
 import org.acumos.designstudio.ce.vo.DSSolution;
 import org.acumos.designstudio.ce.vo.MatchingModel;
 import org.acumos.designstudio.ce.vo.cdump.Cdump;
+import org.acumos.designstudio.ce.vo.cdump.ComplexType;
 import org.acumos.designstudio.ce.vo.cdump.Ndata;
 import org.acumos.designstudio.ce.vo.cdump.Nodes;
 import org.acumos.designstudio.ce.vo.cdump.Property;
@@ -74,6 +77,9 @@ import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMap;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapInput;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapOutput;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterOutputField;
+import org.acumos.designstudio.ce.vo.matchingmodel.DSModelVO;
+import org.acumos.designstudio.ce.vo.matchingmodel.KeyVO;
+import org.acumos.designstudio.ce.vo.matchingmodel.ModelDetailVO;
 import org.acumos.designstudio.ce.vo.protobuf.MessageBody;
 import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
 import org.acumos.designstudio.ce.vo.tgif.Call;
@@ -86,6 +92,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -113,8 +120,58 @@ public class SolutionServiceImpl implements ISolutionService {
 	@Autowired
 	NexusArtifactClient nexusArtifactClient;
 	
+	@Autowired
+	MatchingModelServiceImpl matchingModelServiceImpl;
+	
+	@Autowired
+	ModelCacheForMatching modelCacheForMatching;
+	
 	private final ObjectMapper mapper = new ObjectMapper();
+	
+	private Date lastExecutionTime; 
+	
+	@Override
+	public void getUpdatedModelsbyDate() throws InterruptedException, ServiceException {
+		logger.debug(EELFLoggerDelegator.debugLogger, " getCacheMechanism() Begin ");
+		try {
+			Map<KeyVO, List<ModelDetailVO>> publicModelCache = modelCacheForMatching.getPublicModelCache();
+			if (null != publicModelCache && !publicModelCache.isEmpty()) { // It should get created on application startup.
 
+				if (null == lastExecutionTime) {
+					lastExecutionTime = new Date();
+				}
+				String[] accessTypeCodes = { props.getPublicAccessTypeCode(), props.getOrganizationAccessTypeCode() };
+				String[] valStatusCodes = { props.getValidationStatusCode() };
+
+				// Make a call to CDS to get the updated models.
+				RestPageResponse<MLPSolution> updatedModels = cmnDataService.findSolutionsByDate(true, accessTypeCodes,
+						valStatusCodes, lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));
+
+				if (null != updatedModels && updatedModels.getContent().size() > 0) {
+					List<DSModelVO> dsModels = getDSModels(updatedModels);
+					matchingModelServiceImpl.populatePublicModelCacheForMatching(dsModels);
+				}
+
+				// Make a call to get the deleted models.
+				updatedModels = cmnDataService.findSolutionsByDate(false, accessTypeCodes, valStatusCodes,
+						lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));
+
+				if (null != updatedModels && updatedModels.getContent().size() > 0) {
+					List<DSModelVO> dsModels = getDSModels(updatedModels);
+					matchingModelServiceImpl.removePublicModelCacheForMatching(dsModels);
+				}
+				lastExecutionTime = new Date();
+			} else {
+				Thread.sleep(1000 * 60);
+			}
+		} catch (InterruptedException e) {
+			logger.error("Interrupted Exception Occured in getCacheMechanism() {}", e);
+			throw new ServiceException("Failed for Creating the Cache");
+		}
+		logger.debug(EELFLoggerDelegator.debugLogger, " getCacheMechanism() End ");
+	}
+	
+	
 	@Override
 	public String getSolutions(String userID) throws ServiceException {
 
@@ -125,10 +182,8 @@ public class SolutionServiceImpl implements ISolutionService {
 		DSSolution dssolution = null;
 		List<DSSolution> dsSolutionList = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
-		
 		try {
 			mapper.setSerializationInclusion(Include.NON_NULL);
-			
 			Map<String, Object> queryParameters = new HashMap<>();
 			queryParameters.put("active", Boolean.TRUE);
 			// Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
@@ -187,103 +242,27 @@ public class SolutionServiceImpl implements ISolutionService {
 		return result;
 	}
 
-	private List<DSSolution> checkDuplicateSolution(List<DSSolution> dsSolutionList) {
-		//Check for solutions with same name and version
-		List<DSSolution> clonedSolution = new ArrayList<DSSolution>();
-		clonedSolution.addAll(dsSolutionList);
-		List<DSSolution> result = new ArrayList<DSSolution>();
-		int cnt = 0;
-		for(DSSolution dss : dsSolutionList){
-			//check if it appears twice in clone
-			cnt = 0;
-			logger.debug(EELFLoggerDelegator.debugLogger, " dss.getSolutionName() " + dss.getSolutionName());
-            logger.debug(EELFLoggerDelegator.debugLogger, " dss.getVersion() " + dss.getVersion());
-            if(null == dss.getSolutionName() && null == dss.getVersion() ){
-            	break;
-            }
-			for(DSSolution dss1 : clonedSolution ){
-                
-                if(null == dss1.getSolutionName() && null == dss1.getVersion()){
-                	break;
-                } else if(dss.getSolutionName().equals(dss1.getSolutionName()) && dss.getVersion().equals(dss1.getVersion())){
-                	logger.debug(EELFLoggerDelegator.debugLogger, " dss1.getSolutionName() " + dss1.getSolutionName());
-                    logger.debug(EELFLoggerDelegator.debugLogger, " dss1.getVersion() " + dss1.getVersion());
-					cnt++;
-				}
-				if(cnt == 2){  //indicating that same solution name and version appeared twice, so no need to check further 
-					break;
-				}
-				
+	@Override
+	public String getMatchingModels(String userId, String portType, JSONArray protobufJsonString) throws Exception {
+		logger.debug(EELFLoggerDelegator.debugLogger, " getMatchingModels() Begin ");
+		String jsonInString = null;
+		List<MatchingModel> matchingModelList = new ArrayList<>();
+		List<MessageargumentList> inMsgArgList = mapper.readValue(protobufJsonString.toString(), 
+			    new TypeReference<ArrayList<MessageargumentList>>() {});
+		matchingModelList = getPublicMatchingModels(portType,inMsgArgList);
+		//Check if user private cache is old to recent.
+		Date lastExecutionTime = modelCacheForMatching.getUserPrivateModelUpdateTime(userId);
+		if(null != lastExecutionTime){
+			Long minutes = TimeUnit.MILLISECONDS.toMinutes((new Date()).getTime() - lastExecutionTime.getTime());
+			if (minutes > props.getPrivateCacheRemovalTime()) { //If difference is more than configurable min then cache is too old.  
+				modelCacheForMatching.removeUserPrivateModelCache(userId);
 			}
-			if(cnt == 1){
-				dss.setSolutionRevisionId("");
-			}
-			result.add(dss);
-		}
-		return result;
-	}
-
-	private List<DSSolution> buildSolutionDetails(MLPSolution mlpsolution, CommonDataServiceRestClientImpl cmnDataService,
-			String solutionId, SimpleDateFormat sdf) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " buildSolutionDetails() Begin ");
-		DSSolution dssolution = null;
-		List<DSSolution> dsSolutions = new ArrayList<DSSolution>();
-		try {
-			solutionId = mlpsolution.getSolutionId();
-			List<MLPSolutionRevision>  mlpSolRevisionList = cmnDataService.getSolutionRevisions(solutionId);
-			String userId = mlpsolution.getUserId();
-			MLPUser user = cmnDataService.getUser(userId);
-			String userName = user.getFirstName() + " " + user.getLastName();
-			if (null == mlpSolRevisionList) {
-				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned null SolutionRevision list");
-			} else if (mlpSolRevisionList.isEmpty()) {
-				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned empty SolutionRevision list");
-			} else {
-				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned SolutionRevision list of size : " + mlpSolRevisionList.size() );
-
-				for (MLPSolutionRevision mlpSolRevision : mlpSolRevisionList) {
-					dssolution = populateDsSolution(mlpsolution, sdf, userName, mlpSolRevision);
-					dsSolutions.add(dssolution);
-				}
-			}
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in buildSolutionDetails() ",e);
-		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " buildSolutionDetails() Ends ");
-		return dsSolutions;
-	}
-
-	private DSSolution populateDsSolution(MLPSolution mlpsolution, SimpleDateFormat sdf, String userName,
-			MLPSolutionRevision mlpSolRevision) {
-		DSSolution dssolution;
-		dssolution = new DSSolution();
-		// 1. SolutionId
-		dssolution.setSolutionId(mlpsolution.getSolutionId());
-		// 2. Solution Created Date
-		dssolution.setCreatedDate(sdf.format(mlpSolRevision.getCreated().getTime()));
-		// 3. Solution Icon
-		dssolution.setIcon(null);
-		// 4. Solution Name
-		dssolution.setSolutionName(mlpsolution.getName());
-		// 5. Solution Provider
-		dssolution.setProvider(mlpSolRevision.getPublisher());
-		// 6. Solution Tool Kit
-		dssolution.setToolKit(mlpsolution.getToolkitTypeCode());
-		// 7. Solution Category
-		dssolution.setCategory(mlpsolution.getModelTypeCode());
-		// 8. Solution Description
-		dssolution.setDescription(mlpsolution.getDescription());
-		// 9. Solution Visibility
-		dssolution.setVisibilityLevel(mlpSolRevision.getAccessTypeCode());
-		// 10. Solution Version
-		dssolution.setVersion(mlpSolRevision.getVersion());
-		// 11. Solution On boarder
-		dssolution.setOnBoarder(userName);
-		// 12. Solution Author
-		dssolution.setAuthor(userName);
-		// 13. Set RevisionId 
-		dssolution.setSolutionRevisionId(mlpSolRevision.getRevisionId());
-		return dssolution;
+		} 
+		// get the private matching models
+		matchingModelList.addAll(getPrivateMatchingModels(userId, portType,inMsgArgList));
+		jsonInString = mapper.writeValueAsString(matchingModelList);
+		logger.debug(EELFLoggerDelegator.debugLogger, " getMatchingModels() End ");
+		return jsonInString;
 	}
 
 	@Override
@@ -496,53 +475,6 @@ public class SolutionServiceImpl implements ISolutionService {
 		return result;
 	}
 
-	private List<MLPSolutionRevision> getSolutionRevisions(String solutionId) throws Exception {
-		logger.debug(EELFLoggerDelegator.debugLogger, " getSolutionRevisions() : Begin ");
-		List<MLPSolutionRevision> solRevisions = null;
-		try {
-			solRevisions = cmnDataService.getSolutionRevisions(solutionId);
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutionRevisions() ", e);
-			throw e;
-		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " getSolutionRevisions() : End ");
-		return solRevisions;
-	}
-
-	private List<MLPArtifact> getListOfArtifacts(String solutionId, String solutionRevisionId) throws Exception{
-		List<MLPArtifact> mlpArtifacts = null;
-		try {
-			mlpArtifacts = cmnDataService.getSolutionRevisionArtifacts(solutionId, solutionRevisionId);
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getListOfArtifacts() ", e);
-			throw e;
-		}
-		return mlpArtifacts;
-	}
-
-	private ByteArrayOutputStream getPayload(String uri) throws Exception{
-		ByteArrayOutputStream outputStream = null;
-		try {
-			outputStream = nexusArtifactClient.getArtifact(uri);
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getPayload()", e);
-		}
-		return outputStream;
-	}
-
-	private boolean isSolutionIdValid(String solutionId) {
-		try {
-			MLPSolution mLPSolution = cmnDataService.getSolution(solutionId);
-			if (null != mLPSolution.getSolutionId()) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in isSolutionIdValid() ", ex);
-			return false;
-		}
-	}
 
 	@Override
 	public String modifyNode(String userId, String solutionId, String version, String cid, String nodeId,
@@ -632,6 +564,620 @@ public class SolutionServiceImpl implements ISolutionService {
 		return results;
 	}
 
+	@Override
+	public String modifyLink(String userId, String cid, String solutionId, String version, String linkId,
+			String linkName) {
+		logger.debug(EELFLoggerDelegator.debugLogger, " modifyLink()  : Begin");
+		String results = "";
+		String resultTemplate = "{\"success\" : \"%s\", \"errorDescription\" : \"%s\"}";
+		try {
+			Cdump cdump = null;
+			String id = "";
+			if (null != cid && null == solutionId) {
+				id = cid;
+			} else if (null == cid) {
+				id = solutionId;
+			}
+			String cdumpFileName = "acumos-cdump" + "-" + id;
+			String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
+			cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
+			List<Relations> relations = cdump.getRelations();
+			if (null == relations || relations.isEmpty()) {
+				results = String.format(resultTemplate, false, "Invalid Link Id – not found");
+			} else {
+				for (Relations relation : relations) {
+					if (relation.getLinkId().equals(linkId)) {
+						relation.setLinkName(linkName);
+						results = String.format(resultTemplate, true, "");
+						break;
+					} else {
+						results = String.format(resultTemplate, false, "Invalid Link Id – not found");
+					}
+				}
+				mapper.writeValue(new File(path.concat(cdumpFileName).concat(".json")), cdump);
+				logger.debug(EELFLoggerDelegator.debugLogger, " Link Modified Successfully ");
+			}
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in  modifyLink() ", e);
+			results = String.format(resultTemplate, false, "Not able to modify the Link");
+		}
+		logger.debug(EELFLoggerDelegator.debugLogger, " modifyLink()  : End");
+		return results;
+	}
+
+	@Override
+	public boolean deleteNode(String userId, String solutionId, String version, String cid, String nodeId)
+			throws AcumosException {
+		logger.debug(EELFLoggerDelegator.debugLogger, " deleteNode() in SolutionServiceImpl : Begin ");
+		boolean deletedNode = false;
+		try {
+			String id = "";
+			if (null != cid && null == solutionId) {
+				id = cid;
+			} else if (null == cid && null != solutionId) {
+				id = solutionId;
+			}
+			String cdumpFileName = "acumos-cdump" + "-" + id + ".json";
+			String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
+			File file = new File(path.concat(cdumpFileName));
+			if (file.exists()) {
+				try {
+					Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName)), Cdump.class);
+					List<Nodes> nodesList = cdump.getNodes();
+					List<Relations> relationsList = cdump.getRelations();
+					if (nodesList == null || nodesList.isEmpty()) {
+						deletedNode = false;
+					} else {
+						// Deleting node if exists
+						Iterator<Nodes> nodeitr = nodesList.iterator();
+						while (nodeitr.hasNext()) {
+							Nodes node = nodeitr.next();
+							if (node.getNodeId().equals(nodeId)) {
+								deletedNode = true;
+								nodeitr.remove();
+								break;
+							}
+						}
+						if (null != relationsList) {
+							for (Relations relations : relationsList) {
+								if (relations.getTargetNodeId().equals(nodeId)) {
+									// delete the LinkId related TargetNodeId
+									deleteLinksTargetNode(nodeId, nodesList, relations);
+								}
+								if (relations.getSourceNodeId().equals(nodeId)) {
+									// delete the LinkId related SourceNodeId
+									deleteLinksSourceNode(nodeId, nodesList, relations);
+								}
+							}
+						}
+						// Deleting relationsList for given nodeId
+						if (relationsList == null || relationsList.isEmpty()) {
+						} else {
+							Iterator<Relations> relationitr = relationsList.iterator();
+							while (relationitr.hasNext()) {
+								Relations relation = relationitr.next();
+								if (relation.getSourceNodeId().equals(nodeId)
+										|| relation.getTargetNodeId().equals(nodeId)) {
+									relationitr.remove();
+								}
+							}
+						}
+						Gson gson = new Gson();
+						String jsonInString = gson.toJson(cdump);
+						DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
+					}
+				} catch (JsonParseException e) {
+					logger.error(EELFLoggerDelegator.errorLogger, " JsonParseException in deleteNode() ", e);
+					throw e;
+				} catch (JsonMappingException e) {
+					logger.error(EELFLoggerDelegator.errorLogger, " JsonMappingException in deleteNode() ", e);
+					throw e;
+				} catch (IOException e) {
+					logger.error(EELFLoggerDelegator.errorLogger, " IOException in deleteNode() ", e);
+					throw e;
+				}
+			}
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in deleteNode() ", e);
+			throw new ServiceException("Failed to Delete the Node", props.getSolutionErrorCode(),
+					"Failed to Delete the Node");
+		}
+		logger.debug(EELFLoggerDelegator.debugLogger, " deleteNode() in SolutionServiceImpl : Ends ");
+		return deletedNode;
+	}
+
+	@Override
+	public boolean addLink(String userId, String solutionId, String version, String linkName, String linkId,
+			String sourceNodeName, String sourceNodeId, String targetNodeName, String targetNodeId,
+			String sourceNodeRequirement, String targetNodeCapabilityName, String cid, Property property) {
+		logger.debug(EELFLoggerDelegator.debugLogger, " addLink() in SolutionServiceImpl : Begin ");
+		String id = "";
+		Gson gson = new Gson();
+		String nodeToUpdate = "";
+		boolean addedLink = false;
+		List<Nodes> nodesList = new ArrayList<>();
+		try {
+			if (null != cid && null == solutionId) {
+				id = cid;
+			} else if (null == cid) {
+				id = solutionId;
+			}
+			String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
+			String cdumpFileName = "acumos-cdump" + "-" + id + ".json";
+			Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName)), Cdump.class);
+			nodesList = cdump.getNodes();
+
+			// update relations list, if link is created b/w 2 models
+			if (null == property || (null != property && null == property.getData_map()
+					&& null == property.getCollator_map() && null == property.getSplitter_map())) {
+				updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName, targetNodeId,
+						sourceNodeRequirement, targetNodeCapabilityName, cdump);
+				addedLink = true;
+			}
+			if (null != property.getSplitter_map()) {
+				nodeToUpdate = targetNodeId;
+				if (nodesList != null && !nodesList.isEmpty()) {
+					for (Nodes node : nodesList) {
+						if (node.getNodeId().equals(nodeToUpdate)) {
+							// update Splitter Input Message Signature
+							updateSplitterMap(property.getSplitter_map(), node);
+							updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
+									targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
+							addedLink = true;
+						}
+					}
+				}
+			}
+			if (null != property.getCollator_map()) {
+				nodeToUpdate = sourceNodeId;
+				if (nodesList != null && !nodesList.isEmpty()) {
+					for (Nodes node : nodesList) {
+						if (node.getNodeId().equals(nodeToUpdate)) {
+							// update Collator Output Message Signature
+							updateCollatorMap(property.getCollator_map(), node);
+							updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
+									targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
+							addedLink = true;
+						}
+					}
+				}
+			} else if (null != property.getData_map()) {
+				// set properties field of DM + update relations list, if link is b/w Model & Data Mapper
+				// Identify Data Mapper node to update
+				if (null != property.getData_map() && property.getData_map().getMap_inputs().length == 0) {
+					nodeToUpdate = sourceNodeId;
+				} else {
+					nodeToUpdate = targetNodeId;
+				}
+				// update the properties field of Data mapper node + update relations list with link details
+				if (nodesList != null && !nodesList.isEmpty()) {
+					for (Nodes node : nodesList) {
+						if (node.getNodeId().equals(nodeToUpdate)) {
+							Property[] propertyArr = node.getProperties();
+							if (null == propertyArr || propertyArr.length == 0) {
+								Property[] propertyArray = new Property[1];
+								propertyArray[0] = property;
+								node.setProperties(propertyArray);
+								updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
+										targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
+								addedLink = true;
+								break;
+							} else {
+								// set map_outputs of data_map under properties field of DM
+								if (null != property.getData_map()
+										&& property.getData_map().getMap_inputs().length == 0) {
+
+									propertyArr[0].getData_map()
+											.setMap_outputs(property.getData_map().getMap_outputs());
+
+									updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
+											targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
+									addedLink = true;
+									break;
+								}
+								// set map_inputs of data_map under properties field of DM
+								if (null != property.getData_map()
+										&& property.getData_map().getMap_outputs().length == 0) {
+									propertyArr[0].getData_map().setMap_inputs(property.getData_map().getMap_inputs());
+									updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
+											targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
+									addedLink = true;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+			try {
+				String jsonInString = gson.toJson(cdump);
+				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
+			} catch (JsonIOException e) {
+				logger.error(EELFLoggerDelegator.errorLogger, "Exception in addLink() ", e);
+				addedLink = false;
+			}
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured in addLink() ", e);
+			addedLink = false;
+		}
+
+		logger.debug(EELFLoggerDelegator.debugLogger, " addLink() in SolutionServiceImpl : End ");
+		return addedLink;
+	}
+
+	@Override
+	public boolean deleteLink(String userId, String solutionId, String version, String cid, String linkId) {
+		logger.debug(EELFLoggerDelegator.debugLogger, " deleteLink() in SolutionServiceImpl : Begin ");
+		String id = "";
+		String cdumpFileName;
+		String sourceNodeId = null;
+		String targetNodeId = null;
+		boolean deletedLink = false;
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		List<Nodes> nodesList = new ArrayList<>();
+		String filePath = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
+		try {
+			if (null != cid && null == solutionId) {
+				id = cid;
+			} else if (null == cid && null != solutionId) {
+				id = solutionId;
+			}
+			cdumpFileName = "acumos-cdump" + "-" + id + ".json";
+			File file = new File(filePath.concat(cdumpFileName));
+			if (file.exists()) {
+				Cdump cdump = mapper.readValue(new File(filePath.concat(cdumpFileName)), Cdump.class);
+				List<Relations> relationsList = cdump.getRelations();
+				if (null == relationsList || relationsList.isEmpty()) {
+					deletedLink = false;
+				} else {
+					Iterator<Relations> relationsItr = relationsList.iterator();
+					// Identify link to delete + Data mapper node to delete it's properties field
+					while (relationsItr.hasNext()) {
+						Relations relation = relationsItr.next();
+						if (relation.getLinkId().equals(linkId)) {
+							sourceNodeId = relation.getSourceNodeId();
+							targetNodeId = relation.getTargetNodeId();
+							nodesList = cdump.getNodes();
+							// delete properties field from DM
+							for (Nodes node : nodesList) {
+								// For all NodeTypes input is SourceNodeId which is same as nodeId in Nodes
+								logger.debug(EELFLoggerDelegator.debugLogger, "1. For all NodeTypes input is SourceNodeId which is same as nodeId in Nodes ");
+								if (node.getNodeId().equals(sourceNodeId) && node.getProperties().length != 0) {
+									if (props.getGdmType().equals(node.getType().getName())) {
+										node.getProperties()[0].getData_map().setMap_outputs(new MapOutput[0]);
+									} else if (props.getDatabrokerType().equals(node.getType().getName())) {
+										node.getProperties()[0].getData_broker_map().setMap_outputs(new DBMapOutput[0]);
+										DBMapInput[] dbMapInArr = node.getProperties()[0].getData_broker_map()
+												.getMap_inputs();
+										for (DBMapInput dbmInput : dbMapInArr) {
+											DBInputField dbiField = dbmInput.getInput_field();
+											dbiField.setChecked("NO");
+											dbiField.setMapped_to_field("");
+										}
+										// Collator map Output which have only one output link
+										logger.debug(EELFLoggerDelegator.debugLogger, " Collator map Output which have only one output link ");
+									} else if (props.getCollatorType().equals(node.getType().getName())) {
+										logger.debug(EELFLoggerDelegator.debugLogger, "Output Message Signature set as empty for Collator");
+										node.getProperties()[0].getCollator_map().setOutput_message_signature("");
+										node.getProperties()[0].getCollator_map()
+												.setMap_outputs(new CollatorMapOutput[0]);
+
+										// Splitter Map Output which may have single or multiple link(s)
+										
+									} else if (props.getSplitterType().equals(node.getType().getName())) {
+										logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
+										splitterLink(linkId, relationsList, node);
+										logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : End ");
+									}
+								}
+								
+								// For all NodeTypes input is targetNodeId which is same as nodeId in Nodes
+								if (node.getNodeId().equals(targetNodeId) && node.getProperties().length != 0) {
+									logger.debug(EELFLoggerDelegator.debugLogger, " For all NodeTypes input is targetNodeId which is same as nodeId in Nodes");
+									if (props.getGdmType().equals(node.getType().getName())) {
+										node.getProperties()[0].getData_map().setMap_inputs(new MapInputs[0]);
+									} else if (props.getSplitterType().equals(node.getType().getName())) {
+										logger.debug(EELFLoggerDelegator.debugLogger,"Input Message Signature set as empty for Splitter");
+										node.getProperties()[0].getSplitter_map().setInput_message_signature("");
+										node.getProperties()[0].getSplitter_map()
+												.setMap_inputs(new SplitterMapInput[0]);
+									} else {
+										if (null != node.getProperties()[0].getCollator_map().getMap_inputs()) {
+											List<String> targetNodeList = new ArrayList<String>();
+											String source = null;
+											for (Relations rel : relationsList) {
+												if (rel.getLinkId().equals(linkId)) {
+													source = rel.getSourceNodeId();
+												}
+												if (rel.getTargetNodeId().equals(node.getNodeId())
+														&& node.getType().getName().equals(props.getCollatorType())) {
+													targetNodeList.add(rel.getTargetNodeId());
+												}
+											}
+											// If the targetNodeId List size is having only one means collator contains one input and need to delete
+											// the entire mapInputs and Source table details
+											if (targetNodeList.size() == 0) {
+												logger.debug(EELFLoggerDelegator.debugLogger," If the targetNodeId List size is having only one means collator contains one input.");
+												if (props.getCollatorType().equals(node.getType().getName())) {
+													node.getProperties()[0].getCollator_map()
+															.setMap_inputs(new CollatorMapInput[0]);
+												}
+												// If the targetNodeId List size is more than one means collator contains more than one inputs and need to
+												// delete the only deleted link related mapping details mapInputs and Source table details
+											} else {
+												logger.debug(EELFLoggerDelegator.debugLogger," If the targetNodeId List size is more than one means collator contains more than one inputs.");
+												CollatorMapInput[] cmInput = node.getProperties()[0].getCollator_map()
+														.getMap_inputs();
+												List<CollatorMapInput> cim = new LinkedList<>(Arrays.asList(cmInput));
+												Iterator<CollatorMapInput> cmiItr = cim.iterator();
+												CollatorMapInput collatorMapInput = null;
+												while (cmiItr.hasNext()) {
+													collatorMapInput = (CollatorMapInput) cmiItr.next();
+													if (source.equals(
+															collatorMapInput.getInput_field().getSource_name())) {
+														cmiItr.remove();
+														break;
+													}
+												}
+												CollatorMapInput newCmInput[] = cim
+														.toArray(new CollatorMapInput[cim.size()]);
+												node.getProperties()[0].getCollator_map().setMap_inputs(newCmInput);
+											}
+										}
+									}
+								}
+							}
+							// delete link details form relations list
+							deletedLink = true;
+							relationsItr.remove();
+							break;
+						}
+					}
+					cdump.setNodes(nodesList);
+					String jsonInString = mapper.writeValueAsString(cdump);
+					DSUtil.writeDataToFile(filePath, "acumos-cdump" + "-" + id, "json", jsonInString);
+				}
+			}
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger," Exception in deleteLink() in SolutionServiceImpl", e);
+		}
+		logger.debug(EELFLoggerDelegator.debugLogger, " deleteLink() in SolutionServiceImpl End ");
+		return deletedLink;
+	}
+
+	
+	/**
+	 * 
+	 * @param commonDataServiceRestClient
+	 *            Client
+	 */
+	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
+		cmnDataService = commonDataServiceRestClient;
+	}
+
+	/**
+	 * 
+	 * @param nexusArtifactClient1
+	 *            NexusArtifactClient
+	 * @param confprops1
+	 *            ConfigurationProperties
+	 * @param properties
+	 *            Properties
+	 */
+	public void getNexusClient(NexusArtifactClient nexusArtifactClient1, ConfigurationProperties confprops1,
+			org.acumos.designstudio.ce.util.Properties properties) {
+		confprops = confprops1;
+		props = properties;
+		nexusArtifactClient = nexusArtifactClient1;
+	}
+	
+	/**
+	 * 
+	 * @param solutionId
+	 * 		solutionId is required to get protoUrl
+	 * @param version
+	 * 		version is required to get protoUrl	
+	 * @param artifactType
+	 * 		artifactType is required to get protoUrl
+	 * @param fileExtention
+	 * 		This method accepts fileExtention
+	 * @return
+	 * 		JsonRepsonse
+	 * @throws AcumosException
+	 * 		 Throws AcumosException while getting protoUrl, Use for getting the nexusURI for solution.
+	 */
+	public String getProtoUrl(String solutionId, String version, String artifactType, String fileExtention) throws AcumosException {
+		logger.debug(EELFLoggerDelegator.debugLogger, "getProtoUrl() : Begin");
+
+		String nexusURI = "";
+		List<MLPSolutionRevision> mlpSolutionRevisionList = null;
+		String solutionRevisionId = null;
+		List<MLPArtifact> mlpArtifactList;
+		try {
+			// 1. Get the list of SolutionRevision for the solutionId.
+			try {
+				mlpSolutionRevisionList = cmnDataService.getSolutionRevisions(solutionId);
+			} catch (Exception e) {
+				logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutionRevisions() ",e);
+				throw new ServiceException("Failed to get the SolutionRevisionList");
+			}
+
+			// 2. Match the version with the SolutionRevision and get the solutionRevisionId.
+			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
+				solutionRevisionId = mlpSolutionRevisionList.stream().filter(mlp -> mlp.getVersion().equals(version))
+						.findFirst().get().getRevisionId();
+				logger.debug(EELFLoggerDelegator.debugLogger, " SolutionRevisonId for Version :  {} ", solutionRevisionId );
+			}
+		} catch (NoSuchElementException | NullPointerException e) {
+			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
+			throw new NoSuchElementException("Failed to fetch the Solution Revision Id of the solutionId for the user");
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
+			throw new ServiceException("Failed to fetch the Solution Revision Id for the solutionId " + solutionId);
+		}
+
+		if (null != solutionRevisionId) {
+			// 3. Get the list of Artifiact for the SolutionId and SolutionRevisionId.
+			try {
+				mlpArtifactList = getListOfArtifacts(solutionId, solutionRevisionId);
+			} catch (Exception e1) {
+				throw new ServiceException(" Exception Occured decryptAndWriteTofile() ", "501","No artifact found for the solution Id " + solutionId+ " and revisionId " + solutionRevisionId );
+			}
+
+			if (null != mlpArtifactList && !mlpArtifactList.isEmpty()) {
+				try {
+					// 3. Get the nexus URI for the SolutionId
+					/*nexusURI = mlpArtifactList.stream()
+							.filter(mlpArt -> mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType)).findFirst()
+							.get().getUri();*/
+					for(MLPArtifact mlpArt : mlpArtifactList){
+						if( null != fileExtention ){
+							if(mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType) && mlpArt.getName().contains(fileExtention)){
+								nexusURI = mlpArt.getUri();
+								break;
+							}
+						} else if(mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType)){
+							nexusURI = mlpArt.getUri();
+							break;
+						}
+						
+					}
+					logger.debug(EELFLoggerDelegator.debugLogger, " Nexus URI :  {} ", nexusURI );
+				} catch (NoSuchElementException | NullPointerException e) {
+					logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",e);
+					throw new NoSuchElementException("Could not search the artifact URI for artifactType " + artifactType);
+				} catch (Exception e) {
+					logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",e);
+					throw new ServiceException(" Exception Occured decryptAndWriteTofile() ", "501","Could not search the artifact URI for artifactType " + artifactType, e.getCause());
+				}
+			}
+		}
+		logger.debug(EELFLoggerDelegator.debugLogger, "getProtoUrl() : End");
+		return nexusURI;
+	}
+	
+	
+	private List<DSSolution> checkDuplicateSolution(List<DSSolution> dsSolutionList) {
+		//Check for solutions with same name and version
+		List<DSSolution> clonedSolution = new ArrayList<DSSolution>();
+		clonedSolution.addAll(dsSolutionList);
+		List<DSSolution> result = new ArrayList<DSSolution>();
+		int cnt = 0;
+		for(DSSolution dss : dsSolutionList){
+			//check if it appears twice in clone
+			cnt = 0;
+			logger.debug(EELFLoggerDelegator.debugLogger, " dss.getSolutionName() " + dss.getSolutionName());
+            logger.debug(EELFLoggerDelegator.debugLogger, " dss.getVersion() " + dss.getVersion());
+            if(null == dss.getSolutionName() && null == dss.getVersion() ){
+            	break;
+            }
+			for(DSSolution dss1 : clonedSolution ){
+                
+                if(null == dss1.getSolutionName() && null == dss1.getVersion()){
+                	break;
+                } else if(dss.getSolutionName().equals(dss1.getSolutionName()) && dss.getVersion().equals(dss1.getVersion())){
+                	logger.debug(EELFLoggerDelegator.debugLogger, " dss1.getSolutionName() " + dss1.getSolutionName());
+                    logger.debug(EELFLoggerDelegator.debugLogger, " dss1.getVersion() " + dss1.getVersion());
+					cnt++;
+				}
+				if(cnt == 2){  //indicating that same solution name and version appeared twice, so no need to check further 
+					break;
+				}
+				
+			}
+			if(cnt == 1){
+				dss.setSolutionRevisionId("");
+			}
+			result.add(dss);
+		}
+		return result;
+	}
+
+
+	private DSSolution populateDsSolution(MLPSolution mlpsolution, SimpleDateFormat sdf, String userName,
+			MLPSolutionRevision mlpSolRevision) {
+		DSSolution dssolution;
+		dssolution = new DSSolution();
+		// 1. SolutionId
+		dssolution.setSolutionId(mlpsolution.getSolutionId());
+		// 2. Solution Created Date
+		dssolution.setCreatedDate(sdf.format(mlpSolRevision.getCreated().getTime()));
+		// 3. Solution Icon
+		dssolution.setIcon(null);
+		// 4. Solution Name
+		dssolution.setSolutionName(mlpsolution.getName());
+		// 5. Solution Provider
+		dssolution.setProvider(mlpSolRevision.getPublisher());
+		// 6. Solution Tool Kit
+		dssolution.setToolKit(mlpsolution.getToolkitTypeCode());
+		// 7. Solution Category
+		dssolution.setCategory(mlpsolution.getModelTypeCode());
+		// 8. Solution Description
+		dssolution.setDescription(mlpsolution.getDescription());
+		// 9. Solution Visibility
+		dssolution.setVisibilityLevel(mlpSolRevision.getAccessTypeCode());
+		// 10. Solution Version
+		dssolution.setVersion(mlpSolRevision.getVersion());
+		// 11. Solution On boarder
+		dssolution.setOnBoarder(userName);
+		// 12. Solution Author
+		dssolution.setAuthor(userName);
+		// 13. Set RevisionId 
+		dssolution.setSolutionRevisionId(mlpSolRevision.getRevisionId());
+		return dssolution;
+	}
+
+	
+	private List<MLPSolutionRevision> getSolutionRevisions(String solutionId) throws Exception {
+		logger.debug(EELFLoggerDelegator.debugLogger, " getSolutionRevisions() : Begin ");
+		List<MLPSolutionRevision> solRevisions = null;
+		try {
+			solRevisions = cmnDataService.getSolutionRevisions(solutionId);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutionRevisions() ", e);
+			throw e;
+		}
+		logger.debug(EELFLoggerDelegator.debugLogger, " getSolutionRevisions() : End ");
+		return solRevisions;
+	}
+
+	private List<MLPArtifact> getListOfArtifacts(String solutionId, String solutionRevisionId) throws Exception{
+		List<MLPArtifact> mlpArtifacts = null;
+		try {
+			mlpArtifacts = cmnDataService.getSolutionRevisionArtifacts(solutionId, solutionRevisionId);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getListOfArtifacts() ", e);
+			throw e;
+		}
+		return mlpArtifacts;
+	}
+
+	private ByteArrayOutputStream getPayload(String uri) throws Exception{
+		ByteArrayOutputStream outputStream = null;
+		try {
+			outputStream = nexusArtifactClient.getArtifact(uri);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getPayload()", e);
+		}
+		return outputStream;
+	}
+
+	private boolean isSolutionIdValid(String solutionId) {
+		try {
+			MLPSolution mLPSolution = cmnDataService.getSolution(solutionId);
+			if (null != mLPSolution.getSolutionId()) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception ex) {
+			logger.error(EELFLoggerDelegator.errorLogger, " Exception in isSolutionIdValid() ", ex);
+			return false;
+		}
+	}
+
+	
 	private void updateSplitterMap(SplitterMap splitterMap, Nodes nodesData) {
 		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : Begin");
 		Property properties[] = nodesData.getProperties();
@@ -811,128 +1357,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : End");
 	}
 
-	@Override
-	public String modifyLink(String userId, String cid, String solutionId, String version, String linkId,
-			String linkName) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyLink()  : Begin");
-		String results = "";
-		String resultTemplate = "{\"success\" : \"%s\", \"errorDescription\" : \"%s\"}";
-		try {
-			Cdump cdump = null;
-			String id = "";
-			if (null != cid && null == solutionId) {
-				id = cid;
-			} else if (null == cid) {
-				id = solutionId;
-			}
-			String cdumpFileName = "acumos-cdump" + "-" + id;
-			String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
-			cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
-			List<Relations> relations = cdump.getRelations();
-			if (null == relations || relations.isEmpty()) {
-				results = String.format(resultTemplate, false, "Invalid Link Id – not found");
-			} else {
-				for (Relations relation : relations) {
-					if (relation.getLinkId().equals(linkId)) {
-						relation.setLinkName(linkName);
-						results = String.format(resultTemplate, true, "");
-						break;
-					} else {
-						results = String.format(resultTemplate, false, "Invalid Link Id – not found");
-					}
-				}
-				mapper.writeValue(new File(path.concat(cdumpFileName).concat(".json")), cdump);
-				logger.debug(EELFLoggerDelegator.debugLogger, " Link Modified Successfully ");
-			}
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in  modifyLink() ", e);
-			results = String.format(resultTemplate, false, "Not able to modify the Link");
-		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyLink()  : End");
-		return results;
-	}
-
-	@Override
-	public boolean deleteNode(String userId, String solutionId, String version, String cid, String nodeId)
-			throws AcumosException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " deleteNode() in SolutionServiceImpl : Begin ");
-		boolean deletedNode = false;
-		try {
-			String id = "";
-			if (null != cid && null == solutionId) {
-				id = cid;
-			} else if (null == cid && null != solutionId) {
-				id = solutionId;
-			}
-			String cdumpFileName = "acumos-cdump" + "-" + id + ".json";
-			String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
-			File file = new File(path.concat(cdumpFileName));
-			if (file.exists()) {
-				try {
-					Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName)), Cdump.class);
-					List<Nodes> nodesList = cdump.getNodes();
-					List<Relations> relationsList = cdump.getRelations();
-					if (nodesList == null || nodesList.isEmpty()) {
-						deletedNode = false;
-					} else {
-						// Deleting node if exists
-						Iterator<Nodes> nodeitr = nodesList.iterator();
-						while (nodeitr.hasNext()) {
-							Nodes node = nodeitr.next();
-							if (node.getNodeId().equals(nodeId)) {
-								deletedNode = true;
-								nodeitr.remove();
-								break;
-							}
-						}
-						if (null != relationsList) {
-							for (Relations relations : relationsList) {
-								if (relations.getTargetNodeId().equals(nodeId)) {
-									// delete the LinkId related TargetNodeId
-									deleteLinksTargetNode(nodeId, nodesList, relations);
-								}
-								if (relations.getSourceNodeId().equals(nodeId)) {
-									// delete the LinkId related SourceNodeId
-									deleteLinksSourceNode(nodeId, nodesList, relations);
-								}
-							}
-						}
-						// Deleting relationsList for given nodeId
-						if (relationsList == null || relationsList.isEmpty()) {
-						} else {
-							Iterator<Relations> relationitr = relationsList.iterator();
-							while (relationitr.hasNext()) {
-								Relations relation = relationitr.next();
-								if (relation.getSourceNodeId().equals(nodeId)
-										|| relation.getTargetNodeId().equals(nodeId)) {
-									relationitr.remove();
-								}
-							}
-						}
-						Gson gson = new Gson();
-						String jsonInString = gson.toJson(cdump);
-						DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
-					}
-				} catch (JsonParseException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, " JsonParseException in deleteNode() ", e);
-					throw e;
-				} catch (JsonMappingException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, " JsonMappingException in deleteNode() ", e);
-					throw e;
-				} catch (IOException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, " IOException in deleteNode() ", e);
-					throw e;
-				}
-			}
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in deleteNode() ", e);
-			throw new ServiceException("Failed to Delete the Node", props.getSolutionErrorCode(),
-					"Failed to Delete the Node");
-		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " deleteNode() in SolutionServiceImpl : Ends ");
-		return deletedNode;
-	}
-
+	
 	private void deleteLinksTargetNode(String nodeId, List<Nodes> nodesList, Relations relations) {
 		String sourceNodeId = relations.getSourceNodeId();
 		for (Nodes no : nodesList) {
@@ -1043,394 +1468,157 @@ public class SolutionServiceImpl implements ISolutionService {
 		}
 	}
 
-	@Override
-	public String getMatchingModels(String userId, String portType, JSONArray protobufJsonString) throws Exception {
-		Gson gson = new Gson();
-		List<MLPSolution> mlpSolutions = null;
-		List<MLPArtifact> mlpArtifact  = null;
-		List<MatchingModel> matchingModelList = new ArrayList<>();
-		boolean validMatchingModel;
-		LinkedHashMap<String, List<MLPSolutionRevision>> matchingModelRevisionList = new LinkedHashMap<String,List<MLPSolutionRevision>>();
-		LinkedHashMap<String, List<MLPArtifact>> matchingModelArtifactTigifFileList = new LinkedHashMap<String, List<MLPArtifact>>();
-		try {
-			if(null != matchingModelServiceComponent.getMatchingModelsolutionList()){
-				mlpSolutions = matchingModelServiceComponent.getMatchingModelsolutionList();	
-				logger.debug(EELFLoggerDelegator.debugLogger,"Take solution list at the time of getSolutionS API is called as well from the local cache or session");
-			}else{
-				mlpSolutions = getSolutionsForMatchingModel(userId);
-				logger.debug(EELFLoggerDelegator.debugLogger,"If solution list is not available from at time of getSolutionS API call as well " + "from the local cache or session then need to fetch from CCDS");
-			}
-			MatchingModel matchingModel = null;
-			List<MLPSolutionRevision> mlpSolRevisions;
-			String solutionId = null;
-			if (null != mlpSolutions && !mlpSolutions.isEmpty()) {
-				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned Solution list of size :  {} ", mlpSolutions.size());
-				mlpSolRevisions = new ArrayList<>();
-				for (MLPSolution mlpsol : mlpSolutions) {
-					solutionId = mlpsol.getSolutionId();
-					//mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
-					if(null != matchingModelServiceComponent.getMatchingModelRevisionList() && 
-							matchingModelServiceComponent.getMatchingModelRevisionList().containsKey(solutionId)){
-						    mlpSolRevisions = matchingModelServiceComponent.getMatchingModelRevisionList().get(solutionId);
-					}else{
-						mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
-						matchingModelRevisionList.put(solutionId, mlpSolRevisions);
-					}
-					if (mlpSolRevisions != null && mlpSolRevisions.size() != 0) {
-						logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned Solution Revision list of size : "+ mlpSolRevisions.size());
-						validMatchingModel = false;
-						for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
-							
-							matchingModel = new MatchingModel();
-							if(null != matchingModelServiceComponent.getMatchingModelArtifactTigifFileList()){
-								if(matchingModelServiceComponent.getMatchingModelArtifactTigifFileList().containsKey(mlpsol.getSolutionId()+mlpSolRevision.getRevisionId())){
-									mlpArtifact = matchingModelServiceComponent.getMatchingModelArtifactTigifFileList().get(mlpsol.getSolutionId()+mlpSolRevision.getRevisionId());
-								}	
-						   }else{
-								mlpArtifact = cmnDataService.getSolutionRevisionArtifacts(mlpsol.getSolutionId(), mlpSolRevision.getRevisionId());
-								matchingModelArtifactTigifFileList.put(mlpsol.getSolutionId()+mlpSolRevision.getRevisionId(), mlpArtifact);
-						   }
-						    logger.debug(EELFLoggerDelegator.debugLogger," Solution Id {} ", mlpsol.getSolutionId());
-							String artifactURI = "";
-							if (null != mlpArtifact && !mlpArtifact.isEmpty()) {
-								logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned Solution Revision Artifact list of size : " + mlpArtifact.size());
-								for (MLPArtifact mlpArti : mlpArtifact) {
-									if ("TG".equalsIgnoreCase(mlpArti.getArtifactTypeCode())) {
-										artifactURI = mlpArti.getUri();
-										if (validateTheMatchingPort(artifactURI, portType, protobufJsonString)) {
-											validMatchingModel = true;
-										}
-									} else {
-									}
-								}
-							}
-							if (validMatchingModel) {
-								matchingModel.setMatchingModelName(mlpsol.getName());
-								matchingModel.setTgifFileNexusURI(artifactURI);
+	
+	/**
+	 * @param portType
+	 * @param inMsgArgList
+	 * @return
+	 * @throws ServiceException 
+	 * @throws IOException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
+	 */
+	private List<MatchingModel> getPrivateMatchingModels(String userId, String portType,
+			List<MessageargumentList> inMsgArgList) throws ServiceException, JsonParseException, JsonMappingException, IOException {
+		logger.debug(EELFLoggerDelegator.debugLogger, " getPrivateMatchingModels() Begin ");
+		List<MatchingModel> matchingModelList = new ArrayList<MatchingModel>();
+		
+		Map<KeyVO, List<ModelDetailVO>> privateModelCache = modelCacheForMatching.getPrivateModelCache(userId);
+		//for first time it will be null 
+		if(null == privateModelCache) {
+			//populate user privateModelCache 
+			List<DSModelVO> dsModels = matchingModelServiceImpl.getPrivateDSModels(userId);
+			matchingModelServiceImpl.populatePrivateModelCacheForMatching(userId,dsModels);
+			modelCacheForMatching.setUserPrivateModelUpdateTime(userId, new Date());
+		}
+		matchingModelList = getMatchingModels(portType, inMsgArgList, privateModelCache);
+		logger.debug(EELFLoggerDelegator.debugLogger, " getPrivateMatchingModels() End ");
+		return matchingModelList;
+	}
+
+	/**
+	 * @param portType
+	 * @param matchingModelList
+	 * @param inMsgArgList
+	 * @throws IOException
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 */
+	private List<MatchingModel> getPublicMatchingModels(String portType,
+			List<MessageargumentList> inMsgArgList) throws IOException, JsonParseException, JsonMappingException {
+		logger.debug(EELFLoggerDelegator.debugLogger, " getPublicMatchingModels() Begin ");
+		List<MatchingModel> matchingModelList = null;
+		Map<KeyVO, List<ModelDetailVO>> publicModelCache = modelCacheForMatching.getPublicModelCache();
+		matchingModelList = getMatchingModels(portType, inMsgArgList, publicModelCache);
+		logger.debug(EELFLoggerDelegator.debugLogger, " getPublicMatchingModels() End ");
+		return matchingModelList;
+	}
+
+	/**
+	 * @param portType
+	 * @param inMsgArgList
+	 * @param matchingModelList
+	 * @param modelCache
+	 * @throws IOException
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 */
+	private List<MatchingModel> getMatchingModels(String portType, List<MessageargumentList> inMsgArgList,
+			Map<KeyVO, List<ModelDetailVO>> modelCache)
+			throws IOException, JsonParseException, JsonMappingException {
+		logger.debug(EELFLoggerDelegator.debugLogger, " getMatchingModels() Begin ");
+		List<MatchingModel> matchingModelList = new ArrayList<MatchingModel>();;
+		KeyVO inKeyVO;
+		MatchingModel matchingModel = null;
+		if(portType.equals("output")){
+			if(null != inMsgArgList && !inMsgArgList.isEmpty()) {
+				int numberOfFields = 0;
+				boolean isNestedMessage = false;
+				numberOfFields = inMsgArgList.size(); //Number of fields.
+				//Check if nested message 
+				isNestedMessage = getIsNested(inMsgArgList);
+				//Construct KeyVO 
+				inKeyVO = new KeyVO();
+				inKeyVO.setNestedMessage(isNestedMessage);
+				inKeyVO.setNumberofFields(numberOfFields);
+				inKeyVO.setPortType("input");
+				//check if key is present in modelCacheForMatching 
+				if(modelCache.containsKey(inKeyVO)){
+					List<ModelDetailVO> modelDetVOList = new ArrayList<ModelDetailVO>();
+					modelDetVOList = modelCache.get(inKeyVO);
+					MessageBody[] messages = null;
+					List<MessageargumentList> msgArgList = null;
+					for(ModelDetailVO modeldetailVo : modelDetVOList){
+						modeldetailVo.getProtobufJsonString();
+						messages = mapper.readValue(modeldetailVo.getProtobufJsonString(), MessageBody[].class);
+						for(MessageBody messageBody	 : messages ){
+							messageBody.getMessageargumentList();
+							msgArgList = messageBody.getMessageargumentList();
+							if(inMsgArgList.size() == msgArgList.size() && inMsgArgList.containsAll(msgArgList)) {
+								matchingModel = new MatchingModel();
+								matchingModel.setMatchingModelName(modeldetailVo.getModelName());
+								matchingModel.setTgifFileNexusURI(modeldetailVo.getTgifFileNexusURI());
 								matchingModelList.add(matchingModel);
 							}
 						}
-					} else {
-						logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned empty Solution Revision list ");
 					}
-				}
-				if(null == matchingModelServiceComponent.getMatchingModelRevisionList()){
-					matchingModelServiceComponent.setMatchingModelRevisionList(matchingModelRevisionList);
-				}
-				if(null ==matchingModelServiceComponent.getMatchingModelArtifactTigifFileList()){
-					matchingModelServiceComponent.setMatchingModelArtifactTigifFileList(matchingModelArtifactTigifFileList);
-				}
-			} else {
-				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned empty Solution list");
+				} 
 			}
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getMatchingModels() ", e);
-			throw new ServiceException("Exception in getMatchingModels() solution, revision and Artifact section");
-		}
-		if (matchingModelList != null && !matchingModelList.isEmpty()) {
-			String jsonInString = gson.toJson(matchingModelList);
-			return jsonInString;
-		} else {
-			return "false";
-		}
-	}
-	 
-	private boolean validateTheMatchingPort(String artifactURI, String portType, JSONArray protobufJsonString) throws Exception {
-		logger.debug(EELFLoggerDelegator.debugLogger, " validateTheMatchingPort() Begin ");
-		boolean matchingPortisFound = false;
-		ByteArrayOutputStream byteArrayOutputStream = null;
-		try {
-            if (null != artifactURI && !"".equals(artifactURI)) {
-                byteArrayOutputStream = getPayload(artifactURI);
-                if(null != byteArrayOutputStream){
-                    String result = byteArrayOutputStream.toString();
-                    if ("input".equals(portType)) {
-                        matchingPortisFound = validateProviderPort(result, protobufJsonString);
-                    } else if ("output".equals(portType)) {
-                        matchingPortisFound = validateConsumerPort(result, protobufJsonString);
-                    }
-                }else {
-                    logger.error(EELFLoggerDelegator.errorLogger,"validateTheMatchingPort() : getPayload is returning null");
-                }
-            } else { 
-                logger.error(EELFLoggerDelegator.errorLogger,"validateTheMatchingPort() : artifactURI is null or empty");
-            }
-        } catch (JsonParseException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "JsonParseException in validateTheMatchingPort() method : ",e);
-			throw e;
-		} catch (JsonMappingException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "JsonMappingException in validateTheMatchingPort() method : ",e);
-			throw e;
-		} catch (IOException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "IOException in validateTheMatchingPort() method : ", e);
-			throw e;
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in validateTheMatchingPort() method : ", e);
-			throw e;
-		} finally {
-			try {
-				if (byteArrayOutputStream != null) {
-					byteArrayOutputStream.close();
-				}
-			} catch (IOException e) {
-				logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in readArtifact() : Failed to close the byteArrayOutputStream", e);
-				throw e;
-			}
-		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " validateTheMatchingPort() End ");
-		return matchingPortisFound;
-
-	}
-
-	private boolean validateProviderPort(String protobufTgifOutput, JSONArray protobufJsonString)
-			throws JsonParseException, JsonMappingException, IOException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " validateProviderPort() Begin ");
-		Gson gson = new Gson();
-		Tgif tgif = new Tgif();
-		org.acumos.designstudio.ce.vo.tgif.Service service = new org.acumos.designstudio.ce.vo.tgif.Service();
-		try {
-			tgif = mapper.readValue(protobufTgifOutput, Tgif.class);
-		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception in  validateProviderPort    {} ", ex);
-		}
-		service = tgif.getServices();
-		boolean matchingPortIsFound = false;
-		if (service != null) {
-			if (service.getCalls() != null && service.getCalls().length != 0) {
-				Call[] call = service.getCalls();
-				MessageBody messageBody1;
-				MessageargumentList messageargumentListObject;
-				List<MessageargumentList> listOfArgument = new ArrayList<MessageargumentList>();
-				for (int i = 0; i < call.length; i++) {
-					MessageBody[] messageBody = mapper.readValue(call[i].getRequest().getFormat().toJSONString(),
-							MessageBody[].class);
-					if (messageBody != null && messageBody.length != 0) {
-						for (int j = 0; j < messageBody.length; j++) {
-							messageBody1 = new MessageBody();
-							messageBody1.setMessageargumentList(messageBody[j].getMessageargumentList());
-							if (messageBody[j].getMessageargumentList() != null
-									&& !messageBody[j].getMessageargumentList().isEmpty()) {
-								if (protobufJsonString.length() == messageBody1.getMessageargumentList().size()) {
-									for (int k = 0; k < messageBody1.getMessageargumentList().size(); k++) {
-										messageargumentListObject = new MessageargumentList();
-										messageargumentListObject
-												.setTag(messageBody1.getMessageargumentList().get(k).getTag());
-										messageargumentListObject
-												.setRole(messageBody1.getMessageargumentList().get(k).getRole());
-										messageargumentListObject
-												.setType(messageBody1.getMessageargumentList().get(k).getType());
-										listOfArgument.add(messageargumentListObject);
-										listOfArgument.toArray().toString();
-									}
-									String jsonInString = gson.toJson(listOfArgument);
-									JsonNode tree1 = mapper.readTree(jsonInString);
-									JsonNode tree2 = mapper.readTree(protobufJsonString.toString());
-									boolean isItSame = tree1.equals(tree2);
-									if (isItSame) {
-										matchingPortIsFound = true;
-										return matchingPortIsFound;
-									}
-								} else {
-									matchingPortIsFound = false;
-								}
-							}
-						}
-
-					}
-
-				}
-			}
-		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " validateProviderPort() End ");
-		return matchingPortIsFound;
-
-	}
-
-	private boolean validateConsumerPort(String protobufTgifOutput, JSONArray protobufJsonString)
-			throws JsonParseException, JsonMappingException, IOException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " validateConsumerPort() Start ");
-		Gson gson = new Gson();
-		Tgif tgif = new Tgif();
-		org.acumos.designstudio.ce.vo.tgif.Service service = new org.acumos.designstudio.ce.vo.tgif.Service();
-		try {
-			tgif = mapper.readValue(protobufTgifOutput, Tgif.class);
-		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception in  validateConsumerPort     {} ", ex);
-		}
-		service = tgif.getServices();
-		boolean matchingPortIsFound = false;
-		if (service != null) {
-			if (service.getProvides() != null && service.getProvides().length != 0) {
-				Provide[] provide = service.getProvides();
-				MessageBody messageBody1;
-				MessageargumentList messageargumentListObject;
-				List<MessageargumentList> listOfArgument = new ArrayList<MessageargumentList>();
-				for (int i = 0; i < provide.length; i++) {
-					MessageBody[] messageBody = mapper.readValue(provide[i].getRequest().getFormat().toJSONString(),
-							MessageBody[].class);
-					if (messageBody != null && messageBody.length != 0) {
-						for (int j = 0; j < messageBody.length; j++) {
-							messageBody1 = new MessageBody();
-							messageBody1.setMessageargumentList(messageBody[j].getMessageargumentList());
-							if (messageBody[j].getMessageargumentList() != null
-									&& !messageBody[j].getMessageargumentList().isEmpty()) {
-								if (protobufJsonString.length() == messageBody1.getMessageargumentList().size()) {
-									for (int k = 0; k < messageBody1.getMessageargumentList().size(); k++) {
-										messageargumentListObject = new MessageargumentList();
-										messageargumentListObject
-												.setTag(messageBody1.getMessageargumentList().get(k).getTag());
-										messageargumentListObject
-												.setRole(messageBody1.getMessageargumentList().get(k).getRole());
-										messageargumentListObject
-												.setType(messageBody1.getMessageargumentList().get(k).getType());
-										listOfArgument.add(messageargumentListObject);
-										listOfArgument.toArray().toString();
-									}
-									String jsonInString = gson.toJson(listOfArgument);
-									JsonNode tree1 = mapper.readTree(jsonInString);
-									JsonNode tree2 = mapper.readTree(protobufJsonString.toString());
-									boolean isItSame = tree1.equals(tree2);
-									if (isItSame) {
-										matchingPortIsFound = true;
-										return matchingPortIsFound;
-									}
-								} else {
-									matchingPortIsFound = false;
-								}
-							}
-
-						}
-
-					}
-
-				}
-			}
-		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " validateConsumerPort() End ");
-		return matchingPortIsFound;
-	}
-
-	@Override
-	public boolean addLink(String userId, String solutionId, String version, String linkName, String linkId,
-			String sourceNodeName, String sourceNodeId, String targetNodeName, String targetNodeId,
-			String sourceNodeRequirement, String targetNodeCapabilityName, String cid, Property property) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " addLink() in SolutionServiceImpl : Begin ");
-		String id = "";
-		Gson gson = new Gson();
-		String nodeToUpdate = "";
-		boolean addedLink = false;
-		List<Nodes> nodesList = new ArrayList<>();
-		try {
-			if (null != cid && null == solutionId) {
-				id = cid;
-			} else if (null == cid) {
-				id = solutionId;
-			}
-			String path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
-			String cdumpFileName = "acumos-cdump" + "-" + id + ".json";
-			Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName)), Cdump.class);
-			nodesList = cdump.getNodes();
-
-			// update relations list, if link is created b/w 2 models
-			if (null == property || (null != property && null == property.getData_map()
-					&& null == property.getCollator_map() && null == property.getSplitter_map())) {
-				updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName, targetNodeId,
-						sourceNodeRequirement, targetNodeCapabilityName, cdump);
-				addedLink = true;
-			}
-			if (null != property.getSplitter_map()) {
-				nodeToUpdate = targetNodeId;
-				if (nodesList != null && !nodesList.isEmpty()) {
-					for (Nodes node : nodesList) {
-						if (node.getNodeId().equals(nodeToUpdate)) {
-							// update Splitter Input Message Signature
-							updateSplitterMap(property.getSplitter_map(), node);
-							updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
-									targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
-							addedLink = true;
-						}
-					}
-				}
-			}
-			if (null != property.getCollator_map()) {
-				nodeToUpdate = sourceNodeId;
-				if (nodesList != null && !nodesList.isEmpty()) {
-					for (Nodes node : nodesList) {
-						if (node.getNodeId().equals(nodeToUpdate)) {
-							// update Collator Output Message Signature
-							updateCollatorMap(property.getCollator_map(), node);
-							updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
-									targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
-							addedLink = true;
-						}
-					}
-				}
-			} else if (null != property.getData_map()) {
-				// set properties field of DM + update relations list, if link is b/w Model & Data Mapper
-				// Identify Data Mapper node to update
-				if (null != property.getData_map() && property.getData_map().getMap_inputs().length == 0) {
-					nodeToUpdate = sourceNodeId;
-				} else {
-					nodeToUpdate = targetNodeId;
-				}
-				// update the properties field of Data mapper node + update relations list with link details
-				if (nodesList != null && !nodesList.isEmpty()) {
-					for (Nodes node : nodesList) {
-						if (node.getNodeId().equals(nodeToUpdate)) {
-							Property[] propertyArr = node.getProperties();
-							if (null == propertyArr || propertyArr.length == 0) {
-								Property[] propertyArray = new Property[1];
-								propertyArray[0] = property;
-								node.setProperties(propertyArray);
-								updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
-										targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
-								addedLink = true;
-								break;
-							} else {
-								// set map_outputs of data_map under properties field of DM
-								if (null != property.getData_map()
-										&& property.getData_map().getMap_inputs().length == 0) {
-
-									propertyArr[0].getData_map()
-											.setMap_outputs(property.getData_map().getMap_outputs());
-
-									updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
-											targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
-									addedLink = true;
-									break;
-								}
-								// set map_inputs of data_map under properties field of DM
-								if (null != property.getData_map()
-										&& property.getData_map().getMap_outputs().length == 0) {
-									propertyArr[0].getData_map().setMap_inputs(property.getData_map().getMap_inputs());
-									updateLinkdetails(linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
-											targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cdump);
-									addedLink = true;
-									break;
-								}
+		}else if (portType.equals("input")) {
+			if(null != inMsgArgList && !inMsgArgList.isEmpty()) {
+				int numberOfFields = 0;
+				boolean isNestedMessage = false;
+				numberOfFields = inMsgArgList.size(); //Number of fields.
+				//Check if nested message 
+				isNestedMessage = getIsNested(inMsgArgList);
+				//Construct KeyVO 
+				inKeyVO = new KeyVO();
+				inKeyVO.setNestedMessage(isNestedMessage);
+				inKeyVO.setNumberofFields(numberOfFields);
+				inKeyVO.setPortType("output");
+				//check if key is present in modelCacheForMatching 
+				if(modelCache.containsKey(inKeyVO)){
+					List<ModelDetailVO> modelDetVOList = new ArrayList<ModelDetailVO>();
+					modelDetVOList = modelCache.get(inKeyVO);
+					MessageBody[] messages = null;
+					List<MessageargumentList> msgArgList = null;
+					for(ModelDetailVO modeldetailVo : modelDetVOList){
+						modeldetailVo.getProtobufJsonString();
+						//e.g. [{"messageName":"ClassifyIn","messageargumentList":[{"role":"","name":"tok_corpus","tag":"1","type":"string"}]}]
+						messages = mapper.readValue(modeldetailVo.getProtobufJsonString(), MessageBody[].class);
+						for(MessageBody messageBody	 : messages ){
+							messageBody.getMessageargumentList();
+							msgArgList = messageBody.getMessageargumentList();
+							if(inMsgArgList.size() == msgArgList.size() && inMsgArgList.containsAll(msgArgList)) {
+								matchingModel = new MatchingModel();
+								matchingModel.setMatchingModelName(modeldetailVo.getModelName());
+								matchingModel.setTgifFileNexusURI(modeldetailVo.getTgifFileNexusURI());
+								matchingModelList.add(matchingModel);
 							}
 						}
 					}
-				}
+				} 
 			}
-			try {
-				String jsonInString = gson.toJson(cdump);
-				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
-			} catch (JsonIOException e) {
-				logger.error(EELFLoggerDelegator.errorLogger, "Exception in addLink() ", e);
-				addedLink = false;
-			}
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured in addLink() ", e);
-			addedLink = false;
 		}
-
-		logger.debug(EELFLoggerDelegator.debugLogger, " addLink() in SolutionServiceImpl : End ");
-		return addedLink;
+		logger.debug(EELFLoggerDelegator.debugLogger, " getMatchingModels() End ");
+		return matchingModelList;
 	}
-
+	
+	private boolean getIsNested(List<MessageargumentList> messagearguments) {
+		logger.debug(EELFLoggerDelegator.debugLogger, " getIsNested() Begin ");
+		boolean isNestedMessage = false;
+		ComplexType complexType = null;
+		for(MessageargumentList msgargument : messagearguments) {
+			complexType = msgargument.getComplexType();
+			if(null != complexType) { 
+				isNestedMessage = true;
+				break;
+			}
+		}
+		logger.debug(EELFLoggerDelegator.debugLogger, " getIsNested() End ");
+		return isNestedMessage;
+	}
+	
 	private void updateLinkdetails(String linkName, String linkId, String sourceNodeName, String sourceNodeId,
 			String targetNodeName, String targetNodeId, String sourceNodeRequirement, String targetNodeCapabilityName,
 			Cdump cdump) {
@@ -1467,147 +1655,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		}
 	}
 
-	@Override
-	public boolean deleteLink(String userId, String solutionId, String version, String cid, String linkId) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " deleteLink() in SolutionServiceImpl : Begin ");
-		String id = "";
-		String cdumpFileName;
-		String sourceNodeId = null;
-		String targetNodeId = null;
-		boolean deletedLink = false;
-		mapper.setSerializationInclusion(Include.NON_NULL);
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		List<Nodes> nodesList = new ArrayList<>();
-		String filePath = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
-		try {
-			if (null != cid && null == solutionId) {
-				id = cid;
-			} else if (null == cid && null != solutionId) {
-				id = solutionId;
-			}
-			cdumpFileName = "acumos-cdump" + "-" + id + ".json";
-			File file = new File(filePath.concat(cdumpFileName));
-			if (file.exists()) {
-				Cdump cdump = mapper.readValue(new File(filePath.concat(cdumpFileName)), Cdump.class);
-				List<Relations> relationsList = cdump.getRelations();
-				if (null == relationsList || relationsList.isEmpty()) {
-					deletedLink = false;
-				} else {
-					Iterator<Relations> relationsItr = relationsList.iterator();
-					// Identify link to delete + Data mapper node to delete it's properties field
-					while (relationsItr.hasNext()) {
-						Relations relation = relationsItr.next();
-						if (relation.getLinkId().equals(linkId)) {
-							sourceNodeId = relation.getSourceNodeId();
-							targetNodeId = relation.getTargetNodeId();
-							nodesList = cdump.getNodes();
-							// delete properties field from DM
-							for (Nodes node : nodesList) {
-								// For all NodeTypes input is SourceNodeId which is same as nodeId in Nodes
-								logger.debug(EELFLoggerDelegator.debugLogger, "1. For all NodeTypes input is SourceNodeId which is same as nodeId in Nodes ");
-								if (node.getNodeId().equals(sourceNodeId) && node.getProperties().length != 0) {
-									if (props.getGdmType().equals(node.getType().getName())) {
-										node.getProperties()[0].getData_map().setMap_outputs(new MapOutput[0]);
-									} else if (props.getDatabrokerType().equals(node.getType().getName())) {
-										node.getProperties()[0].getData_broker_map().setMap_outputs(new DBMapOutput[0]);
-										DBMapInput[] dbMapInArr = node.getProperties()[0].getData_broker_map()
-												.getMap_inputs();
-										for (DBMapInput dbmInput : dbMapInArr) {
-											DBInputField dbiField = dbmInput.getInput_field();
-											dbiField.setChecked("NO");
-											dbiField.setMapped_to_field("");
-										}
-										// Collator map Output which have only one output link
-										logger.debug(EELFLoggerDelegator.debugLogger, " Collator map Output which have only one output link ");
-									} else if (props.getCollatorType().equals(node.getType().getName())) {
-										logger.debug(EELFLoggerDelegator.debugLogger, "Output Message Signature set as empty for Collator");
-										node.getProperties()[0].getCollator_map().setOutput_message_signature("");
-										node.getProperties()[0].getCollator_map()
-												.setMap_outputs(new CollatorMapOutput[0]);
-
-										// Splitter Map Output which may have single or multiple link(s)
-										
-									} else if (props.getSplitterType().equals(node.getType().getName())) {
-										logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
-										splitterLink(linkId, relationsList, node);
-										logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : End ");
-									}
-								}
-								
-								// For all NodeTypes input is targetNodeId which is same as nodeId in Nodes
-								if (node.getNodeId().equals(targetNodeId) && node.getProperties().length != 0) {
-									logger.debug(EELFLoggerDelegator.debugLogger, " For all NodeTypes input is targetNodeId which is same as nodeId in Nodes");
-									if (props.getGdmType().equals(node.getType().getName())) {
-										node.getProperties()[0].getData_map().setMap_inputs(new MapInputs[0]);
-									} else if (props.getSplitterType().equals(node.getType().getName())) {
-										logger.debug(EELFLoggerDelegator.debugLogger,"Input Message Signature set as empty for Splitter");
-										node.getProperties()[0].getSplitter_map().setInput_message_signature("");
-										node.getProperties()[0].getSplitter_map()
-												.setMap_inputs(new SplitterMapInput[0]);
-									} else {
-										if (null != node.getProperties()[0].getCollator_map().getMap_inputs()) {
-											List<String> targetNodeList = new ArrayList<String>();
-											String source = null;
-											for (Relations rel : relationsList) {
-												if (rel.getLinkId().equals(linkId)) {
-													source = rel.getSourceNodeId();
-												}
-												if (rel.getTargetNodeId().equals(node.getNodeId())
-														&& node.getType().getName().equals(props.getCollatorType())) {
-													targetNodeList.add(rel.getTargetNodeId());
-												}
-											}
-											// If the targetNodeId List size is having only one means collator contains one input and need to delete
-											// the entire mapInputs and Source table details
-											if (targetNodeList.size() == 0) {
-												logger.debug(EELFLoggerDelegator.debugLogger," If the targetNodeId List size is having only one means collator contains one input.");
-												if (props.getCollatorType().equals(node.getType().getName())) {
-													node.getProperties()[0].getCollator_map()
-															.setMap_inputs(new CollatorMapInput[0]);
-												}
-												// If the targetNodeId List size is more than one means collator contains more than one inputs and need to
-												// delete the only deleted link related mapping details mapInputs and Source table details
-											} else {
-												logger.debug(EELFLoggerDelegator.debugLogger," If the targetNodeId List size is more than one means collator contains more than one inputs.");
-												CollatorMapInput[] cmInput = node.getProperties()[0].getCollator_map()
-														.getMap_inputs();
-												List<CollatorMapInput> cim = new LinkedList<>(Arrays.asList(cmInput));
-												Iterator<CollatorMapInput> cmiItr = cim.iterator();
-												CollatorMapInput collatorMapInput = null;
-												while (cmiItr.hasNext()) {
-													collatorMapInput = (CollatorMapInput) cmiItr.next();
-													if (source.equals(
-															collatorMapInput.getInput_field().getSource_name())) {
-														cmiItr.remove();
-														break;
-													}
-												}
-												CollatorMapInput newCmInput[] = cim
-														.toArray(new CollatorMapInput[cim.size()]);
-												node.getProperties()[0].getCollator_map().setMap_inputs(newCmInput);
-											}
-										}
-									}
-								}
-							}
-							// delete link details form relations list
-							deletedLink = true;
-							relationsItr.remove();
-							break;
-						}
-					}
-					cdump.setNodes(nodesList);
-					String jsonInString = mapper.writeValueAsString(cdump);
-					DSUtil.writeDataToFile(filePath, "acumos-cdump" + "-" + id, "json", jsonInString);
-				}
-			}
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger," Exception in deleteLink() in SolutionServiceImpl", e);
-		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " deleteLink() in SolutionServiceImpl End ");
-		return deletedLink;
-	}
-
+	
 	private void splitterLink(String linkId, List<Relations> relationsList, Nodes node) {
 		logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
 		List<String> sourceNodeList = new ArrayList<String>();
@@ -1650,173 +1698,29 @@ public class SolutionServiceImpl implements ISolutionService {
 			}
 		}
 	}
-
-	/**
-	 * 
-	 * @param commonDataServiceRestClient
-	 *            Client
-	 */
-	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
-		cmnDataService = commonDataServiceRestClient;
-	}
-
-	/**
-	 * 
-	 * @param nexusArtifactClient1
-	 *            NexusArtifactClient
-	 * @param confprops1
-	 *            ConfigurationProperties
-	 * @param properties
-	 *            Properties
-	 */
-	public void getNexusClient(NexusArtifactClient nexusArtifactClient1, ConfigurationProperties confprops1,
-			org.acumos.designstudio.ce.util.Properties properties) {
-		confprops = confprops1;
-		props = properties;
-		nexusArtifactClient = nexusArtifactClient1;
-	}
-
-	/**
-	 * @param solutionId
-	 * 			solutionId is required to get protoUrl
-	 * @param version
-	 * 			version is required to get protoUrl			
-	 * @param artifactType
-	 * 			artifactType is required to get protoUrl	
-	 * @param fileExtention
-	 * 			This method accepts fileExtention
-	 * @throws AcumosException
-	 *          Throws AcumosException while getting protoUrl, Use for getting the nexusURI for solution.
-	 *  
-	 */
-	public String getProtoUrl(String solutionId, String version, String artifactType, String fileExtention) throws AcumosException {
-		logger.debug(EELFLoggerDelegator.debugLogger, "getProtoUrl() : Begin");
-
-		String nexusURI = "";
-		List<MLPSolutionRevision> mlpSolutionRevisionList = null;
-		String solutionRevisionId = null;
-		List<MLPArtifact> mlpArtifactList;
-		try {
-			// 1. Get the list of SolutionRevision for the solutionId.
-			try {
-				mlpSolutionRevisionList = cmnDataService.getSolutionRevisions(solutionId);
-			} catch (Exception e) {
-				logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutionRevisions() ",e);
-				throw new ServiceException("Failed to get the SolutionRevisionList");
-			}
-
-			// 2. Match the version with the SolutionRevision and get the solutionRevisionId.
-			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
-				solutionRevisionId = mlpSolutionRevisionList.stream().filter(mlp -> mlp.getVersion().equals(version))
-						.findFirst().get().getRevisionId();
-				logger.debug(EELFLoggerDelegator.debugLogger, " SolutionRevisonId for Version :  {} ", solutionRevisionId );
-			}
-		} catch (NoSuchElementException | NullPointerException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
-			throw new NoSuchElementException("Failed to fetch the Solution Revision Id of the solutionId for the user");
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
-			throw new ServiceException("Failed to fetch the Solution Revision Id for the solutionId " + solutionId);
-		}
-
-		if (null != solutionRevisionId) {
-			// 3. Get the list of Artifiact for the SolutionId and SolutionRevisionId.
-			try {
-				mlpArtifactList = getListOfArtifacts(solutionId, solutionRevisionId);
-			} catch (Exception e1) {
-				throw new ServiceException(" Exception Occured decryptAndWriteTofile() ", "501","No artifact found for the solution Id " + solutionId+ " and revisionId " + solutionRevisionId );
-			}
-
-			if (null != mlpArtifactList && !mlpArtifactList.isEmpty()) {
-				try {
-					// 3. Get the nexus URI for the SolutionId
-					/*nexusURI = mlpArtifactList.stream()
-							.filter(mlpArt -> mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType)).findFirst()
-							.get().getUri();*/
-					for(MLPArtifact mlpArt : mlpArtifactList){
-						if( null != fileExtention ){
-							if(mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType) && mlpArt.getName().contains(fileExtention)){
-								nexusURI = mlpArt.getUri();
-								break;
-							}
-						} else if(mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType)){
-							nexusURI = mlpArt.getUri();
-							break;
-						}
-						
-					}
-					logger.debug(EELFLoggerDelegator.debugLogger, " Nexus URI :  {} ", nexusURI );
-				} catch (NoSuchElementException | NullPointerException e) {
-					logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",e);
-					throw new NoSuchElementException("Could not search the artifact URI for artifactType " + artifactType);
-				} catch (Exception e) {
-					logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",e);
-					throw new ServiceException(" Exception Occured decryptAndWriteTofile() ", "501","Could not search the artifact URI for artifactType " + artifactType, e.getCause());
-				}
+	
+	private List<DSModelVO> getDSModels(RestPageResponse<MLPSolution> mlpSolutionPageResponse) {
+		logger.debug(EELFLoggerDelegator.debugLogger, " getDSModels() Begin ");
+		List<MLPSolution> mlpSolutionsList = null;
+		mlpSolutionsList = mlpSolutionPageResponse.getContent();
+		List<MLPSolutionRevision> solutionRevisions = null;
+		String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
+		List<DSModelVO>  dsModelsList = new ArrayList<DSModelVO>();
+		DSModelVO modelVO = null;
+		//for every solution get the MLPSolutionRevisions 
+		for(MLPSolution mlpSol : mlpSolutionsList){
+			//Skip composite solution 
+			if (mlpSol.getToolkitTypeCode() != null
+					&& (!mlpSol.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
+				solutionRevisions = cmnDataService.getSolutionRevisions(mlpSol.getSolutionId());
+				modelVO = new DSModelVO();
+				modelVO.setMlpSolution(mlpSol);
+				modelVO.setMlpSolutionRevisions(solutionRevisions);
+				dsModelsList.add(modelVO);
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "getProtoUrl() : End");
-		return nexusURI;
+		logger.debug(EELFLoggerDelegator.debugLogger, " getDSModels() End ");
+		return dsModelsList;
 	}
 	
-	private List<MLPSolution> getSolutionsForMatchingModel(String userId){
-		List<MLPSolution> matchingModelsolutionList  = new ArrayList<MLPSolution>();
-		List<MLPSolution> mlpSolutionsList = null;
-		Map<String, Object> queryParameters = new HashMap<>();
-		queryParameters.put("active", Boolean.TRUE);
-		
-		// Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
-		
-		RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,new RestPageRequest(0, props.getSolutionResultsetSize()));
-		
-		mlpSolutionsList = pageResponse.getContent();
-		
-		logger.debug(EELFLoggerDelegator.debugLogger, " The Date Format :  {} ", confprops.getDateFormat());
-		
-		if (null == mlpSolutionsList) {
-			
-			logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned null Solution list");
-			
-		} else if (mlpSolutionsList.isEmpty()) {
-			
-			logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned empty Solution list");
-			
-		} else {
-			
-			logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned Solution list of size :  {} ", mlpSolutionsList.size());
-			
-			MLPUser mlpUser = cmnDataService.getUser(userId);
-			
-			logger.debug(EELFLoggerDelegator.debugLogger, "MLPUSer  {} ", mlpUser);
-			
-			// Get the TypeCodes from Properties file
-			String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
-			String pbAccessTypeCode = props.getPublicAccessTypeCode();
-			String prAccessTypeCode = props.getPrivateAccessTypeCode();
-			String orAccessTypeCode = props.getOrganizationAccessTypeCode();
-			// For each solution where toolkittypeCode is not null and not equal to "CP".
-			
-			for (MLPSolution mlpsolution : mlpSolutionsList) {
-				List<MLPSolutionRevision> mlpSolRevisions = cmnDataService.getSolutionRevisions(mlpsolution.getSolutionId());
-				for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
-					if (mlpsolution.getToolkitTypeCode() != null
-							&& (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
-	                        String accessTypeCode = mlpSolRevision.getAccessTypeCode();
-						if (accessTypeCode.equals(pbAccessTypeCode)) {
-							matchingModelsolutionList.add(mlpsolution);
-						}
-	                    if (mlpSolRevision.getUserId().equals(userId) && accessTypeCode.equals(prAccessTypeCode)) {
-							matchingModelsolutionList.add(mlpsolution);
-						}
-	                    if (accessTypeCode.equals(orAccessTypeCode)) {
-							matchingModelsolutionList.add(mlpsolution);
-						}
-					}
-				}
-
-			}
-			matchingModelServiceComponent.setMatchingModelsolutionList(matchingModelsolutionList);
-		}
-		return matchingModelsolutionList;
-	}
 }

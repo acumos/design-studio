@@ -32,16 +32,13 @@ public class MessageargumentList implements Serializable{
     private String name;
     private String tag;
     private ComplexType complexType;
-    
-    
-	/**
+
+    /**
 	 * @return the role
 	 */
 	public String getRole() {
 		return role;
 	}
-
-
 
 	/**
 	 * @param role the role to set
@@ -50,16 +47,12 @@ public class MessageargumentList implements Serializable{
 		this.role = role;
 	}
 
-
-
 	/**
 	 * @return the type
 	 */
 	public String getType() {
 		return type;
 	}
-
-
 
 	/**
 	 * @param type the type to set
@@ -68,16 +61,12 @@ public class MessageargumentList implements Serializable{
 		this.type = type;
 	}
 
-
-
 	/**
 	 * @return the name
 	 */
 	public String getName() {
 		return name;
 	}
-
-
 
 	/**
 	 * @param name the name to set
@@ -86,16 +75,12 @@ public class MessageargumentList implements Serializable{
 		this.name = name;
 	}
 
-
-
 	/**
 	 * @return the tag
 	 */
 	public String getTag() {
 		return tag;
 	}
-
-
 
 	/**
 	 * @param tag the tag to set
@@ -106,21 +91,61 @@ public class MessageargumentList implements Serializable{
 
 
 	/**
-	 * 
+	 * Default Constructor
 	 */
 	public MessageargumentList() {
 	}
-
-
 
 	public ComplexType getComplexType() {
 		return complexType;
 	}
 
-
-
 	public void setComplexType(ComplexType complexType) {
 		this.complexType = complexType;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((complexType == null) ? 0 : complexType.hashCode());
+		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result + ((tag == null) ? 0 : tag.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MessageargumentList other = (MessageargumentList) obj;
+		if (complexType == null) {
+			if (other.complexType != null)
+				return false;
+		} else if (!complexType.equals(other.complexType))
+			return false;
+		if (role == null) {
+			if (other.role != null)
+				return false;
+		} else if (!role.equals(other.role))
+			return false;
+		if (tag == null) {
+			if (other.tag != null)
+				return false;
+		} else if (!tag.equals(other.tag))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
+	}
+
+	
 }

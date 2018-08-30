@@ -209,7 +209,7 @@ public interface ISolutionService {
 	public String addNode(String userId, String solutionId, String version, String cid, Nodes nodes);
 
 	/**
-	 * This method used for to addNode
+	 * This method used for to getMatchingModels
 	 * @param userId
 	 * This method accepts userId as Parameter
 	 * @param portType
@@ -222,5 +222,14 @@ public interface ISolutionService {
 	 * If in case exception it will throw AcumosException
 	 */
 	public String getMatchingModels(String userId, String portType, JSONArray protobufJsonString) throws Exception;
+	
+	/**
+	 * This method will get the updated models like PR,OR,PB 
+	 * @throws InterruptedException
+	 * 			In case of Thread Execution if exception comes it throws InterruptedException 
+	 * @throws ServiceException
+	 * 			In case of exception it throws ServiceException 
+	 */
+	public void getUpdatedModelsbyDate() throws InterruptedException, ServiceException;
 
 }

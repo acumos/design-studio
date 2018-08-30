@@ -139,7 +139,47 @@ public class Properties implements Serializable {
 	@Value("${protobuffFileExtention}")	
 	private String protobuffFileExtention;
 	
+	@Value("${validationStatusCode}")
+	private String validationStatusCode;
 	
+	@Value("${matchingInputPortType}")
+	private String matchingInputPortType;
+	
+	@Value("${matchingOutputPortType}")
+	private String matchingOutputPortType;
+	
+	@Value("${privateCacheRemovalTime}")
+	private int privateCacheRemovalTime;
+	
+	
+	public int getPrivateCacheRemovalTime() {
+		return privateCacheRemovalTime;
+	}
+	
+	public void setPrivateCacheRemovalTime(int privateCacheRemovalTime) {
+		this.privateCacheRemovalTime = privateCacheRemovalTime;
+	}
+
+	public String getMatchingInputPortType() {
+		return matchingInputPortType;
+	}
+	
+	public void setMatchingInputPortType(String matchingInputPortType) {
+		this.matchingInputPortType = matchingInputPortType;
+	}
+	public String getMatchingOutputPortType() {
+		return matchingOutputPortType;
+	}
+	public void setMatchingOutputPortType(String matchingOutputPortType) {
+		this.matchingOutputPortType = matchingOutputPortType;
+	}
+	public String getValidationStatusCode() {
+		return validationStatusCode;
+	}
+	public void setValidationStatusCode(String validationStatusCode) {
+		this.validationStatusCode = validationStatusCode;
+	}
+
 	public String getSplitterType() {
 		return splitterType;
 	}
