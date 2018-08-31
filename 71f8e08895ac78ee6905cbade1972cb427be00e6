@@ -1,0 +1,533 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e9666ee7_09abf345",
+        "filename": "ds-compositionengine/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "I have informed not to commit these dependencies.",
+      "range": {
+        "startLine": 150,
+        "startChar": 12,
+        "endLine": 158,
+        "endChar": 21
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "743017ba_635702ad",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/Application.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please remove empty javadoc or if required include the description.",
+      "range": {
+        "startLine": 59,
+        "startChar": 2,
+        "endLine": 59,
+        "endChar": 3
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "00f06ee2_159fccf2",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/Application.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please specify one liner description of public method.",
+      "range": {
+        "startLine": 79,
+        "startChar": 3,
+        "endLine": 79,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c796f434_e0b69e02",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/Application.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please specify one liner description of public method.",
+      "range": {
+        "startLine": 122,
+        "startChar": 3,
+        "endLine": 122,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74dc20eb_a3062345",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/ArtfactDetailsController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please specify one liner description of public method.",
+      "range": {
+        "startLine": 48,
+        "startChar": 3,
+        "endLine": 48,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22909eff_b1e84976",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please specify one liner description of public method.",
+      "range": {
+        "startLine": 347,
+        "startChar": 3,
+        "endLine": 347,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfa94e09_86bb8c5a",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please specify one liner description of public method.",
+      "range": {
+        "startLine": 427,
+        "startChar": 3,
+        "endLine": 427,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "09379f93_e4411829",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/IMatchingModelService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please specify one liner description of public method.",
+      "range": {
+        "startLine": 31,
+        "startChar": 3,
+        "endLine": 31,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fba8384_c0a16377",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/IMatchingModelService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please specify one liner description of public method.",
+      "range": {
+        "startLine": 39,
+        "startChar": 3,
+        "endLine": 39,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de8f0b7c_25eae962",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/IMatchingModelService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please specify one liner description of public method.",
+      "range": {
+        "startLine": 47,
+        "startChar": 3,
+        "endLine": 47,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d53f277_49d1776c",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/IMatchingModelService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please specify one liner description of public method.",
+      "range": {
+        "startLine": 55,
+        "startChar": 3,
+        "endLine": 55,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59584e2f_5b253df6",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/IMatchingModelService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please specify one liner description of public method.",
+      "range": {
+        "startLine": 65,
+        "startChar": 3,
+        "endLine": 65,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64d7a17c_67b6d1c8",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "No need, its already specified in the Interface",
+      "range": {
+        "startLine": 87,
+        "startChar": 1,
+        "endLine": 93,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c696fb77_c7971d40",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "same as above, not needed for override method.",
+      "range": {
+        "startLine": 138,
+        "startChar": 1,
+        "endLine": 146,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14d7a7cb_a69da06b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "same as above",
+      "range": {
+        "startLine": 235,
+        "startChar": 1,
+        "endLine": 241,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dacdacd_615a1d3f",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please declare the method in interface and provide java doc in interface",
+      "range": {
+        "startLine": 133,
+        "startChar": 1,
+        "endLine": 139,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "60143040_bbb36614",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please correct the method name.  Also corresponding declaration seems to be missing in Interface.",
+      "range": {
+        "startLine": 140,
+        "startChar": 13,
+        "endLine": 140,
+        "endChar": 30
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71a6561e_4880dbc0",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/ModelCacheForMatching.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "Please specify the one line description for public method.",
+      "range": {
+        "startLine": 51,
+        "startChar": 3,
+        "endLine": 51,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b71181b_24f2f514",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/ModelCacheForMatching.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "description is missing",
+      "range": {
+        "startLine": 83,
+        "startChar": 3,
+        "endLine": 83,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9437b70_7dd5d751",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/ModelCacheForMatching.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "description is missing",
+      "range": {
+        "startLine": 97,
+        "startChar": 3,
+        "endLine": 97,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a8479d5_fd568ab0",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/ModelCacheForMatching.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "description is missing",
+      "range": {
+        "startLine": 116,
+        "startChar": 3,
+        "endLine": 116,
+        "endChar": 4
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "134bc5d4_2c65979e",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/Properties.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "please rename to revel the purpose of variable",
+      "range": {
+        "startLine": 151,
+        "startChar": 11,
+        "endLine": 151,
+        "endChar": 27
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c01300fa_d95ec7b4",
+        "filename": "ds-compositionengine/src/test/resources/12345678-abcd-90ab-cdef-1234567890ab/acumos-cdump-111.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-08-31T08:52:04Z",
+      "side": 1,
+      "message": "didn\u0027t get this?",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 2
+      },
+      "revId": "71f8e08895ac78ee6905cbade1972cb427be00e6",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
