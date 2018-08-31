@@ -252,6 +252,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		matchingModelList = getPublicMatchingModels(portType,inMsgArgList);
 		//Check if user private cache is old to recent.
 		Date lastExecutionTime = modelCacheForMatching.getUserPrivateModelUpdateTime(userId);
+		logger.debug(EELFLoggerDelegator.debugLogger, " lastExecutionTime : " + lastExecutionTime);
 		if(null != lastExecutionTime){
 			Long minutes = TimeUnit.MILLISECONDS.toMinutes((new Date()).getTime() - lastExecutionTime.getTime());
 			if (minutes > props.getPrivateCacheRemovalTime()) { //If difference is more than configurable min then cache is too old.  
@@ -1530,7 +1531,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		List<MatchingModel> matchingModelList = new ArrayList<MatchingModel>();;
 		KeyVO inKeyVO;
 		MatchingModel matchingModel = null;
-		if(portType.equals("output")){
+		if(portType.equals(props.getMatchingOutputPortType())){
 			if(null != inMsgArgList && !inMsgArgList.isEmpty()) {
 				int numberOfFields = 0;
 				boolean isNestedMessage = false;
@@ -1541,7 +1542,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				inKeyVO = new KeyVO();
 				inKeyVO.setNestedMessage(isNestedMessage);
 				inKeyVO.setNumberofFields(numberOfFields);
-				inKeyVO.setPortType("input");
+				inKeyVO.setPortType(props.getMatchingInputPortType());
 				//check if key is present in modelCacheForMatching 
 				if(modelCache.containsKey(inKeyVO)){
 					List<ModelDetailVO> modelDetVOList = new ArrayList<ModelDetailVO>();
@@ -1564,7 +1565,7 @@ public class SolutionServiceImpl implements ISolutionService {
 					}
 				} 
 			}
-		}else if (portType.equals("input")) {
+		}else if (portType.equals(props.getMatchingInputPortType())) {
 			if(null != inMsgArgList && !inMsgArgList.isEmpty()) {
 				int numberOfFields = 0;
 				boolean isNestedMessage = false;
@@ -1575,7 +1576,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				inKeyVO = new KeyVO();
 				inKeyVO.setNestedMessage(isNestedMessage);
 				inKeyVO.setNumberofFields(numberOfFields);
-				inKeyVO.setPortType("output");
+				inKeyVO.setPortType(props.getMatchingOutputPortType());
 				//check if key is present in modelCacheForMatching 
 				if(modelCache.containsKey(inKeyVO)){
 					List<ModelDetailVO> modelDetVOList = new ArrayList<ModelDetailVO>();

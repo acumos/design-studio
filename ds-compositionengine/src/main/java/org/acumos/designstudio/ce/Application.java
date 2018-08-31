@@ -64,7 +64,7 @@ public class Application {
 	 * @throws ServiceException
 	 * 		This method throws Service Exception
 	 */
-	@Scheduled(cron = "* * 6 * * *")
+	@Scheduled(cron = "* * */6 * * *")
 	public void ExecuteForHour() throws ServiceException {
 		logger.debug(EELFLoggerDelegator.debugLogger, " Scheduled on ExecuteForHour() Begin ");
 		try {
@@ -114,7 +114,7 @@ public class Application {
 		logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() Begin ");
 		List<DSModelVO> dsModels = matchingModelServiceImpl.getPublicDSModels();
 		matchingModelServiceImpl.populatePublicModelCacheForMatching(dsModels);
-		logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() begin ");
+		logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() End ");
 		
     }
 	
