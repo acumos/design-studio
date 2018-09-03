@@ -54,8 +54,8 @@ import org.acumos.nexus.client.NexusArtifactClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonParser.Feature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Component
@@ -259,7 +259,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 									tgif = mapper.readValue(byteArrayOutputStream.toString(), Tgif.class);
 								}
 							} catch (Exception e) {
-								logger.error(EELFLoggerDelegator.errorLogger, " exception occured in getModelCache()", e);
+								logger.error(EELFLoggerDelegator.errorLogger, " exception occured in removeModelFromCache()", e);
 								throw new ServiceException("Failed to read the Model");
 							}
 						}
@@ -276,13 +276,13 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 									try {
 										//Assuming that only one message as a input parameter. 
 										//Currently multi input message parameter is not supported.
-										messages = mapper.readValue(provide.getRequest().getFormat().toJSONString(),
-												MessageBody[].class);
+										messages = mapper.readValue(provide.getRequest().getFormat().toJSONString(),MessageBody[].class);
 										for(MessageBody msgBody : messages){ //Assumption : only input message parameter
-											numberOfFields = msgBody.getMessageargumentList().size(); //Number of fields.
-											//Check if nested message 
-											isNestedMessage = getIsNested(msgBody.getMessageargumentList());
-											
+											if (null != msgBody.getMessageargumentList()) {
+												numberOfFields = msgBody.getMessageargumentList().size(); //Number of fields.
+												// Check if nested message
+												isNestedMessage = getIsNested(msgBody.getMessageargumentList());
+											}
 											//Construct KeyVO 
 											key = new KeyVO();
 											key.setNestedMessage(isNestedMessage);
@@ -295,7 +295,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 											} 
 										}
 									} catch (IOException e) {
-										logger.error(EELFLoggerDelegator.errorLogger, " exception occured in getModelCache()", e);
+										logger.error(EELFLoggerDelegator.errorLogger, " exception occured in Provides part in removeModelFromCache()", e);
 										throw new ServiceException("Failed to read the Model");
 									}
 								}
@@ -310,9 +310,11 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 										//Assuming that only one message as a output parameter. 
 										messages = mapper.readValue(call.getRequest().getFormat().toJSONString(), MessageBody[].class);
 										for(MessageBody msgBody : messages){
-											numberOfFields = msgBody.getMessageargumentList().size();
-											isNestedMessage =  getIsNested(msgBody.getMessageargumentList());
-											
+											if (null != msgBody.getMessageargumentList()) {
+												numberOfFields = msgBody.getMessageargumentList().size(); //Number of fields.
+												// Check if nested message
+												isNestedMessage = getIsNested(msgBody.getMessageargumentList());
+											}
 											//Construct KeyVO 
 											key = new KeyVO();
 											key.setNestedMessage(isNestedMessage);
@@ -325,7 +327,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 											}
 										}
 									} catch (IOException e) {
-										logger.error(EELFLoggerDelegator.errorLogger, " exception occured in getModelCache()", e);
+										logger.error(EELFLoggerDelegator.errorLogger, " exception occured in Calls Part in removeModelFromCache()", e);
 										throw new ServiceException("Failed to read the Model");
 									}
 								}
@@ -377,45 +379,46 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 									//1. process input messages
 									if(service.getProvides() != null & service.getProvides().length != 0 ){
 										inputs = service.getProvides();
-										
 										for(Provide provide : inputs){
 											//For every provide generate the keyVO 
 											try {
-												//Assuming that only one message as a input parameter. 
-												//Currently multi input message parameter is not supported.
-												messages = mapper.readValue(provide.getRequest().getFormat().toJSONString(),
-														MessageBody[].class);
-												for(MessageBody msgBody : messages){ //Assumption : onlye input message parameter
-													numberOfFields = msgBody.getMessageargumentList().size(); //Number of fields.
-													//Check if nested message 
-													isNestedMessage = getIsNested(msgBody.getMessageargumentList());
-													
-													//Construct KeyVO 
-													key = new KeyVO();
-													key.setNestedMessage(isNestedMessage);
-													key.setNumberofFields(numberOfFields);
-													key.setPortType(props.getMatchingInputPortType());
-													
-													//Construct ValueVO 
-													value = new ModelDetailVO();
-													value.setModelId(mlpSolRevision.getSolutionId());
-													value.setModelName(solution.getName());
-													value.setProtobufJsonString(provide.getRequest().getFormat().toJSONString());
-													value.setRevisionId(mlpSolRevision.getRevisionId());
-													value.setTgifFileNexusURI(tgifFileNexusURI);
-													value.setVersion(mlpSolRevision.getVersion());
-													
-													//check if key is present in result 
-													if(result.containsKey(key)){
-														modelDetailVOs = result.get(key);
-													} else {
-														modelDetailVOs = new ArrayList<ModelDetailVO>();
+												if (null != provide.getRequest().getFormat()) {
+													// Assuming that only one message as a input parameter.
+													// Currently multi input message parameter is not supported.
+													messages = mapper.readValue(provide.getRequest().getFormat().toJSONString(),MessageBody[].class);
+													for (MessageBody msgBody : messages) { // Assumption : only input message parameter
+														if (null != msgBody.getMessageargumentList()) {
+															numberOfFields = msgBody.getMessageargumentList().size(); // Number of fields.
+															// Check if nested message
+															isNestedMessage = getIsNested(msgBody.getMessageargumentList());
+														}
+														// Construct KeyVO
+														key = new KeyVO();
+														key.setNestedMessage(isNestedMessage);
+														key.setNumberofFields(numberOfFields);
+														key.setPortType(props.getMatchingInputPortType());
+
+														// Construct ValueVO
+														value = new ModelDetailVO();
+														value.setModelId(mlpSolRevision.getSolutionId());
+														value.setModelName(solution.getName());
+														value.setProtobufJsonString(provide.getRequest().getFormat().toJSONString());
+														value.setRevisionId(mlpSolRevision.getRevisionId());
+														value.setTgifFileNexusURI(tgifFileNexusURI);
+														value.setVersion(mlpSolRevision.getVersion());
+
+														// check if key is present in result
+														if (result.containsKey(key)) {
+															modelDetailVOs = result.get(key);
+														} else {
+															modelDetailVOs = new ArrayList<ModelDetailVO>();
+														}
+														modelDetailVOs.add(value);
+														result.put(key, modelDetailVOs);
 													}
-													modelDetailVOs.add(value);
-													result.put(key, modelDetailVOs);
 												}
 											} catch (IOException e) {
-												logger.error(EELFLoggerDelegator.errorLogger, " exception occured in getModelCache()", e);
+												logger.error(EELFLoggerDelegator.errorLogger, " exception occured in Provides part in getModelCache()", e);
 												throw new ServiceException("Failed to read the Model");
 											}
 										}
@@ -427,53 +430,55 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 										for(Call call : calls){
 											//For every call generate the keyVO 
 											try {
-												//Assuming that only one message as a output parameter. 
-												messages = mapper.readValue(call.getRequest().getFormat().toJSONString(), MessageBody[].class);
-												for(MessageBody msgBody : messages){
-													numberOfFields = msgBody.getMessageargumentList().size();
-													isNestedMessage =  getIsNested(msgBody.getMessageargumentList());
-													
-													//Construct KeyVO 
-													key = new KeyVO();
-													key.setNestedMessage(isNestedMessage);
-													key.setNumberofFields(numberOfFields);
-													key.setPortType(props.getMatchingOutputPortType());
-													
-													//Construct ValueVO 
-													value = new ModelDetailVO();
-													value.setModelId(mlpSolRevision.getSolutionId());
-													value.setModelName(solution.getName());
-													value.setProtobufJsonString(call.getRequest().getFormat().toJSONString());
-													value.setRevisionId(mlpSolRevision.getRevisionId());
-													value.setTgifFileNexusURI(tgifFileNexusURI);
-													value.setVersion(mlpSolRevision.getVersion());
-													
-													//check if key is present in result
-													if(result.containsKey(key)){
-														modelDetailVOs = result.get(key);
-													}else {
-														modelDetailVOs = new ArrayList<ModelDetailVO>();
+												if (null != call.getRequest().getFormat()) {
+													// Assuming that only one message as a output parameter.
+													messages = mapper.readValue(call.getRequest().getFormat().toJSONString(),MessageBody[].class);
+													for (MessageBody msgBody : messages) {
+														if (null != msgBody.getMessageargumentList()) {
+															numberOfFields = msgBody.getMessageargumentList().size(); // Number
+															// Check if nested message
+															isNestedMessage = getIsNested(msgBody.getMessageargumentList());
+														}
+
+														// Construct KeyVO
+														key = new KeyVO();
+														key.setNestedMessage(isNestedMessage);
+														key.setNumberofFields(numberOfFields);
+														key.setPortType(props.getMatchingOutputPortType());
+
+														// Construct ValueVO
+														value = new ModelDetailVO();
+														value.setModelId(mlpSolRevision.getSolutionId());
+														value.setModelName(solution.getName());
+														value.setProtobufJsonString(call.getRequest().getFormat().toJSONString());
+														value.setRevisionId(mlpSolRevision.getRevisionId());
+														value.setTgifFileNexusURI(tgifFileNexusURI);
+														value.setVersion(mlpSolRevision.getVersion());
+
+														// check if key is present in result
+														if (result.containsKey(key)) {
+															modelDetailVOs = result.get(key);
+														} else {
+															modelDetailVOs = new ArrayList<ModelDetailVO>();
+														}
+														modelDetailVOs.add(value);
+														result.put(key, modelDetailVOs);
 													}
-													modelDetailVOs.add(value);
-													result.put(key,modelDetailVOs);
 												}
 											} catch (IOException e) {
-												logger.error(EELFLoggerDelegator.errorLogger, " exception occured in getModelCache()", e);
+												logger.error(EELFLoggerDelegator.errorLogger, " exception occured in Calls part in getModelCache()", e);
 												throw new ServiceException("Failed to read the Model");
 											}
-											
 										}
 									}
 								}
 							}
-							
 						} catch (Exception e) {
 							logger.error(EELFLoggerDelegator.errorLogger, " exception occured in getModelCache()", e);
 							throw new ServiceException("Exception Occured while reading the TGIF");
 						}
 					}
 				}
-				
 			}
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, " constructModelCache() End ");

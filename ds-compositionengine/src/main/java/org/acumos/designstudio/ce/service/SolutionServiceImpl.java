@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -82,9 +81,6 @@ import org.acumos.designstudio.ce.vo.matchingmodel.KeyVO;
 import org.acumos.designstudio.ce.vo.matchingmodel.ModelDetailVO;
 import org.acumos.designstudio.ce.vo.protobuf.MessageBody;
 import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
-import org.acumos.designstudio.ce.vo.tgif.Call;
-import org.acumos.designstudio.ce.vo.tgif.Provide;
-import org.acumos.designstudio.ce.vo.tgif.Tgif;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +91,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
@@ -1553,9 +1548,8 @@ public class SolutionServiceImpl implements ISolutionService {
 						modeldetailVo.getProtobufJsonString();
 						messages = mapper.readValue(modeldetailVo.getProtobufJsonString(), MessageBody[].class);
 						for(MessageBody messageBody	 : messages ){
-							messageBody.getMessageargumentList();
 							msgArgList = messageBody.getMessageargumentList();
-							if(inMsgArgList.size() == msgArgList.size() && inMsgArgList.containsAll(msgArgList)) {
+							if(null != msgArgList && inMsgArgList.size() == msgArgList.size() && inMsgArgList.containsAll(msgArgList)) {
 								matchingModel = new MatchingModel();
 								matchingModel.setMatchingModelName(modeldetailVo.getModelName());
 								matchingModel.setTgifFileNexusURI(modeldetailVo.getTgifFileNexusURI());
@@ -1588,9 +1582,8 @@ public class SolutionServiceImpl implements ISolutionService {
 						//e.g. [{"messageName":"ClassifyIn","messageargumentList":[{"role":"","name":"tok_corpus","tag":"1","type":"string"}]}]
 						messages = mapper.readValue(modeldetailVo.getProtobufJsonString(), MessageBody[].class);
 						for(MessageBody messageBody	 : messages ){
-							messageBody.getMessageargumentList();
 							msgArgList = messageBody.getMessageargumentList();
-							if(inMsgArgList.size() == msgArgList.size() && inMsgArgList.containsAll(msgArgList)) {
+							if(null != msgArgList && inMsgArgList.size() == msgArgList.size() && inMsgArgList.containsAll(msgArgList)) {
 								matchingModel = new MatchingModel();
 								matchingModel.setMatchingModelName(modeldetailVo.getModelName());
 								matchingModel.setTgifFileNexusURI(modeldetailVo.getTgifFileNexusURI());
