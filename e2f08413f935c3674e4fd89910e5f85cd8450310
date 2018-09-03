@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3cb28cea_108a2ebc",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-03T09:03:12Z",
+      "side": 1,
+      "message": "Need to be in the above if condition",
+      "range": {
+        "startLine": 286,
+        "startChar": 11,
+        "endLine": 295,
+        "endChar": 13
+      },
+      "revId": "e2f08413f935c3674e4fd89910e5f85cd8450310",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71edc006_df5f35ae",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-03T09:03:12Z",
+      "side": 1,
+      "message": "Please include in the above if condition",
+      "range": {
+        "startLine": 318,
+        "startChar": 11,
+        "endLine": 327,
+        "endChar": 12
+      },
+      "revId": "e2f08413f935c3674e4fd89910e5f85cd8450310",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a9b9dc31_976dacb3",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-03T09:03:12Z",
+      "side": 1,
+      "message": "Please include in the above if condition",
+      "range": {
+        "startLine": 395,
+        "startChar": 14,
+        "endLine": 417,
+        "endChar": 46
+      },
+      "revId": "e2f08413f935c3674e4fd89910e5f85cd8450310",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28efaddf_a6b8cda5",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-03T09:03:12Z",
+      "side": 1,
+      "message": "Please include in above if condition.",
+      "range": {
+        "startLine": 443,
+        "startChar": 14,
+        "endLine": 465,
+        "endChar": 46
+      },
+      "revId": "e2f08413f935c3674e4fd89910e5f85cd8450310",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
