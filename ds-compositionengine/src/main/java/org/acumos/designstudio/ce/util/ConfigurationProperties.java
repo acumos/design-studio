@@ -23,11 +23,7 @@ package org.acumos.designstudio.ce.util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-/**
- * 
- * 
- *
- */
+
 @Component
 public class ConfigurationProperties {
 	
@@ -74,7 +70,25 @@ public class ConfigurationProperties {
 	@Value("${sqldatabrokerURI}")
 	private String sqldatabrokerURI;
 	
+	@Value("${solutionResultsetSize}")
+	private int solutionResultsetSize;
 	
+	
+	
+	/**
+	 * @return the solutionResultsetSize
+	 */
+	public int getSolutionResultsetSize() {
+		return solutionResultsetSize;
+	}
+
+	/**
+	 * @param solutionResultsetSize the solutionResultsetSize to set
+	 */
+	public void setSolutionResultsetSize(int solutionResultsetSize) {
+		this.solutionResultsetSize = solutionResultsetSize;
+	}
+
 	/**
 	 * @return the imagedatabrokerURI
 	 */

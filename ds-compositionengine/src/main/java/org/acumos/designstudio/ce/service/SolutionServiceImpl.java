@@ -183,7 +183,7 @@ public class SolutionServiceImpl implements ISolutionService {
 			queryParameters.put("active", Boolean.TRUE);
 			// Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
 			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
-					new RestPageRequest(0, props.getSolutionResultsetSize()));
+					new RestPageRequest(0, confprops.getSolutionResultsetSize()));
 			mlpSolutionsList = pageResponse.getContent();
 			logger.debug(EELFLoggerDelegator.debugLogger, " The Date Format :  {} ", confprops.getDateFormat());
 			if (null == mlpSolutionsList) {
