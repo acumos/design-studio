@@ -37,6 +37,7 @@ public class Properties implements Serializable {
 
 	@Value("${solutionErrorDesc}")
 	private String solutionErrorDesc;
+	
 	@Value("${compositionErrorCode}")
 	private String compositionErrorCode;
 
@@ -152,6 +153,23 @@ public class Properties implements Serializable {
 	private int privateCacheRemovalTime;
 	
 	
+	
+	/**
+	 * @return 
+	 * 		the solutionResultsetSize
+	 */
+	public int getSolutionResultsetSize() {
+		return solutionResultsetSize;
+	}
+
+	/**
+	 * @param 
+	 * 		solutionResultsetSize the solutionResultsetSize to set
+	 */
+	public void setSolutionResultsetSize(int solutionResultsetSize) {
+		this.solutionResultsetSize = solutionResultsetSize;
+	}
+
 	public int getPrivateCacheRemovalTime() {
 		return privateCacheRemovalTime;
 	}
@@ -248,12 +266,6 @@ public class Properties implements Serializable {
 		return blueprintArtifactType;
 	}
 
-	/**
-	 * @return the solutionResultsetSize
-	 */
-	public int getSolutionResultsetSize() {
-		return solutionResultsetSize;
-	}
 
 	/**
 	 * @return the gdmJarName

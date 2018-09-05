@@ -93,7 +93,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 		Map<String, Object> queryParameters = new HashMap<>();
 		queryParameters.put("active", Boolean.TRUE);
 		RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
-				new RestPageRequest(0, props.getSolutionResultsetSize()));
+				new RestPageRequest(0, confprops.getSolutionResultsetSize()));
 		mlpSolutionsList = pageResponse.getContent();
 		if (null == mlpSolutionsList) {
 			logger.debug(EELFLoggerDelegator.debugLogger, " CommonDataService returned null Solution list");
