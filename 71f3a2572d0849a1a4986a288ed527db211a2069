@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f588600a_d9bb3c58",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/ConfigurationProperties.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-05T14:57:39Z",
+      "side": 1,
+      "message": "Remove this setter method",
+      "range": {
+        "startLine": 88,
+        "startChar": 13,
+        "endLine": 88,
+        "endChar": 37
+      },
+      "revId": "71f3a2572d0849a1a4986a288ed527db211a2069",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888e9cd0_1ceb629c",
+        "filename": "ds-compositionengine/src/main/resources/application.properties",
+        "patchSetId": 3
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-05T14:57:39Z",
+      "side": 1,
+      "message": "Remove this property place holder",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 26
+      },
+      "revId": "71f3a2572d0849a1a4986a288ed527db211a2069",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
