@@ -24,6 +24,10 @@ The Design Studio Composition Engine is packaged within a Docker image and avail
 Acumos docker registry.  The TOSCAGenerator Client library is published in the Acumos Nexus
 repository as a jar file.
 
+0.0.37-SNAPSHOT, 2018-09-07
+---------------------------
+* ACUMOS-1701 : Upgrade DSCE and TGC to CDS 1.18.0
+
 0.0.36-SNAPSHOT, 2018-09-03
 ---------------------------
 * ACUMOS-1191 : DS should ignore model's toolkit type attribute when populating selection palette
