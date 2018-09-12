@@ -33,6 +33,8 @@ import java.util.Properties;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.DSSolution;
+import org.acumos.designstudio.ce.vo.MatchingModel;
+import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 import org.acumos.designstudio.ce.vo.blueprint.BaseOperationSignature;
 import org.acumos.designstudio.ce.vo.blueprint.BluePrint;
 import org.acumos.designstudio.ce.vo.blueprint.Container;
@@ -48,12 +50,15 @@ import org.json.simple.JSONArray;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 
 public class VOTest  {
 	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(VOTest.class);
 	private String nexusURI = "";
 	private String payloadURI ="";
+	
 	public static Properties CONFIG = new Properties();
 	@Before
 	/**
@@ -376,5 +381,34 @@ public class VOTest  {
 		logger.debug(EELFLoggerDelegator.debugLogger,   confProps.toString());
 	}
 	
-
+	@Test
+	/**
+	 * Test for matching model name
+	 * 
+	 */
+	public void matchingModelTest(){
+		MatchingModel matchingModel = new MatchingModel();
+		matchingModel.getMatchingModelName();
+		matchingModel.setMatchingModelName("Test");
+		matchingModel.getTgifFileNexusURI();
+		matchingModel.setTgifFileNexusURI("https://localhost:8082/repo/test");
+		
+		assertNotNull(matchingModel);
+	}
+	
+	@Test
+	/**
+	 * Test for SuccessErrroMessgae
+	 * 
+	 */
+	public void successErrroMessgaeTest(){
+		SuccessErrorMessage successErrorMessage = new SuccessErrorMessage("200","400");
+		successErrorMessage.getSuccess();
+		successErrorMessage.setSuccess("success");
+		successErrorMessage.getErrorMessage();
+		successErrorMessage.setErrorMessage("400");
+		
+		assertNotNull(successErrorMessage);
+	}
+	
 }

@@ -28,9 +28,11 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ import org.acumos.cds.AccessTypeCode;
 import org.acumos.cds.ModelTypeCode;
 import org.acumos.cds.ValidationStatusCode;
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
+import org.acumos.cds.client.CommonDataServiceRestClientMockImpl;
 import org.acumos.cds.client.ICommonDataServiceRestClient;
 import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolution;
@@ -51,18 +54,23 @@ import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.cds.domain.MLPUser;
 import org.acumos.cds.transport.RestPageRequest;
 import org.acumos.cds.transport.RestPageResponse;
+import org.acumos.designstudio.ce.config.AppConfig;
+import org.acumos.designstudio.ce.docker.CommandUtils;
+import org.acumos.designstudio.ce.docker.DockerConfiguration;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.service.AcumosCatalogServiceImpl;
 import org.acumos.designstudio.ce.service.CompositeSolutionServiceImpl;
 import org.acumos.designstudio.ce.service.DataBrokerServiceImpl;
 import org.acumos.designstudio.ce.service.GenericDataMapperServiceImpl;
+import org.acumos.designstudio.ce.service.MatchingModelServiceComponent;
 import org.acumos.designstudio.ce.service.SolutionServiceImpl;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.DSUtil;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.Artifact;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
+import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 import org.acumos.designstudio.ce.vo.cdump.Argument;
 import org.acumos.designstudio.ce.vo.cdump.Capabilities;
 import org.acumos.designstudio.ce.vo.cdump.CapabilityTarget;
@@ -117,6 +125,10 @@ import org.mockito.junit.MockitoRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -138,9 +150,10 @@ public class SolutionControllerTest {
 	String userId = "12345678-abcd-90ab-cdef-1234567890ab";
 	// The local path folder which is there in local project Directory.
 	String localpath = "./src/test/resources/";
+	String localpath1 = "./src/test/resources/demo/";
 
 	// For meanwhile hard coding the sessionID.
-	String sessionId = "4e3e6ef4-7ae2-4132-a683-020f82c38c16";
+	String sessionId = "010";
 
 	@Before
 	/**
@@ -173,10 +186,16 @@ public class SolutionControllerTest {
 	ResourceLoader resourceLoader;
 	
 	@Mock
+	MatchingModelServiceComponent matchingModelServiceComponent;
+	
+	@Mock
 	Resource resource;
 	
 	@Mock
 	NexusArtifactClient nexusArtifactClient;
+	
+	@Mock
+	RestPageResponse<MLPSolution> pageResponse1;
 	
 	@Mock
 	UploadArtifactInfo artifactInfo1;
@@ -202,9 +221,25 @@ public class SolutionControllerTest {
 	@InjectMocks
 	GenericDataMapperServiceImpl gdmService;
 	
+	@InjectMocks
+	AppConfig appConfig;
+	
+	@InjectMocks
+	org.acumos.designstudio.ce.util.Properties property;
+	
+	@InjectMocks
+	DSUtil dsUtil;
+	
+	@InjectMocks
+	CommandUtils commandUtils;
+	
+	@InjectMocks
+	DockerConfiguration dockerConfiguration;
+	
 	@Rule
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
-
+	
+	
 	@Test
 	/**
 	 * The test case is used to create a new composite solution. The test case
@@ -231,11 +266,13 @@ public class SolutionControllerTest {
 				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + sessionId, "json", emptyCdumpJson);
 				logger.debug(EELFLoggerDelegator.debugLogger, emptyCdumpJson);
 				response = "{\"cid\":\"" + sessionId + "\",\"success\":\"true\",\"errorMessage\":\"\"}";
-			} else {
-				response = "{\"cid\":\"" + sessionId
-						+ "\",\"success\":\"false\",\"errorMessage\":\"User Id Required\"}";
-				logger.debug(EELFLoggerDelegator.debugLogger, response);
-				throw new ServiceException("Unable to create new CDUMP file");
+				when(confprops.getDateFormat()).thenReturn("yyyy-MM-dd HH:mm:ss.SSS");
+				when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+				String result = solutionService.createNewCompositeSolution(userId);
+		        assertNotNull(result);
+		        String result1 = solutionService.createNewCompositeSolution(null);
+		        assertNotNull(result1);
+				
 			}
 		} catch (ServiceException e) {
 			logger.error(EELFLoggerDelegator.errorLogger,
@@ -576,9 +613,10 @@ public class SolutionControllerTest {
 	public void linkShouldGetAddedBetweenModels() throws Exception {
 		Property property = new Property();
 		assertNull(property.getData_map());
+		when(props.getDatabrokerType()).thenReturn("DataBroker");
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-		boolean result = solutionService.addLink(userId, null, null, "Node1 to Node2", "101", "Node1", "1", "Node2",
-				"2", "Req2", "Cap2", sessionId, property);
+		boolean result = solutionService.addLink(userId, null, null, "Node1 to Node2", "101", "My DataBroker", "ZIPDataBroker1", "CPM21",
+				"CPM21", "Req2", "Cap2", "333", property);
 		//assertTrue(result);
 	}
 
@@ -1079,7 +1117,12 @@ public class SolutionControllerTest {
 	public void linkBetweenTwoModelShouldGetDeleted() throws Exception {
 		try {
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			boolean result = solutionService.deleteLink(userId, null, null, sessionId, "101");
+			Property property = new Property();
+			assertNull(property.getData_map());
+			when(props.getGdmType()).thenReturn("gdm");
+			when(props.getDatabrokerType()).thenReturn("DataBroker");
+			
+			boolean result = solutionService.deleteLink(userId, null, null, "333", "f783f2ad-3714-4fd5-8e28-484fab2aac03");
 			assertNotNull(result);
 			if (result == true) {
 				logger.debug(EELFLoggerDelegator.debugLogger, "Link deleted  {} ", result);
@@ -1172,57 +1215,12 @@ public class SolutionControllerTest {
 	 * 
 	 * @throws Exception
 	 */
-	public void dMnodeShouldGetDeleted() throws Exception {
-		try {
-			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			boolean result = solutionService.deleteNode(userId, null, null, sessionId, "3");
-			assertNotNull(result);
-			if (result == true) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "Node deleted  {} ", result);
-			} else {
-				throw new ServiceException("Node Not Deleted");
-			}
-		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Action Failed", e);
-		}
-	}
-
-	@Test
-	/**
-	 * The test case is used to delete a node.The test case uses deleteNode
-	 * method which consumes userId, solutionId, version, cid, nodeId and
-	 * updates CDUMP.json by deleting the node and its relation with other
-	 * nodes.
-	 * 
-	 * @throws Exception
-	 */
-	public void modelnodeShouldGetDeleted() throws Exception {
-		try {
-			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			boolean result = solutionService.deleteNode(userId, null, null, sessionId, "2");
-			if (result == true) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "Node deleted  {} ", result);
-			} else {
-				throw new ServiceException("Node Not Deleted");
-			}
-		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Action Failed", e);
-		}
-	}
-
-	@Test
-	/**
-	 * The test case is used to delete a node.The test case uses deleteNode
-	 * method which consumes userId, solutionId, version, cid, nodeId and
-	 * updates CDUMP.json by deleting the node and its relation with other
-	 * nodes.
-	 * 
-	 * @throws Exception
-	 */
 	public void nodeShouldGetDeleted() throws Exception {
 		try {
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			boolean result = solutionService.deleteNode(userId, null, null, sessionId, "5");
+			when(props.getCollatorType()).thenReturn("MLModel");
+			
+			boolean result = solutionService.deleteNode(userId, "222", null, null, "Aggregator1");
 			if (result == true) {
 				logger.debug(EELFLoggerDelegator.debugLogger, "Node deleted  {} ", result);
 			} else {
@@ -1250,11 +1248,11 @@ public class SolutionControllerTest {
 		
 		List<MLPSolutionRevision> mlpSolRevisions = new ArrayList<MLPSolutionRevision>();
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
-		mlpSolutionRevision.setSolutionId("222");
+		mlpSolutionRevision.setSolutionId("111");
 		mlpSolutionRevision.setDescription("Testing Save Function");
 		mlpSolutionRevision.setUserId(userId);
-		mlpSolutionRevision.setVersion("1.0.0");
-		mlpSolutionRevision.setRevisionId("111");
+		mlpSolutionRevision.setVersion("1");
+		mlpSolutionRevision.setRevisionId("3232");
 		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
@@ -1268,7 +1266,7 @@ public class SolutionControllerTest {
 		csimpl.getNexusClient(nexusArtifactClient, confprops, properties);
 		csimpl.setGenericDataMapperServiceImpl(gdmService);
 		
-		when(cmnDataService.getSolutionRevisions("222")).thenReturn(mlpSolRevisions);
+		when(cmnDataService.getSolutionRevisions("3232")).thenReturn(mlpSolRevisions);
 		when(cmnDataService.getSolutionRevisionArtifacts("222", null)).thenReturn(artifacts);
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		when(confprops.getNexusgroupid()).thenReturn("xyz");
@@ -1330,14 +1328,21 @@ public class SolutionControllerTest {
 			mlpArtifact.setVersion("1.0.0");
 			mlpArtifact.setSize(1);
 			mlpArtifact.setArtifactId("333");
+			List<MLPArtifact> mlpArtifactList = new ArrayList<MLPArtifact>();
+			mlpArtifactList.add(mlpArtifact);
 			//PowerMockito.whenNew(MLPArtifact.class).withAnyArguments().thenReturn(mlpArtifact);
 			when(cmnDataService.createArtifact(mlpArtifact)).thenReturn(mlpArtifact);
 
 			//CommonDataServiceRestClientImpl cmnDataService2 = mock(CommonDataServiceRestClientImpl.class);
 			Mockito.doNothing().when(cmnDataService).addSolutionRevisionArtifact(Mockito.isA(String.class), Mockito.isA(String.class), Mockito.isA(String.class));
 			cmnDataService.addSolutionRevisionArtifact(mlpSolutionRevision.getSolutionId(), mlpSolutionRevision.getRevisionId(),mlpArtifact.getArtifactId());
-		    
-			String result = csimpl.validateCompositeSolution(userId, "NewModel", "4f91545a-e674-46af-a4ad-d6514f41de9b", "1.0.0");
+			when(confprops.getDateFormat()).thenReturn("yyyy-MM-dd HH:mm:ss.SSS");
+			when(cmnDataService.getSolutionRevisions("c4600a07-d443-4ec6-a567-1d01563823d1")).thenReturn(mlpSolRevisions);
+			when(props.getGdmType()).thenReturn("MLModel");
+			when(cmnDataService.getSolutionRevisionArtifacts("c4600a07-d443-4ec6-a567-1d01563823d1", "3232")).thenReturn(mlpArtifactList);
+			
+			
+			String result = csimpl.validateCompositeSolution(userId, "testPubVer", "111", "1.0.0");
 			//assertNotNull(result);
 			logger.debug(EELFLoggerDelegator.debugLogger, result);
 			
@@ -1422,7 +1427,7 @@ public class SolutionControllerTest {
 
 		DSCompositeSolution dscs = new DSCompositeSolution();
 
-		dscs.setcId(sessionId);
+		dscs.setcId("111");
 		dscs.setAuthor(userId);
 		dscs.setSolutionName("testPubVer");
 		dscs.setSolutionId(null);
@@ -1442,6 +1447,7 @@ public class SolutionControllerTest {
 		mlpSolution.setUserId(dscs.getAuthor());
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
+		mlpSolution.setActive(true);
 		
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
@@ -1453,7 +1459,6 @@ public class SolutionControllerTest {
 		
 		
 		mlpSols.add(mlpSolution);
-		RestPageResponse<MLPSolution> pageResponse = new RestPageResponse<MLPSolution>(mlpSols);
 		when(properties.getProvider()).thenReturn("Acumos");
 		when(properties.getToolKit()).thenReturn("CP");
 		when(properties.getVisibilityLevel()).thenReturn("PR");
@@ -1466,22 +1471,18 @@ public class SolutionControllerTest {
 		when(properties.getSolutionResultsetSize()).thenReturn(10);
 		String result = null;
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("name", "Test");
+		queryParameters.put("name", "testPubVer");
+		Pageable pageRequest = new PageRequest(0, 10);
 		RestPageRequest restPageRequets = new RestPageRequest(0,10);
-		
+		RestPageResponse<MLPSolution> pageResponse = new RestPageResponse<>(mlpSols, pageRequest, 1);
 		
 		try {
-			/*PowerMockito.whenNew(Map.class).withAnyArguments().thenReturn(queryParameters);
-			PowerMockito.whenNew(RestPageRequest.class).withAnyArguments().thenReturn(restPageRequets);*/
 			
 			when(cmnDataService.searchSolutions(queryParameters, false, restPageRequets)).thenReturn(pageResponse);
-			// CASE 1 : where New Composite Solution : CID exist and SolutionID
-			// is
-			// missing.
-			
 			when(cmnDataService.createSolution(mlpSolution)).thenReturn(mlpSolution);
 			when(cmnDataService.createSolutionRevision(mlpSolutionRevision)).thenReturn(mlpSolutionRevision);
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+			//when(pageResponse1.getContent()).thenReturn(mlpSols);
 			
 			result = compositeServiceImpl.saveCompositeSolution(dscs);
 			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
@@ -1566,7 +1567,31 @@ public class SolutionControllerTest {
 		String portType = "output";
 		String protobufJsonString = "[{\"role\":\"repeated\",\"tag\":\"1\",\"type\":\"string\"},{\"role\":\"repeated\",\"tag\":\"2\",\"type\":\"string\"}]";
 		try {
+			MLPSolution mlpSolution = new MLPSolution();
+			mlpSolution.setSolutionId("666");
+			mlpSolution.setName("Test");
+			mlpSolution.setDescription("sample");
+			mlpSolution.setUserId(userId);
+			mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
+			mlpSolution.setToolkitTypeCode("CP");
+			
+			MLPSolution mlpSolution1 = new MLPSolution();
+			mlpSolution1.setSolutionId("555");
+			mlpSolution1.setName("Test2");
+			mlpSolution1.setDescription("sample");
+			mlpSolution1.setUserId(userId);
+			mlpSolution1.setModelTypeCode(ModelTypeCode.PR.toString());
+			mlpSolution1.setToolkitTypeCode("CP");
+			
+			List<MLPSolution> mlpSolutionList = new ArrayList<MLPSolution>();
+			mlpSolutionList.add(mlpSolution);
+			mlpSolutionList.add(mlpSolution1);
+			
 			JSONArray protobufJsonString1 = new JSONArray(protobufJsonString);
+			matchingModelServiceComponent = mock(MatchingModelServiceComponent.class);
+			
+			when(matchingModelServiceComponent.getMatchingModelsolutionList()).thenReturn(mlpSolutionList);	
+			
 			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,
 					protobufJsonString1);
 			Assert.assertNotNull(getMatchingModelsResult);
@@ -1621,25 +1646,66 @@ public class SolutionControllerTest {
 	 * @throws Exception
 	 */
 	public void readCompositeSolutionGraph() throws AcumosException {
-		String sId = "040fe8f7-14f7-45e1-b46d-2de505e9d52d";
+		String sId = "111";
 		String version = "1.0.0";
+		ObjectMapper mapper1 = new ObjectMapper();
 		MLPSolution mlpSolution = new MLPSolution();
 		mlpSolution.setSolutionId(sId);
-		mlpSolution.setName("Test");
+		mlpSolution.setName("testPubVer");
 		mlpSolution.setDescription("sample");
 		mlpSolution.setUserId(userId);
 		mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
 		mlpSolution.setToolkitTypeCode("CP");
+
+		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
+		mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
+		mlpSolutionRevision.setDescription("Test"); 
+		mlpSolutionRevision.setUserId("Acumos");
+		mlpSolutionRevision.setVersion("1.0.0");
+		mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
-		when(props.getArtifactTypeCode()).thenReturn("CD");
-		when(cmnDataService.getSolution(sId)).thenReturn(mlpSolution);
-		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-		solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
-		solutionService.getNexusClient(nexusArtifactClient, confprops, props);
-		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-		String result = solutionService.readCompositeSolutionGraph(userId, sId, version);
-		Assert.assertNotNull(result);
-		logger.info(EELFLoggerDelegator.applicationLogger, "readCompositeSolutionGraph {}", result);
+		
+		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
+		mlpSolutionRevisionList.add(mlpSolutionRevision);
+		
+		MLPArtifact mlpArtifact = new MLPArtifact();
+		mlpArtifact.setArtifactTypeCode("BP");
+		mlpArtifact.setDescription("BluePrint File for : Test for SolutionID : "
+				+ mlpSolutionRevision.getSolutionId() + " with version : " + mlpSolutionRevision.getVersion());
+		mlpArtifact.setUri("com/artifact/6b024d8b-224e-4264-a776-ca7febb5e665_ACUMOS-CDUMP-6B024D8B-224E-4264-A776-CA7FEBB5E665/1/6b024d8b-224e-4264-a776-ca7febb5e665_ACUMOS-CDUMP-6B024D8B-224E-4264-A776-CA7FEBB5E665-1.json");
+		mlpArtifact.setName("testPubVer");
+		mlpArtifact.setUserId(userId); 	
+		mlpArtifact.setVersion("1.0.0");
+		mlpArtifact.setArtifactTypeCode("CD");
+		mlpArtifact.setSize(1);
+		mlpArtifact.setArtifactId("59a6fd05-5654-4043-b046-1b16ff75ec30");
+		List<MLPArtifact> mlpArtifactList = new ArrayList<MLPArtifact>();
+		mlpArtifactList.add(mlpArtifact);
+		
+		
+		try {
+			byte[] byteArray = "Test".getBytes();
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			byteArrayOutputStream.write(byteArray);
+		
+			when(cmnDataService.getSolution(sId)).thenReturn(mlpSolution);
+			solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
+			solutionService.getNexusClient(nexusArtifactClient, confprops, props);
+			when(confprops.getToscaOutputFolder()).thenReturn(localpath1);
+			when(cmnDataService.getSolutionRevisions("111")).thenReturn(mlpSolutionRevisionList);
+			when(cmnDataService.getSolutionRevisionArtifacts(mlpSolution.getSolutionId(), mlpSolutionRevision.getRevisionId())).thenReturn(mlpArtifactList);
+			when(props.getArtifactTypeCode()).thenReturn("CD");
+			when(nexusArtifactClient.getArtifact(mlpArtifact.getUri())).thenReturn(byteArrayOutputStream);
+			
+			String result = solutionService.readCompositeSolutionGraph(userId, sId, version);
+			Assert.assertNotNull(result);
+			logger.info(EELFLoggerDelegator.applicationLogger, "readCompositeSolutionGraph {}", result);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error(EELFLoggerDelegator.errorLogger,"exception in readCompositeSolutionGraph Test", e);
+		}
+		
 	}
 
 	@Test
@@ -1692,12 +1758,13 @@ public class SolutionControllerTest {
 
            ArrayList<MLPSolution> mlpSolList = new ArrayList<MLPSolution>();
            MLPSolution image_classifier = new MLPSolution();
-           image_classifier.setSolutionId("1cb9e77e-43dd-4add-bf29-648f2420c621");
-           image_classifier.setName("image_classifier");
-           image_classifier.setToolkitTypeCode("SK");
+           image_classifier.setSolutionId("111");
+           image_classifier.setName("testPubVer");
+           image_classifier.setToolkitTypeCode("CP");
            image_classifier.setModelTypeCode("CL");
            image_classifier.setDescription("image_classifier");
-           image_classifier.setUserId("c4e4d366-8ed8-40e1-b61e-1e103de9699b");
+           image_classifier.setUserId(userId);
+           image_classifier.setActive(true);
            assertNotNull(image_classifier);
            mlpSolList.add(image_classifier);
 
@@ -1713,8 +1780,22 @@ public class SolutionControllerTest {
            assertNotNull(mlpSolRev);
            mlpSolRevList.add(mlpSolRev);
            
+         /*  CommonDataServiceRestClientMockImpl client = new CommonDataServiceRestClientMockImpl();
+   		   client = new CommonDataServiceRestClientMockImpl("url", "user", "pass");
+   		   client = new CommonDataServiceRestClientMockImpl("url", new RestTemplate());
+   		   boolean isOr = false;
+   		   
+   		   Pageable pageRequest = new PageRequest(0, 10);
+	   	   RestPageResponse<MLPSolution> solutionResponse = new RestPageResponse<>(mlpSolList, pageRequest, 1);
+		   client.setSearchSolutions(solutionResponse);
+		   solutionResponse = client.searchSolutions(queryParameters, isOr, new RestPageRequest());
+		   */
            cmnDataService = mock(CommonDataServiceRestClientImpl.class);
-           RestPageResponse<MLPSolution> pageResponse = new RestPageResponse<MLPSolution>(mlpSolList);
+           Pageable pageRequest = new PageRequest(0, 10);
+           RestPageRequest restPageRequets = new RestPageRequest(0,10);
+   		   RestPageResponse<MLPSolution> pageResponse = new RestPageResponse<>(mlpSolList, pageRequest, 1);
+   			
+   		try{
            when(confprops.getDateFormat()).thenReturn(sdf.format(new Date()));
            when(props.getCompositSolutiontoolKitTypeCode()).thenReturn("CP");
            when(props.getPublicAccessTypeCode()).thenReturn("PB");
@@ -1723,10 +1804,12 @@ public class SolutionControllerTest {
            when(props.getSolutionResultsetSize()).thenReturn(10000);
            when(cmnDataService.getSolutionRevisions(image_classifier.getSolutionId())).thenReturn(mlpSolRevList);
            when(cmnDataService.searchSolutions(queryParameters, false, new RestPageRequest(0,props.getSolutionResultsetSize()))).thenReturn(pageResponse);
-           when(cmnDataService.getUser("c4e4d366-8ed8-40e1-b61e-1e103de9699b")).thenReturn(user);
-           /*String result = solutionService.getSolutions("c4e4d366-8ed8-40e1-b61e-1e103de9699b");
-
-           assertNotNull(result);*/
+           when(cmnDataService.getUser(userId)).thenReturn(user);
+           String result = solutionService.getSolutions("111");
+           assertNotNull(result);
+   		} catch(Exception e){
+   			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getSolutionsReturnSolution Test:" , e);
+   		}
     }
 
 	@Test
@@ -2966,5 +3049,225 @@ public class SolutionControllerTest {
 		return caa;
 	}
 	
+	@Test
+	/**
+	 * The test case is used set Probe Indicator
+	 */
+	public void setProbeIndicator()  {
+		
+		try {
+			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+			SuccessErrorMessage successErrorMessage = compositeService.setProbeIndicator(userId, "111", "1.0.0", null,"true");
+			assertNotNull(successErrorMessage);
+			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", successErrorMessage);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+		}
+		
+	}
+	
+	
+	
+	@Test
+	/**
+	 * The test case is used set Probe Indicator
+	 */
+	public void isValidJsonSchemaTest()  {
+		
+		try {
+			String path = DSUtil.readCdumpPath(userId, localpath);
+
+			String cdumpFileName = "acumos-cdump-111.json";
+			//when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+			boolean flag = dsUtil.isValidJsonSchema(path+cdumpFileName);
+			assertNotNull(flag);
+			logger.debug(EELFLoggerDelegator.debugLogger, "Result of isValidJsonSchemaTest :  {} ", flag);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in isValidJsonSchemaTest" , e);
+		}
+		
+	}
+	
+
+	@Test
+	/**
+	 * The test case is used image FullNameFrom
+	 */
+	public void imageFullNameFrom()  {
+		
+		try {
+			String registry = "{\"url\":\"http://cognita-nexus01:8001/\",\"username\": \"cognita_model_rw\",\"password\": \"not4you\",\"email\": \"admin@cognita.com\"}";
+			String repoAndImg = "test.image";
+			String tag = "test";
+			
+			String result = commandUtils.imageFullNameFrom(registry, repoAndImg, tag);
+			assertNotNull(result);
+			logger.debug(EELFLoggerDelegator.debugLogger, "Result of imageFullNameFrom :  {} ", result);
+			
+			
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in imageFullNameFrom" , e);
+		}
+		
+	}
+	
+	@Test
+	/**
+	 * The test case add latest Tag
+	 */
+	public void addLatestTagIfNeeded()  {
+		try {
+			String fullImageName = "cognita_model_rw.jpg";
+			
+			String result = commandUtils.addLatestTagIfNeeded(fullImageName);
+			assertNotNull(result);
+			logger.debug(EELFLoggerDelegator.debugLogger, "Result of addLatestTagIfNeeded :  {} ", result);
+			
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in addLatestTagIfNeeded" , e);
+		}
+		
+	}
+	
+	@Test
+	/**
+	 * The test case for sizeInBytes
+	 */
+	public void sizeInBytes()  {
+		try {
+			
+			long result = commandUtils.sizeInBytes("1");
+			assertNotNull(result);
+			logger.debug(EELFLoggerDelegator.debugLogger, "Result of sizeInBytes :  {} ", result);
+			
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in sizeInBytes" , e);
+		}
+		
+	}
+	
+	@Test
+	/**
+	 * The test case is for dockerConfiguration
+	 */
+	public void dockerConfiguration()  {
+		try {
+			dockerConfiguration.getConfig();	
+			
+			dockerConfiguration.toUrl(); 				 
+
+			dockerConfiguration.getApiVersion();
+
+			dockerConfiguration.getHost();
+
+			dockerConfiguration.getPort(); 
+
+			dockerConfiguration.getRegistryUsername();
+
+			dockerConfiguration.getRegistryPassword();
+			
+			dockerConfiguration.getImagetagPrefix();
+			
+			dockerConfiguration.getRegistryUrl();
+
+			dockerConfiguration.getRegistryEmail();
+			
+			dockerConfiguration.getRequestTimeout();
+
+			dockerConfiguration.setRequestTimeout(1);
+			 
+			dockerConfiguration.isTlsVerify();
+
+			dockerConfiguration.getCertPath();
+
+			dockerConfiguration.isSocket();
+
+			dockerConfiguration.getCmdExecFactory();
+
+			dockerConfiguration.getMaxTotalConnections();
+
+			dockerConfiguration.getMaxPerRouteConnections();
+
+			logger.debug(EELFLoggerDelegator.debugLogger, "successfully run test for dockerConfiguration : ");
+			
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in dockerConfiguration" , e);
+		}
+		
+	}
+	
+	@Test
+	/**
+	 * The test case is configuration
+	 */
+	public void configuration()  {
+		try {
+			
+			property.getSplitterType();	
+			
+			property.setSplitterType("Test"); 				 
+
+			property.getCollatorType();
+
+			property.setCollatorType("Test");
+
+			property.getDefaultCollatorType(); 
+
+			property.setDefaultCollatorType("Test");
+
+			property.getDefaultSplitterType();
+			
+			property.setDefaultSplitterType("Test");
+			
+			property.getProtobuffFileExtention();
+
+			property.getModelImageArtifactType();
+			
+			property.getGdmType();
+
+			property.getDatabrokerType();
+			 
+			property.getBlueprintArtifactType();
+
+			property.getSolutionResultsetSize();
+
+			property.getGdmJarName();
+
+			property.getTarget();
+
+			property.getFieldMapping();
+
+			property.getProtobufjar();
+			
+			property.getPackagepath();
+			property.getClassName();
+			property.getProtobufFileName();
+			property.getSolutionErrorCode();
+			property.getSolutionErrorDesc();
+			property.getCompositionErrorCode();
+			property.getCompositionErrorDescription();
+			property.getSuccessCode();
+			property.getCompositionSolutionErrorCode();
+			property.getProvider();
+			property.getToolKit();
+			property.getVisibilityLevel();
+			property.getArtifactTypeCode();
+			property.getAskToUpdateExistingCompSolnMsg();
+			property.getPrivateAccessTypeCode();
+			property.getPublicAccessTypeCode();
+			property.getOrganizationAccessTypeCode();
+			property.getSolutionErrorDescription();
+			property.getArtifactType();
+			property.getCompositSolutiontoolKitTypeCode();
+			property.getProtoArtifactType();
+			
+
+			logger.debug(EELFLoggerDelegator.debugLogger, "successfully run test for configuration : ");
+			
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in configuration" , e);
+		}
+		
+	}
 }
 
