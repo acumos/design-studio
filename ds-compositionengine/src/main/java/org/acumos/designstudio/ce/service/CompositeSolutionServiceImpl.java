@@ -949,7 +949,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					Nodes dataBrokerTargetNode = null;
 					Nodes firstNode = getNodeForId(nodes, firstNodeId);
 					
-					if(firstNode.getType().equals(DATABROKER_TYPE)){
+					if(firstNode.getType().getName().equals(DATABROKER_TYPE)){
 						for(Relations relation : relationsList){
 							if(relation.getSourceNodeId().equals(firstNodeId)){
 								dataBrokerTargetNodeId = relation.getTargetNodeId();
