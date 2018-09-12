@@ -26,7 +26,10 @@ repository as a jar file.
 
 0.0.38-SNAPSHOT, 2018-09-14
 ---------------------------
-* ACUMOS-624 : log standardization and consistency design studio
+* ACUMOS-624  : log standardization and consistency design studio
+* ACUMOS-1665 : Update ds-composition to handle new CDUMP and BLUEPrint file.
+* ACUMOS-1666 : Update ds-composition to handle databroke of type : SQL.
+* ACUMOS-1667 : Validation for mapping table - user must select at least one column type.
 
 0.0.37-SNAPSHOT, 2018-09-07
 ---------------------------
