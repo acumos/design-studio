@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76aacc3f_5f2d10e8",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-12T12:19:05Z",
+      "side": 1,
+      "message": "please remove sysout.",
+      "range": {
+        "startLine": 180,
+        "startChar": 3,
+        "endLine": 180,
+        "endChar": 9
+      },
+      "revId": "7d6f005f0c25d89925d22d5116e8f3841b57137c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4372330d_edbdd897",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-12T12:19:05Z",
+      "side": 1,
+      "message": "please remove sysout",
+      "range": {
+        "startLine": 182,
+        "startChar": 9,
+        "endLine": 182,
+        "endChar": 10
+      },
+      "revId": "7d6f005f0c25d89925d22d5116e8f3841b57137c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "715e5357_a805131c",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-12T12:19:05Z",
+      "side": 1,
+      "message": "No System.out.println.  Please remove",
+      "range": {
+        "startLine": 218,
+        "startChar": 3,
+        "endLine": 218,
+        "endChar": 9
+      },
+      "revId": "7d6f005f0c25d89925d22d5116e8f3841b57137c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8484f328_d65a51e5",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/service/CSVDatabrokerServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-12T12:19:05Z",
+      "side": 1,
+      "message": "please remove, use logger if required",
+      "range": {
+        "startLine": 220,
+        "startChar": 14,
+        "endLine": 220,
+        "endChar": 21
+      },
+      "revId": "7d6f005f0c25d89925d22d5116e8f3841b57137c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb6b4d6e_2e3a40c9",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/SolutionControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1783,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-12T12:19:05Z",
+      "side": 1,
+      "message": "Remove commented code",
+      "range": {
+        "startLine": 1783,
+        "startChar": 9,
+        "endLine": 1783,
+        "endChar": 11
+      },
+      "revId": "7d6f005f0c25d89925d22d5116e8f3841b57137c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fd683111_1dc2d8a4",
+        "filename": "ds-compositionengine/src/test/resources/demo/12345678-abcd-90ab-cdef-1234567890ab/acumos-cdump-111.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-12T12:19:05Z",
+      "side": 1,
+      "message": "What is this for ?",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 4
+      },
+      "revId": "7d6f005f0c25d89925d22d5116e8f3841b57137c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
