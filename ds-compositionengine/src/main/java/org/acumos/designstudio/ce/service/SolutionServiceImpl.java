@@ -1283,8 +1283,25 @@ public class SolutionServiceImpl implements ISolutionService {
 						if(null != databrokerMap.getTarget_system_url()){
 							dataBrokerMap.setTarget_system_url(databrokerMap.getTarget_system_url());
 						}
-						if (null != databrokerMap.getMap_inputs()
-								&& null != databrokerMap.getMap_outputs()) {
+						if(null != databrokerMap.getDatabase_name()){
+							dataBrokerMap.setDatabase_name(databrokerMap.getDatabase_name());
+						}
+						if(null != databrokerMap.getTable_name()){
+							dataBrokerMap.setTable_name(databrokerMap.getTable_name());
+						}
+						if(null != databrokerMap.getJdbc_driver_data_source_class_name()){
+							dataBrokerMap.setJdbc_driver_data_source_class_name(databrokerMap.getJdbc_driver_data_source_class_name());
+						}
+						if(null != databrokerMap.getUser_id()){
+							dataBrokerMap.setUser_id(databrokerMap.getUser_id());
+						}
+						if(null != databrokerMap.getPassword()){
+							dataBrokerMap.setPassword(databrokerMap.getPassword());
+						}
+						if(null != databrokerMap.getProtobufFile() && !databrokerMap.getProtobufFile().isEmpty()){
+							dataBrokerMap.setProtobufFile(databrokerMap.getProtobufFile());
+						}
+						if (null != databrokerMap.getMap_inputs() && null != databrokerMap.getMap_outputs()) {
 							dataBrokerMap.setMap_inputs(databrokerMap.getMap_inputs());
 							dataBrokerMap.setMap_outputs(databrokerMap.getMap_outputs());
 						}

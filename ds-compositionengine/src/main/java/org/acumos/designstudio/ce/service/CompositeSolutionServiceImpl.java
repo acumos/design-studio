@@ -20,6 +20,7 @@
 
 package org.acumos.designstudio.ce.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -82,6 +83,7 @@ import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapInput;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapOutput;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBOTypeAndRoleHierarchy;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DBOutputField;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterInputField;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapInput;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapOutput;
@@ -941,6 +943,38 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					logger.debug(EELFLoggerDelegator.debugLogger,"On successful validation generate the BluePrint file.");
 					cdump.setValidSolution(true);
 					cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
+					
+					String firstNodeId = getNodeIdForPosition(cdump, FIRST_NODE_POSITION);
+					String dataBrokerTargetNodeId = null;
+					Nodes dataBrokerTargetNode = null;
+					Nodes firstNode = getNodeForId(nodes, firstNodeId);
+					
+					if(firstNode.getType().equals(DATABROKER_TYPE)){
+						for(Relations relation : relationsList){
+							if(relation.getSourceNodeId().equals(firstNodeId)){
+								dataBrokerTargetNodeId = relation.getTargetNodeId();
+								dataBrokerTargetNode = getNodeForId(nodes, dataBrokerTargetNodeId);
+								//get the protobuf file string for the target model 
+								String protoUri =	dataBrokerTargetNode.getProtoUri();
+								ByteArrayOutputStream bytes = nexusArtifactClient.getArtifact(protoUri);
+								logger.debug(EELFLoggerDelegator.debugLogger,"ByteArrayOutputStream of ProtoFile :" + bytes);
+								if(null != bytes) { 
+									String protobufFile = bytes.toString();
+									logger.debug(EELFLoggerDelegator.debugLogger,"protobufFile in String Format :" + protobufFile);
+									//put protobufFile String in databroker 
+									Property[] prop = firstNode.getProperties();
+									if(null != prop[0].getData_broker_map()){
+										prop[0].getData_broker_map().setProtobufFile(protobufFile);
+									}
+									firstNode.setProperties(prop);
+								} else { 
+									logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured in ValidateCompositeSolution() : Failed to Set the ProtoBuf File in DataBrokerMap ");
+									throw new ServiceException("Exception Occured in ValidateCompositeSolution() : Failed to Set the ProtoBuf File in DataBrokerMap");
+								}
+								break;
+							}
+						}
+					}
 					Gson gson = new Gson();
 					String emptyCdumpJson = gson.toJson(cdump);
 					path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
@@ -1063,11 +1097,25 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 							// It should not be connected to Collator
 							boolean connectedToCollator = isConnectedToCollator(nodes, relationsList, nodeId);
 							if (!connectedToCollator) {
-								// Validate mapping
-								Property[] p = node.getProperties();
-								if (p.length == 1) {
-									resultVo.setSuccess("true");
-									resultVo.setErrorDescription("");
+								// Validate mapping Details 
+								String check = null;
+								Property[] propArr = node.getProperties();
+								if (propArr.length == 1) {
+									for(Property prop : propArr){
+										DBMapInput[] dbmInArr =  prop.getData_broker_map().getMap_inputs();
+										for(DBMapInput db : dbmInArr){
+											check = db.getInput_field().getChecked();
+											// DataBroker Input Table Mapping Details must contain at least one check box checked
+											if(check.equals("YES")){
+												resultVo.setSuccess("true");
+												resultVo.setErrorDescription("");
+												break;
+											}else {
+												resultVo.setSuccess("false");
+												resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" Mapping Details should contains at least one check box selected");
+											}
+										}
+									}
 								} else {
 									resultVo.setSuccess("false");
 		                            resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" Mapping Details are Incorrect");
@@ -1938,6 +1986,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String local_system_data_file_Path = null;
 		String first_Row = null;
 		String csv_file_field_Separator = null;
+		String database_name = null;
+		String table_name = null;
+		String jdbc_driver_data_source_class_name = null;
+		String user_id = null;
+		String password = null;
+		String protobufFile = null;
 
 		// BluePrint DataBrokerMap object
 		BPDataBrokerMap bpdbMap = new BPDataBrokerMap();
@@ -1955,6 +2009,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					local_system_data_file_Path = dbprops.getData_broker_map().getLocal_system_data_file_path();
 					first_Row = dbprops.getData_broker_map().getFirst_row();
 					csv_file_field_Separator = dbprops.getData_broker_map().getCsv_file_field_separator();
+					database_name = dbprops.getData_broker_map().getDatabase_name();
+					table_name = dbprops.getData_broker_map().getTable_name();
+					jdbc_driver_data_source_class_name = dbprops.getData_broker_map().getJdbc_driver_data_source_class_name();
+					user_id = dbprops.getData_broker_map().getUser_id();
+					password = dbprops.getData_broker_map().getPassword();
+					protobufFile = dbprops.getData_broker_map().getProtobufFile();
 
 					bpdbMap.setData_broker_type(data_broker_Type);
 					bpdbMap.setScript(script);
@@ -1962,7 +2022,13 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					bpdbMap.setLocal_system_data_file_path(local_system_data_file_Path);
 					bpdbMap.setFirst_row(first_Row);
 					bpdbMap.setCsv_file_field_separator(csv_file_field_Separator);
-
+					bpdbMap.setDatabase_name(database_name);
+					bpdbMap.setTable_name(table_name);
+					bpdbMap.setJdbc_driver_data_source_class_name(jdbc_driver_data_source_class_name);
+					bpdbMap.setUser_id(user_id);
+					bpdbMap.setPassword(password);
+					bpdbMap.setProtobufFile(protobufFile);
+					
 					// Get the DBMapInput[] from DataBrokerMap from the Cdump file
 					if (null != dbprops.getData_broker_map().getMap_inputs()) {
 						DBMapInput[] dmapIn = dbprops.getData_broker_map().getMap_inputs();
