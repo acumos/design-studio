@@ -30,6 +30,8 @@ repository as a jar file.
 * ACUMOS-1665 : Update ds-composition to handle new CDUMP and BLUEPrint file.
 * ACUMOS-1666 : Update ds-composition to handle databroke of type : SQL.
 * ACUMOS-1667 : Validation for mapping table - user must select at least one column type.
+* ACUMOS-1655 : Develop new component : SQL Databroker
+* ACUMOS-1656 : Construct SQL Databroker as DS tool
 
 0.0.37-SNAPSHOT, 2018-09-07
 ---------------------------
