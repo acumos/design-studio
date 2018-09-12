@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "af3aa9da_7d71d141",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/Application.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-12T12:16:25Z",
+      "side": 1,
+      "message": "Don\u0027t try-catch.  If this fails, the app should not start.",
+      "revId": "80662e61e280a03b79a480353cff3fca64eb19dd",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5bf4c989_504b2cee",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-12T12:16:25Z",
+      "side": 1,
+      "message": "What if this config prop is missing?  Add a default value here, and complain loudly to the log.",
+      "range": {
+        "startLine": 95,
+        "startChar": 34,
+        "endLine": 95,
+        "endChar": 52
+      },
+      "revId": "80662e61e280a03b79a480353cff3fca64eb19dd",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae4d8a14_fe936eb1",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-12T12:16:25Z",
+      "side": 1,
+      "message": "Ditto",
+      "range": {
+        "startLine": 96,
+        "startChar": 35,
+        "endLine": 96,
+        "endChar": 54
+      },
+      "revId": "80662e61e280a03b79a480353cff3fca64eb19dd",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "456431ee_239d8a3a",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-12T12:16:25Z",
+      "side": 1,
+      "message": "Use error logger",
+      "revId": "80662e61e280a03b79a480353cff3fca64eb19dd",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62788ef9_5084d178",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-12T12:16:25Z",
+      "side": 1,
+      "message": "1. Don\u0027t log level ERROR to DEBUG logger.  Use WARN for the ERROR logger. \n2. Use slf4j {} feature instead of string catenation",
+      "range": {
+        "startLine": 141,
+        "startChar": 112,
+        "endLine": 141,
+        "endChar": 120
+      },
+      "revId": "80662e61e280a03b79a480353cff3fca64eb19dd",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
