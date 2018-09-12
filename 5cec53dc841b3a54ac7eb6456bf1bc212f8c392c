@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f806d2a5_5a0add7e",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 950,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-12T09:46:45Z",
+      "side": 1,
+      "message": "No need to iterate through all the nodes and check type and then equals the firstNodeId.  Or even we have method to getNodeForPosition instead of ID. Please check.",
+      "range": {
+        "startLine": 948,
+        "startChar": 5,
+        "endLine": 950,
+        "endChar": 48
+      },
+      "revId": "5cec53dc841b3a54ac7eb6456bf1bc212f8c392c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d7ea87_a991be99",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 956,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-12T09:46:45Z",
+      "side": 1,
+      "message": "repeated code",
+      "range": {
+        "startLine": 955,
+        "startChar": 10,
+        "endLine": 956,
+        "endChar": 50
+      },
+      "revId": "5cec53dc841b3a54ac7eb6456bf1bc212f8c392c",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
