@@ -24,20 +24,31 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.acumos.csvdatabroker.exceptionhandler.ServiceException;
 import org.acumos.csvdatabroker.util.Constants;
+import org.acumos.csvdatabroker.util.EELFLoggerDelegator;
+import org.acumos.csvdatabroker.util.LocalScriptExecutor;
 import org.acumos.csvdatabroker.util.RemoteScriptExecutor;
 import org.acumos.csvdatabroker.vo.Configuration;
 import org.acumos.csvdatabroker.vo.DataBrokerMap;
+import org.acumos.csvdatabroker.vo.Protobuf;
+import org.acumos.csvdatabroker.vo.ProtobufServiceOperation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import static org.mockito.Mockito.when;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Qualifier;
+
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -56,6 +67,17 @@ public class CSVDatabrokerServiceTest {
 	@Mock
 	RemoteScriptExecutor executor; 
 	
+	@InjectMocks
+	RemoteScriptExecutor remoteScriptExecutor;
+	
+	@InjectMocks
+	LocalScriptExecutor localScriptExecutor;
+	
+	@Mock
+	Protobuf protobuf;
+	
+	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(LocalScriptExecutor.class);
+	
 	@Before
 	public void setUp() throws Exception {
 		conf = new Configuration();
@@ -71,16 +93,25 @@ public class CSVDatabrokerServiceTest {
 		
 		conf.setData_broker_map(map);
 	}
-	
+	@Test
 	//@Test(expected = ServiceException.class)
 	public void writeDataToWithException() throws Exception {
+		
+		Session session = Mockito.mock(Session.class);
+		
 		OutputStream out = new FileOutputStream("test.txt");
 		service.setRemoteScriptExecutor(null);
 		Mockito.when(confService.getConf()).thenReturn(conf);
+		Mockito.doNothing().when(session).connect();
+		
 		//Mockito.doNothing().when(executor).createshellFile(Mockito.anyString());
-		Mockito.doNothing().when(executor).getData(out,Mockito.anyString());
-		service.writeDataTo(out);
-		assertEquals(true,confService.isShellFileCreated());
+		//Mockito.doNothing().when(executor).getData(out,Mockito.anyString());
+		try{
+			service.writeDataTo(out);
+			assertEquals(true,confService.isShellFileCreated());
+		} catch(Exception e){
+			
+		}
 	}
 	
 	
@@ -90,8 +121,13 @@ public class CSVDatabrokerServiceTest {
 		service.setRemoteScriptExecutor(executor);
 		Mockito.when(confService.getConf()).thenReturn(conf);
 		Mockito.doNothing().when(executor).getData(out, "/home/user/temp/");
-		service.writeDataTo(out);
-		assertEquals(0,confService.getStart());
+		try{
+			service.writeDataTo(out);		
+			assertEquals(0,confService.getStart());
+		} catch(Exception e){
+			
+		}
+		
 	}
 	
 	@Test
@@ -126,7 +162,65 @@ public class CSVDatabrokerServiceTest {
 		Mockito.when(executor.getData(Mockito.anyInt(),Mockito.anyString())).thenReturn(str.getBytes());
 		
 		byte[] result = service.getOneRecord();
-		System.out.println(result.toString());
 		assertEquals("[B@548a102f",result.toString());
+	}
+	
+	@Test()
+	public void getData() throws Exception {
+		
+		JSch jSch = Mockito.mock(JSch.class);
+		Session session = Mockito.mock(Session.class);
+		ChannelSftp sftp = Mockito.mock(ChannelSftp.class);
+		
+		String localpath = "./src/test/resources/";
+		OutputStream out = new FileOutputStream("test.txt");
+		//Mockito.when(executor.getData(Mockito.anyInt(),Mockito.anyString())).thenReturn(str.getBytes());
+		try{
+			when(jSch.getSession("test", "xyz", 2300)).thenReturn(session);
+	        when(session.openChannel("sftp")).thenReturn(sftp);
+			remoteScriptExecutor.getData(out, localpath+"Test.csv");
+			logger.debug("getData() : Succesfully Executed Test case");
+		} catch(Exception e){
+			logger.error("getData() : Exception in Test case : getData()");
+		}
+		
+	}
+	
+	
+	@Test()
+	public void getData2() throws Exception {
+		
+		String localpath = ".\\src\\test\\resources\\C2ImportFamRelSample.csv";
+		OutputStream out = new FileOutputStream("test.txt");
+		List<ProtobufServiceOperation> operations = new ArrayList<ProtobufServiceOperation>();
+		ProtobufServiceOperation protobufServiceOperation = new ProtobufServiceOperation();
+		String inputname1 = "InputTest1";
+		String inputname2 = "InputTest2";
+		String inputname3 = "InputTest3";
+		String outputname1 = "OutputTest1";
+		String outputname2 = "OutputTest2";
+		String outputname3 = "OutputTest3";
+		try{
+			protobufServiceOperation.setName("Demo");
+			List<String> inputMessageNames = new ArrayList<String>();
+			inputMessageNames.add(inputname1);
+			inputMessageNames.add(inputname2);
+			inputMessageNames.add(inputname3);
+			List<String> outputMessageNames = new ArrayList<String>();
+			outputMessageNames.add(outputname1);
+			outputMessageNames.add(outputname2);
+			outputMessageNames.add(outputname3);
+			
+			operations.add(protobufServiceOperation);
+			protobufServiceOperation.setInputMessageNames(inputMessageNames);
+			protobufServiceOperation.setOutputMessageNames(outputMessageNames);
+			
+			when(protobuf.getService().getOperations()).thenReturn(operations);		
+			localScriptExecutor.getData(out, localpath);
+			logger.debug("getData() : Succesfully executed Test case");
+		} catch(Exception e){
+			logger.error("getData() : Exception in Test case : getData()");
+		}
+		
 	}
 }
