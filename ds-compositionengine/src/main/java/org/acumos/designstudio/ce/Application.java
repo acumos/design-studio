@@ -112,11 +112,18 @@ public class Application {
 	@EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) throws ServiceException {
 		logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() Begin ");
-		List<DSModelVO> dsModels = matchingModelServiceImpl.getPublicDSModels();
-		matchingModelServiceImpl.populatePublicModelCacheForMatching(dsModels);
+		try {
+			List<DSModelVO> dsModels = matchingModelServiceImpl.getPublicDSModels();
+			if(dsModels != null && !dsModels.isEmpty()){
+				matchingModelServiceImpl.populatePublicModelCacheForMatching(dsModels);
+			} else {
+				logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() : public model cache is empty");
+			}
+		} catch(Exception e){
+			logger.error(EELFLoggerDelegator.debugLogger, "onApplicationEvent() : Connection to CDS get failed");
+		}
 		logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() End ");
 		
     }
-	
 	
 }

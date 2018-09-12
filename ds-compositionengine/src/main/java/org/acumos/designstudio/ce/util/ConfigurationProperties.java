@@ -73,6 +73,28 @@ public class ConfigurationProperties {
 	@Value("${solutionResultsetSize}")
 	private int solutionResultsetSize;
 	
+	@Value("${cdsCheckInterval}")
+	private int cdsCheckInterval;
+	
+	@Value("${cdsCheckAttempt}")
+	private int cdsCheckAttempt;
+	
+	
+	/**
+	 * @return 
+	 * 		the cdsCheckInterval
+	 */
+	public int getCdsCheckInterval() {
+		return cdsCheckInterval;
+	}
+
+	/**
+	 * @return 
+	 * 		the cdsCheckAttempt
+	 */
+	public int getCdsCheckAttempt() {
+		return cdsCheckAttempt;
+	}
 	
 	
 	/**
