@@ -72,8 +72,7 @@ public class ConfigurationProperties {
 	
 	@Value("${solutionResultsetSize}")
 	private int solutionResultsetSize;
-	
-	
+
 	
 	/**
 	 * @return the solutionResultsetSize

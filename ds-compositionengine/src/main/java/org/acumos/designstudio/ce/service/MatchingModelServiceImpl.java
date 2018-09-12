@@ -92,37 +92,55 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 		List<MLPSolution> mlpSolutionsList = null;
 		Map<String, Object> queryParameters = new HashMap<>();
 		queryParameters.put("active", Boolean.TRUE);
-		RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
-				new RestPageRequest(0, confprops.getSolutionResultsetSize()));
-		mlpSolutionsList = pageResponse.getContent();
-		if (null == mlpSolutionsList) {
-			logger.debug(EELFLoggerDelegator.debugLogger, " CommonDataService returned null Solution list");
-		} else if (mlpSolutionsList.isEmpty()) {
-			logger.debug(EELFLoggerDelegator.debugLogger, " CommonDataService returned empty Solution list");
-		} else {
-			String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
-			String pbAccessTypeCode = props.getPublicAccessTypeCode();
-			String orAccessTypeCode = props.getOrganizationAccessTypeCode();
-			List<MLPSolutionRevision> mlpSolutionRevisionList = null;
-			for (MLPSolution mlpsolution : mlpSolutionsList) {
-				if (null != mlpsolution.getToolkitTypeCode()
-						&& (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
-					List<MLPSolutionRevision> mlpSolRevisions = cmnDataService.getSolutionRevisions(mlpsolution.getSolutionId());
-					mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
-					for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
-						String accessTypeCode = mlpSolRevision.getAccessTypeCode();
-						if (accessTypeCode.equals(pbAccessTypeCode)) {
-							mlpSolutionRevisionList.add(mlpSolRevision);
-						} else if (accessTypeCode.equals(orAccessTypeCode)) {
-							mlpSolutionRevisionList.add(mlpSolRevision);
+		int cdsCheckAttempt = 3;
+		int cdsCheckInterval = 1000;
+		
+		for(int i = 0; i < cdsCheckAttempt; i++){
+			try{
+				RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
+						new RestPageRequest(0, confprops.getSolutionResultsetSize()));			
+					mlpSolutionsList = pageResponse.getContent();
+					if (null == mlpSolutionsList) {
+						logger.debug(EELFLoggerDelegator.debugLogger, " CommonDataService returned null Solution list");
+					} else if (mlpSolutionsList.isEmpty()) {
+						logger.debug(EELFLoggerDelegator.debugLogger, " CommonDataService returned empty Solution list");
+					} else {
+						String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
+						String pbAccessTypeCode = props.getPublicAccessTypeCode();
+						String orAccessTypeCode = props.getOrganizationAccessTypeCode();
+						List<MLPSolutionRevision> mlpSolutionRevisionList = null;
+						for (MLPSolution mlpsolution : mlpSolutionsList) {
+							if (null != mlpsolution.getToolkitTypeCode()
+									&& (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
+								List<MLPSolutionRevision> mlpSolRevisions = cmnDataService.getSolutionRevisions(mlpsolution.getSolutionId());
+								mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
+								for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
+									String accessTypeCode = mlpSolRevision.getAccessTypeCode();
+									if (accessTypeCode.equals(pbAccessTypeCode)) {
+										mlpSolutionRevisionList.add(mlpSolRevision);
+									} else if (accessTypeCode.equals(orAccessTypeCode)) {
+										mlpSolutionRevisionList.add(mlpSolRevision);
+									}
+								}
+								if(mlpSolutionRevisionList.size() > 0 ){
+									DSModelVO modelVO = new DSModelVO();
+									modelVO.setMlpSolution(mlpsolution);
+									modelVO.setMlpSolutionRevisions(mlpSolutionRevisionList);
+									modelsList.add(modelVO);
+								}
+							}
 						}
 					}
-					if(mlpSolutionRevisionList.size() > 0 ){
-						DSModelVO modelVO = new DSModelVO();
-						modelVO.setMlpSolution(mlpsolution);
-						modelVO.setMlpSolutionRevisions(mlpSolutionRevisionList);
-						modelsList.add(modelVO);
-					}
+					break;				
+			} catch(Exception e){
+				try {
+					Thread.sleep(cdsCheckInterval);
+				} catch (InterruptedException ie) {
+					logger.error(EELFLoggerDelegator.errorLogger, "getPublicDSModels() : Connection to CDS get failed...trying with {} attempt ",i);
+				}
+				logger.warn("getPublicDSModels() : Connection to CDS get failed...trying with {} attempt :",i);
+				if(i >= cdsCheckAttempt -1) {
+					throw new ServiceException("Connection to CDS get failed");
 				}
 			}
 		}
