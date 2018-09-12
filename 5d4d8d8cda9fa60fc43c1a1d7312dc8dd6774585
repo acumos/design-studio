@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed5ba7d3_09402f5b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-12T18:51:50Z",
+      "side": 1,
+      "message": "I don\u0027t understand this change. Previously you were getting config properties, now the values are hardcoded.  I don\u0027t quite understand why the step backwards.",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 95,
+        "endChar": 26
+      },
+      "revId": "5d4d8d8cda9fa60fc43c1a1d7312dc8dd6774585",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3d158e05_54024a32",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/ConfigurationProperties.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-12T18:51:50Z",
+      "side": 1,
+      "message": "Why remove the props?",
+      "revId": "5d4d8d8cda9fa60fc43c1a1d7312dc8dd6774585",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
