@@ -17,6 +17,7 @@
 		<module>ds-compositionengine</module>
 		<module>csvdatabroker</module>
 		<module>gdmservice</module>
+		<module>sqldatabroker</module>
 	</modules>
 	<build>
 		<plugins>
