@@ -31,6 +31,8 @@ repository as a jar file.
 * ACUMOS-1666 : Update ds-composition to handle databroke of type : SQL.
 * ACUMOS-1667 : Validation for mapping table - user must select at least one column type.
 * ACUMOS-1747 : Update CSV databroker code w.r.t change in the Databroker Map.
+* ACUMOS-1699 : Design Studio must wait for CDS to start before populating matching-model cache.
+* ACUMOS-1551 : Increase code coverage for modules under design-studio repository.
 
 
 0.0.37-SNAPSHOT, 2018-09-07

@@ -113,10 +113,12 @@ public class Application {
     public void onApplicationEvent(ContextRefreshedEvent event) throws ServiceException {
 		logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() Begin ");
 		List<DSModelVO> dsModels = matchingModelServiceImpl.getPublicDSModels();
-		matchingModelServiceImpl.populatePublicModelCacheForMatching(dsModels);
+		if(dsModels != null && !dsModels.isEmpty()){
+			matchingModelServiceImpl.populatePublicModelCacheForMatching(dsModels);
+		} else {
+			logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() : public model cache is empty");
+		}
 		logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() End ");
-		
     }
-	
 	
 }

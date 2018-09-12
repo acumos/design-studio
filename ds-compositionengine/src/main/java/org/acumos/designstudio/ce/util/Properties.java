@@ -152,7 +152,27 @@ public class Properties implements Serializable {
 	@Value("${privateCacheRemovalTime}")
 	private int privateCacheRemovalTime;
 	
+	@Value("${cdsCheckInterval}")
+	private int cdsCheckInterval;
 	
+	@Value("${cdsCheckAttempt}")
+	private int cdsCheckAttempt;
+	
+	/**
+	 * @return 
+	 * 		the cdsCheckInterval
+	 */
+	public int getCdsCheckInterval() {
+		return cdsCheckInterval;
+	}
+
+	/**
+	 * @return 
+	 * 		the cdsCheckAttempt
+	 */
+	public int getCdsCheckAttempt() {
+		return cdsCheckAttempt;
+	}
 	
 	/**
 	 * @return 
