@@ -1087,54 +1087,67 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		            break;
 		        case DATABROKER_TYPE : 
 		        	//DataBroker should be the first Node 
-		        	if(nodeId.equals(firstNodeId)){ // Node--
-		                // Then it should be source of only one link.
-		            	int connectedCnt = getSourceCountForNodeId(relationsList, nodeId);
-		            	if(connectedCnt == 1) {  
-		            		// It should not be connected to Splitter 
-		                    boolean connectedToSplitter = isConnectedToSplitter(nodes, relationsList, nodeId);
+				if (nodeId.equals(firstNodeId)) { // Node--
+					// Then it should be source of only one link.
+					int connectedCnt = getSourceCountForNodeId(relationsList, nodeId);
+					if (connectedCnt == 1) {
+						// It should not be connected to Splitter
+						boolean connectedToSplitter = isConnectedToSplitter(nodes, relationsList, nodeId);
 						if (!connectedToSplitter) {
 							// It should not be connected to Collator
 							boolean connectedToCollator = isConnectedToCollator(nodes, relationsList, nodeId);
 							if (!connectedToCollator) {
-								// Validate mapping Details 
+								// Validate mapping Details
 								String check = null;
 								Property[] propArr = node.getProperties();
 								if (propArr.length == 1) {
-									for(Property prop : propArr){
-										DBMapInput[] dbmInArr =  prop.getData_broker_map().getMap_inputs();
-										for(DBMapInput db : dbmInArr){
-											check = db.getInput_field().getChecked();
-											// DataBroker Input Table Mapping Details must contain at least one check box checked
-											if(check.equals("YES")){
-												resultVo.setSuccess("true");
-												resultVo.setErrorDescription("");
-												break;
-											}else {
-												resultVo.setSuccess("false");
-												resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" Mapping Details should contains at least one check box selected");
+									DataBrokerMap dbMap = propArr[0].getData_broker_map();
+									if (null != dbMap) {
+										DBMapInput[] dbmInArr = dbMap.getMap_inputs();
+										if (null != dbmInArr) {
+											for (DBMapInput dbMapIn : dbmInArr) {
+												if (null != dbMapIn.getInput_field()) {
+													check = dbMapIn.getInput_field().getChecked();
+													// DataBroker Input Table Mapping Details must contain at least one check box checked
+													if (check.equals("YES")) {
+														resultVo.setSuccess("true");
+														resultVo.setErrorDescription("");
+														break;
+													} else {
+														resultVo.setSuccess("false");
+														resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" Mapping Details should contains at least one check box selected");
+													}
+												} else {
+													resultVo.setSuccess("false");
+													resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \""+ node.getName()+ "\" Input Mapping Input Fields should not be empty");
+												}
 											}
+										} else {
+											resultVo.setSuccess("false");
+											resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \""+ node.getName() + "\" Input Mapping Details should not be empty");
 										}
+									} else {
+										resultVo.setSuccess("false");
+										resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \""+ node.getName() + "\" Mapping Details should not be empty");
 									}
 								} else {
 									resultVo.setSuccess("false");
-		                            resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" Mapping Details are Incorrect");
+									resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \""+ node.getName() + "\" Mapping Details are Incorrect");
 								}
 							} else {
-		                    	resultVo.setSuccess("false");
-		                        resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" cannot be connected to Collator");
+								resultVo.setSuccess("false");
+								resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \""+ node.getName() + "\" cannot be connected to Collator");
 							}
 						} else {
-		                    	resultVo.setSuccess("false");
-		                        resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" cannot be connected to Splitter");
-		                    }
-		                    
-		            	} else { //Indicates its connected to multiple nodes, and validation fails.
-		            		resultVo.setSuccess("false");
-		                    resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" is connected to multiple Nodes");
-		            	}
-		                
-		           } else {
+							resultVo.setSuccess("false");
+							resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName()+ "\" cannot be connected to Splitter");
+						}
+					} else { // Indicates its connected to multiple nodes, and validation fails.
+						resultVo.setSuccess("false");
+						resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" is connected to multiple Nodes");
+					}
+
+				} else {
 		        	   resultVo.setSuccess("false");
 		               resultVo.setErrorDescription("Invalid Composite Solution : DataBroker \"" + node.getName() + "\" should be the first Node");
 		           }
