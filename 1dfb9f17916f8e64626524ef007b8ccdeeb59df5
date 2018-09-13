@@ -1,0 +1,435 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2234699_f1964a97",
+        "filename": "sqldatabroker/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "Please create a new docs/sql-data-broker.rst file",
+      "range": {
+        "startLine": 4,
+        "startChar": 37,
+        "endLine": 4,
+        "endChar": 41
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57675db4_27d7fe66",
+        "filename": "sqldatabroker/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "Upgrade at least to 1.5.15 please",
+      "range": {
+        "startLine": 33,
+        "startChar": 10,
+        "endLine": 33,
+        "endChar": 15
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f363861_6b732b05",
+        "filename": "sqldatabroker/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "be careful here - what\u0027s the license?  we had problems in ONAP with using the Mysql driver.  Had to use Mariadb driver.",
+      "range": {
+        "startLine": 167,
+        "startChar": 15,
+        "endLine": 167,
+        "endChar": 20
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f49df24_e593cece",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/Application.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "Suggest name SqlDatabrokerApplication",
+      "range": {
+        "startLine": 32,
+        "startChar": 13,
+        "endLine": 32,
+        "endChar": 24
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4f3e442_8785e2e2",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/config/SwaggerConfiguration.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "noreply@acumos.org",
+      "range": {
+        "startLine": 57,
+        "startChar": 7,
+        "endLine": 57,
+        "endChar": 18
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07989678_d6ce3ea5",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/controller/SQLDatabrokerController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "has it been tested??",
+      "range": {
+        "startLine": 106,
+        "startChar": 10,
+        "endLine": 106,
+        "endChar": 11
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd0985ca_63e30df2",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/exceptionhandler/AcumosException.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "Remove empty javadoc",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 3
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2255b28b_83d91b29",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/jdbc/datasource/DataSourceFactory.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "Not supported here cos no library, remove?",
+      "range": {
+        "startLine": 52,
+        "startChar": 24,
+        "endLine": 52,
+        "endChar": 39
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be2f1783_c4ed7726",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/service/ProtobufService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 50,
+        "startChar": 23,
+        "endLine": 50,
+        "endChar": 25
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df93cff0_7802f399",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/service/ProtobufService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 61,
+        "startChar": 23,
+        "endLine": 61,
+        "endChar": 25
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae68b02c_c1ca54fa",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/service/ProtobufService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "reads",
+      "range": {
+        "startLine": 77,
+        "startChar": 16,
+        "endLine": 77,
+        "endChar": 20
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a756f7ba_ce37faf2",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "Is this copied from the Datasource project?  Can be be extracted into a jar?",
+      "range": {
+        "startLine": 57,
+        "startChar": 13,
+        "endLine": 57,
+        "endChar": 32
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06a2e783_d7691da2",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "In general an Impl class needs no comments, it should faithfully implement the interface contract, which is commented.  Strip all copied comments.  Only need a comment if there\u0027s so",
+      "range": {
+        "startLine": 67,
+        "startChar": 1,
+        "endLine": 73,
+        "endChar": 4
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "579c790d_fb0252a8",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/util/Constants.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "Maybe: DatabrokerConstants",
+      "range": {
+        "startLine": 23,
+        "startChar": 17,
+        "endLine": 23,
+        "endChar": 26
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05704ce4_6527a0e9",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/util/DSUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "Strip empty javadoc",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 3
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56c61d7c_40ff0876",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/util/DSUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "meaningless javadoc is not helpful",
+      "range": {
+        "startLine": 165,
+        "startChar": 7,
+        "endLine": 165,
+        "endChar": 26
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "80f89b85_c8526ffd",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/util/ProtobufUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "Another candidate to extract and package in a jar?",
+      "range": {
+        "startLine": 36,
+        "startChar": 13,
+        "endLine": 36,
+        "endChar": 25
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de17e576_ee90b964",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/vo/Configuration.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "Maybe DatabrokerConfiguration ?",
+      "range": {
+        "startLine": 32,
+        "startChar": 13,
+        "endLine": 32,
+        "endChar": 26
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0046c7af_3909d62c",
+        "filename": "sqldatabroker/src/test/resources/testInput.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-13T19:05:34Z",
+      "side": 1,
+      "message": "kind of missing the data, eh?",
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
