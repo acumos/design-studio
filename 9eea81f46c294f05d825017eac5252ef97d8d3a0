@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "abeeada8_5e8b317a",
+        "filename": "docs/release-notes.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-14T14:01:53Z",
+      "side": 1,
+      "message": "Why remove the entries for databroker?",
+      "revId": "9eea81f46c294f05d825017eac5252ef97d8d3a0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c1cdb2_4da41312",
+        "filename": "docs/sql-data-broker.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-14T14:01:53Z",
+      "side": 1,
+      "message": "Title should be release notes?",
+      "revId": "9eea81f46c294f05d825017eac5252ef97d8d3a0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48c46b55_9a113bc0",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/Application.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-14T14:01:53Z",
+      "side": 1,
+      "message": "I like using project-specific names.  I find it confusing if I have multiple projects open in Eclipse and they all have a class with the same name \u0027Application\u0027",
+      "range": {
+        "startLine": 32,
+        "startChar": 13,
+        "endLine": 32,
+        "endChar": 24
+      },
+      "revId": "9eea81f46c294f05d825017eac5252ef97d8d3a0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7d5d09b_1373df90",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/exceptionhandler/AcumosException.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-14T14:01:53Z",
+      "side": 1,
+      "message": "Empty javadoc blocks don\u0027t help anyone",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 3
+      },
+      "revId": "9eea81f46c294f05d825017eac5252ef97d8d3a0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba3e31bd_941350a6",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/exceptionhandler/AcumosException.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-14T14:01:53Z",
+      "side": 1,
+      "message": "strange choice of package name.  You\u0027re not HANDLING exceptions, you\u0027re reporting them, right?",
+      "range": {
+        "startLine": 24,
+        "startChar": 33,
+        "endLine": 24,
+        "endChar": 49
+      },
+      "revId": "9eea81f46c294f05d825017eac5252ef97d8d3a0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
