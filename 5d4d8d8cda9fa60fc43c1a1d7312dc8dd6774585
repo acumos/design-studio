@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ff81c29f_2e2a778d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 33
+      },
+      "writtenOn": "2018-09-14T15:01:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed5ba7d3_09402f5b",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 95,
+        "endChar": 26
+      },
+      "revId": "5d4d8d8cda9fa60fc43c1a1d7312dc8dd6774585",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3d158e05_54024a32",
         "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/ConfigurationProperties.java",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2018-09-12T18:51:50Z",
       "side": 1,
       "message": "Why remove the props?",
+      "revId": "5d4d8d8cda9fa60fc43c1a1d7312dc8dd6774585",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "588275d4_f88d4fac",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/ConfigurationProperties.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 33
+      },
+      "writtenOn": "2018-09-14T15:01:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d158e05_54024a32",
       "revId": "5d4d8d8cda9fa60fc43c1a1d7312dc8dd6774585",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
