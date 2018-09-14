@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6001d4c2_0e072a4d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/ConfigurationProperties.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 33
+      },
+      "writtenOn": "2018-09-14T15:01:42Z",
+      "side": 1,
+      "message": "Chris one file is to load the properties from docker-compose.yml and another is for to load from local system env variable. we have two different files to load from different environments.",
+      "parentUuid": "1abc6b4c_28f29e1b",
+      "revId": "7cf8cd99cf453884d0966d2c73fa6274152ee599",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0dd1e08d_c5761162",
         "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/Properties.java",
         "patchSetId": 5
@@ -30,6 +48,30 @@
       "writtenOn": "2018-09-14T14:52:51Z",
       "side": 1,
       "message": "Why are these properties in this file AND in another?  In that other file they have defaults, here they do not.  I really recommend you avoid duplication!!",
+      "range": {
+        "startLine": 155,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 30
+      },
+      "revId": "7cf8cd99cf453884d0966d2c73fa6274152ee599",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bae0342e_75c70b43",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/Properties.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 33
+      },
+      "writtenOn": "2018-09-14T15:01:42Z",
+      "side": 1,
+      "message": "Chris, one file is to load the properties from docker-compose.yml and another is for to load from local system env variable. we have two different files to load from different environments.",
+      "parentUuid": "0dd1e08d_c5761162",
       "range": {
         "startLine": 155,
         "startChar": 0,
