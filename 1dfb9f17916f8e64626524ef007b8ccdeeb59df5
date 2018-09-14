@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "ca7c85f2_485560b9",
+        "filename": "sqldatabroker/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "License of mysql-connector-java (5.1.9) is GPL 2.0.  But we don\u0027t have list of supported \u0026 not supported licences.",
+      "parentUuid": "1f363861_6b732b05",
+      "range": {
+        "startLine": 167,
+        "startChar": 15,
+        "endLine": 167,
+        "endChar": 20
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f49df24_e593cece",
         "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/Application.java",
         "patchSetId": 2
@@ -82,6 +106,30 @@
       "writtenOn": "2018-09-13T19:05:34Z",
       "side": 1,
       "message": "Suggest name SqlDatabrokerApplication",
+      "range": {
+        "startLine": 32,
+        "startChar": 13,
+        "endLine": 32,
+        "endChar": 24
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0cd65cb9_2829a636",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/Application.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "Just maintaining consistence across all modules.  Does it make difference ?",
+      "parentUuid": "3f49df24_e593cece",
       "range": {
         "startLine": 32,
         "startChar": 13,
@@ -117,6 +165,30 @@
     },
     {
       "key": {
+        "uuid": "9e865408_f4ac7df9",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/config/SwaggerConfiguration.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4f3e442_8785e2e2",
+      "range": {
+        "startLine": 57,
+        "startChar": 7,
+        "endLine": 57,
+        "endChar": 18
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "07989678_d6ce3ea5",
         "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/controller/SQLDatabrokerController.java",
         "patchSetId": 2
@@ -128,6 +200,30 @@
       "writtenOn": "2018-09-13T19:05:34Z",
       "side": 1,
       "message": "has it been tested??",
+      "range": {
+        "startLine": 106,
+        "startChar": 10,
+        "endLine": 106,
+        "endChar": 11
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b9489f5_b51809af",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/controller/SQLDatabrokerController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "removed",
+      "parentUuid": "07989678_d6ce3ea5",
       "range": {
         "startLine": 106,
         "startChar": 10,
@@ -163,6 +259,30 @@
     },
     {
       "key": {
+        "uuid": "7d303d5c_7c4bb624",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/exceptionhandler/AcumosException.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd0985ca_63e30df2",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 3
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2255b28b_83d91b29",
         "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/jdbc/datasource/DataSourceFactory.java",
         "patchSetId": 2
@@ -174,6 +294,30 @@
       "writtenOn": "2018-09-13T19:05:34Z",
       "side": 1,
       "message": "Not supported here cos no library, remove?",
+      "range": {
+        "startLine": 52,
+        "startChar": 24,
+        "endLine": 52,
+        "endChar": 39
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d69e09dd_ae06eb00",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/jdbc/datasource/DataSourceFactory.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "be there for future enhancement.",
+      "parentUuid": "2255b28b_83d91b29",
       "range": {
         "startLine": 52,
         "startChar": 24,
@@ -209,6 +353,30 @@
     },
     {
       "key": {
+        "uuid": "b9d857a9_9ea56a70",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/service/ProtobufService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be2f1783_c4ed7726",
+      "range": {
+        "startLine": 50,
+        "startChar": 23,
+        "endLine": 50,
+        "endChar": 25
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df93cff0_7802f399",
         "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/service/ProtobufService.java",
         "patchSetId": 2
@@ -220,6 +388,30 @@
       "writtenOn": "2018-09-13T19:05:34Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 61,
+        "startChar": 23,
+        "endLine": 61,
+        "endChar": 25
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e03d265f_5999590e",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/service/ProtobufService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df93cff0_7802f399",
       "range": {
         "startLine": 61,
         "startChar": 23,
@@ -255,6 +447,30 @@
     },
     {
       "key": {
+        "uuid": "d8991cc2_29d3d4f8",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/service/ProtobufService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ae68b02c_c1ca54fa",
+      "range": {
+        "startLine": 77,
+        "startChar": 16,
+        "endLine": 77,
+        "endChar": 20
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a756f7ba_ce37faf2",
         "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/service/ProtobufServiceImpl.java",
         "patchSetId": 2
@@ -266,6 +482,30 @@
       "writtenOn": "2018-09-13T19:05:34Z",
       "side": 1,
       "message": "Is this copied from the Datasource project?  Can be be extracted into a jar?",
+      "range": {
+        "startLine": 57,
+        "startChar": 13,
+        "endLine": 57,
+        "endChar": 32
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa699e6_d787c129",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "Yes. I will put all the common code in one common project as most of the code is duplicate.  But again it comes with other miscellaneous tasks too.  But for let it be, in future will get it refactored in separate common project.",
+      "parentUuid": "a756f7ba_ce37faf2",
       "range": {
         "startLine": 57,
         "startChar": 13,
@@ -301,6 +541,30 @@
     },
     {
       "key": {
+        "uuid": "9310826a_b6d5b704",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "06a2e783_d7691da2",
+      "range": {
+        "startLine": 67,
+        "startChar": 1,
+        "endLine": 73,
+        "endChar": 4
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "579c790d_fb0252a8",
         "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/util/Constants.java",
         "patchSetId": 2
@@ -312,6 +576,30 @@
       "writtenOn": "2018-09-13T19:05:34Z",
       "side": 1,
       "message": "Maybe: DatabrokerConstants",
+      "range": {
+        "startLine": 23,
+        "startChar": 17,
+        "endLine": 23,
+        "endChar": 26
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "829d317e_acc76b16",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/util/Constants.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "579c790d_fb0252a8",
       "range": {
         "startLine": 23,
         "startChar": 17,
@@ -370,6 +658,30 @@
     },
     {
       "key": {
+        "uuid": "0fe6a46f_5382893a",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/util/DSUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "Removed",
+      "parentUuid": "56c61d7c_40ff0876",
+      "range": {
+        "startLine": 165,
+        "startChar": 7,
+        "endLine": 165,
+        "endChar": 26
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "80f89b85_c8526ffd",
         "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/util/ProtobufUtil.java",
         "patchSetId": 2
@@ -381,6 +693,30 @@
       "writtenOn": "2018-09-13T19:05:34Z",
       "side": 1,
       "message": "Another candidate to extract and package in a jar?",
+      "range": {
+        "startLine": 36,
+        "startChar": 13,
+        "endLine": 36,
+        "endChar": 25
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bf7beed_518c32a1",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/util/ProtobufUtil.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "Yes, will definitely do the refactor into common project.",
+      "parentUuid": "80f89b85_c8526ffd",
       "range": {
         "startLine": 36,
         "startChar": 13,
@@ -416,6 +752,30 @@
     },
     {
       "key": {
+        "uuid": "b306aa3b_88b628a6",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/vo/Configuration.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "common name helps me to reuse same class in other databroker too :)",
+      "parentUuid": "de17e576_ee90b964",
+      "range": {
+        "startLine": 32,
+        "startChar": 13,
+        "endLine": 32,
+        "endChar": 26
+      },
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0046c7af_3909d62c",
         "filename": "sqldatabroker/src/test/resources/testInput.txt",
         "patchSetId": 2
@@ -427,6 +787,24 @@
       "writtenOn": "2018-09-13T19:05:34Z",
       "side": 1,
       "message": "kind of missing the data, eh?",
+      "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c0af7928_91b9880d",
+        "filename": "sqldatabroker/src/test/resources/testInput.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T10:33:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0046c7af_3909d62c",
       "revId": "1dfb9f17916f8e64626524ef007b8ccdeeb59df5",
       "serverId": "655300a2-7a56-4504-9153-881edd907bea",
       "unresolved": false
