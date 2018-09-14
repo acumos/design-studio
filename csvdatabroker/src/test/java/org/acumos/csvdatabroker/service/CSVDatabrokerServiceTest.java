@@ -59,17 +59,10 @@ public class CSVDatabrokerServiceTest {
 	@Before
 	public void setUp() throws Exception {
 		conf = new Configuration();
-		conf.setHost("0.0.0.0");
-		conf.setPort(80);
-		conf.setUserName("xyz");
+		conf.setUserId("xyz");
 		conf.setPassword("xyz");
-		
-		map = new DataBrokerMap();
-		map.setFirst_row(Constants.FIRST_ROW_CONTAINS_FIELDNAMES);
-		map.setTarget_system_url("file://0.0.0.0:8080/home/user/temp/");
-		
-		
-		conf.setData_broker_map(map);
+		conf.setFirst_row(Constants.FIRST_ROW_CONTAINS_FIELDNAMES);
+		conf.setTarget_system_url("file://0.0.0.0:8080/home/user/temp/");
 	}
 	
 	//@Test(expected = ServiceException.class)
@@ -126,7 +119,6 @@ public class CSVDatabrokerServiceTest {
 		Mockito.when(executor.getData(Mockito.anyInt(),Mockito.anyString())).thenReturn(str.getBytes());
 		
 		byte[] result = service.getOneRecord();
-		System.out.println(result.toString());
 		assertEquals("[B@548a102f",result.toString());
 	}
 }

@@ -62,7 +62,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 	 */
 	public void setConf(Configuration conf) {
 		this.conf = conf;
-		if(conf.getData_broker_map().getFirst_row().equals(Constants.FIRST_ROW_CONTAINS_FIELDNAMES)) {
+		if(conf.getFirst_row().equals(Constants.FIRST_ROW_CONTAINS_FIELDNAMES)) {
 			start = 1;
 		} else {
 			start = 0;

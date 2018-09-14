@@ -55,7 +55,7 @@ public class CSVDatabrokerServiceImpl implements CSVDatabrokerService {
 			conf = confService.getConf();
 			if(conf.isRemoteFile()) { 
 				if (null == remoteExecutor) {
-					remoteExecutor = new RemoteScriptExecutor(conf.getHost(), conf.getPort(), conf.getUserName(),
+					remoteExecutor = new RemoteScriptExecutor(conf.getHost(), conf.getPort(), conf.getUserId(),
 							conf.getPassword(), conf.getRemoteDir(), "default.sh");
 				}
 				remoteExecutor.setProtobufService(protoService);
@@ -80,7 +80,7 @@ public class CSVDatabrokerServiceImpl implements CSVDatabrokerService {
 			conf = confService.getConf();
 			if(conf.isRemoteFile()){ //data file is at remote host.
 				if(null == remoteExecutor) {
-					remoteExecutor = new RemoteScriptExecutor(conf.getHost(), conf.getPort(), conf.getUserName(),
+					remoteExecutor = new RemoteScriptExecutor(conf.getHost(), conf.getPort(), conf.getUserId(),
 								conf.getPassword(), conf.getRemoteDir(), "default.sh");
 					remoteExecutor.setProtobufService(protoService);
 				}

@@ -92,7 +92,7 @@ private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(AdminCs
 		try {
 			
 			Configuration conf  = confService.getConf();
-			if(conf.getData_broker_map().getFirst_row().equals(Constants.FIRST_ROW_CONTAINS_FIELDNAMES)) {
+			if(conf.getFirst_row().equals(Constants.FIRST_ROW_CONTAINS_FIELDNAMES)) {
 				start = 1;
 			} 
 			confService.setStart(start);
