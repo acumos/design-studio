@@ -30,7 +30,6 @@ import org.acumos.csvdatabroker.service.CSVDatabrokerService;
 import org.acumos.csvdatabroker.service.ConfigurationService;
 import org.acumos.csvdatabroker.service.ProtobufService;
 import org.acumos.csvdatabroker.vo.Configuration;
-import org.acumos.csvdatabroker.vo.DataBrokerMap;
 import org.acumos.csvdatabroker.vo.Protobuf;
 import org.acumos.csvdatabroker.vo.ProtobufMessage;
 import org.junit.Test;
@@ -93,11 +92,9 @@ public class AdminCsvDatabrokerControllerTest {
 		MvcResult mvcresult = mockMvc.perform(requestBuilder).andReturn();
 		MockHttpServletResponse response = mvcresult.getResponse();
 		
-		DataBrokerMap databrokerMap = new DataBrokerMap();
-		databrokerMap.setScript("this is the script");
-		databrokerMap.setFirst_row("contains_field_names");
 		conf = new Configuration();
-		conf.setData_broker_map(databrokerMap);
+		conf.setScript("this is the script");
+		conf.setFirst_row("contains_field_names");
 		Mockito.when(confService.getConf()).thenReturn(conf);
 		requestBuilder = MockMvcRequestBuilders.put("/admin/resetOffset");
 		mvcresult = mockMvc.perform(requestBuilder).andReturn();

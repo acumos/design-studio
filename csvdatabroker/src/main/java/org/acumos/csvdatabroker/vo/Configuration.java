@@ -26,88 +26,233 @@ import java.net.URISyntaxException;
 
 import org.acumos.csvdatabroker.exceptionhandler.ServiceException;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 public class Configuration implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = -1221791434230094251L;
-	private String userName;
-	private String password;
-	private String host;
-	private Integer port;
-	private DataBrokerMap data_broker_map;
-	private String protobufFile;
+	private String script;
+	private String target_system_url;
+	private String local_system_data_file_path;
+	private String first_row;
+	private String csv_file_field_separator;
+	private String data_broker_type;
+	private DBMapInput[] map_inputs;
+	private DBMapOutput[] map_outputs;
 	
+	private String userId; //user_id 
+	private String password; //password
+	private String protobufFile; //protobufFile
+	
+	//private String map_action;
+	private String databaseName; //database_name
+	private String tableName; //table_name
+	private String dataSourceClassName; //jdbc_driver_data_source_class_name;
+	
+		
 	/**
-	 * @return the userName
+	 * @return the userId
 	 */
-	public String getUserName() {
-		return userName;
+	@JsonProperty("user_id")
+	public String getUserId() {
+		return userId;
 	}
+
 	/**
-	 * @param userName the userName to set
+	 * @param userId the userId to set
 	 */
-	public void setUserName(String userName) {
-		this.userName = userName;
+	@JsonSetter("user_id")
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
+
 	/**
 	 * @return the password
 	 */
 	public String getPassword() {
 		return password;
 	}
+
 	/**
 	 * @param password the password to set
 	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	/**
-	 * @return the host
-	 */
-	public String getHost() {
-		return host;
-	}
-	/**
-	 * @param host the host to set
-	 */
-	public void setHost(String host) {
-		this.host = host;
-	}
-	/**
-	 * @return the port
-	 */
-	public Integer getPort() {
-		return port;
-	}
-	/**
-	 * @param port the port to set
-	 */
-	public void setPort(Integer port) {
-		this.port = port;
-	}
-	
-	/**
-	 * @return the data_broker_map
-	 */
-	public DataBrokerMap getData_broker_map() {
-		return data_broker_map;
-	}
-	/**
-	 * @param data_broker_map the data_broker_map to set
-	 */
-	public void setData_broker_map(DataBrokerMap data_broker_map) {
-		this.data_broker_map = data_broker_map;
-	}
+
 	/**
 	 * @return the protobufFile
 	 */
 	public String getProtobufFile() {
 		return protobufFile;
 	}
+
 	/**
 	 * @param protobufFile the protobufFile to set
 	 */
 	public void setProtobufFile(String protobufFile) {
 		this.protobufFile = protobufFile;
+	}
+
+	/**
+	 * @return the databaseName
+	 */
+	@JsonProperty("database_name")
+	public String getDatabaseName() {
+		return databaseName;
+	}
+	
+	/**
+	 * @param databaseName the databaseName to set
+	 */
+	@JsonSetter("database_name")
+	public void setDatabaseName(String databaseName) {
+		this.databaseName = databaseName;
+	}
+	
+	/**
+	 * @return the tableName
+	 */
+	@JsonProperty("table_name")
+	public String getTableName() {
+		return tableName;
+	}
+	
+	/**
+	 * @param tableName the tableName to set
+	 */
+	@JsonSetter("table_name")
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+	
+	/**
+	 * @return the dataSourceClassName
+	 */
+	@JsonProperty("jdbc_driver_data_source_class_name")
+	public String getDataSourceClassName() {
+		return dataSourceClassName;
+	}
+	
+	/**
+	 * @param dataSourceClassName the dataSourceClassName to set
+	 */
+	@JsonSetter("jdbc_driver_data_source_class_name")
+	public void setDataSourceClassName(String dataSourceClassName) {
+		this.dataSourceClassName = dataSourceClassName;
+	}
+	
+	/**
+	 * @return the script
+	 */
+	public String getScript() {
+		return script;
+	}
+	
+	/**
+	 * @param script the script to set
+	 */
+	public void setScript(String script) {
+		this.script = script;
+	}
+	
+	/**
+	 * @return the target_system_url
+	 */
+	public String getTarget_system_url() {
+		return target_system_url;
+	}
+	
+	/**
+	 * @param target_system_url the target_system_url to set
+	 */
+	public void setTarget_system_url(String target_system_url) {
+		this.target_system_url = target_system_url;
+	}
+	
+	/**
+	 * @return the local_system_data_file_path
+	 */
+	public String getLocal_system_data_file_path() {
+		return local_system_data_file_path;
+	}
+	
+	/**
+	 * @param local_system_data_file_path the local_system_data_file_path to set
+	 */
+	public void setLocal_system_data_file_path(String local_system_data_file_path) {
+		this.local_system_data_file_path = local_system_data_file_path;
+	}
+	
+	/**
+	 * @return the first_row
+	 */
+	public String getFirst_row() {
+		return first_row;
+	}
+	
+	/**
+	 * @param first_row the first_row to set
+	 */
+	public void setFirst_row(String first_row) {
+		this.first_row = first_row;
+	}
+	
+	/**
+	 * @return the csv_file_field_separator
+	 */
+	public String getCsv_file_field_separator() {
+		return csv_file_field_separator;
+	}
+	
+	/**
+	 * @param csv_file_field_separator the csv_file_field_separator to set
+	 */
+	public void setCsv_file_field_separator(String csv_file_field_separator) {
+		this.csv_file_field_separator = csv_file_field_separator;
+	}
+	
+	/**
+	 * @return the data_broker_type
+	 */
+	public String getData_broker_type() {
+		return data_broker_type;
+	}
+	
+	/**
+	 * @param data_broker_type the data_broker_type to set
+	 */
+	public void setData_broker_type(String data_broker_type) {
+		this.data_broker_type = data_broker_type;
+	}
+	
+	/**
+	 * @return the map_inputs
+	 */
+	public DBMapInput[] getMap_inputs() {
+		return map_inputs;
+	}
+	
+	/**
+	 * @param map_inputs the map_inputs to set
+	 */
+	public void setMap_inputs(DBMapInput[] map_inputs) {
+		this.map_inputs = map_inputs;
+	}
+	
+	/**
+	 * @return the map_outputs
+	 */
+	public DBMapOutput[] getMap_outputs() {
+		return map_outputs;
+	}
+	
+	/**
+	 * @param map_outputs the map_outputs to set
+	 */
+	public void setMap_outputs(DBMapOutput[] map_outputs) {
+		this.map_outputs = map_outputs;
 	}
 	
 	
@@ -115,12 +260,35 @@ public class Configuration implements Serializable, Cloneable {
 		return super.clone();
 	}
 	
+	public String getHost() throws ServiceException {
+		String host = null;
+		try {
+			URI uri = new URI(target_system_url);
+			host = uri.getHost();
+		} catch (URISyntaxException e) {
+			throw new ServiceException("  Exception in getRemoteDir() ","401", "Invalid Target system URL ");
+		}
+		
+		return host;
+	}
+	
+	public Integer getPort() throws ServiceException {
+		Integer port = null;
+		try {
+			URI uri = new URI(target_system_url);
+			port = uri.getPort();
+		} catch (URISyntaxException e) {
+			throw new ServiceException("  Exception in getRemoteDir() ","401", "Invalid Target system URL ");
+		}
+		
+		return port;
+	}
 	
 	public String getRemoteDir() throws ServiceException {
 		String remoteDir = null;
 		String remotePath = null;
 		try {
-			URI uri = new URI(data_broker_map.getTarget_system_url());
+			URI uri = new URI(target_system_url);
 			remotePath = uri.getPath();
 			
 			if(remotePath.endsWith("/")){ //Target System URL may end with dir/
@@ -139,7 +307,7 @@ public class Configuration implements Serializable, Cloneable {
 	public String getRemoteFilePath() throws ServiceException {
 		String remotePath = null;
 		try {
-			URI uri = new URI(data_broker_map.getTarget_system_url());
+			URI uri = new URI(target_system_url);
 			remotePath = uri.getPath();
 		} catch (URISyntaxException e) {
 			throw new ServiceException("  Exception in getRemoteDir() ","401", "Invalid Target system URL ");
@@ -150,7 +318,7 @@ public class Configuration implements Serializable, Cloneable {
 	public String getLocalFilePath() throws ServiceException { 
 		String localPath = null;
 		try {
-			localPath = data_broker_map.getTarget_system_url();
+			localPath = target_system_url;
 			
 			//Path may contain "\" so replace it with "/"
 			if(localPath.contains("\\")){
@@ -169,7 +337,7 @@ public class Configuration implements Serializable, Cloneable {
 	public String getLocalPath() throws ServiceException { 
 		String localPath = null;
 		try {
-			localPath = data_broker_map.getTarget_system_url();
+			localPath = target_system_url;
 			
 			//Path may contain "\" so replace it with "/"
 			if(localPath.contains("\\")){
@@ -191,12 +359,14 @@ public class Configuration implements Serializable, Cloneable {
 		return localPath; 
 	}
 	
-	public boolean isRemoteFile() { 
+	public boolean isRemoteFile() throws ServiceException { 
 		boolean result = false; 
-		
+		String host = getHost();
+		Integer port = getPort();
 		if((null != host && null != port) && ( !host.isEmpty() && port != 0)){
 			result = true;
 		}
 		return result;
 	}
+	
 }

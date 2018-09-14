@@ -30,10 +30,13 @@ repository as a jar file.
 * ACUMOS-1665 : Update ds-composition to handle new CDUMP and BLUEPrint file.
 * ACUMOS-1666 : Update ds-composition to handle databroke of type : SQL.
 * ACUMOS-1667 : Validation for mapping table - user must select at least one column type.
+* ACUMOS-1747 : Update CSV databroker code w.r.t change in the Databroker Map.
+
 
 0.0.37-SNAPSHOT, 2018-09-07
 ---------------------------
 * ACUMOS-1701 : Upgrade DSCE and TGC to CDS 1.18.0
+
 
 0.0.36-SNAPSHOT, 2018-09-03
 ---------------------------

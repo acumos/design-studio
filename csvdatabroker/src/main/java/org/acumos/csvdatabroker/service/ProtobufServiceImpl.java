@@ -432,7 +432,7 @@ public class ProtobufServiceImpl implements ProtobufService {
 
 	private Object getValue(int mappedColumn, String line) throws CloneNotSupportedException {
 		Configuration conf = confService.getConf();
-		char splitby = conf.getData_broker_map().getCsv_file_field_separator().charAt(0);
+		char splitby = conf.getCsv_file_field_separator().charAt(0);
 		Object result = null;
 		char[] chars = line.toCharArray();
 		Stack<String> parenthesis = new Stack<String>();
@@ -477,7 +477,7 @@ public class ProtobufServiceImpl implements ProtobufService {
 	private int getMappedColumn(String messageName, ProtobufMessageField field) throws CloneNotSupportedException {
 		int mappedColumn = -1;
 		Configuration conf = confService.getConf();
-		DBMapOutput[] outputs =    conf.getData_broker_map().getMap_outputs();
+		DBMapOutput[] outputs = conf.getMap_outputs();
 		
 		
 		int outputLength = outputs.length;
@@ -498,7 +498,7 @@ public class ProtobufServiceImpl implements ProtobufService {
 		}
 		
 		if(null != outputFieldTag){
-			DBMapInput[] inputs = conf.getData_broker_map().getMap_inputs();
+			DBMapInput[] inputs = conf.getMap_inputs();
 			DBInputField inputField = null;
 			
 			int inputLength = inputs.length;

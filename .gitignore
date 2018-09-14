@@ -6,3 +6,4 @@
 /target/
 .gitattributes
 .pydevproject
+**/desktop.ini

@@ -20,7 +20,7 @@
 
 package org.acumos.csvdatabroker.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.acumos.csvdatabroker.util.Constants;
 import org.acumos.csvdatabroker.vo.Configuration;
@@ -45,11 +45,7 @@ public class ConfigurationServiceTest {
 	@Before
 	public void setUp() throws Exception {
 		conf = new Configuration();
-		map = new DataBrokerMap();
-		map.setFirst_row(Constants.FIRST_ROW_CONTAINS_FIELDNAMES);
-		
-		
-		conf.setData_broker_map(map);
+		conf.setFirst_row(Constants.FIRST_ROW_CONTAINS_FIELDNAMES);
 	}
 	
 	@Test //(expected = CloneNotSupportedException.class)
@@ -69,7 +65,7 @@ public class ConfigurationServiceTest {
 		confService.incrementStart();
 		assertEquals(2,confService.getStart());
 		
-		conf.getData_broker_map().setFirst_row("");
+		conf.setFirst_row("");
 		confService.setConf(conf);
 		assertEquals(0,confService.getStart());
 		
