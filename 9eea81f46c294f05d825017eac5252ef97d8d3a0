@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3c056a29_7394d51c",
+        "filename": "docs/release-notes.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T15:03:38Z",
+      "side": 1,
+      "message": "Included them in sql-data-broker.rst",
+      "parentUuid": "abeeada8_5e8b317a",
+      "revId": "9eea81f46c294f05d825017eac5252ef97d8d3a0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0c1cdb2_4da41312",
         "filename": "docs/sql-data-broker.rst",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "77ba1aa6_c6e13c97",
+        "filename": "docs/sql-data-broker.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T15:03:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0c1cdb2_4da41312",
+      "revId": "9eea81f46c294f05d825017eac5252ef97d8d3a0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48c46b55_9a113bc0",
         "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/Application.java",
         "patchSetId": 3
@@ -47,6 +83,30 @@
       "writtenOn": "2018-09-14T14:01:53Z",
       "side": 1,
       "message": "I like using project-specific names.  I find it confusing if I have multiple projects open in Eclipse and they all have a class with the same name \u0027Application\u0027",
+      "range": {
+        "startLine": 32,
+        "startChar": 13,
+        "endLine": 32,
+        "endChar": 24
+      },
+      "revId": "9eea81f46c294f05d825017eac5252ef97d8d3a0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5a9d8af_853cbe35",
+        "filename": "sqldatabroker/src/main/java/org/acumos/sqldatabroker/Application.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-09-14T15:03:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48c46b55_9a113bc0",
       "range": {
         "startLine": 32,
         "startChar": 13,
