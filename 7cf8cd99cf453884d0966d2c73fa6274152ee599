@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1abc6b4c_28f29e1b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/ConfigurationProperties.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-14T14:52:51Z",
+      "side": 1,
+      "message": "Why are these properties also in a class \"Properties\" ?",
+      "revId": "7cf8cd99cf453884d0966d2c73fa6274152ee599",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0dd1e08d_c5761162",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/Properties.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-14T14:52:51Z",
+      "side": 1,
+      "message": "Why are these properties in this file AND in another?  In that other file they have defaults, here they do not.  I really recommend you avoid duplication!!",
+      "range": {
+        "startLine": 155,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 30
+      },
+      "revId": "7cf8cd99cf453884d0966d2c73fa6274152ee599",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
