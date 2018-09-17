@@ -33,7 +33,8 @@ repository as a jar file.
 * ACUMOS-1747 : Update CSV databroker code w.r.t change in the Databroker Map.
 * ACUMOS-1699 : Design Studio must wait for CDS to start before populating matching-model cache.
 * ACUMOS-1551 : Increase code coverage for modules under design-studio repository.
-
+* ACUMOS-662  : Develop SQL DataBroker 
+* ACUMOS-1662 : ds-compositio changes w.r.t to SQL Databroker
 
 0.0.37-SNAPSHOT, 2018-09-07
 ---------------------------
