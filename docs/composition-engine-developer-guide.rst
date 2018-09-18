@@ -16,17 +16,17 @@
 .. limitations under the License.
 .. ===============LICENSE_END=========================================================
 
-=============================
-Design Studio Developer Guide
-=============================
+=================================================
+Design Studio Composition Engine Developer Guide
+=================================================
 
 1.	Introduction
 ========================
 
-         This is the developers guide to Design Studio. 
+         This is the developers guide to Design Studio Composition Engine. 
 
-**1.1 What is Design Studio\?**
-	The Design Studio is a web based tool to:
+**1.1 What is Composition Engine\?**
+	The Design Studio UI invokes Composition Engine API to:
 
 	1.	Create machine learning applications, hereafter referred to as composite solutions, out of the basic building blocks – the individual Machine Learning (ML) models contributed by the open source user community.
 
@@ -328,20 +328,33 @@ This operation is called when the user request the SAVE of the composite solutio
 
 **4.1	Operation Name**
 	readCompositeSolution
+
 **4.2	Trigger**
+
 	This operation is called when the user performs a double click operation on an existing composite solution in the Catalog Palette in order to display the complete solution in the Design Canvas. 
+
 **4.3	Request**
+
 	{
 		userId: string // mandatory
+		
 		solutionId: string, // id of composite solution in catalog - mandatory
+		
 		version: string //mandatory
+		
 	}
+
 **4.4	Response**
+
 	{
 		cdump: JSON, //JSON of cdump
+		
 		errorMessage: string //optional
+
 	}
+
 **4.5	Behavior**
+
 	1.	The Composition Engine must check if the request JSON structure is valid, otherwise it should return a user friendly message, such as “Incorrectly formatted input – Invalid JSON”. 
 	2.	The Composition Engine must check if the solutionId and version are found in the Catalog DB, otherwise it should return a user friendly error message back in the response, such as “Requested Solution Not Found”.
 	3.	The Composition Engine must retrieve the location of the cdump file from the Catalog DB, via a query into Solution and Version Tables.
