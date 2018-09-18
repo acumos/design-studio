@@ -16,17 +16,25 @@
 .. limitations under the License.
 .. ===============LICENSE_END=========================================================
 
-=============
-Design Studio
-=============
+=============================
+Design Studio Databroker Developer Guide
+=============================
 
-.. toctree::
-       :maxdepth: 3
-       :caption: Contents:
+1.	Introduction
+========================
 
-       release-notes.rst
-	   sql-data-broker.rst
-       developer-guide.rst
-	   TOSCAModelGeneratorClient-developer-guide.rst
-	   databroker-developer-guide.rst
-	   gdmservice-developer-guide.rst
+         This is the developers guide to Design Studio Databroker. 
+
+**1. What is Databroker\?**
+	1.	Data Broker retrieves the data from passive Data Sources.
+
+	2.	Converts the data into Protobuf format.
+
+	3.	Provides the data to Models (via Model Connector).
+	
+	4.  Model Connector explicitly requests the Data Broker to retrieve the data from Data Source, receives the data in response, and provides the data to Models
+
+**2.  Data Broker Types**
+    1.  File Data Broker: Retrieves the data from CSV Files, JSON Files, or other files where the records (rows) of the file have a pre-defined structure. 
+    2.  SQL Data Broker: Retrieves the data from SQL databases.
+
