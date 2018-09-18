@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cea2aaed_1a872714",
+        "filename": "docs/databroker-developer-guide.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-18T16:39:18Z",
+      "side": 1,
+      "message": "Please correct line length",
+      "revId": "1cc16d5c07e3c0d2e4abc18ac358cf422e10c941",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e60afd8c_80d3910a",
+        "filename": "docs/databroker-developer-guide.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-18T16:39:18Z",
+      "side": 1,
+      "message": "Use hyphens for second-level headings, and fix line length",
+      "revId": "1cc16d5c07e3c0d2e4abc18ac358cf422e10c941",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
