@@ -16,9 +16,9 @@
 .. limitations under the License.
 .. ===============LICENSE_END=========================================================
 
-===========================
+===========================================
 Design Studio SQL Databroker Release Notes
-===========================
+===========================================
 
 The Design Studio SQL Databroker is packaged within a Docker image and available from the
 Acumos docker registry. The docker image URI of SQL Databroker is configured in Design Studio Composition Engine docker-compose configuration.

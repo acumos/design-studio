@@ -16,18 +16,15 @@
 .. limitations under the License.
 .. ===============LICENSE_END=========================================================
 
-=============
-Design Studio
-=============
+=========================================================
+Design Studio Generic Datamapper Service Developer Guide
+=========================================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+1.	Introduction
+========================
 
-   composition-engine-developer-guide.rst
-   databroker-developer-guide.rst
-   gdmservice-developer-guide.rst
-   sql-data-broker.rst
-   tosca-model-generator-client-developer-guide.rst
-   release-notes.rst
-	   
+         This is the developers guide to Design Studio Generic Datamapper Service. 
+
+**1. What is Datamapper\?**
+    Further details will be updated soon. 
+
