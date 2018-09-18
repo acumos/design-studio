@@ -16,18 +16,16 @@
 .. limitations under the License.
 .. ===============LICENSE_END=========================================================
 
-=============
-Design Studio
-=============
+===========================================================
+Design Studio TOSCA Model Generator Client Developer Guide
+===========================================================
 
-.. toctree::
-       :maxdepth: 3
-       :caption: Contents:
+1.	Introduction
+========================
 
-       release-notes.rst
-	   composition-engine-developer-guide.rst
-	   databroker-developer-guide.rst
-	   gdmservice-developer-guide.rst
-	   sql-data-broker.rst
-       tosca-model-generator-client-developer-guide.rst
-	   
+         This is the developers guide to Design Studio TOSCAModelGeneratorClient. 
+
+**1. What is TOSCAModelGeneratorClient\?**
+    1.  TOSCAModelGeneratorClient generates TOSCA models and is included as onboarding module as lib.  
+    2.  The TOSCA Model generated are : 1. TGIF.json & Protobuf.json while onboarding the models. 
+
