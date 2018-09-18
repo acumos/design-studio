@@ -17,13 +17,13 @@
 .. ===============LICENSE_END=========================================================
 
 =============================
-Design Studio Developer Guide
+Design Studio Composition Engine Developer Guide
 =============================
 
 1.	Introduction
 ========================
 
-         This is the developers guide to Design Studio. 
+         This is the developers guide to Design Studio Composition Engine. 
 
 **1.1 What is Design Studio\?**
 	The Design Studio is a web based tool to:
