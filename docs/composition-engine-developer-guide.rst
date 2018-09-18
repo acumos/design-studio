@@ -16,17 +16,17 @@
 .. limitations under the License.
 .. ===============LICENSE_END=========================================================
 
-=============================
-Design Studio Developer Guide
-=============================
+=================================================
+Design Studio Composition Engine Developer Guide
+=================================================
 
 1.	Introduction
 ========================
 
-         This is the developers guide to Design Studio. 
+         This is the developers guide to Design Studio Composition Engine. 
 
-**1.1 What is Design Studio\?**
-	The Design Studio is a web based tool to:
+**1.1 What is Composition Engine\?**
+	The Design Studio UI invokes Composition Engine API to:
 
 	1.	Create machine learning applications, hereafter referred to as composite solutions, out of the basic building blocks – the individual Machine Learning (ML) models contributed by the open source user community.
 
