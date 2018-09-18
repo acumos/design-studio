@@ -23,14 +23,14 @@
 
   <groupId>org.acumos.design-studio</groupId>
   <artifactId>sqldatabroker</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Design Studio SQL Databroker </name>
 
   <parent>
 	<groupId>org.springframework.boot</groupId>
 	<artifactId>spring-boot-starter-parent</artifactId>
-	<version>1.5.4.RELEASE</version>
+	<version>1.5.16.RELEASE</version>
 	<!-- silence warning about parent relative path -->
   	<relativePath />
   </parent>
@@ -39,7 +39,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!-- Stand-alone RESTFul application -->
-		<start-class>org.acumos.csvdatabroker.Application</start-class>
+		<start-class>org.acumos.sqldatabroker.SQLDatabrokerApplication</start-class>
 		<!-- Jenkins invokes mvn with argument -Dbuild.number=${BUILD_NUMBER} -->
 		<build.number>0</build.number>
 		<!-- Not supplied to all jobs; e.g., Javadoc -->

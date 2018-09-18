@@ -24,6 +24,11 @@ The Design Studio Composition Engine is packaged within a Docker image and avail
 Acumos docker registry.  The TOSCAGenerator Client library is published in the Acumos Nexus
 repository as a jar file.
 
+0.0.39-SNAPSHOT, 2018-09-18
+---------------------------
+*ACUMOS-1756 : Upgrade Design Studio Java server components to Spring-Boot 1.5.16.RELEASE
+
+
 0.0.38-SNAPSHOT, 2018-09-14
 ---------------------------
 * ACUMOS-624  : log standardization and consistency design studio
