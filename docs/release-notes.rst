@@ -24,6 +24,11 @@ The Design Studio Composition Engine is packaged within a Docker image and avail
 Acumos docker registry.  The TOSCAGenerator Client library is published in the Acumos Nexus
 repository as a jar file.
 
+0.0.39-SNAPSHOT, 2018-09-18
+---------------------------
+* ACUMOS-1699 : Design Studio must wait for CDS to start before populating matching-model cache.
+
+
 0.0.38-SNAPSHOT, 2018-09-14
 ---------------------------
 * ACUMOS-624  : log standardization and consistency design studio
@@ -35,6 +40,7 @@ repository as a jar file.
 * ACUMOS-1551 : Increase code coverage for modules under design-studio repository.
 * ACUMOS-662  : Develop SQL DataBroker 
 * ACUMOS-1662 : ds-compositio changes w.r.t to SQL Databroker
+
 
 0.0.37-SNAPSHOT, 2018-09-07
 ---------------------------
