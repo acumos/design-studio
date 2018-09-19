@@ -1,0 +1,237 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66fca903_f123a360",
+        "filename": "docs/TOSCAModelGeneratorClient-developer-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-19T12:05:18Z",
+      "side": 1,
+      "message": "Suggest being consistent with other files in this directory and name it tosca-model-generator-client-developer-guide.rst",
+      "revId": "c9d8ab9d84aff0aba5f60a640223d9bd7e513dc0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14a4f453_b6b8f939",
+        "filename": "docs/TOSCAModelGeneratorClient-developer-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-19T12:05:18Z",
+      "side": 1,
+      "message": "Pls fix line length, and add spaces between words; this isn\u0027t code",
+      "revId": "c9d8ab9d84aff0aba5f60a640223d9bd7e513dc0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e9a9b10_dea3cac5",
+        "filename": "docs/TOSCAModelGeneratorClient-developer-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-19T12:05:18Z",
+      "side": 1,
+      "message": "Remove \"1.\" RST will generate section heading number",
+      "revId": "c9d8ab9d84aff0aba5f60a640223d9bd7e513dc0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67df8115_75c97b45",
+        "filename": "docs/databroker-developer-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-19T12:05:18Z",
+      "side": 1,
+      "message": "Pls fix line length",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 29
+      },
+      "revId": "c9d8ab9d84aff0aba5f60a640223d9bd7e513dc0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9952dba1_552b95d8",
+        "filename": "docs/databroker-developer-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-19T12:05:18Z",
+      "side": 1,
+      "message": "Remove \"1.\" bcos this is a heading, RST will generate the number automagically",
+      "revId": "c9d8ab9d84aff0aba5f60a640223d9bd7e513dc0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5758c01e_8ad71c62",
+        "filename": "docs/developer-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-19T12:05:18Z",
+      "side": 1,
+      "message": "suggest renaming to composition-engine-developer-guide.rst",
+      "revId": "c9d8ab9d84aff0aba5f60a640223d9bd7e513dc0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de04caa8_67a19f8e",
+        "filename": "docs/developer-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-19T12:05:18Z",
+      "side": 1,
+      "message": "Fix line len",
+      "revId": "c9d8ab9d84aff0aba5f60a640223d9bd7e513dc0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc2147a0_51d63f70",
+        "filename": "docs/developer-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-19T12:05:18Z",
+      "side": 1,
+      "message": "Remove \"1.\" RST will generate section heading number",
+      "revId": "c9d8ab9d84aff0aba5f60a640223d9bd7e513dc0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b4d0351_2621f5c1",
+        "filename": "docs/developer-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-19T12:05:18Z",
+      "side": 1,
+      "message": "What is the Composition Engine",
+      "range": {
+        "startLine": 28,
+        "startChar": 14,
+        "endLine": 28,
+        "endChar": 27
+      },
+      "revId": "c9d8ab9d84aff0aba5f60a640223d9bd7e513dc0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d127177d_90e62a8d",
+        "filename": "docs/gdmservice-developer-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-19T12:05:18Z",
+      "side": 1,
+      "message": "Fix line len",
+      "revId": "c9d8ab9d84aff0aba5f60a640223d9bd7e513dc0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8978f8f9_de207ee7",
+        "filename": "docs/gdmservice-developer-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-19T12:05:18Z",
+      "side": 1,
+      "message": "Remove \"1.\" RST will generate section heading number",
+      "revId": "c9d8ab9d84aff0aba5f60a640223d9bd7e513dc0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d72a302_826e7256",
+        "filename": "docs/gdmservice-developer-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-19T12:05:18Z",
+      "side": 1,
+      "message": "Indeed, what is a generic data mapper?  Can you add just one sentence!?",
+      "revId": "c9d8ab9d84aff0aba5f60a640223d9bd7e513dc0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab934f0e_6c7ba9ab",
+        "filename": "docs/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-19T12:05:18Z",
+      "side": 1,
+      "message": "Maybe arrange in alphabetical order - put TOSCA last",
+      "revId": "c9d8ab9d84aff0aba5f60a640223d9bd7e513dc0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
