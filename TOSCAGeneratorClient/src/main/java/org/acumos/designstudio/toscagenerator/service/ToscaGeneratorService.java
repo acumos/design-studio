@@ -48,18 +48,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * 
- * 
- *
- */
+
 public class ToscaGeneratorService {
 	private static final Logger logger = LoggerFactory.getLogger(ToscaGeneratorService.class);
 	
-	@Autowired
-	private CommonDataServiceRestClientImpl cdmsClient;
 	/**
 	 * 
 	 * @param solutionID
@@ -142,13 +135,13 @@ public class ToscaGeneratorService {
 		FileInputStream fileInputStream = null;
 		UploadArtifactInfo artifactInfo = null;
 		String revisionId = null; 
+		CommonDataServiceRestClientImpl cdmsClient = (CommonDataServiceRestClientImpl) CommonDataServiceRestClientImpl.getInstance(
+				Properties.getCmnDataSvcEndPoinURL(), Properties.getCmnDataSvcUser(), Properties.getCmnDataSvcPwd());
 		try {
 			if (toscaFiles != null && !toscaFiles.isEmpty()) {
 				for (Artifact a : toscaFiles) {
 
-					// 1. group id ,2. artifact name, 3. version, 4. extension
-					// i.e., packaging, 5. size of content, 6. actual file input
-					// stream.
+					// 1. group id ,2. artifact name, 3. version, 4. extension i.e., packaging, 5. size of content, 6. actual file input stream.
 					List<MLPSolutionRevision> mlpSolnRevision = cdmsClient.getSolutionRevisions(solutionID);
 					if (null != mlpSolnRevision && !mlpSolnRevision.isEmpty()) {
 						for (MLPSolutionRevision mlpSolRev : mlpSolnRevision) {
@@ -166,13 +159,12 @@ public class ToscaGeneratorService {
 					}
 				}
 			}
-			logger.debug("--------------- uploadFilesToRepository() ended --------------");
 		} catch (Exception e) {
 			logger.error(" --------------- Exception Occured  uploadFilesToRepository() --------------", e);
 			throw new ServiceException(" --------------- Exception Occured  uploadFilesToRepository() -------------",
 					Properties.getUploadFileErrorCode(), Properties.getUploadFileErrorDesc(), e.getCause());
 		}
-
+		logger.debug("--------------- uploadFilesToRepository() ended --------------");
 		return toscaFiles;
 
 	}
@@ -208,11 +200,6 @@ public class ToscaGeneratorService {
 			OutputStream os = conn.getOutputStream();
 			os.write(json_spec.getBytes());
 			os.flush();
-
-			/*
-			 * if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) { throw new
-			 * RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()); }
-			 */
 
 			br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
