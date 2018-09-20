@@ -26,8 +26,8 @@ repository as a jar file.
 
 0.0.39-SNAPSHOT, 2018-09-18
 ---------------------------
-*ACUMOS-1756 : Upgrade Design Studio Java server components to Spring-Boot 1.5.16.RELEASE
-
+* ACUMOS-1756 : Upgrade Design Studio Java server components to Spring-Boot 1.5.16.RELEASE
+* ACUMOS-1770 : Unable to on-board model via web on-boarding as getting 'Exception in TOSCA Model Generator Client'.
 
 0.0.38-SNAPSHOT, 2018-09-14
 ---------------------------
