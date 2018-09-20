@@ -48,18 +48,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * 
- * 
- *
- */
+
 public class ToscaGeneratorService {
 	private static final Logger logger = LoggerFactory.getLogger(ToscaGeneratorService.class);
 	
-	@Autowired
-	private CommonDataServiceRestClientImpl cdmsClient;
 	/**
 	 * 
 	 * @param solutionID
@@ -74,7 +67,6 @@ public class ToscaGeneratorService {
 	 */
 	public List<Artifact> decryptAndWriteTofile(String solutionID, String version, String response)
 			throws AcumosException {
-		logger.debug("------------- decryptAndWriteTofile() started -------------");
 		List<Artifact> toscaFiles = new ArrayList<Artifact>();
 		try {
 			String path = Properties.getTempFolderPath(solutionID, version);
@@ -103,12 +95,9 @@ public class ToscaGeneratorService {
 			ToscaUtil.writeDataToFile(path, "translate", "yaml", new String(translateBytes));
 			Artifact translate = new Artifact("translate", "yaml", solutionID, version, path, translateBytes.length);
 			toscaFiles.add(translate);
-
-			logger.debug("------------- decryptAndWriteTofile() Ended -------------");
-
 		} catch (Exception e) {
-			logger.error("------------- Exception Occured  decryptAndWriteTofile() -------------", e);
-			throw new ServiceException(" --------------- Exception Occured decryptAndWriteTofile() --------------",
+			logger.error(" Exception Occured  decryptAndWriteTofile() ", e);
+			throw new ServiceException("Exception Occured decryptAndWriteTofile()",
 					Properties.getDecryptionErrorCode(), Properties.getDecryptionErrorDesc(), e.getCause());
 		}
 		return toscaFiles;
@@ -128,7 +117,6 @@ public class ToscaGeneratorService {
 	 */
 	public List<Artifact> uploadFilesToRepository(String solutionID, String version, List<Artifact> toscaFiles)
 			throws AcumosException {
-		logger.debug("-----------  uploadFilesToRepository() started -----------");
 		@SuppressWarnings("unused")
 		String path = Properties.getTempFolderPath(solutionID, version);
 		RepositoryLocation repositoryLocation = new RepositoryLocation();
@@ -142,13 +130,13 @@ public class ToscaGeneratorService {
 		FileInputStream fileInputStream = null;
 		UploadArtifactInfo artifactInfo = null;
 		String revisionId = null; 
+		CommonDataServiceRestClientImpl cdmsClient = (CommonDataServiceRestClientImpl) CommonDataServiceRestClientImpl.getInstance(
+				Properties.getCmnDataSvcEndPoinURL(), Properties.getCmnDataSvcUser(), Properties.getCmnDataSvcPwd());
 		try {
 			if (toscaFiles != null && !toscaFiles.isEmpty()) {
 				for (Artifact a : toscaFiles) {
 
-					// 1. group id ,2. artifact name, 3. version, 4. extension
-					// i.e., packaging, 5. size of content, 6. actual file input
-					// stream.
+					// 1. group id ,2. artifact name, 3. version, 4. extension i.e., packaging, 5. size of content, 6. actual file input stream.
 					List<MLPSolutionRevision> mlpSolnRevision = cdmsClient.getSolutionRevisions(solutionID);
 					if (null != mlpSolnRevision && !mlpSolnRevision.isEmpty()) {
 						for (MLPSolutionRevision mlpSolRev : mlpSolnRevision) {
@@ -157,7 +145,6 @@ public class ToscaGeneratorService {
 							}
 						}
 					} 
-					
 					fileInputStream = new FileInputStream(a.getPayloadURI());
 					if(null != revisionId) {
 						artifactInfo = artifactClient.uploadArtifact(Properties.getNexusGropuId()+"."+a.getSolutionID()+"."+revisionId,
@@ -166,13 +153,16 @@ public class ToscaGeneratorService {
 					}
 				}
 			}
-			logger.debug("--------------- uploadFilesToRepository() ended --------------");
 		} catch (Exception e) {
-			logger.error(" --------------- Exception Occured  uploadFilesToRepository() --------------", e);
-			throw new ServiceException(" --------------- Exception Occured  uploadFilesToRepository() -------------",
+			logger.error("Exception Occured  uploadFilesToRepository()", e);
+			throw new ServiceException("Exception Occured  uploadFilesToRepository()",
 					Properties.getUploadFileErrorCode(), Properties.getUploadFileErrorDesc(), e.getCause());
 		}
-
+		finally {
+			if(null != fileInputStream){
+				fileInputStream.close();
+			}
+		}
 		return toscaFiles;
 
 	}
@@ -193,7 +183,6 @@ public class ToscaGeneratorService {
 	 */
 	public String getToscaModels(String modelMetaData)
 			throws MalformedURLException, IOException, ProtocolException, AcumosException {
-		logger.debug("------------ getToscaModels() started ------------");
 		String json_spec = "{ \"spec\" : " + modelMetaData + "}";
 		StringBuilder sb = null;
 		BufferedReader br = null;
@@ -209,11 +198,6 @@ public class ToscaGeneratorService {
 			os.write(json_spec.getBytes());
 			os.flush();
 
-			/*
-			 * if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) { throw new
-			 * RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()); }
-			 */
-
 			br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
 			String line;
@@ -226,7 +210,7 @@ public class ToscaGeneratorService {
 			conn.disconnect();
 
 		} catch (Exception ex) {
-			logger.error(" ---------------- Exception Occured  getToscaModels() -----------------", ex);
+			logger.error("Exception Occured  getToscaModels()", ex);
 			throw new ServiceException("Exception Occured  getToscaModels()", Properties.getConnectionErrorCode(),
 					Properties.getConnectionErrorDesc(), ex.getCause());
 		} finally {
@@ -234,7 +218,6 @@ public class ToscaGeneratorService {
 				br.close();
 			}
 		}
-		logger.debug("----------- getToscaModels()  Ended ----------");
 		return sb.toString();
 	}
 
@@ -254,7 +237,6 @@ public class ToscaGeneratorService {
 	public void postArtifact(String solutionId, String solutionRevisionId, String ownerID, List<Artifact> toscaFiles)
 			throws AcumosException {
 
-		logger.debug("-------------- postArtifact() strated ---------------");
 		CommonDataServiceRestClientImpl cdmsClient = (CommonDataServiceRestClientImpl) CommonDataServiceRestClientImpl.getInstance(
 				Properties.getCmnDataSvcEndPoinURL(), Properties.getCmnDataSvcUser(), Properties.getCmnDataSvcPwd());
 		MLPArtifact cArtifact = null;
@@ -278,12 +260,11 @@ public class ToscaGeneratorService {
 					result = cdmsClient.createArtifact(cArtifact);
 					// Associate the TOSCA Artifact to the SolutionRevisionArtifact;
 					cdmsClient.addSolutionRevisionArtifact(solutionId, solutionRevisionId, result.getArtifactId());
-					logger.debug("----------- postArtifact() ended ---------------");
 
 				} catch (Exception ex) {
-					logger.error(" ----------------- Exception Occured  postArtifact() -------------", ex);
+					logger.error("Exception Occured  postArtifact() ", ex);
 					throw new ServiceException(
-							" -------------------- Exception Occured  postArtifact() ------------------",
+							"Exception Occured  postArtifact()",
 							Properties.getConnectionErrorCode(), Properties.getConnectionErrorDesc(), ex.getCause());
 				}
 			}
