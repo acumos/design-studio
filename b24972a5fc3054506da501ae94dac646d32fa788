@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa857ae_f1f7987e",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ToscaGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-20T15:12:02Z",
+      "side": 1,
+      "message": "Where do you close the fileInputStream ?",
+      "revId": "b24972a5fc3054506da501ae94dac646d32fa788",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba8fcd73_d4034935",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ToscaGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-20T15:12:02Z",
+      "side": 1,
+      "message": "Please remove these useless hyphens while you are modifying this file",
+      "range": {
+        "startLine": 163,
+        "startChar": 18,
+        "endLine": 163,
+        "endChar": 34
+      },
+      "revId": "b24972a5fc3054506da501ae94dac646d32fa788",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b78d518_79907a55",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/ToscaGeneratorService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-09-20T15:12:02Z",
+      "side": 1,
+      "message": "Here also",
+      "range": {
+        "startLine": 167,
+        "startChar": 14,
+        "endLine": 167,
+        "endChar": 31
+      },
+      "revId": "b24972a5fc3054506da501ae94dac646d32fa788",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
