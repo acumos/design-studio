@@ -23,7 +23,7 @@
 
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>ds-compositionengine</artifactId>
-	<version>0.0.39-SNAPSHOT</version>
+	<version>0.0.40-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Design Studio Composition Engine</name>
 
@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>org.acumos.common-dataservice</groupId>
 			<artifactId>cmn-data-svc-client</artifactId>
-			<version>1.18.0</version>
+			<version>1.18.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-collections</groupId>
