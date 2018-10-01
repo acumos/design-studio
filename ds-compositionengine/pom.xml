@@ -23,7 +23,7 @@
 
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>ds-compositionengine</artifactId>
-	<version>0.0.40-SNAPSHOT</version>
+	<version>1.40.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Design Studio Composition Engine</name>
 
@@ -50,7 +50,7 @@
 		<protobuf.java.version>3.4.0</protobuf.java.version>
 		<protobuf.java.jar.name>protobuf-java-${protobuf.java.version}.jar</protobuf.java.jar.name>
 		<!-- Generic Datamapper Service -->
-		<gdmservice.version>0.0.1</gdmservice.version>
+		<gdmservice.version>1.2.0-SNAPSHOT</gdmservice.version>
 		<gdmservice.jar.name>gdmservice-${gdmservice.version}.jar</gdmservice.jar.name>
 	</properties>
 
@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>org.acumos.common-dataservice</groupId>
 			<artifactId>cmn-data-svc-client</artifactId>
-			<version>1.18.1</version>
+			<version>1.18.2</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-collections</groupId>
