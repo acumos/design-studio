@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e1e2dbd6_2ae36a6f",
+        "filename": "docs/gdmservice-developer-guide.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-10-10T13:48:49Z",
+      "side": 1,
+      "message": "Please write \"coming soon\" or something",
+      "revId": "5e188402a899cacca6365ad61e3e938ac7401f8f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb53fb09_9ffe8f51",
+        "filename": "docs/index.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-10-10T13:48:49Z",
+      "side": 1,
+      "message": "Please make this item last",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 20
+      },
+      "revId": "5e188402a899cacca6365ad61e3e938ac7401f8f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93c1d7f0_39719733",
+        "filename": "docs/tosca-model-generator-client-developer-guide.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-10-10T13:48:49Z",
+      "side": 1,
+      "message": "This line is marked up exactly correctly",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 58
+      },
+      "revId": "5e188402a899cacca6365ad61e3e938ac7401f8f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "687c7c9d_a21718a5",
+        "filename": "docs/tosca-model-generator-client-developer-guide.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-10-10T13:48:49Z",
+      "side": 1,
+      "message": "This line should be marked up with RST section \"----------\" below it",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 15
+      },
+      "revId": "5e188402a899cacca6365ad61e3e938ac7401f8f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37a74f5a_d6935367",
+        "filename": "docs/tosca-model-generator-client-developer-guide.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-10-10T13:48:49Z",
+      "side": 1,
+      "message": "This line should be marked up with RST sub-section, which I think is \"~~~~~~~~~~\"",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 42
+      },
+      "revId": "5e188402a899cacca6365ad61e3e938ac7401f8f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
