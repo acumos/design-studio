@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "67f05c3e_beed8bb5",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/MatchingModelServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-10-10T19:15:56Z",
+      "side": 1,
+      "message": "Maybe use the {} feature?\n\n    logger.log(LOGGER, \"Some exception: {}\", tgifFileNexusURI);",
+      "range": {
+        "startLine": 486,
+        "startChar": 112,
+        "endLine": 486,
+        "endChar": 116
+      },
+      "revId": "575773c437a227b1f5fd518acaffa009ef82d916",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
