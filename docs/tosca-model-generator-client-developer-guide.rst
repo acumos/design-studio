@@ -16,18 +16,16 @@
 .. limitations under the License.
 .. ===============LICENSE_END=========================================================
 
-===========================================
-Design Studio SQL Databroker Release Notes
-===========================================
+===========================================================
+Design Studio TOSCA Model Generator Client Developer Guide
+===========================================================
 
-The Design Studio SQL Databroker is packaged within a Docker image and available from the
-Acumos docker registry. The docker image URI of SQL Databroker is configured in Design Studio Composition Engine docker-compose configuration.
+1.	Introduction
+========================
 
-1.1.0-SNAPSHOT, 2018-10-01
----------------------------
-* Updated major, minor and patch version 
+         This is the developers guide to Design Studio TOSCAModelGeneratorClient. 
 
-0.0.1-SNAPSHOT, 2018-09-14
----------------------------
-* ACUMOS-1655 : Develop new component : SQL Databroker
-* ACUMOS-1656 : Construct SQL Databroker as DS tool
+**1. What is TOSCAModelGeneratorClient\?**
+    1.  TOSCAModelGeneratorClient generates TOSCA models and is included as onboarding module as lib.  
+    2.  The TOSCA Model generated are : 1. TGIF.json & Protobuf.json while onboarding the models. 
+

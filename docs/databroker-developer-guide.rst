@@ -16,18 +16,25 @@
 .. limitations under the License.
 .. ===============LICENSE_END=========================================================
 
-===========================================
-Design Studio SQL Databroker Release Notes
-===========================================
+=========================================
+Design Studio Databroker Developer Guide
+=========================================
 
-The Design Studio SQL Databroker is packaged within a Docker image and available from the
-Acumos docker registry. The docker image URI of SQL Databroker is configured in Design Studio Composition Engine docker-compose configuration.
+1.	Introduction
+========================
 
-1.1.0-SNAPSHOT, 2018-10-01
----------------------------
-* Updated major, minor and patch version 
+         This is the developers guide to Design Studio Databroker. 
 
-0.0.1-SNAPSHOT, 2018-09-14
----------------------------
-* ACUMOS-1655 : Develop new component : SQL Databroker
-* ACUMOS-1656 : Construct SQL Databroker as DS tool
+**1. What is Databroker\?**
+	1.	Data Broker retrieves the data from passive Data Sources.
+
+	2.	Converts the data into Protobuf format.
+
+	3.	Provides the data to Models (via Model Connector).
+	
+	4.  Model Connector explicitly requests the Data Broker to retrieve the data from Data Source, receives the data in response, and provides the data to Models
+
+**2.  Data Broker Types**
+    1.  File Data Broker: Retrieves the data from CSV Files, JSON Files, or other files where the records (rows) of the file have a pre-defined structure. 
+    2.  SQL Data Broker: Retrieves the data from SQL databases.
+

@@ -21,8 +21,13 @@ Design Studio
 =============
 
 .. toctree::
-       :maxdepth: 3
-       :caption: Contents:
+   :maxdepth: 2
+   :caption: Contents:
 
-       release-notes.rst
-       developer-guide.rst
+   composition-engine-developer-guide.rst
+   databroker-developer-guide.rst
+   gdmservice-developer-guide.rst
+   sql-data-broker.rst
+   tosca-model-generator-client-developer-guide.rst
+   release-notes.rst
+	   
