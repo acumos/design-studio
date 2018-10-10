@@ -360,7 +360,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 		return result; 
 	}
 	
-	private HashMap<KeyVO, List<ModelDetailVO>> constructModelCache(List<DSModelVO> models) throws ServiceException {
+	private HashMap<KeyVO, List<ModelDetailVO>> constructModelCache(List<DSModelVO> models) {
 		logger.debug(EELFLoggerDelegator.debugLogger, " constructModelCache() Begin ");
 		HashMap<KeyVO, List<ModelDetailVO>> result = null;
 		List<ModelDetailVO> modelDetailVOs = null;
@@ -401,7 +401,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 										inputs = service.getProvides();
 										for (Provide provide : inputs) {
 											// For every provide generate the keyVO
-											try {
 												if (null != provide.getRequest().getFormat()) {
 													// Assuming that only one message as a input parameter.
 													// Currently multi input message parameter is not supported.
@@ -437,10 +436,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 														}
 													}
 												}
-											} catch (IOException e) {
-												logger.error(EELFLoggerDelegator.errorLogger,"exception occured in Provides part in getModelCache()", e);
-												throw new ServiceException("Failed to read the Model");
-											}
 										}
 									}
 
@@ -449,7 +444,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 										Call[] calls = service.getCalls();
 										for (Call call : calls) {
 											// For every call generate the keyVO
-											try {
 												if (null != call.getRequest().getFormat()) {
 													// Assuming that only one message as a output parameter.
 													messages = mapper.readValue(call.getRequest().getFormat().toJSONString(),MessageBody[].class);
@@ -484,17 +478,13 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 														}
 													}
 												}
-											} catch (IOException e) {
-												logger.error(EELFLoggerDelegator.errorLogger,"exception occured in Calls part in getModelCache()", e);
-												throw new ServiceException("Failed to read the Model");
-											}
 										}
 									}
 								}
 							}
 						} catch (Exception e) {
+							logger.debug(EELFLoggerDelegator.debugLogger, " Some exception so ignored record for Tgif FileNexus URI : {} ", tgifFileNexusURI);
 							logger.error(EELFLoggerDelegator.errorLogger, " exception occured in getModelCache()", e);
-							throw new ServiceException("Exception Occured while reading the TGIF");
 						}
 					}
 				}
