@@ -24,9 +24,13 @@ Design Studio
    :maxdepth: 2
    :caption: Contents:
 
+   composition-engine-api-doc.rst
    composition-engine-developer-guide.rst
+   design-studio-user-guide.rst
+   databroker-api-doc.rst
    databroker-developer-guide.rst
    gdmservice-developer-guide.rst
+   gdmservice-user-guide.rst
    sql-data-broker.rst
    tosca-model-generator-client-developer-guide.rst
    release-notes.rst
