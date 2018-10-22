@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a8bf8bc6_2e7a5298",
+        "filename": "docs/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-10-22T13:10:35Z",
+      "side": 1,
+      "message": "Vaibhav I don\u0027t see an overview?",
+      "range": {
+        "startLine": 27,
+        "startChar": 3,
+        "endLine": 27,
+        "endChar": 23
+      },
+      "revId": "0c4fc0d2f9af1727475a6fd527756a9d4780e0f2",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
