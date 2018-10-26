@@ -29,8 +29,10 @@ Design Studio
    design-studio-user-guide.rst
    databroker-api-doc.rst
    databroker-developer-guide.rst
+   databroker-user-guide.rst
    gdmservice-developer-guide.rst
    gdmservice-user-guide.rst
+   split-join-user-guide.rst
    sql-data-broker.rst
    tosca-model-generator-client-developer-guide.rst
    release-notes.rst
