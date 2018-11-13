@@ -27,6 +27,7 @@ repository as a jar file.
 1.40.3-SNAPSHOT, 2018-11-13
 ---------------------------
 * ACUMOS-1969 : Default CDS startup check interval too short, attempts too few; pls increase
+* ACUMOS-1650 : Senitization for CSS Vulnerability
 
 1.40.2-SNAPSHOT, 2018-10-12
 ---------------------------

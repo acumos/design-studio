@@ -33,6 +33,7 @@ import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.DSUtil;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
+import org.acumos.designstudio.ce.util.SanitizeUtils;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
 import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
 import org.acumos.designstudio.ce.vo.cdump.DataConnector;
@@ -136,7 +137,7 @@ public class SolutionController {
 		try {
 			dscs.setAuthor(userId);
 			dscs.setSolutionName(solutionName);
-			dscs.setSolutionId(solutionId);
+			dscs.setSolutionId(SanitizeUtils.sanitize(solutionId));
 			dscs.setVersion(version);
 			dscs.setOnBoarder(userId);
 			dscs.setDescription(description);
@@ -226,7 +227,7 @@ public class SolutionController {
 			boolean validNode = validateNode(node);
 			if (validNode) {
 				if ((solutionId != null && version != null) || (null != cid)) {
-					results = solutionService.addNode(userId, solutionId, version, cid, node);
+					results = solutionService.addNode(userId, SanitizeUtils.sanitize(solutionId), version, cid, node);
 				} else {
 					results = "{\"error\": \"Either Cid or SolutionId and Version need to Pass\"}";
 				}
@@ -296,7 +297,7 @@ public class SolutionController {
 		logger.debug(EELFLoggerDelegator.debugLogger, " fetchJsonTOSCA()  : Begin");
 		String result;
 		try {
-			result = solutionService.readCompositeSolutionGraph(userId, solutionId, version);
+			result = solutionService.readCompositeSolutionGraph(userId, SanitizeUtils.sanitize(solutionId), version);
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, "Failed to read the ComposietSolution", e);
 			result = "";
@@ -361,7 +362,7 @@ public class SolutionController {
 					splitterMap = dataConnector.getSplitterMap();
 				}
 			}
-			result = solutionService.modifyNode(userId, solutionId, version, cid, nodeId, nodeName, ndata, fieldMap, databrokerMap, collatorMap, splitterMap);
+			result = solutionService.modifyNode(userId, SanitizeUtils.sanitize(solutionId), version, cid, nodeId, nodeName, ndata, fieldMap, databrokerMap, collatorMap, splitterMap);
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, "-------Exception in  modifyNode() -------", e);
 		}
@@ -381,7 +382,7 @@ public class SolutionController {
 		String result = null;
 		logger.debug(EELFLoggerDelegator.debugLogger, " modifyLink()  : Begin");
 		try {
-			result = solutionService.modifyLink(userId, cid, solutionId, version, linkId, linkName);
+			result = solutionService.modifyLink(userId, cid, SanitizeUtils.sanitize(solutionId), version, linkId, linkName);
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, "Exception in  modifyLink() ", e);
 		}
@@ -401,7 +402,7 @@ public class SolutionController {
 
 		try {
 
-			boolean deleted = compositeServiceImpl.deleteCompositeSolution(userId, solutionId, version);
+			boolean deleted = compositeServiceImpl.deleteCompositeSolution(userId, SanitizeUtils.sanitize(solutionId), version);
 			if (!deleted) {
 				result = String.format(resultTemplate, "false", "Requested Solution Not Found");
 			} else {
@@ -429,7 +430,7 @@ public class SolutionController {
 			result = String.format(resultTemplate, false, "Mandatory feild(s) missing");
 		} else {
 			try {
-				boolean deletedNode = solutionService.deleteNode(userId, solutionId, version, cid, nodeId);
+				boolean deletedNode = solutionService.deleteNode(userId, SanitizeUtils.sanitize(solutionId), version, cid, nodeId);
 				if (deletedNode) {
 					result = String.format(resultTemplate, true, "");
 				} else {
@@ -454,7 +455,7 @@ public class SolutionController {
 		logger.debug(EELFLoggerDelegator.debugLogger, " closeCompositeSolution(): Begin ");
 		String result = "";
 		try {
-			result = compositeServiceImpl.closeCompositeSolution(userId, solutionId, solutionVersion, cid);
+			result = compositeServiceImpl.closeCompositeSolution(userId, SanitizeUtils.sanitize(solutionId), solutionVersion, cid);
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, " Exception in closeCompositeSolution() ", e);
 		}
@@ -472,7 +473,7 @@ public class SolutionController {
 		logger.debug(EELFLoggerDelegator.debugLogger, " clearCompositeSolution(): Begin ");
 		String result = "";
 		try {
-			result = compositeServiceImpl.clearCompositeSolution(userId, solutionId, solutionVersion, cid);
+			result = compositeServiceImpl.clearCompositeSolution(userId, SanitizeUtils.sanitize(solutionId), solutionVersion, cid);
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, " Exception in clearCompositeSolution() ", e);
 		}
@@ -543,7 +544,7 @@ public class SolutionController {
 		logger.debug(EELFLoggerDelegator.debugLogger, "validateCompositeSolution() : Begin ");
 		String result = "";
 		try {
-			result = compositeServiceImpl.validateCompositeSolution(userId, solutionName, solutionId, version);
+			result = compositeServiceImpl.validateCompositeSolution(userId, solutionName, SanitizeUtils.sanitize(solutionId), version);
 			result = String.format(result);
 		} catch (Exception e) {
 			result = "{\"success\" : \"false\", \"errorDescription\" : \"Failed to Validate Composite Solution\"}";
@@ -582,7 +583,7 @@ public class SolutionController {
 					&& targetNodeCapabilityName != null) {
 
 				if (validateProperty(property)) {
-					linkAdded = solutionService.addLink(userId, solutionId, version, linkName, linkId, sourceNodeName,
+					linkAdded = solutionService.addLink(userId, SanitizeUtils.sanitize(solutionId), version, linkName, linkId, sourceNodeName,
 							sourceNodeId, targetNodeName, targetNodeId, sourceNodeRequirement, targetNodeCapabilityName,
 							cid, property);
 
@@ -684,7 +685,7 @@ public class SolutionController {
 			result = String.format(resultTemplate, false, "Mandatory feild(s) missing");
 		} else {
 			try {
-				boolean deletedLink = solutionService.deleteLink(userId, solutionId, version, cid, linkId);
+				boolean deletedLink = solutionService.deleteLink(userId, SanitizeUtils.sanitize(solutionId), version, cid, linkId);
 				if (deletedLink) {
 					result = String.format(resultTemplate, true, "");
 				} else {
@@ -711,7 +712,7 @@ public class SolutionController {
         SuccessErrorMessage successErrorMessage = null;
 		logger.debug(EELFLoggerDelegator.debugLogger, "setProbeIndicator() in SolutionController Begin");
         try {
-        	successErrorMessage = compositeServiceImpl.setProbeIndicator(userId, solutionId, version, cid,probeIndicator);
+        	successErrorMessage = compositeServiceImpl.setProbeIndicator(userId, SanitizeUtils.sanitize(solutionId), version, cid,probeIndicator);
 		}catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, "Exception in setProbeIndicator() in SolutionController", e);
 		}
