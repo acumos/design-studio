@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.acumos.designstudio.ce.service.IAcumosCatalog;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
+import org.acumos.designstudio.ce.util.SanitizeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -66,7 +67,7 @@ public class ArtfactDetailsController {
 		logger.debug(EELFLoggerDelegator.debugLogger, "fetchJsonTOSCA() : Begin");
 		String result = "";
 		try {
-			result = iacumosCatalog.readArtifact(userId, solutionId, version, props.getArtifactType().trim());
+			result = iacumosCatalog.readArtifact(userId, SanitizeUtils.sanitize(solutionId), version, props.getArtifactType().trim());
 			
 			if (result == null || result.isEmpty()) {
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -102,7 +103,7 @@ public class ArtfactDetailsController {
 		String resultTemplate = "{\"protobuf_json\" : %s,\n \"success\" : \"%s\",\n \"errorMessage\" : \"%s\"}";
 		String result = "";
 		try {
-			result = iacumosCatalog.readArtifact(userId, solutionId, version, props.getProtoArtifactType().trim());
+			result = iacumosCatalog.readArtifact(userId, SanitizeUtils.sanitize(solutionId), version, props.getProtoArtifactType().trim());
 
 			if (result != null && !result.isEmpty()) {
 				resultTemplate = String.format(resultTemplate, result, true, "");
