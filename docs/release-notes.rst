@@ -24,6 +24,10 @@ The Design Studio Composition Engine is packaged within a Docker image and avail
 Acumos docker registry.  The TOSCAGenerator Client library is published in the Acumos Nexus
 repository as a jar file.
 
+1.40.3-SNAPSHOT, 2018-11-13
+---------------------------
+* ACUMOS-1969 : Default CDS startup check interval too short, attempts too few; pls increase
+
 1.40.2-SNAPSHOT, 2018-10-12
 ---------------------------
 * ACUMOS-1886 : IST2 Design Studio fails to start due to exception in populatePublicModelCacheForMatching
