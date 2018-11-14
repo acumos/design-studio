@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "00024feb_b352c90b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1221,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-11-14T11:22:09Z",
+      "side": 1,
+      "message": "Either of the condition should invalidate the solution.  Please check the condition.",
+      "range": {
+        "startLine": 1221,
+        "startChar": 81,
+        "endLine": 1221,
+        "endChar": 83
+      },
+      "revId": "fa0752636a13e9392f0e8ee477404bf0b8f2b86e",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89da2497_e170a280",
+        "filename": "ds-compositionengine/src/test/resources/12345678-abcd-90ab-cdef-1234567890ab/acumos-cdump-111.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-11-14T11:22:09Z",
+      "side": 1,
+      "message": "revert the changes",
+      "range": {
+        "startLine": 1,
+        "startChar": 71,
+        "endLine": 1,
+        "endChar": 83
+      },
+      "revId": "fa0752636a13e9392f0e8ee477404bf0b8f2b86e",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ec1a01f_6a2da720",
+        "filename": "ds-compositionengine/src/test/resources/12345678-abcd-90ab-cdef-1234567890ab/acumos-cdump-222.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-11-14T11:22:09Z",
+      "side": 1,
+      "message": "revert the changes",
+      "range": {
+        "startLine": 1,
+        "startChar": 56,
+        "endLine": 1,
+        "endChar": 60
+      },
+      "revId": "fa0752636a13e9392f0e8ee477404bf0b8f2b86e",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14ee0eda_ad5d14f9",
+        "filename": "ds-compositionengine/src/test/resources/12345678-abcd-90ab-cdef-1234567890ab/acumos-cdump-333.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-11-14T11:22:09Z",
+      "side": 1,
+      "message": "revert the changes",
+      "range": {
+        "startLine": 1,
+        "startChar": 65,
+        "endLine": 1,
+        "endChar": 69
+      },
+      "revId": "fa0752636a13e9392f0e8ee477404bf0b8f2b86e",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
