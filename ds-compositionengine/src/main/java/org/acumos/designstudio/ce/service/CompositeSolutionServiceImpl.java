@@ -1218,6 +1218,10 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						resultVo.setSuccess("false");
 						resultVo.setErrorDescription("Invalid Composite Solution : Splitter \""
 								+ node.getName() + "\" should not be the Last Node");
+					}else if(null == node.getProperties()[0].getSplitter_map().getMap_outputs() || null == node.getProperties()[0].getSplitter_map().getMap_inputs()){
+						resultVo.setSuccess("false");
+						resultVo.setErrorDescription("Invalid Composite Solution : Splitter \""
+								+ node.getName() + "\" Mapping Details Should not be empty");
 					}else if(null != node.getProperties()[0].getSplitter_map().getMap_outputs() && node.getProperties()[0].getSplitter_map().getMap_outputs().length != 0){
 						SplitterMapOutput mapOutput[] = node.getProperties()[0].getSplitter_map().getMap_outputs();
 						for(SplitterMapOutput smo : mapOutput){
@@ -1291,6 +1295,10 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						resultVo.setSuccess("false");
 						resultVo.setErrorDescription("Invalid Composite Solution : Collator \""
 								+ node.getName() + "\" should not be the Last Node");
+					}else if(null == node.getProperties()[0].getCollator_map().getMap_outputs() || null == node.getProperties()[0].getCollator_map().getMap_inputs()){
+						resultVo.setSuccess("false");
+						resultVo.setErrorDescription("Invalid Composite Solution : Collator \""
+								+ node.getName() + "\" Mapping Details Should not be empty");
 					}else if(null != node.getProperties()[0].getCollator_map().getMap_inputs() && node.getProperties()[0].getCollator_map().getMap_inputs().length != 0){
 						CollatorMapInput mapInput[] = node.getProperties()[0].getCollator_map().getMap_inputs();
 						for(CollatorMapInput cmi : mapInput){
