@@ -27,6 +27,8 @@ repository as a jar file.
 1.40.2-SNAPSHOT, 2018-10-12
 ---------------------------
 * ACUMOS-1886 : IST2 Design Studio fails to start due to exception in populatePublicModelCacheForMatching
+* ACUMOS-1968 : IST2 | UI showing validation failed error for valid solution
+* ACUMOS-2036 : DSCE- If a splitter and collator node is present in cdump file, but it has zero mappings associated with it, the validation should show invalid solution.
 
 1.40.1-SNAPSHOT, 2018-10-01
 ---------------------------
