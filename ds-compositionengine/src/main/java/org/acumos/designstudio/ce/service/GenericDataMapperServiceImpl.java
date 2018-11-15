@@ -163,9 +163,9 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		String result = null;
 		path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 		String libPath = confprops.getLib();
-		String gdmJarName = libPath + props.getGdmJarName();
+		String gdmJarName = libPath + confprops.getGdmJarName();
 		UUID id = UUID.randomUUID();
-		String tempJarName = path + id.toString() + "_" + props.getGdmJarName();
+		String tempJarName = path + id.toString() + "_" + confprops.getGdmJarName();
 		
 		String fieldMappingJarEntryName = "BOOT-INF/classes/FieldMapping.json";
 		String protobufJarEntryName = "BOOT-INF/classes/default.proto";

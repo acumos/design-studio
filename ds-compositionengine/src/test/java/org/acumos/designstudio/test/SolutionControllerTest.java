@@ -3221,7 +3221,7 @@ public class SolutionControllerTest {
 
 			property.getSolutionResultsetSize();
 
-			property.getGdmJarName();
+			confprops.getGdmJarName();
 
 			property.getTarget();
 

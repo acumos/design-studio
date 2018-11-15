@@ -29,6 +29,7 @@ repository as a jar file.
 * ACUMOS-1969 : Default CDS startup check interval too short, attempts too few; pls increase
 * ACUMOS-1650 : Senitization for CSS Vulnerability
 
+
 1.40.2-SNAPSHOT, 2018-10-12
 ---------------------------
 * ACUMOS-1886 : IST2 Design Studio fails to start due to exception in populatePublicModelCacheForMatching

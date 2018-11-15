@@ -107,9 +107,6 @@ public class Properties implements Serializable {
 	@Value("${target}")
 	private String target;
 	
-	@Value("${gdmJarName}")
-	private String gdmJarName;
-	
 	@Value("${solutionResultsetSize}")
 	private int solutionResultsetSize;
 	
@@ -284,14 +281,6 @@ public class Properties implements Serializable {
 	 */
 	public String getBlueprintArtifactType() {
 		return blueprintArtifactType;
-	}
-
-
-	/**
-	 * @return the gdmJarName
-	 */
-	public String getGdmJarName() {
-		return gdmJarName;
 	}
 
 	/**
