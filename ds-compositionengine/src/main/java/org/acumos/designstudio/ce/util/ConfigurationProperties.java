@@ -79,6 +79,16 @@ public class ConfigurationProperties {
 	@Value("${cdsCheckAttempt:10}")
 	private int cdsCheckAttempt;
 	
+	@Value("${gdmJarName}")
+	private String gdmJarName;
+	/**
+	 * @return
+	 * 		 the gdmJarName
+	 */
+	public String getGdmJarName() {
+		return gdmJarName;
+	}
+	
 	/**
 	 * @return 
 	 * 		the cdsCheckInterval
