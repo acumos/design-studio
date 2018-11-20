@@ -30,6 +30,7 @@ repository as a jar file.
 * ACUMOS-1650 : Senitization for CSS Vulnerability
 * ACUMOS-1968 : IST2 | UI showing validation failed error for valid solution
 * ACUMOS-2036 : DSCE- If a splitter and collator node is present in cdump file, but it has zero mappings associated with it, the validation should show invalid solution.
+* ACUMOS-2033 : Api to get the dsce version
 
 1.40.2-SNAPSHOT, 2018-10-12
 ---------------------------
