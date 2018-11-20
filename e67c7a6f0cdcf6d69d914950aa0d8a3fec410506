@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "722d034d_4dc4106d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/AdminController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-11-20T12:47:56Z",
+      "side": 1,
+      "message": "This should be 0.0.0",
+      "range": {
+        "startLine": 48,
+        "startChar": 124,
+        "endLine": 48,
+        "endChar": 125
+      },
+      "revId": "e67c7a6f0cdcf6d69d914950aa0d8a3fec410506",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "027b738d_eb64042d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/controller/AdminController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2018-11-20T12:47:56Z",
+      "side": 1,
+      "message": "this should be 0.0.0",
+      "range": {
+        "startLine": 52,
+        "startChar": 14,
+        "endLine": 52,
+        "endChar": 15
+      },
+      "revId": "e67c7a6f0cdcf6d69d914950aa0d8a3fec410506",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
