@@ -31,8 +31,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
+import org.acumos.designstudio.ce.controller.AdminController;
 import org.acumos.designstudio.ce.controller.SolutionController;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.service.ICompositeSolutionService;
@@ -73,6 +75,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.jayway.jsonpath.InvalidJsonException;
 
@@ -97,6 +100,11 @@ public class ControllersTest {
 	
 	@Mock
     CommonDataServiceRestClientImpl cmnDataService;
+	
+	@InjectMocks
+	AdminController adminController;
+	
+	private HttpServletResponse response = new MockHttpServletResponse();
 
 	@Test
 	/**
@@ -737,5 +745,23 @@ public class ControllersTest {
 		assertEquals("description", dscs.getDescription());
 		logger.debug(EELFLoggerDelegator.debugLogger, "results");
 	}
+	
+	@Test
+	/**
+	 * This test case is used to display the design studio version in the UI
+	 * 
+	 * @throws Exception
+	 */
+	public void getVersionTest() throws Exception {
+		try {
+			logger.debug(EELFLoggerDelegator.debugLogger, "Calling Controller Method to display version");
+			String result = adminController.getVersion(response);
+			assertNotNull(result);
+		} catch (Exception e) {
+			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getVersionTest", e);
+		}
+	}
+	
+	
 	
 }
