@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3657b5cc_0110e1a8",
+        "filename": "docs/release-notes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4
+      },
+      "writtenOn": "2018-11-20T16:38:10Z",
+      "side": 1,
+      "message": "You might consider starting with the word Version, I think that looks nicer than a bare number; e.g.:\n\n    Version 2.0.0, 15 Nov 2018\n    --------------------------",
+      "revId": "3d574fb65a1e03bf504b20fafbcc2b877d858e5d",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
