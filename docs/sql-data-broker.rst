@@ -23,11 +23,11 @@ Design Studio SQL Databroker Release Notes
 The Design Studio SQL Databroker is packaged within a Docker image and available from the
 Acumos docker registry. The docker image URI of SQL Databroker is configured in Design Studio Composition Engine docker-compose configuration.
 
-1.1.0-SNAPSHOT, 2018-10-01
+Version 1.1.0, 2018-10-01
 ---------------------------
 * Updated major, minor and patch version 
 
-0.0.1-SNAPSHOT, 2018-09-14
+Version 0.0.1, 2018-09-14
 ---------------------------
 * ACUMOS-1655 : Develop new component : SQL Databroker
 * ACUMOS-1656 : Construct SQL Databroker as DS tool
