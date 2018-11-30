@@ -1037,6 +1037,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		            	int connectedCnt = getSourceCountForNodeId(relationsList, nodeId);
 		            	if(connectedCnt == 1) {  
 		            		resultVo.setSuccess("true");
+		            		resultVo.setErrorDescription("");
 		            	} else { //Indicates its connected to multiple nodes, and validation fails.
 		            		resultVo.setSuccess("false");
 		                    resultVo.setErrorDescription("Invalid Composite Solution : MLModel \"" + node.getName() + "\" is connected to multiple Nodes");
@@ -1049,6 +1050,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		                	boolean isCorrectPortsConnected = correctPortsConnected(relationsList, nodeId);
 		                	if(isCorrectPortsConnected){
 		                		resultVo.setSuccess("true");
+		                		resultVo.setErrorDescription("");
 		                	}else {
 		                		resultVo.setSuccess("false");
 		                        resultVo.setErrorDescription("Invalid Composite Solution : Incorrect ports are connected to MLModel \"" + node.getName() + "\"");
