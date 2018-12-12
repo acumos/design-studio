@@ -31,6 +31,7 @@ Version 1.40.3, 2018-11-13
 * ACUMOS-1968 : IST2 | UI showing validation failed error for valid solution
 * ACUMOS-2036 : DSCE- If a splitter and collator node is present in cdump file, but it has zero mappings associated with it, the validation should show invalid solution.
 * ACUMOS-2033 : Api to get the dsce version
+* ACUMOS-2272 : Incorrect Protobuf.json and TGIF.json generated for nested messages
 
 Version 1.40.2, 2018-10-12
 ---------------------------
