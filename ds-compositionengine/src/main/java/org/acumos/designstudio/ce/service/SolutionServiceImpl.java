@@ -40,6 +40,7 @@ import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolution;
 import org.acumos.cds.domain.MLPSolutionRevision;
+import org.acumos.cds.domain.MLPStepResult;
 import org.acumos.cds.domain.MLPUser;
 import org.acumos.cds.transport.RestPageRequest;
 import org.acumos.cds.transport.RestPageResponse;
@@ -177,6 +178,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		DSSolution dssolution = null;
 		List<DSSolution> dsSolutionList = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
+		boolean errorInModel = false;
 		try {
 			mapper.setSerializationInclusion(Include.NON_NULL);
 			Map<String, Object> queryParameters = new HashMap<>();
@@ -208,11 +210,14 @@ public class SolutionServiceImpl implements ISolutionService {
 							String accessTypeCode = mlpSolRevision.getAccessTypeCode();
 							if ((accessTypeCode.equals(pbAccessTypeCode)) || (mlpSolRevision.getUserId().equals(userID) && accessTypeCode.equals(prAccessTypeCode)) 
 									 || (accessTypeCode.equals(orAccessTypeCode)) ) {
-								String revisionUserID = mlpSolRevision.getUserId();
-								MLPUser mlpUser = cmnDataService.getUser(revisionUserID);
-								String userName = mlpUser.getFirstName() + " " + mlpUser.getLastName();
-								dsSolutionList.add(populateDsSolution(mlpsolution, sdf, userName, mlpSolRevision));
-								matchingModelsolutionList.add(mlpsolution);
+								errorInModel = checkErrorInModel(solutionId, mlpSolRevision.getRevisionId());
+								if(!errorInModel) {
+									String revisionUserID = mlpSolRevision.getUserId();
+									MLPUser mlpUser = cmnDataService.getUser(revisionUserID);
+									String userName = mlpUser.getFirstName() + " " + mlpUser.getLastName();
+									dsSolutionList.add(populateDsSolution(mlpsolution, sdf, userName, mlpSolRevision));
+									matchingModelsolutionList.add(mlpsolution);
+								}
 							}
 						}
 					}
@@ -236,6 +241,22 @@ public class SolutionServiceImpl implements ISolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, " getSolutions() End ");
 		return result;
 	}
+
+	private boolean checkErrorInModel(String solutionId, String revisionId) {
+		boolean errorInModel = false; 
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("solutionId", solutionId);
+		queryParameters.put("revisionId", revisionId);
+		queryParameters.put("statusCode", "FA");
+		RestPageResponse<MLPStepResult> searchResults = cmnDataService.searchStepResults(queryParameters, false,
+				null);
+		if(searchResults.getNumberOfElements() > 0){
+			errorInModel = true;
+		}
+		
+		return errorInModel;
+	}
+
 
 	@Override
 	public String getMatchingModels(String userId, String portType, JSONArray protobufJsonString) throws Exception {

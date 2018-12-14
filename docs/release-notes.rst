@@ -24,6 +24,10 @@ The Design Studio Composition Engine is packaged within a Docker image and avail
 Acumos docker registry.  The TOSCAGenerator Client library is published in the Acumos Nexus
 repository as a jar file.
 
+Version 2.0.0, 2018-12-14
+---------------------------
+* ACUMOS-1989 : DC-Staging Failed onboarded models are visible in DS
+
 Version 1.40.3, 2018-11-13
 ---------------------------
 * ACUMOS-1969 : Default CDS startup check interval too short, attempts too few; pls increase
