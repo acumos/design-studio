@@ -33,6 +33,7 @@ import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolution;
 import org.acumos.cds.domain.MLPSolutionRevision;
+import org.acumos.cds.domain.MLPStepResult;
 import org.acumos.cds.transport.RestPageRequest;
 import org.acumos.cds.transport.RestPageResponse;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
@@ -109,6 +110,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 						String pbAccessTypeCode = props.getPublicAccessTypeCode();
 						String orAccessTypeCode = props.getOrganizationAccessTypeCode();
 						List<MLPSolutionRevision> mlpSolutionRevisionList = null;
+						boolean errorInModel = false;
 						for (MLPSolution mlpsolution : mlpSolutionsList) {
 							if (null != mlpsolution.getToolkitTypeCode()
 									&& (!mlpsolution.getToolkitTypeCode().equals(compoSolnTlkitTypeCode))) {
@@ -116,10 +118,11 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 								mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 								for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
 									String accessTypeCode = mlpSolRevision.getAccessTypeCode();
-									if (accessTypeCode.equals(pbAccessTypeCode)) {
-										mlpSolutionRevisionList.add(mlpSolRevision);
-									} else if (accessTypeCode.equals(orAccessTypeCode)) {
-										mlpSolutionRevisionList.add(mlpSolRevision);
+									if (accessTypeCode.equals(pbAccessTypeCode)|| accessTypeCode.equals(orAccessTypeCode)) {
+										errorInModel = checkErrorInModel(mlpsolution.getSolutionId(), mlpSolRevision.getRevisionId());
+										if(!errorInModel){
+											mlpSolutionRevisionList.add(mlpSolRevision);
+										}
 									}
 								}
 								if(mlpSolutionRevisionList.size() > 0 ){
@@ -521,11 +524,20 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 	}
 
 
-	
-
-	
-	
-	
+	private boolean checkErrorInModel(String solutionId, String revisionId) {
+		boolean errorInModel = false; 
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("solutionId", solutionId);
+		queryParameters.put("revisionId", revisionId);
+		queryParameters.put("statusCode", "FA");
+		RestPageResponse<MLPStepResult> searchResults = cmnDataService.searchStepResults(queryParameters, false,
+				null);
+		if(searchResults.getNumberOfElements() > 0){
+			errorInModel = true;
+		}
+		
+		return errorInModel;
+	}
 	
 }
 
