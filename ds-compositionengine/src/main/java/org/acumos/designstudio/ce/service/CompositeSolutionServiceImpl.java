@@ -1037,6 +1037,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		            	int connectedCnt = getSourceCountForNodeId(relationsList, nodeId);
 		            	if(connectedCnt == 1) {  
 		            		resultVo.setSuccess("true");
+		            		resultVo.setErrorDescription("");
 		            	} else { //Indicates its connected to multiple nodes, and validation fails.
 		            		resultVo.setSuccess("false");
 		                    resultVo.setErrorDescription("Invalid Composite Solution : MLModel \"" + node.getName() + "\" is connected to multiple Nodes");
@@ -1049,6 +1050,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		                	boolean isCorrectPortsConnected = correctPortsConnected(relationsList, nodeId);
 		                	if(isCorrectPortsConnected){
 		                		resultVo.setSuccess("true");
+		                		resultVo.setErrorDescription("");
 		                	}else {
 		                		resultVo.setSuccess("false");
 		                        resultVo.setErrorDescription("Invalid Composite Solution : Incorrect ports are connected to MLModel \"" + node.getName() + "\"");
@@ -1218,7 +1220,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						resultVo.setSuccess("false");
 						resultVo.setErrorDescription("Invalid Composite Solution : Splitter \""
 								+ node.getName() + "\" should not be the Last Node");
-					}else if(null == node.getProperties()[0].getSplitter_map().getMap_outputs() || null == node.getProperties()[0].getSplitter_map().getMap_inputs()){
+					}else if("Parameter-based".equals(node.getProperties()[0].getSplitter_map().getSplitter_type()) && (null == node.getProperties()[0].getSplitter_map().getMap_outputs() || null == node.getProperties()[0].getSplitter_map().getMap_inputs())){
 						resultVo.setSuccess("false");
 						resultVo.setErrorDescription("Invalid Composite Solution : Splitter \""
 								+ node.getName() + "\" Mapping Details Should not be empty");
@@ -1295,7 +1297,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						resultVo.setSuccess("false");
 						resultVo.setErrorDescription("Invalid Composite Solution : Collator \""
 								+ node.getName() + "\" should not be the Last Node");
-					}else if(null == node.getProperties()[0].getCollator_map().getMap_outputs() || null == node.getProperties()[0].getCollator_map().getMap_inputs()){
+					}else if("Parameter-based".equals(node.getProperties()[0].getCollator_map().getCollator_type()) && (null == node.getProperties()[0].getCollator_map().getMap_outputs() || null == node.getProperties()[0].getCollator_map().getMap_inputs())){
 						resultVo.setSuccess("false");
 						resultVo.setErrorDescription("Invalid Composite Solution : Collator \""
 								+ node.getName() + "\" Mapping Details Should not be empty");
@@ -2385,8 +2387,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured in deleteMember() ", e);
 			throw new ServiceException(" Exception in updateCompositeSolution() ", "333","Failed to drop CompositeSolution Member");
 		}		
-		
 	}
-	
 }
 
