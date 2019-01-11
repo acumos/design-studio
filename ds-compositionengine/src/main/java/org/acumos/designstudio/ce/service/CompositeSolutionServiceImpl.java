@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +34,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -88,6 +90,10 @@ import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterInputField;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapInput;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapOutput;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterOutputField;
+import org.acumos.designstudio.ce.vo.compositeproto.Protobuf;
+import org.acumos.designstudio.ce.vo.compositeproto.ProtobufMessage;
+import org.acumos.designstudio.ce.vo.compositeproto.ProtobufMessageField;
+import org.acumos.designstudio.ce.vo.compositeproto.ProtobufServiceOperation;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.acumos.nexus.client.data.UploadArtifactInfo;
 import org.json.JSONException;
@@ -140,6 +146,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	@Autowired
 	private DataBrokerServiceImpl dbService;
+	
+	@Autowired
+	private CompositeSolutionProtoFileGeneratorServiceImpl cspfgService;
 	
 	@Override
 	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException {
@@ -261,7 +270,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		}
 		String cdumpFileName = "acumos-cdump" + "-" + dscs.getcId();
 		String payload = "";
-
+		//Create cdump file with more details and store the file with solutionId in file name. 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
@@ -287,12 +296,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in insertCompositeSolution() : Failed to Find the Cdump File ",e);
 			throw new ServiceException("  Exception in insertCompositeSolution() ", "222","Failed to create the Solution");
 		}
-
+		//Create DS Artifact for cdump 
 		Artifact cdumpArtifact = new Artifact(cdumpFileName, "json", mlpSolution.getSolutionId(), dscs.getVersion(),
 				path, payload.length());
 
 		logger.debug(EELFLoggerDelegator.debugLogger,"4. Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
-
+		//Upload cdump to nexus
 		try {
 			uploadFilesToRepository(mlpSolution.getSolutionId(), mlpSolutionRevision.getRevisionId(), dscs.getVersion(), cdumpArtifact);
 			dscs.setCdump(cdumpArtifact);
@@ -309,7 +318,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			throw new ServiceException("  Exception in insertCompositeSolution() ", "222","Failed to create the Solution");
 		}
 
-		// 4. create the artifact
+		// 4. create MLPArtifact
 		MLPArtifact mlpArtifact = null;
 		try {
 			mlpArtifact = new MLPArtifact();
@@ -616,25 +625,18 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param solutionID
-	 * @param version
-	 * @param a
-	 * @throws AcumosException
-	 */
-	private void uploadFilesToRepository(String solutionID, String revisionId, String version, Artifact a) throws AcumosException {
+	private void uploadFilesToRepository(String solutionID, String revisionId, String version, Artifact artifact) throws AcumosException {
 		logger.debug(EELFLoggerDelegator.debugLogger, "  uploadFilesToRepository() started ");
 		FileInputStream fileInputStream = null;
 		UploadArtifactInfo artifactInfo = null;
 		try {
 			// 1. group id ,2. artifact name, 3. version, 4. extension i.e., packaging, 5. size of content, 6. actual file input stream.
-			fileInputStream = new FileInputStream(a.getPayloadURI());
+			fileInputStream = new FileInputStream(artifact.getPayloadURI());
 			if(null != revisionId) {
-				artifactInfo = nexusArtifactClient.uploadArtifact(confprops.getNexusgroupid()+"."+a.getSolutionID()+"."+revisionId,
-						a.getType(), a.getVersion(), a.getExtension(), a.getContentLength(),
+				artifactInfo = nexusArtifactClient.uploadArtifact(confprops.getNexusgroupid()+"."+artifact.getSolutionID()+"."+revisionId,
+						artifact.getType(), artifact.getVersion(), artifact.getExtension(), artifact.getContentLength(),
 						fileInputStream);
-				a.setNexusURI(artifactInfo.getArtifactMvnPath());
+				artifact.setNexusURI(artifactInfo.getArtifactMvnPath());
 			}
 
 			logger.debug(EELFLoggerDelegator.debugLogger, " uploadFilesToRepository() ended ");
@@ -680,22 +682,45 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								String artifactId = mlpArtifact.getArtifactId();
 								// Delete SolutionRevisionArtifact
 								cdmsClient.dropSolutionRevisionArtifact(solutionId, revisionId, artifactId);
-								logger.debug(EELFLoggerDelegator.debugLogger,
-										" Successfully Deleted the SolutionRevisionArtifact ");
+								logger.debug(EELFLoggerDelegator.debugLogger," Successfully Deleted the SolutionRevisionArtifact which is if CDUMP i.e CD ");
 								// Delete Artifact
 								// 3. Delete the artifact "CD"
 								cdmsClient.deleteArtifact(artifactId);
-								logger.debug(EELFLoggerDelegator.debugLogger,
-										" Successfully Deleted the CDump Artifact ");
+								logger.debug(EELFLoggerDelegator.debugLogger," Successfully Deleted the CDUMP Artifact ");
 								// 4. Delete the cdump file from the Nexus
 								nexusArtifactClient.deleteArtifact(mlpArtifact.getUri());
 							}
+							
+							// delete the .proto file which having the artifact of MI with SolutionId and version
+							if("MI".equals(mlpArtifact.getArtifactTypeCode())){
+								String artiId = mlpArtifact.getArtifactId();
+								boolean artifactURI = mlpArtifact.getUri().endsWith("proto");
+								if(artifactURI){
+									cdmsClient.dropSolutionRevisionArtifact(solutionId, revisionId, artiId);
+									logger.debug(EELFLoggerDelegator.debugLogger," Successfully Deleted the SolutionRevisionArtifact which is if PROTO i.e MI");
+									cdmsClient.deleteArtifact(artiId);
+									logger.debug(EELFLoggerDelegator.debugLogger," Successfully Deleted the .proto file Artifact ");
+									nexusArtifactClient.deleteArtifact(mlpArtifact.getUri());
+								}
+							}
+							if("BP".equals(mlpArtifact.getArtifactTypeCode())){
+								String artifactId = mlpArtifact.getArtifactId();
+								// Delete SolutionRevisionArtifact
+								cdmsClient.dropSolutionRevisionArtifact(solutionId, revisionId, artifactId);
+								logger.debug(EELFLoggerDelegator.debugLogger," Successfully Deleted the SolutionRevisionArtifact which is if BLUEPRINT i.e BP");
+								// Delete Artifact
+								// 3. Delete the artifact "BP"
+								cdmsClient.deleteArtifact(artifactId);
+								logger.debug(EELFLoggerDelegator.debugLogger," Successfully Deleted the BluePrint Artifact ");
+								// 4. Delete the cdump file from the Nexus
+								nexusArtifactClient.deleteArtifact(mlpArtifact.getUri());
+							}
+							
 						}
 
 						// 5. Delete the SolutionRevision from the DB
 						cdmsClient.deleteSolutionRevision(solutionId, mlpSolRevision.getRevisionId());
-						logger.debug(EELFLoggerDelegator.debugLogger,
-								" Successfully Deleted the Solution Revision ");
+						logger.debug(EELFLoggerDelegator.debugLogger," Successfully Deleted the Solution Revision ");
 						solutionFound = true;
 						result = true;
 						deleteMember(solutionId);
@@ -924,7 +949,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			List<Nodes> nodes = cdump.getNodes();
 			List<Relations> relationsList = cdump.getRelations();
 			String revisionId = null;
-			
+			//Get the solutionrevisionId
 			List<MLPSolutionRevision> mlpSolnRevision = cdmsClient.getSolutionRevisions(solutionId);
 			if (null != mlpSolnRevision && !mlpSolnRevision.isEmpty()) {
 				for (MLPSolutionRevision mlpSolRev : mlpSolnRevision) {
@@ -943,78 +968,405 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					logger.debug(EELFLoggerDelegator.debugLogger,"On successful validation generate the BluePrint file.");
 					cdump.setValidSolution(true);
 					cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
-					
+
 					String firstNodeId = getNodeIdForPosition(cdump, FIRST_NODE_POSITION);
 					String dataBrokerTargetNodeId = null;
 					Nodes dataBrokerTargetNode = null;
 					Nodes firstNode = getNodeForId(nodes, firstNodeId);
-					
-					if(firstNode.getType().getName().equals(DATABROKER_TYPE)){
-						for(Relations relation : relationsList){
-							if(relation.getSourceNodeId().equals(firstNodeId)){
+
+					if (firstNode.getType().getName().equals(DATABROKER_TYPE)) {
+						for (Relations relation : relationsList) {
+							if (relation.getSourceNodeId().equals(firstNodeId)) {
 								dataBrokerTargetNodeId = relation.getTargetNodeId();
 								dataBrokerTargetNode = getNodeForId(nodes, dataBrokerTargetNodeId);
-								//get the protobuf file string for the target model 
-								String protoUri =	dataBrokerTargetNode.getProtoUri();
+								// get the protobuf file string for the target model
+								String protoUri = dataBrokerTargetNode.getProtoUri();
 								ByteArrayOutputStream bytes = nexusArtifactClient.getArtifact(protoUri);
 								logger.debug(EELFLoggerDelegator.debugLogger,"ByteArrayOutputStream of ProtoFile :" + bytes);
-								if(null != bytes) { 
+								if (null != bytes) {
 									String protobufFile = bytes.toString();
 									logger.debug(EELFLoggerDelegator.debugLogger,"protobufFile in String Format :" + protobufFile);
-									//put protobufFile String in databroker 
+									// put protobufFile String in databroker
 									Property[] prop = firstNode.getProperties();
-									if(null != prop[0].getData_broker_map()){
+									if (null != prop[0].getData_broker_map()) {
 										prop[0].getData_broker_map().setProtobufFile(protobufFile);
 									}
 									firstNode.setProperties(prop);
-								} else { 
-									logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured in ValidateCompositeSolution() : Failed to Set the ProtoBuf File in DataBrokerMap ");
+								} else {
+									logger.error(EELFLoggerDelegator.errorLogger," Exception Occured in ValidateCompositeSolution() : Failed to Set the ProtoBuf File in DataBrokerMap ");
 									throw new ServiceException("Exception Occured in ValidateCompositeSolution() : Failed to Set the ProtoBuf File in DataBrokerMap");
 								}
 								break;
 							}
 						}
+						// The CompositeSolution Contains the first Node as DataBroker so it cannot be invoked by an external client.
+						path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
+						String csProtoValue = "This solution retrieves the data from a data source, it cannot be invoked by an external client";
+						DSUtil.writeDataToFile(path, cdump.getCname() + "-" + version, "proto", csProtoValue);
+						// upload the protobuf file to repository, for solution with Databroker as first node. 
+						Artifact protoArtifact = new Artifact(cdump.getCname(), "proto", solutionId, version, path,csProtoValue.length());
+						uploadFilesToRepository(solutionId, revisionId, version, protoArtifact);
+						
+						// add the artifact details to the DB
+						List<MLPSolutionRevision> mlpSolRevisions = null;
+						MLPArtifact mlpArtifact = null;
+						mlpArtifact = new MLPArtifact();
+						mlpArtifact.setArtifactTypeCode("MI");
+						mlpArtifact.setDescription("Proto File for : " + solutionName + " for SolutionID : "
+								+ solutionId + " with version : " + version);
+						mlpArtifact.setUri(protoArtifact.getNexusURI());
+						mlpArtifact.setName(protoArtifact.getName());
+						mlpArtifact.setUserId(userId);
+						mlpArtifact.setVersion(version);
+						mlpArtifact.setSize(csProtoValue.length());
+						// Get the SolutionRevisions from CDMSClient.
+						logger.debug(EELFLoggerDelegator.debugLogger,"Get the SolutionRevisions for protoArtifact CompositeSolution from CDMSClient .");
+						mlpSolRevisions = cdmsClient.getSolutionRevisions(solutionId);
+						MLPSolutionRevision compositeSolutionProtoRevision = null;
+						// Iterate over MLPSolutionRevisions and get the CompositeSolution Revision.
+						logger.debug(EELFLoggerDelegator.debugLogger," Iterate over MLPSolutionRevisions and get the CompositeSolutionProtoRevision.");
+						for (MLPSolutionRevision solRev : mlpSolRevisions) {
+							if (solRev.getVersion().equals(version)) {
+								compositeSolutionProtoRevision = solRev;
+								break;
+							}
+						}
+						List<MLPArtifact> mlpArtiLst = cdmsClient.getSolutionRevisionArtifacts(solutionId,compositeSolutionProtoRevision.getRevisionId());
+						// Creating the Artifact from CDMSClient.
+						logger.debug(EELFLoggerDelegator.debugLogger," Creating the Artifact from CDMSClient.");
+						boolean protoFileExists = false;
+						for (MLPArtifact mlpArt : mlpArtiLst) {
+							// Check if the composite solution which exists .proto file 
+							boolean protoUri = mlpArt.getUri().endsWith("proto");
+							if (props.getModelImageArtifactType().equals(mlpArt.getArtifactTypeCode()) && protoUri) {
+								// update the artifact details with artifactId
+								mlpArtifact.setArtifactId(mlpArt.getArtifactId());
+								protoFileExists = true;
+								break;
+							}
+						}
+						logger.debug(EELFLoggerDelegator.debugLogger, "ProtoArtifactFlag for MI : " + protoFileExists);
+						if (protoFileExists) {
+							// Update the Artifact which is already exists as MI
+							cdmsClient.updateArtifact(mlpArtifact);
+							logger.debug(EELFLoggerDelegator.debugLogger," Updated the ArtifactTypeCode MI which is already exists");
+						}else {
+							mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
+							logger.debug(EELFLoggerDelegator.debugLogger,"Successfully created the artifact for the ProtoFile for the solution : "
+									+ solutionId + " artifact ID : " + mlpArtifact.getArtifactId());
+							// Associate the SolutionRevisionArtifact for solution ID.
+							logger.debug(EELFLoggerDelegator.debugLogger,"Associate the SolutionRevisionArtifact for solution ID.");
+							cdmsClient.addSolutionRevisionArtifact(solutionId,compositeSolutionProtoRevision.getRevisionId(), mlpArtifact.getArtifactId());
+							logger.debug(EELFLoggerDelegator.debugLogger," Successfully associated the Solution Revision Artifact for solution ID  : "
+									+ solutionId);
+						}
+					} else {
+						// The composite solution without Databroker.
+						compositeProtoGenerator(userId, solutionId, version, cdump, nodes, revisionId, firstNode);
 					}
 					Gson gson = new Gson();
 					String emptyCdumpJson = gson.toJson(cdump);
 					path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
 					// Write Data to File
 					DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionId, "json", emptyCdumpJson);
-					Artifact cdumpArtifact = new Artifact(cdumpFileName, "json",solutionId, version, path, emptyCdumpJson.length());
-					// upload the file to repository
-					uploadFilesToRepository(solutionId, revisionId, version,cdumpArtifact);
-					result = createAndUploadBluePrint(userId, solutionId, solutionName, version,cdump);
+					Artifact cdumpArtifact = new Artifact(cdumpFileName, "json", solutionId, version, path,emptyCdumpJson.length());
+					// upload the file to repository & no need to update DB entry for MLPArtifact as it been already update while save 
+					uploadFilesToRepository(solutionId, revisionId, version, cdumpArtifact);
+					result = createAndUploadBluePrint(userId, solutionId, solutionName, version, cdump);
 				}
-			}else if(null != nodes && nodes.size() == 1 && (null == relationsList || relationsList.isEmpty())){
-				for(Nodes no : nodes){
-					if(no.getType().getName().equals(MLMODEL_TYPE)){
+			} else if (null != nodes && nodes.size() == 1 && (null == relationsList || relationsList.isEmpty())) {
+				for (Nodes no : nodes) {
+					if (no.getType().getName().equals(MLMODEL_TYPE)) {
 						cdump.setValidSolution(true);
 						cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
 						Gson gson = new Gson();
 						String emptyCdumpJson = gson.toJson(cdump);
 						path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
-						// Write Data to File
+						String firstNodeSolutionId = no.getNodeSolutionId();
+						String firstNodeSolutionVersion = no.getNodeVersion();
+						//String protoData1 = "syntax = \"proto3\";\npackage UbENTnRTKDmvMUwJokNTcYjStUylzrBO;\n \nservice Model {\n rpc ingest (ComputeInput) returns (ComputeInput);\n}\n\nmessage ComputeInput {\n  double f1 = 1;\n  double f2 = 2;\n  string s = 3;\n}";
+						String protoData1 = cspfgService.getProtoUrl(firstNodeSolutionId, firstNodeSolutionVersion,props.getModelImageArtifactType(), "proto");
+						// Parse the protobuf message string in Protobuf structure format
+						Protobuf firstNodeProto = cspfgService.parseProtobuf(protoData1);
+						// For Single ML Model is there in the composite solution then the below code will get executed
+							List<MLPSolutionRevision> mlpSolutionRevisions = cdmsClient.getSolutionRevisions(solutionId);
+							if (null != mlpSolutionRevisions) {
+								for (MLPSolutionRevision mlpSolRevision : mlpSolutionRevisions) {
+									if (mlpSolRevision.getVersion().equals(version) && mlpSolRevision.getUserId().equals(userId)) {
+										// get the list of artifact for the Revision
+										String mlpRevisionId = mlpSolRevision.getRevisionId();
+										// for specific solutionId and revisionId get the MLPArtifacts
+										List<MLPArtifact> mlpArtifacts = cdmsClient.getSolutionRevisionArtifacts(solutionId,mlpRevisionId);
+										boolean artifactExists = false;
+										MLPArtifact mlpArtifactClone = new MLPArtifact();
+										for (MLPArtifact mlp : mlpArtifacts) {
+											String mlpArtifactTypeCode = mlp.getArtifactTypeCode();
+											if ("MI".equals(mlpArtifactTypeCode) && mlp.getVersion().equals(version)) {
+												artifactExists = true;
+												mlpArtifactClone = mlp;
+											}
+										}
+										if (artifactExists) {
+											boolean artifactURI = mlpArtifactClone.getUri().endsWith("proto");
+											String artiId = mlpArtifactClone.getArtifactId();
+											if (artifactURI) {
+												// drop the solution revision artifact for the existing solution
+												//cdmsClient.dropSolutionRevisionArtifact(solutionId, revisionId, artiId);
+												//logger.debug(EELFLoggerDelegator.debugLogger," Successfully Deleted the SolutionRevisionArtifact of .proto file ");
+												// delete the artifact
+												//cdmsClient.deleteArtifact(artiId);
+												//logger.debug(EELFLoggerDelegator.debugLogger," Successfully Deleted the .proto file Artifact ");
+												// delete the artifact i.e proto file from nexus repository
+												//nexusArtifactClient.deleteArtifact(mlpArtifactClone.getUri());
+												// create the new .proto file and write the proto content into it.
+												String firstProtoString = firstNodeProto.toString();
+												path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
+												DSUtil.writeDataToFile(path, cdump.getCname() + "-" + version, "proto",firstProtoString);
+												// create the new artifact for the latest generated proto file and upload it into nexus repo
+												Artifact protoArtifact = new Artifact(cdump.getCname(), "proto", solutionId, version,path, firstProtoString.length());
+												String protoVersion = protoArtifact.getVersion();
+												uploadFilesToRepository(solutionId, revisionId, protoVersion, protoArtifact);
+												mlpArtifactClone.setUri(protoArtifact.getNexusURI());
+												cdmsClient.updateArtifact(mlpArtifactClone);
+												logger.debug(EELFLoggerDelegator.debugLogger,"Updated the ArtifactTypeCode MI which is already exists");
+												break;
+											}
+										} else {
+											String firstProtoString = firstNodeProto.toString();
+											path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
+											DSUtil.writeDataToFile(path, cdump.getCname() + "-" + version, "proto", firstProtoString);
+											Artifact protoArtifact = new Artifact(cdump.getCname(), "proto", solutionId, version, path,firstProtoString.length());
+											String protoVersion = protoArtifact.getVersion();
+											// upload the file to repository
+											uploadFilesToRepository(solutionId, revisionId, protoVersion, protoArtifact);
+											// add the artifact details to the DB and associate with SolutionRevision.
+											MLPArtifact mlpArtifact = null;
+											mlpArtifact = new MLPArtifact();
+											mlpArtifact.setArtifactTypeCode("MI");
+											mlpArtifact.setDescription("Proto File for : " + cdump.getCname() + " for SolutionID : "+ solutionId + " with version : " + protoVersion);
+											mlpArtifact.setUri(protoArtifact.getNexusURI());
+											mlpArtifact.setName(protoArtifact.getName());
+											mlpArtifact.setUserId(userId);
+											mlpArtifact.setVersion(version);
+											mlpArtifact.setSize(firstProtoString.length());
+											MLPArtifact protoMLPArtifact = cdmsClient.createArtifact(mlpArtifact);
+											logger.debug(EELFLoggerDelegator.debugLogger,"Successfully created the artifact for the ProtoFile for the solution : "
+													+ solutionId + " artifact ID : " + protoMLPArtifact.getArtifactId());
+											// Associate the SolutionRevisionArtifact for solution ID.
+											logger.debug(EELFLoggerDelegator.debugLogger,"Associate the SolutionRevisionArtifact for solution ID.");
+											cdmsClient.addSolutionRevisionArtifact(solutionId,mlpRevisionId, protoMLPArtifact.getArtifactId());
+											logger.debug(EELFLoggerDelegator.debugLogger," Successfully associated the Solution Revision Artifact for solution ID  : "
+													+ solutionId);
+											break;
+											
+										}
+									}
+								}
+							}
+						
+						// Write the cdump Data to File
 						DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionId, "json", emptyCdumpJson);
-						Artifact cdumpArtifact = new Artifact(cdumpFileName, "json",solutionId, version, path, emptyCdumpJson.length());
-						// upload the file to repository
-						uploadFilesToRepository(solutionId, revisionId, version,cdumpArtifact);
-						result = createAndUploadBluePrint(userId, solutionId, solutionName, version,cdump);
-					}else {
+						Artifact cdumpArtifact = new Artifact(cdumpFileName, "json", solutionId, version, path,emptyCdumpJson.length());
+						// upload the file to repository & no need to update DB entry for MLPArtifact as it been already update while save 
+						uploadFilesToRepository(solutionId, revisionId, version, cdumpArtifact);
+						result = createAndUploadBluePrint(userId, solutionId, solutionName, version, cdump);
+					} else {
 						resultVo.setSuccess("false");
-		                resultVo.setErrorDescription("Invalid Composite Solution : \"" + no.getName() + "\" should be ML Model only");
+						resultVo.setErrorDescription("Invalid Composite Solution : \"" + no.getName() + "\" should be ML Model only");
 					}
 				}
 			} else {
-				 resultVo.setSuccess("false");
-                 resultVo.setErrorDescription("Invalid Composite Solution : Composite Solution should contain at least two models to connect");
+				resultVo.setSuccess("false");
+				resultVo.setErrorDescription("Invalid Composite Solution : Composite Solution should contain at least two models to connect");
 			}
-			 result = mapper.writeValueAsString(resultVo);
+			result = mapper.writeValueAsString(resultVo);
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, " Exception in validateCompositeSolution() in Service ", e);
 			throw new ServiceException("  Exception in validateCompositeSolution() ", "333","Failed to create the Solution Artifact");
 		}
 		logger.debug(EELFLoggerDelegator.debugLogger, " validateCompositeSolution() in Service  : End ");
 		return result;
+	}
+
+	private void compositeProtoGenerator(String userId, String solutionId, String version, Cdump cdump,List<Nodes> nodes, String revisionId, Nodes firstNode)
+			throws ServiceException, URISyntaxException, AcumosException {
+		String path = null;
+		// The CompositeSolution doesn't contains the first node as DataBroker so need to create the .protofile for it.
+		// Get the first node(ML Model) details i.e nodeSolutionId and version then get the .protofile content of it.
+		String firstNodeSolutionId = firstNode.getNodeSolutionId();
+		String firstNodeSolutionVersion = firstNode.getNodeVersion();
+
+		String lastNodeId = getNodeIdForPosition(cdump, LAST_NODE_POSITION);
+		Nodes lastNode = getNodeForId(nodes, lastNodeId);
+		String lastNodeSolutionId = lastNode.getNodeSolutionId();
+		String lastNodeSolutionVersion = lastNode.getNodeVersion();
+
+		// Get the protobuf message of the firstNode in the composite solution in String format
+		
+		//String protoData1 = "syntax = \"proto3\";\npackage UbENTnRTKDmvMUwJokNTcYjStUylzrBO;\n \nservice Model {\n rpc ingest (ComputeInput) returns (ComputeInput);\n}\n\nmessage ComputeInput {\n  double f1 = 1;\n  double f2 = 2;\n  string s = 3;\n}";
+		String protoData1 = cspfgService.getProtoUrl(firstNodeSolutionId, firstNodeSolutionVersion,props.getModelImageArtifactType(), "proto");
+		// Get the protobuf message of the lastNode in the composite solution in String format
+		//String protoData2 = "syntax = \"proto3\";\npackage xferfacedata;\n\nservice Model {\n rpc xfer_face_data (RegionDetectionSet) returns (RegionDetectionSet);\n}\n\nmessage RegionDetectionSet {\n repeated RegionDetection RegionDetections = 1;\n}\n\nmessage RegionDetection {\n int64 image = 1;\n int64 region = 2;\n int64 x = 3;\n int64 y = 4;\n int64 w = 5;\n int64 h = 6;\n string mime_type = 7;\n bytes image_binary = 8;\n}";
+		//String protoData2 = "syntax = \"proto3\";\npackage GGRzqrgcZtqxcdPibbKxQRdvSgXiGUkh;\n \nservice Model {\n rpc add (ComputeInput) returns (ComputeResult);\n}\n\nmessage ComputeInput {\n  double f1 = 1;\n  double f2 = 2;\n  string s = 3;\n}\n \nmessage ComputeResult {\n  double f = 1;\n  string s = 2;\n}";
+		String protoData2 = cspfgService.getProtoUrl(lastNodeSolutionId, lastNodeSolutionVersion,props.getModelImageArtifactType(), "proto");
+
+		// Parse the protobuf message string in Protobuf structure format
+		Protobuf firstNodeProto = cspfgService.parseProtobuf(protoData1);
+		// The composite solution contains multiple nodes i.e which is
+		// different nodes then first node and last nodes are different.
+		Protobuf lastNodeProto = cspfgService.parseProtobuf(protoData2);
+		// Last Node Protobuf Message Service Operations
+		List<ProtobufServiceOperation> listPro = lastNodeProto.getService().getOperations();
+		List<String> lastNodeProtoServiceOutputMsgName = null;
+		List<String> lastNodeProtoServiceInputMsgName = null;
+		for (ProtobufServiceOperation ser : listPro) {
+			lastNodeProtoServiceOutputMsgName = ser.getOutputMessageNames(); // [ComputeResult1]
+			lastNodeProtoServiceInputMsgName = ser.getInputMessageNames(); // [ComputeInput]
+		}
+		String lastNodeOutputMsgName = lastNodeProtoServiceOutputMsgName.toString().replaceAll("[^\\dA-Za-z]", ""); //ComputeResult1
+		String lastNodeInputMsgname = lastNodeProtoServiceInputMsgName.toString().replaceAll("[^\\dA-Za-z]", ""); // ComputeInput
+
+		// First Node Protobuf Message Service Operations
+		List<ProtobufServiceOperation> firstNodeProtoServiceOperation = firstNodeProto.getService().getOperations();
+
+		List<String> firstNodeProtoServiceInputMsgName = null;
+		List<String> firstNodeProtoServiceOutputMsgName = null;
+		for (ProtobufServiceOperation op : firstNodeProtoServiceOperation) {
+			firstNodeProtoServiceInputMsgName = op.getOutputMessageNames();
+			firstNodeProtoServiceOutputMsgName = op.getInputMessageNames();
+		}
+		String fnpsInputMsgName = firstNodeProtoServiceInputMsgName.toString().replaceAll("[^\\dA-Za-z]", "");
+		String fnpsOutputMsgName = firstNodeProtoServiceOutputMsgName.toString().replaceAll("[^\\dA-Za-z]", "");
+
+		// Get the first Node protobuf Messages List
+		List<ProtobufMessage> firstNodeprotobufMsgList = firstNodeProto.getMessages();
+		// Get the last Node protobuf Messages List
+		List<ProtobufMessage> lastNodeProtobufInputMsgList = lastNodeProto.getMessages();
+
+		// Iterate over the first Node protobuf Messages and check fnpsInputMsgName and fnpsOutputMsgName are equal or not
+		ListIterator<ProtobufMessage> iter = firstNodeprotobufMsgList.listIterator();
+		while (iter.hasNext()) {
+			// if both are same then break don't check for furthur
+			if (fnpsInputMsgName.equals(fnpsOutputMsgName)) {
+				break;
+				// else iterate over the next element if it equals then don't do anything else remove that element
+			} else {
+				// If First Node ProtoService OutputMsgName and the Iterator next element name both are not same then remove those elements from the iterator
+				if (!fnpsOutputMsgName.equals(iter.next().getName())) {
+					iter.remove();
+				}
+			}
+		}
+		// Iterate over the last Node Proto service operation and set the last node protobuf service to first node output msgName
+		for (ProtobufServiceOperation operation : firstNodeProtoServiceOperation) {
+			// Set the Last Node Service OutputMessageName to first Node Service OutputMessageName
+			operation.setOutputMessageNames(lastNodeProtoServiceOutputMsgName);
+		}
+		List<ProtobufMessage> protoMsgList = new ArrayList<>();
+		List<ProtobufMessageField> protoMsgFieldList = new ArrayList<>();
+		ListIterator<ProtobufMessage> lastNodeProtoMsgIterator = lastNodeProtobufInputMsgList.listIterator();
+		String protoServiceName = null;
+		while (lastNodeProtoMsgIterator.hasNext()) {
+			ProtobufMessage pbMessage = new ProtobufMessage();
+			protoMsgFieldList = lastNodeProtoMsgIterator.next().getFields();
+			protoServiceName = lastNodeProtoMsgIterator.next().getName();
+			if (lastNodeOutputMsgName.equals(lastNodeInputMsgname)) {
+				pbMessage.setName(lastNodeInputMsgname);
+				pbMessage.setFields(protoMsgFieldList);
+				protoMsgList.add(pbMessage);
+				break;
+			}
+		}
+		for (ProtobufMessage ps : lastNodeProtobufInputMsgList) {
+			ProtobufMessage pbm = new ProtobufMessage();
+			protoServiceName = ps.getName();
+			protoMsgFieldList = ps.getFields();
+			if (!protoServiceName.equals(lastNodeInputMsgname)) {
+				pbm.setName(protoServiceName);
+				pbm.setFields(protoMsgFieldList);
+				protoMsgList.add(pbm);
+			}
+		}
+
+		firstNodeprotobufMsgList.addAll(protoMsgList);
+		firstNodeProto.setMessages(firstNodeprotobufMsgList);
+
+		// Now check the .proto file already there or not in nexus repo
+		List<MLPSolutionRevision> mlpSolutionRevisions = cdmsClient.getSolutionRevisions(solutionId);
+		if (null != mlpSolutionRevisions) {
+			for (MLPSolutionRevision mlpSolRevision : mlpSolutionRevisions) {
+				// MLP SolutionRevision version must be equal to the version which is send by the api(UI)
+				if (mlpSolRevision.getVersion().equals(version) && mlpSolRevision.getUserId().equals(userId)) {
+					// get the list of artifact for the Revision
+					String mlpRevisionId = mlpSolRevision.getRevisionId();
+					// for specific solutionId and revisionId get the MLPArtifacts
+					List<MLPArtifact> mlpArtifacts = cdmsClient.getSolutionRevisionArtifacts(solutionId, mlpRevisionId);
+					boolean artifactExists = false;
+					MLPArtifact mlpArtifactClone = new MLPArtifact();
+					for (MLPArtifact mlp : mlpArtifacts) {
+						String mlpArtifactTypeCode = mlp.getArtifactTypeCode();
+						if ("MI".equals(mlpArtifactTypeCode) && mlp.getVersion().equals(version)) {
+							artifactExists = true;
+							mlpArtifactClone = mlp;
+						}
+					}
+					if (artifactExists) {
+						boolean artifactURI = mlpArtifactClone.getUri().endsWith("proto");
+						if (artifactURI) {
+							// drop the solution revision artifact for the existing solution
+							//cdmsClient.dropSolutionRevisionArtifact(solutionId, revisionId, artiId);
+							//logger.debug(EELFLoggerDelegator.debugLogger," Successfully Deleted the SolutionRevisionArtifact of .proto file ");
+							// delete the artifact
+							//cdmsClient.deleteArtifact(artiId);
+							//logger.debug(EELFLoggerDelegator.debugLogger," Successfully Deleted the .proto file Artifact ");
+							// delete the artifact i.e proto file from nexus repository
+							//nexusArtifactClient.deleteArtifact(mlpArtifactClone.getUri());
+							
+							// create the new .proto file and write the proto content into it
+							String firstProtoString = firstNodeProto.toString();
+							path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
+							DSUtil.writeDataToFile(path, cdump.getCname() + "-" + version, "proto", firstProtoString);
+							// create the new artifact for the latest generated proto file and upload it into nexus repo
+							Artifact protoArtifact = new Artifact(cdump.getCname(), "proto", solutionId, version, path,
+									firstProtoString.length());
+							String protoVersion = protoArtifact.getVersion();
+							uploadFilesToRepository(solutionId, revisionId, protoVersion, protoArtifact);
+							mlpArtifactClone.setUri(protoArtifact.getNexusURI());
+							cdmsClient.updateArtifact(mlpArtifactClone);
+							logger.debug(EELFLoggerDelegator.debugLogger,"Updated the ArtifactTypeCode MI which is already exists");
+						}
+					} else {
+						String firstProtoString = firstNodeProto.toString();
+						path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
+						DSUtil.writeDataToFile(path, cdump.getCname() + "-" + version, "proto", firstProtoString);
+						Artifact protoArtifact = new Artifact(cdump.getCname(), "proto", solutionId, version, path,
+								firstProtoString.length());
+						String protoVersion = protoArtifact.getVersion();
+						// upload the file to repository
+						uploadFilesToRepository(solutionId, revisionId, protoVersion, protoArtifact);
+						// add the artifact details to the DB and associate with SolutionRevision.
+						MLPArtifact mlpArtifact = null;
+						mlpArtifact = new MLPArtifact();
+						mlpArtifact.setArtifactTypeCode("MI");
+						mlpArtifact.setDescription("Proto File for : " + cdump.getCname() + " for SolutionID : "+ solutionId + " with version : " + protoVersion);
+						mlpArtifact.setUri(protoArtifact.getNexusURI());
+						mlpArtifact.setName(protoArtifact.getName());
+						mlpArtifact.setUserId(userId);
+						mlpArtifact.setVersion(version);
+						mlpArtifact.setSize(firstProtoString.length());
+						MLPArtifact protoMLPArtifact = cdmsClient.createArtifact(mlpArtifact);
+						logger.debug(EELFLoggerDelegator.debugLogger,"Successfully created the artifact for the ProtoFile for the solution : "
+								+ solutionId + " artifact ID : " + protoMLPArtifact.getArtifactId());
+						// Associate the SolutionRevisionArtifact for solution ID.
+						logger.debug(EELFLoggerDelegator.debugLogger,"Associate the SolutionRevisionArtifact for solution ID.");
+						cdmsClient.addSolutionRevisionArtifact(solutionId,mlpRevisionId, protoMLPArtifact.getArtifactId());
+						logger.debug(EELFLoggerDelegator.debugLogger," Successfully associated the Solution Revision Artifact for solution ID  : "
+								+ solutionId);
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	private DSResult validateEachNode(Cdump cdump) {

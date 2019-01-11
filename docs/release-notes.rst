@@ -24,6 +24,20 @@ The Design Studio Composition Engine is packaged within a Docker image and avail
 Acumos docker registry.  The TOSCAGenerator Client library is published in the Acumos Nexus
 repository as a jar file.
 
+Version 2.0.2, 2019-01-11
+---------------------------
+* ACUMOS-2059 : Create Protobuf (.proto) for new valid Composite Solution.
+* ACUMOS-2060 : Update the .proto file of the existing composite solution (for each version).
+* ACUMOS-2061 : Delete the .proto file of the existing solution (for each version) on successful deletion.
+* ACUMOS-2062 : ds-compositionengine should create .proto on successful validation of new Composite Solution.
+* ACUMOS-2066 : If the Data Broker is the first component of the solution, then .proto file should include text.
+* ACUMOS-2067 : The .proto file should follow the same naming convention and structure as the .proto file created by the On-boarding module.
+* ACUMOS-2068 : The operation name in the .proto file will be the operation name of the first model in the composite solution.
+* ACUMOS-2069 : Input and output protobuf message for Composite solution should be the first and last model input and out protobuf msg respectively.
+* ACUMOS-2070 : Create .proto file for validated Composite Solution (for each version).
+* ACUMOS-2071 : DS should update .proto file when user update the existing version of Composite Solution.
+* ACUMOS-2072 : DS should delete the .proto file along with other artifacts, when user deletes composite solution version.
+
 Version 2.0.1, 2018-12-19
 ---------------------------
 * ACUMOS-2312 : Copy/Array Based composite solution showing invalid solution for valid solution.
