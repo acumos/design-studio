@@ -20,6 +20,8 @@
 
 package org.acumos.designstudio.ce.service;
 
+import java.net.URISyntaxException;
+
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
 import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
@@ -27,7 +29,7 @@ import org.json.JSONException;
 
 public interface ICompositeSolutionService {
 
-	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException, JSONException;
+	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException, JSONException, URISyntaxException;
 
 	public boolean deleteCompositeSolution(String userId, String solutionId, String version) throws AcumosException, JSONException;
 
