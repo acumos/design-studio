@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df01569c_c210096d",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionProtoFileGeneratorServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-01-18T10:48:00Z",
+      "side": 1,
+      "message": "Please include License text",
+      "range": {
+        "startLine": 2,
+        "startChar": 2,
+        "endLine": 2,
+        "endChar": 3
+      },
+      "revId": "b7d1d52b294e62d725f522eba3efd96c8b3817c0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "500e1aeb_43d896ad",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/vo/compositeproto/Protobuf.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-01-18T10:48:00Z",
+      "side": 1,
+      "message": "Missing javadoc",
+      "range": {
+        "startLine": 29,
+        "startChar": 13,
+        "endLine": 29,
+        "endChar": 21
+      },
+      "revId": "b7d1d52b294e62d725f522eba3efd96c8b3817c0",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
