@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "630d3168_f806cde4",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionProtoFileGeneratorServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-01-18T11:07:38Z",
+      "side": 1,
+      "message": "Missing java doc",
+      "range": {
+        "startLine": 53,
+        "startChar": 15,
+        "endLine": 53,
+        "endChar": 26
+      },
+      "revId": "62f9b8d33ab46ddf5c5805e935dc32cf76b139a5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b6429d1_70b170fc",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionProtoFileGeneratorServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-01-18T11:07:38Z",
+      "side": 1,
+      "message": "No need to have java doc for private method",
+      "range": {
+        "startLine": 130,
+        "startChar": 2,
+        "endLine": 130,
+        "endChar": 4
+      },
+      "revId": "62f9b8d33ab46ddf5c5805e935dc32cf76b139a5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a9f2982_d4ad7f36",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionProtoFileGeneratorServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-01-18T11:07:38Z",
+      "side": 1,
+      "message": "Java doc not required for private method.",
+      "range": {
+        "startLine": 154,
+        "startChar": 3,
+        "endLine": 154,
+        "endChar": 4
+      },
+      "revId": "62f9b8d33ab46ddf5c5805e935dc32cf76b139a5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b2dd6e4_4bec5468",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionProtoFileGeneratorServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-01-18T11:07:38Z",
+      "side": 1,
+      "message": "Incomplete java doc",
+      "range": {
+        "startLine": 169,
+        "startChar": 1,
+        "endLine": 169,
+        "endChar": 4
+      },
+      "revId": "62f9b8d33ab46ddf5c5805e935dc32cf76b139a5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed7fc89a_b69b78a4",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionProtoFileGeneratorServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-01-18T11:07:38Z",
+      "side": 1,
+      "message": "Java Doc missing",
+      "range": {
+        "startLine": 298,
+        "startChar": 1,
+        "endLine": 298,
+        "endChar": 7
+      },
+      "revId": "62f9b8d33ab46ddf5c5805e935dc32cf76b139a5",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
