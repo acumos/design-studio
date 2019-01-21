@@ -22,19 +22,40 @@
 package org.acumos.designstudio.ce.service;
 
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
+import org.acumos.designstudio.ce.vo.compositeproto.Protobuf;
 
 
 public interface ICompositeSolutionProtoFileGeneratorService {
 	
+	
 	/**
+	 * This method get the file from Nexus, return the content for the specified artifact.
 	 * 
 	 * @param solutionId
+	 * 	solutionId of the artifact
 	 * @param version
+	 * 	solution version
 	 * @param artifactType
+	 * 	solution artifact type for which UIR need to be retrieved
 	 * @param fileExtension
-	 * @return
+	 * 	The artifact type Nexus file extension
+	 * @return string
+     *	returns the Nexus proto URI
 	 * @throws ServiceException
+	 * 	In case of any error throws ServiceException
 	 */
-	String getProtoUrl(String solutionId, String version, String artifactType, String fileExtension)throws ServiceException;
+	public String getPayload(String solutionId, String version, String artifactType, String fileExtension)throws ServiceException;
 
+	
+	/**
+	 * This method parse the data and returns the Protobuf
+	 * 
+	 * @param protoData
+	 *    .proto file content
+	 *
+	 * @return Protobuf 
+	 *    Converts the input and returns the instance of Protobuf class
+	 *
+	 */
+	public Protobuf parseProtobuf(String protoData);
 }

@@ -49,25 +49,10 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 	@Autowired
 	private NexusArtifactClient nexusArtifactClient;
 	
-	/**
-        * This method returns Nexus URI for the specified solution artifact type.
-        *
-        * @param solutionId
-        *	solutionId of the artifact
-        * @param version
-        *	solution version
-        * @param artifactType
-        *	solution artifact type for which UIR need to be retrieved
-        * @param fileExtension
-        *	The artifact type Nexus file extension
-        * @return string
-        *	returns the Nexus proto URI
-        *
-	* @throws ServiceException 
-        *	In case of any error throws ServiceException
-        */
+	
 	@Override
-	public String getProtoUrl(String solutionId, String version, String artifactType, String fileExtension) throws ServiceException {
+	public String getPayload(String solutionId, String version, String artifactType, String fileExtension) throws ServiceException {
+		logger.debug(EELFLoggerDelegator.debugLogger, "getPayload() : Begin");
 		String result = "";
 		List<MLPSolutionRevision> mlpSolutionRevisionList;
 		String solutionRevisionId = null;
@@ -80,8 +65,12 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 			// 2. Match the version with the SolutionRevision and get the
 			// solutionRevisionId.
 			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
-				solutionRevisionId = mlpSolutionRevisionList.stream().filter(mlp -> mlp.getVersion().equals(version))
-						.findFirst().get().getRevisionId();
+				for(MLPSolutionRevision mlpSolRev : mlpSolutionRevisionList) {
+					if(mlpSolRev.getVersion().equals(version) ){  //TODO : Need to check if revision is delete or not in future. 
+						solutionRevisionId = mlpSolRev.getRevisionId();
+						break;
+					}
+				}
 				logger.debug(EELFLoggerDelegator.debugLogger," SolutionRevisonId for Version :  {} ", solutionRevisionId );
 			}
 		} catch (NoSuchElementException | NullPointerException e) {
@@ -96,12 +85,10 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 			String nexusURI = "";
 			if (null != mlpArtifactList && !mlpArtifactList.isEmpty()) {
 				try {
-					nexusURI = mlpArtifactList.stream()
-							.filter(mlpArt -> mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType)).findFirst()
-							.get().getUri();
-					for(MLPArtifact mlpArt : mlpArtifactList){
-						if( null != fileExtension ){
-							if(mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType) && mlpArt.getName().contains(fileExtension)){
+					if (null != fileExtension) {
+						for (MLPArtifact mlpArt : mlpArtifactList) {
+							if (mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType)
+									&& mlpArt.getName().contains(fileExtension)) {
 								nexusURI = mlpArt.getUri();
 								break;
 							}
@@ -127,14 +114,14 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 						}
 					} catch (Exception e) {
 						logger.error(EELFLoggerDelegator.errorLogger,
-								"Error : Exception in getProtoUrl() : Failed to close the byteArrayOutputStream", e);
+								"Error : Exception in getPayload() : Failed to close the byteArrayOutputStream", e);
 						throw new ServiceException("  Exception in getProtoUrl() ", "201",
 								"Failed to close the byteArrayOutputStream");
 					}
 				}
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "getProtoUrl() : End");
+		logger.debug(EELFLoggerDelegator.debugLogger, "getPayload() : End");
 		
 		return result;
 	}
@@ -172,17 +159,9 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 		return outputStream;
 	}
 
-	/**
-         * This method parse the data and returns the Protobuf
-	 * @param protoData1
-         *	.proto file content
-         *
-	 * @return Protobuf
-         *	Converts the input and returns the insance of Protobuf class.
-         *
-	 */
-	public Protobuf parseProtobuf(String protoData1) {
-			Scanner scanner = new Scanner(protoData1);
+	@Override
+	public Protobuf parseProtobuf(String protoData) {
+			Scanner scanner = new Scanner(protoData);
 			Protobuf protobuf= new Protobuf();
 			boolean serviceBegin = false; 
 			boolean serviceDone = false;
@@ -245,7 +224,8 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 			scanner.close();
 			return protobuf;
 		}
-	private static ProtobufService parserService(String serviceStr) {
+	
+	private ProtobufService parserService(String serviceStr) {
 		Scanner scanner = new Scanner(serviceStr);
 		ProtobufService service = new ProtobufService();
 		while (scanner.hasNextLine()) {
@@ -272,7 +252,7 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 		return service;
 	}
 	
-	private static ProtobufServiceOperation parseServiceOperation(String line) {
+	private ProtobufServiceOperation parseServiceOperation(String line) {
 		ProtobufServiceOperation operation = new ProtobufServiceOperation();
 		line = line.replace("\t", "").trim();
 		line = line.replace(";", "").replace("\t", "").trim();
@@ -306,16 +286,8 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 		return operation;
 	}
 	
-	/**
-         * This method parse the input protobuf message 
-         * 
-         * @param messageStr
-         *	input as string format
-         *
-         * @return ProtobufMessage
-         *	converts and returns the ProtobufMessage. 
-         */
-	public static ProtobufMessage parseMessage(String messageStr) {
+	
+	private ProtobufMessage parseMessage(String messageStr) {
 		Scanner scanner = new Scanner(messageStr);
 		ProtobufMessage message = new ProtobufMessage();
 		ProtobufMessageField field = null;
@@ -350,7 +322,7 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 		return message;
 	}
 	
-	private static ProtobufMessageField parseMessageField(String line) {
+	private ProtobufMessageField parseMessageField(String line) {
 		ProtobufMessageField field = new ProtobufMessageField();
 		line = line.replace(";", "").trim();
 		
@@ -372,7 +344,7 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 		return field;
 	}
 	
-	private static ProtobufOption parseOption(String line) {
+	private ProtobufOption parseOption(String line) {
 		ProtobufOption option = new ProtobufOption();
 		line = line.replace("\t", "").trim();
 		line = line.replace("option", "").trim();

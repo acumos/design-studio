@@ -155,6 +155,9 @@ public class Properties implements Serializable {
 	@Value("${cdsCheckAttempt}")
 	private int cdsCheckAttempt;
 	
+	@Value("${protobufbasicType}")
+	private String protobufbasicType;
+	
 	/**
 	 * @return 
 	 * 		the cdsCheckInterval
@@ -458,5 +461,11 @@ public class Properties implements Serializable {
 		return protoArtifactType;
 	}
 	
+	/**
+	 * @return the protobufbasicType
+	 */
+	public String getProtobufBasicType() {
+		return protobufbasicType;
+	}
 	
 }
