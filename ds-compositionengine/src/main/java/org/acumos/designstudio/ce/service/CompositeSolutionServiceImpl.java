@@ -2552,7 +2552,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			strbld.append(",");
 		}
 		inputMessageNames = strbld.toString();
-		inputMessageNames = inputMessageNames.substring(inputMessageNames.length()-1);
+		inputMessageNames = inputMessageNames.substring(0, inputMessageNames.length()-1);
 		
 		
 		String outputMessageNames = "";
@@ -2562,7 +2562,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			strbld.append(",");
 		}
 		outputMessageNames = strbld.toString();
-		outputMessageNames = outputMessageNames.substring(outputMessageNames.length()-1);
+		outputMessageNames = outputMessageNames.substring(0, outputMessageNames.length()-1);
 		
 								
 		//Construct Messages. 
