@@ -101,7 +101,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -1003,80 +1005,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						// Construct protoPayload for composite solution with Databroker.
 						protoPayload = "This solution retrieves the data from a data source, it cannot be invoked by an external client";
 					} else {
-						// Construct protoPayload for composite solution without Databroker.
-						//1. Get first node protobuf file content of CP 
-						String firstNodeProtoPayload = cspfgService.getPayload(firstNode.getNodeSolutionId(), firstNode.getNodeVersion(),props.getModelImageArtifactType(), "proto");
-						Protobuf firstNodeProto = cspfgService.parseProtobuf(firstNodeProtoPayload);
-						//2. Get Last node protobuf file content of CP 
-						String lastNodeId = getNodeIdForPosition(cdump, LAST_NODE_POSITION);
-						Nodes lastNode = getNodeForId(nodes, lastNodeId);
-						String lastNodeProtoPayload = cspfgService.getPayload(lastNode.getNodeSolutionId(), lastNode.getNodeVersion(),props.getModelImageArtifactType(), "proto");
-						Protobuf lastNodeProto = cspfgService.parseProtobuf(lastNodeProtoPayload);
-						
-						List<ProtobufServiceOperation> operations = null;
-						//3. Get first node port which is connected and its corresponding input message
-						String firstNodeConnectedport = getConnectedPort(relationsList,firstNode.getNodeId());
-						List<String> firstNodeInputMessageNames = null;
-						operations = firstNodeProto.getService().getOperations();
-						for(ProtobufServiceOperation opt : operations){
-							if(opt.getName().equals(firstNodeConnectedport)){
-								firstNodeInputMessageNames = opt.getInputMessageNames();
-							}
-						}
-						//4. Get last node port which is connected.
-						String lastNodeConnectedport = getConnectedPort(relationsList,firstNode.getNodeId());
-						List<String> lastNodeOutputMessageNames = null;
-						operations = lastNodeProto.getService().getOperations();
-						for(ProtobufServiceOperation opt : operations){
-							if(opt.getName().equals(lastNodeConnectedport)) {
-								lastNodeOutputMessageNames = opt.getOutputMessageNames();
-							}
-						}
-						
-						//5. Construct Proto buf. 
-						
-						String inputMessageNames = "";
-						StringBuilder strbld = new StringBuilder();
-						for(String msgName : firstNodeInputMessageNames){
-							strbld.append(msgName);
-							strbld.append(",");
-						}
-						inputMessageNames = strbld.toString();
-						inputMessageNames = inputMessageNames.substring(inputMessageNames.length()-1);
-						
-						
-						String outputMessageNames = "";
-						strbld = new StringBuilder();
-						for(String msgName : lastNodeOutputMessageNames){
-							strbld.append(msgName);
-							strbld.append(",");
-						}
-						outputMessageNames = strbld.toString();
-						outputMessageNames = outputMessageNames.substring(outputMessageNames.length()-1);
-						
-												
-						//Construct Messages. 
-						String messageBody = null;
-						//1. input messages definitions
-						strbld = new StringBuilder();
-						for(String msgName : firstNodeInputMessageNames){
-							buildMessage(firstNodeProto, strbld, msgName);
-						}
-						//2. output messages definitions
-						for (String msgName : lastNodeOutputMessageNames) {
-							buildMessage(lastNodeProto, strbld, msgName);
-						}
-						messageBody = strbld.toString();
-						
-						//Define constant 
-						String protostr = "syntax = \"proto3\";\n"+
-									"package abcd;\n"+
-									"service Model {\n\t" +
-									"rpc %s (%s) returns (%s);\n" + "}\n";
-						
-						
-						protoPayload = String.format(protostr, firstNodeConnectedport,inputMessageNames, outputMessageNames );
-						protoPayload = protoPayload + messageBody;
+						protoPayload = constructPayload(cdump);
 						
 					}
 					createAndUploadProtobuf(userId, solutionId, version, revisionId, protoPayload, cdump);
@@ -1126,13 +1055,15 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		return result;
 	}
 
+	
+
 	private void buildMessage(Protobuf node, StringBuilder strbld, String msgName) {
 		String basicProtobufTypes = props.getProtobufBasicType();
 		ProtobufMessage protoMessage;
 		List<ProtobufMessageField> messageFields;
 		//Check if already added to strbld, it wont be but still in case.
 		String temp = strbld.toString();
-		if(!temp.contains(msgName)){ //if not found then include it in the strbld or else ignore.
+		if(!temp.contains("message "+msgName)){ //if not found then include it in the strbld or else ignore.
 			protoMessage = node.getMessage(msgName);
 			strbld.append("\n");
 			strbld.append(protoMessage.toString());
@@ -2572,5 +2503,92 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			throw new ServiceException(" Exception in updateCompositeSolution() ", "333","Failed to drop CompositeSolution Member");
 		}		
 	}
+	
+	private String constructPayload(Cdump cdump)
+			throws ServiceException {
+		String protoPayload;
+		
+		List<Nodes> nodes = cdump.getNodes();
+		List<Relations> relationsList = cdump.getRelations();
+		String firstNodeId = getNodeIdForPosition(cdump, FIRST_NODE_POSITION);
+		Nodes firstNode = getNodeForId(nodes, firstNodeId);
+		
+		// Construct protoPayload for composite solution without Databroker.
+		//1. Get first node protobuf file content of CP 
+		String firstNodeProtoPayload = cspfgService.getPayload(firstNode.getNodeSolutionId(), firstNode.getNodeVersion(),props.getModelImageArtifactType(), "proto");
+		Protobuf firstNodeProto = cspfgService.parseProtobuf(firstNodeProtoPayload);
+		//2. Get Last node protobuf file content of CP 
+		String lastNodeId = getNodeIdForPosition(cdump, LAST_NODE_POSITION);
+		Nodes lastNode = getNodeForId(nodes, lastNodeId);
+		String lastNodeProtoPayload = cspfgService.getPayload(lastNode.getNodeSolutionId(), lastNode.getNodeVersion(),props.getModelImageArtifactType(), "proto");
+		Protobuf lastNodeProto = cspfgService.parseProtobuf(lastNodeProtoPayload);
+		
+		List<ProtobufServiceOperation> operations = null;
+		//3. Get first node port which is connected and its corresponding input message
+		String firstNodeConnectedport = getConnectedPort(relationsList,firstNode.getNodeId());
+		List<String> firstNodeInputMessageNames = null;
+		operations = firstNodeProto.getService().getOperations();
+		for(ProtobufServiceOperation opt : operations){
+			if(opt.getName().equals(firstNodeConnectedport)){
+				firstNodeInputMessageNames = opt.getInputMessageNames();
+			}
+		}
+		//4. Get last node port which is connected.
+		String lastNodeConnectedport = getConnectedPort(relationsList,lastNode.getNodeId());
+		List<String> lastNodeOutputMessageNames = null;
+		operations = lastNodeProto.getService().getOperations();
+		for(ProtobufServiceOperation opt : operations){
+			if(opt.getName().equals(lastNodeConnectedport)) {
+				lastNodeOutputMessageNames = opt.getOutputMessageNames();
+			}
+		}
+		
+		//5. Construct Proto buf. 
+		
+		String inputMessageNames = "";
+		StringBuilder strbld = new StringBuilder();
+		for(String msgName : firstNodeInputMessageNames){
+			strbld.append(msgName);
+			strbld.append(",");
+		}
+		inputMessageNames = strbld.toString();
+		inputMessageNames = inputMessageNames.substring(inputMessageNames.length()-1);
+		
+		
+		String outputMessageNames = "";
+		strbld = new StringBuilder();
+		for(String msgName : lastNodeOutputMessageNames){
+			strbld.append(msgName);
+			strbld.append(",");
+		}
+		outputMessageNames = strbld.toString();
+		outputMessageNames = outputMessageNames.substring(outputMessageNames.length()-1);
+		
+								
+		//Construct Messages. 
+		String messageBody = null;
+		//1. input messages definitions
+		strbld = new StringBuilder();
+		for(String msgName : firstNodeInputMessageNames){
+			buildMessage(firstNodeProto, strbld, msgName);
+		}
+		//2. output messages definitions
+		for (String msgName : lastNodeOutputMessageNames) {
+			buildMessage(lastNodeProto, strbld, msgName);
+		}
+		messageBody = strbld.toString();
+		
+		//Define constant 
+		String protostr = "syntax = \"proto3\";\n"+
+					"package abcd;\n"+
+					"service Model {\n\t" +
+					"rpc %s (%s) returns (%s);\n" + "}\n";
+		
+		
+		protoPayload = String.format(protostr, firstNodeConnectedport,inputMessageNames, outputMessageNames );
+		protoPayload = protoPayload + messageBody;
+		return protoPayload;
+	}
+	
 }
 
