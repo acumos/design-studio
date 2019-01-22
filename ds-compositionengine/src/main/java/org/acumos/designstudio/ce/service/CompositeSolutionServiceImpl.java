@@ -1090,7 +1090,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
 			DSUtil.writeDataToFile(path, cdump.getCname() + "-" + version, "proto", protoPayload);
 			//create ds protoArtifact and upload to Nexus repo. 
-			Artifact protoArtifact = new Artifact(cdump.getCname(), "proto", solutionId, version, path,protoPayload.length());
+			Artifact protoArtifact = new Artifact(cdump.getCname() + "-" + version, "proto", solutionId, version, path,protoPayload.length());
 			uploadFilesToRepository(solutionId, revisionId, version, protoArtifact);
 			
 			// add the artifact details to the DB
