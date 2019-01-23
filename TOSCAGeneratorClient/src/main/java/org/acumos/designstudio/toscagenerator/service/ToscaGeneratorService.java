@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -236,10 +237,12 @@ public class ToscaGeneratorService {
 	 * @param toscaFiles
 	 *            List of TOSCA file artifacts
 	 * @throws AcumosException
-	 *             On failure
+	 *            On failure
+	 * @throws URISyntaxException 
+	 * 			 On failure
 	 */
 	public void postArtifact(String solutionId, String solutionRevisionId, String ownerID, List<Artifact> toscaFiles)
-			throws AcumosException {
+			throws AcumosException, URISyntaxException {
 
 		CommonDataServiceRestClientImpl cdmsClient = (CommonDataServiceRestClientImpl) CommonDataServiceRestClientImpl.getInstance(
 				Properties.getCmnDataSvcEndPoinURL(), Properties.getCmnDataSvcUser(), Properties.getCmnDataSvcPwd());
