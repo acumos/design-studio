@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -124,7 +125,7 @@ public class SolutionServiceImpl implements ISolutionService {
 	
 	private final ObjectMapper mapper = new ObjectMapper();
 	
-	private Date lastExecutionTime; 
+	private Instant lastExecutionTime; 
 	
 	@Override
 	public void getUpdatedModelsbyDate() throws InterruptedException, ServiceException {
@@ -134,14 +135,14 @@ public class SolutionServiceImpl implements ISolutionService {
 			if (null != publicModelCache && !publicModelCache.isEmpty()) { // It should get created on application startup.
 
 				if (null == lastExecutionTime) {
-					lastExecutionTime = new Date();
+					lastExecutionTime = Instant.now();
 				}
 				String[] accessTypeCodes = { props.getPublicAccessTypeCode(), props.getOrganizationAccessTypeCode() };
-				String[] valStatusCodes = { props.getValidationStatusCode() };
+				//String[] valStatusCodes = { props.getValidationStatusCode() };
 
 				// Make a call to CDS to get the updated models.
 				RestPageResponse<MLPSolution> updatedModels = cmnDataService.findSolutionsByDate(true, accessTypeCodes,
-						valStatusCodes, lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));
+						lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));
 
 				if (null != updatedModels && updatedModels.getContent().size() > 0) {
 					List<DSModelVO> dsModels = getDSModels(updatedModels);
@@ -149,14 +150,13 @@ public class SolutionServiceImpl implements ISolutionService {
 				}
 
 				// Make a call to get the deleted models.
-				updatedModels = cmnDataService.findSolutionsByDate(false, accessTypeCodes, valStatusCodes,
-						lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));
+				updatedModels = cmnDataService.findSolutionsByDate(false, accessTypeCodes,lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));
 
 				if (null != updatedModels && updatedModels.getContent().size() > 0) {
 					List<DSModelVO> dsModels = getDSModels(updatedModels);
 					matchingModelServiceImpl.removePublicModelCacheForMatching(dsModels);
 				}
-				lastExecutionTime = new Date();
+				lastExecutionTime = Instant.now();
 			} else {
 				Thread.sleep(1000 * 60);
 			}
@@ -431,7 +431,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				List<MLPSolutionRevision> rev = getSolutionRevisions(solutionID);
 				if (null != rev && !rev.isEmpty()) {
 					for (MLPSolutionRevision mlp : rev) {
-						description = mlp.getDescription();
+						//description = mlp.getDescription();
 						if (mlp.getVersion().equalsIgnoreCase(version)) {
 							solutionRevisionId = mlp.getRevisionId();
 							isValidVersion = true;
@@ -1119,7 +1119,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		// 1. SolutionId
 		dssolution.setSolutionId(mlpsolution.getSolutionId());
 		// 2. Solution Created Date
-		dssolution.setCreatedDate(sdf.format(mlpSolRevision.getCreated().getTime()));
+		dssolution.setCreatedDate(sdf.format(mlpSolRevision.getCreated()));
 		// 3. Solution Icon
 		dssolution.setIcon(null);
 		// 4. Solution Name
@@ -1131,7 +1131,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		// 7. Solution Category
 		dssolution.setCategory(mlpsolution.getModelTypeCode());
 		// 8. Solution Description
-		dssolution.setDescription(mlpsolution.getDescription());
+		//dssolution.setDescription(mlpsolution.getDescription());
 		// 9. Solution Visibility
 		dssolution.setVisibilityLevel(mlpSolRevision.getAccessTypeCode());
 		// 10. Solution Version

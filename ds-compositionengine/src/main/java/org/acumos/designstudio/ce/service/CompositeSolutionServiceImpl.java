@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,13 +35,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
 import org.acumos.cds.AccessTypeCode;
-import org.acumos.cds.ModelTypeCode;
-import org.acumos.cds.ValidationStatusCode;
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolution;
@@ -101,9 +99,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -153,7 +149,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	private CompositeSolutionProtoFileGeneratorServiceImpl cspfgService;
 	
 	@Override
-	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException {
+	public String saveCompositeSolution(DSCompositeSolution dscs) throws AcumosException, URISyntaxException {
 
 		String result = "";
 		String error = "{\"errorCode\" : \"%s\", \"errorDescription\" : \"%s\"}";
@@ -235,9 +231,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
  
 			mlpSolution = new MLPSolution();
 			mlpSolution.setName(dscs.getSolutionName());
-			mlpSolution.setDescription(dscs.getDescription());
+			//mlpSolution.setDescription(dscs.getDescription());
 			mlpSolution.setUserId(dscs.getAuthor());
-			mlpSolution.setModelTypeCode(ModelTypeCode.PR.toString());
+			mlpSolution.setModelTypeCode("PR");
 			mlpSolution.setToolkitTypeCode("CP");
 			mlpSolution.setActive(true);
 			mlpSolution = cdmsClient.createSolution(mlpSolution);
@@ -251,10 +247,10 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		try {
 			mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
-			mlpSolutionRevision.setDescription(dscs.getDescription());
+			//mlpSolutionRevision.setDescription(dscs.getDescription());
 			mlpSolutionRevision.setUserId(dscs.getAuthor());
 			mlpSolutionRevision.setVersion(dscs.getVersion());
-			mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+			//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 			mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 			mlpSolutionRevision.setPublisher(dscs.getProvider());
 			
@@ -366,8 +362,10 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	 * 		In Exception Case
 	 * @throws IOException
 	 * 		In Exception Case
+	 * @throws URISyntaxException
+	 * 		In Exception Case 
 	 */
-	public String updateCompositeSolution(DSCompositeSolution dscs) throws AcumosException, IOException {
+	public String updateCompositeSolution(DSCompositeSolution dscs) throws AcumosException, IOException, URISyntaxException {
 		logger.debug(EELFLoggerDelegator.debugLogger, " updateCompositeSolution() Begin ");
 
 		String result = null;
@@ -456,12 +454,15 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	 * 		In Exception Case
 	 * @throws AcumosException
 	 * 		In Exception Case
+	 * @throws URISyntaxException 
+	 * 		In Exception Case
 	 */
 	public String updateExistingSolution(MLPSolutionRevision mlpSR, MLPSolution mlpSolution, DSCompositeSolution dscs, Cdump cdump, String cdumpFileName, String path)
-			throws IOException, AcumosException {
+			throws IOException, AcumosException, URISyntaxException {
 		logger.debug(EELFLoggerDelegator.debugLogger, " updateExistingSolution() Start ");
 		String result = "";
 		Date currentDate = new Date();
+		Instant dateInstant = Instant.now();
 		
 		if("PB".equals(mlpSR.getAccessTypeCode()) || "OR".equals(mlpSR.getAccessTypeCode())){
 			result = "{\"duplicateErrorCode\" : \"219\", \"duplicate\" : \"Solution In Public/Company. Please change either solution name, version or both.\"}";
@@ -492,7 +493,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						logger.debug(EELFLoggerDelegator.debugLogger, " {0} = {1} ", mlpArtifact.getArtifactTypeCode(), props.getArtifactTypeCode());
 						dscs.setCdump(cdumpArtifact);
 						mlpArtifact.setUri(cdumpArtifact.getNexusURI());
-						mlpArtifact.setModified(currentDate);
+						mlpArtifact.setModified(dateInstant);
 						mlpArtifact.setSize(cdumpArtifact.getContentLength());
 						cdmsClient.updateArtifact(mlpArtifact);
 						logger.debug(EELFLoggerDelegator.debugLogger," Successfully updated the artifact for the cdumpfile for the solution : {0} artifact ID : {1}" , mlpSolution.getSolutionId(),  mlpArtifact.getArtifactId());
@@ -501,12 +502,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					}
 				}
 				// 5.4 update the solutionRevisoin (i.e., to update the modified date of the solutionrevision)
-				mlpSR.setModified(currentDate);
-				mlpSR.setDescription(dscs.getDescription());
+				mlpSR.setModified(dateInstant);
+				//mlpSR.setDescription(dscs.getDescription());
 				cdmsClient.updateSolutionRevision(mlpSR);
 	
 				// 5.5 Update the solution (i.e., to update the modified date of the solution).
-				mlpSolution.setModified(currentDate);
+				mlpSolution.setModified(dateInstant);
 				cdmsClient.updateSolution(mlpSolution);
 			}
 		}
@@ -535,6 +536,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, " updateSolnWithNewVersion() Start ");
 		String result = "";
 		Date currentDate = new Date();
+		Instant dateInstant = Instant.now();
 		// 5.1 read the cdump file from the outputfolder
 		String path = DSUtil.readCdumpPath(dscs.getAuthor(), confprops.getToscaOutputFolder());
 		// Changed in current implementation Please check while merging
@@ -554,15 +556,15 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
 		try {
 			mlpSolutionRevision.setSolutionId(mlpSolution.getSolutionId());
-			mlpSolutionRevision.setDescription(dscs.getDescription());
+			//mlpSolutionRevision.setDescription(dscs.getDescription());
 			mlpSolutionRevision.setUserId(dscs.getAuthor());
 			mlpSolutionRevision.setVersion(dscs.getVersion());
-			mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
+			//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 			mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 			mlpSolutionRevision.setPublisher(dscs.getProvider());
 			
 			// Get the latest date in to variable and then use it.
-			mlpSolutionRevision.setModified(currentDate);
+			mlpSolutionRevision.setModified(dateInstant);
 			mlpSolutionRevision = cdmsClient.createSolutionRevision(mlpSolutionRevision);
 
 			logger.debug(EELFLoggerDelegator.debugLogger," Successfully Created the SolutionRevision :  {} ", mlpSolutionRevision.getRevisionId());
@@ -620,7 +622,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			throw new ServiceException("  Exception in updateSolnWithNewVersion() ", "222","Failed to create the Solution");
 		}
 		// 5.5 Update the solution (i.e., to update the modified date of the solution).
-		mlpSolution.setModified(currentDate);
+		mlpSolution.setModified(dateInstant);
 		cdmsClient.updateSolution(mlpSolution);
 		result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \"" + dscs.getVersion() + "\" }";
 		logger.debug(EELFLoggerDelegator.debugLogger, " updateSolnWithNewVersion() End ");
@@ -885,7 +887,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 											dssolution = new DSSolution();
 											dssolution.setSolutionId(mlpsol.getSolutionId());
 											dssolution.setSolutionRevisionId(mlpSolRevision.getRevisionId());
-											dssolution.setCreatedDate(sdf.format(mlpSolRevision.getCreated().getTime()));
+											dssolution.setCreatedDate(sdf.format(mlpSolRevision.getCreated()));
 											dssolution.setIcon(null);
 											// 1. Solution Name
 											dssolution.setSolutionName(mlpsol.getName());
@@ -896,7 +898,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 											// 7. Solution Category
 											dssolution.setCategory(mlpsol.getModelTypeCode());
 											// 8. Solution Description
-											dssolution.setDescription(mlpsol.getDescription());
+											//dssolution.setDescription(mlpsol.getDescription());
 											// 9. Solution Visibility
 											dssolution.setVisibilityLevel(mlpSolRevision.getAccessTypeCode());
 											// 2. Solution Version
