@@ -37,9 +37,6 @@ Version 2.0.2, 2019-01-11
 * ACUMOS-2070 : Create .proto file for validated Composite Solution (for each version).
 * ACUMOS-2071 : DS should update .proto file when user update the existing version of Composite Solution.
 * ACUMOS-2072 : DS should delete the .proto file along with other artifacts, when user deletes composite solution version.
-
-Version 2.0.1, 2018-12-19
----------------------------
 * ACUMOS-2312 : Copy/Array Based composite solution showing invalid solution for valid solution.
 
 Version 2.0.0, 2018-12-14
