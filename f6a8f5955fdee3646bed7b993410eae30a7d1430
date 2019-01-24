@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cdeecfcb_6e210837",
+        "filename": "TOSCAGeneratorClient/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-01-24T09:48:10Z",
+      "side": 1,
+      "message": "Please update TOSCA version too",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 2
+      },
+      "revId": "f6a8f5955fdee3646bed7b993410eae30a7d1430",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
