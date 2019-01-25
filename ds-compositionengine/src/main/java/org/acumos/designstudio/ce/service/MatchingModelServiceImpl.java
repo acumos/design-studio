@@ -136,18 +136,19 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 					}
 					break;				
 			} catch(Exception e){
-				try {
-					Thread.sleep(cdsCheckInterval);
-				} catch (InterruptedException ie) {
-					logger.error(EELFLoggerDelegator.errorLogger, "getPublicDSModels() : Connection to CDS get failed...trying with {} attempt ",i);
+				logger.warn("getPublicDSModels() : Connection to CDS failed...trying with {} attempt :",i);
+                logger.error(EELFLoggerDelegator.errorLogger, "getPublicDSModels() : Connection to CDS failed with exception ",e);
+                try {
+                      Thread.sleep(cdsCheckInterval);
+                } catch (InterruptedException ie) {
+                      logger.error(EELFLoggerDelegator.errorLogger, "getPublicDSModels() : Connection to CDS failed...trying with {} attempt ",i);
 
-				}
-				logger.warn("getPublicDSModels() : Connection to CDS get failed...trying with {} attempt :",i);
-				if(i >= cdsCheckAttempt -1) {
-					throw new ServiceException("Connection to CDS get failed");
-				}
-			}
-		}
+                }
+                if(i >= cdsCheckAttempt -1) {
+                      throw new ServiceException("Connection to CDS failed");
+                }
+           }
+      }
 		logger.debug(EELFLoggerDelegator.debugLogger, " getPublicDSModels() End ");
 		return modelsList;
 	}
