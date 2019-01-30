@@ -1119,7 +1119,9 @@ public class SolutionServiceImpl implements ISolutionService {
 		// 1. SolutionId
 		dssolution.setSolutionId(mlpsolution.getSolutionId());
 		// 2. Solution Created Date
-		dssolution.setCreatedDate(sdf.format(mlpSolRevision.getCreated()));
+		java.util.Date newDate = Date.from(mlpSolRevision.getCreated());
+		String formattedDate = sdf.format(newDate);
+		dssolution.setCreatedDate(formattedDate);
 		// 3. Solution Icon
 		dssolution.setIcon(null);
 		// 4. Solution Name

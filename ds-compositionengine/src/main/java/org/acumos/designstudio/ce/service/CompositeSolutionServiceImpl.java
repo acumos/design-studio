@@ -887,7 +887,10 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 											dssolution = new DSSolution();
 											dssolution.setSolutionId(mlpsol.getSolutionId());
 											dssolution.setSolutionRevisionId(mlpSolRevision.getRevisionId());
-											dssolution.setCreatedDate(sdf.format(mlpSolRevision.getCreated()));
+											// Solution Created Date
+											java.util.Date newDate = Date.from(mlpSolRevision.getCreated());
+											String formattedDate = sdf.format(newDate);
+											dssolution.setCreatedDate(formattedDate);
 											dssolution.setIcon(null);
 											// 1. Solution Name
 											dssolution.setSolutionName(mlpsol.getName());
