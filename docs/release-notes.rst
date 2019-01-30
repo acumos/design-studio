@@ -24,11 +24,15 @@ The Design Studio Composition Engine is packaged within a Docker image and avail
 Acumos docker registry.  The TOSCAGenerator Client library is published in the Acumos Nexus
 repository as a jar file.
 
+Version 2.0.4, 2019-01-30
+---------------------------
+* ACUMOS-2433 : No solutions listed in Design Studio page
+
 Version 2.0.3, 2019-01-23
 ---------------------------
-ACUMOS-2405 : Update DS component to use CDS 2.0.2
-ACUMOS-2406 : Update ds-compositionengine to used CDS Client 2.0.2
-ACUMOS-2407 : Update TOSCA-ModelGeneratorClient to use CDS client 2.0.2
+* ACUMOS-2405 : Update DS component to use CDS 2.0.2
+* ACUMOS-2406 : Update ds-compositionengine to used CDS Client 2.0.2
+* ACUMOS-2407 : Update TOSCA-ModelGeneratorClient to use CDS client 2.0.2
 
 Version 2.0.2, 2019-01-11
 ---------------------------
