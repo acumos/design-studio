@@ -48,6 +48,7 @@ import org.acumos.cds.transport.RestPageResponse;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
+import org.acumos.designstudio.ce.util.DSLogConstants;
 import org.acumos.designstudio.ce.util.DSUtil;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.ModelCacheForMatching;
@@ -85,6 +86,7 @@ import org.acumos.designstudio.ce.vo.protobuf.MessageBody;
 import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.json.JSONArray;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -141,6 +143,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				//String[] valStatusCodes = { props.getValidationStatusCode() };
 
 				// Make a call to CDS to get the updated models.
+				cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 				RestPageResponse<MLPSolution> updatedModels = cmnDataService.findSolutionsByDate(true, accessTypeCodes,
 						lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));
 
@@ -184,6 +187,7 @@ public class SolutionServiceImpl implements ISolutionService {
 			Map<String, Object> queryParameters = new HashMap<>();
 			queryParameters.put("active", Boolean.TRUE);
 			// Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
+			cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
 					new RestPageRequest(0, confprops.getSolutionResultsetSize()));
 			mlpSolutionsList = pageResponse.getContent();
@@ -1014,6 +1018,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		try {
 			// 1. Get the list of SolutionRevision for the solutionId.
 			try {
+				cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 				mlpSolutionRevisionList = cmnDataService.getSolutionRevisions(solutionId);
 			} catch (Exception e) {
 				logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutionRevisions() ",e);
@@ -1152,6 +1157,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, " getSolutionRevisions() : Begin ");
 		List<MLPSolutionRevision> solRevisions = null;
 		try {
+			cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 			solRevisions = cmnDataService.getSolutionRevisions(solutionId);
 		} catch (Exception e) {
 			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutionRevisions() ", e);

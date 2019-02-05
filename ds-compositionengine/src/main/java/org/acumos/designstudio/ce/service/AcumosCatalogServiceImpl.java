@@ -31,9 +31,11 @@ import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
+import org.acumos.designstudio.ce.util.DSLogConstants;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.acumos.nexus.client.RepositoryLocation;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +71,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 		List<MLPArtifact> mlpArtifactList;
 		try {
 			// 1. Get the list of SolutionRevision for the solutionId.
+			cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 			mlpSolutionRevisionList = getSolutionRevisionsList(solutionId);
 
 			// 2. Match the version with the SolutionRevision and get the
@@ -202,6 +205,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 		List<MLPArtifact> mlpArtifactList;
 		try {
 			// 1. Get the list of SolutionRevision for the solutionId.
+			cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 			mlpSolutionRevisionList = getSolutionRevisionsList(solutionId);
 
 			// 2. Match the version with the SolutionRevision and get the

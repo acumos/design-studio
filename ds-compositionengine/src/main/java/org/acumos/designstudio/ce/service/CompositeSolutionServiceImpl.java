@@ -51,6 +51,7 @@ import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.DSUtil;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
+import org.acumos.designstudio.ce.util.DSLogConstants;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.Artifact;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
@@ -95,6 +96,7 @@ import org.acumos.designstudio.ce.vo.compositeproto.ProtobufServiceOperation;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.acumos.nexus.client.data.UploadArtifactInfo;
 import org.json.JSONException;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -154,6 +156,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String result = "";
 		String error = "{\"errorCode\" : \"%s\", \"errorDescription\" : \"%s\"}";
 		logger.debug(EELFLoggerDelegator.debugLogger, " saveCompositeSolution() Begin ");
+		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		// Case 1. New Composite Solution : CID exist and SolutionID is missing.
 		if (null != dscs.getcId() && null == dscs.getSolutionId()) {
 			logger.debug(EELFLoggerDelegator.debugLogger,"Started implementation of Case 1 : cid is present and SolutionId is null");
@@ -660,9 +663,11 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 		try {
 			// 1. get the solution and solutionRevision for the solution ID.
+			cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 			MLPSolution mlpSolution = cdmsClient.getSolution(solutionId);
 			boolean solutionFound = false;
 			if (null != mlpSolution) {
+				
 				List<MLPSolutionRevision> mlpSolutionRevisions = cdmsClient.getSolutionRevisions(solutionId);
 
 				// Check the size of mlpSolutionRevisions
@@ -834,6 +839,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			queryParameters.put("toolkitTypeCode", props.getToolKit());
 			RestPageRequest restPageRequets = new RestPageRequest(0,props.getSolutionResultsetSize());
 			//Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
+			cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 			RestPageResponse<MLPSolution> pageResponse = cdmsClient.searchSolutions(queryParameters, false, restPageRequets);
 
 			mlpSolutions  = pageResponse.getContent();
@@ -957,6 +963,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			List<Relations> relationsList = cdump.getRelations();
 			String revisionId = null;
 			//Get the solutionrevisionId
+			cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 			List<MLPSolutionRevision> mlpSolnRevision = cdmsClient.getSolutionRevisions(solutionId);
 			if (null != mlpSolnRevision && !mlpSolnRevision.isEmpty()) {
 				for (MLPSolutionRevision mlpSolRev : mlpSolnRevision) {
