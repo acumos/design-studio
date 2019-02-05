@@ -38,6 +38,7 @@ import org.acumos.cds.transport.RestPageRequest;
 import org.acumos.cds.transport.RestPageResponse;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
+import org.acumos.designstudio.ce.util.DSLogConstants;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.ModelCacheForMatching;
 import org.acumos.designstudio.ce.util.Properties;
@@ -52,6 +53,7 @@ import org.acumos.designstudio.ce.vo.tgif.Provide;
 import org.acumos.designstudio.ce.vo.tgif.Service;
 import org.acumos.designstudio.ce.vo.tgif.Tgif;
 import org.acumos.nexus.client.NexusArtifactClient;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -95,9 +97,11 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 		queryParameters.put("active", Boolean.TRUE);
 		int cdsCheckAttempt = confprops.getCdsCheckAttempt();
 		int cdsCheckInterval = confprops.getCdsCheckInterval();
+		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 
 		for (int i = 0; i < cdsCheckAttempt; i++) {
 			try {
+				
 				RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
 						new RestPageRequest(0, confprops.getSolutionResultsetSize()));
 				mlpSolutionsList = pageResponse.getContent();
@@ -163,6 +167,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 		List<MLPSolution> mlpSolutionsList = null;
 		Map<String, Object> queryParameters = new HashMap<>();
 		queryParameters.put("active", Boolean.TRUE);
+		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
 				new RestPageRequest(0, props.getSolutionResultsetSize()));
 		mlpSolutionsList = pageResponse.getContent();
@@ -268,7 +273,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 			String tgifFileNexusURI = null;
 			boolean isNestedMessage = false;
 			int numberOfFields = 0;
-			
 			for(DSModelVO model : models ){
 				List<MLPSolutionRevision> mlpSolRevisions = model.getMlpSolutionRevisions();
 				for(MLPSolutionRevision mlpSolRevision : mlpSolRevisions ){
@@ -538,7 +542,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 		if(searchResults.getNumberOfElements() > 0){
 			errorInModel = true;
 		}
-		
 		return errorInModel;
 	}
 	

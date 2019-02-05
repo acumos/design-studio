@@ -48,6 +48,7 @@ import org.acumos.cds.transport.RestPageResponse;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
+import org.acumos.designstudio.ce.util.DSLogConstants;
 import org.acumos.designstudio.ce.util.DSUtil;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.ModelCacheForMatching;
@@ -85,6 +86,7 @@ import org.acumos.designstudio.ce.vo.protobuf.MessageBody;
 import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.json.JSONArray;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -130,6 +132,7 @@ public class SolutionServiceImpl implements ISolutionService {
 	@Override
 	public void getUpdatedModelsbyDate() throws InterruptedException, ServiceException {
 		logger.debug(EELFLoggerDelegator.debugLogger, " getCacheMechanism() Begin ");
+		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
 			Map<KeyVO, List<ModelDetailVO>> publicModelCache = modelCacheForMatching.getPublicModelCache();
 			if (null != publicModelCache && !publicModelCache.isEmpty()) { // It should get created on application startup.
@@ -179,6 +182,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		List<DSSolution> dsSolutionList = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
 		boolean errorInModel = false;
+		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
 			mapper.setSerializationInclusion(Include.NON_NULL);
 			Map<String, Object> queryParameters = new HashMap<>();
@@ -426,6 +430,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		logger.debug(EELFLoggerDelegator.debugLogger, " fetchJsonTOSCA()  : Begin ");
 		String result = "";
 		ByteArrayOutputStream byteArrayOutputStream = null;
+		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
 			if (isSolutionIdValid(solutionID)) {
 				List<MLPSolutionRevision> rev = getSolutionRevisions(solutionID);
@@ -971,6 +976,7 @@ public class SolutionServiceImpl implements ISolutionService {
 	 */
 	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
 		cmnDataService = commonDataServiceRestClient;
+		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 	}
 
 	/**
@@ -1011,6 +1017,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		List<MLPSolutionRevision> mlpSolutionRevisionList = null;
 		String solutionRevisionId = null;
 		List<MLPArtifact> mlpArtifactList;
+		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
 			// 1. Get the list of SolutionRevision for the solutionId.
 			try {
@@ -1742,6 +1749,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		List<DSModelVO>  dsModelsList = new ArrayList<DSModelVO>();
 		DSModelVO modelVO = null;
 		//for every solution get the MLPSolutionRevisions 
+		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		for(MLPSolution mlpSol : mlpSolutionsList){
 			//Skip composite solution 
 			if (mlpSol.getToolkitTypeCode() != null
