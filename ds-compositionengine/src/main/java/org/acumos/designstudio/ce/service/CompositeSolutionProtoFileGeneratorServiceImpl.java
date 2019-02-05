@@ -30,6 +30,7 @@ import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
+import org.acumos.designstudio.ce.util.DSLogConstants;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.compositeproto.Protobuf;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufMessage;
@@ -38,6 +39,7 @@ import org.acumos.designstudio.ce.vo.compositeproto.ProtobufOption;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufService;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufServiceOperation;
 import org.acumos.nexus.client.NexusArtifactClient;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +60,7 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 		String solutionRevisionId = null;
 		ByteArrayOutputStream byteArrayOutputStream = null;
 		List<MLPArtifact> mlpArtifactList;
+		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
 			// 1. Get the list of SolutionRevision for the solutionId.
 			mlpSolutionRevisionList = cdmsClient.getSolutionRevisions(solutionId);
