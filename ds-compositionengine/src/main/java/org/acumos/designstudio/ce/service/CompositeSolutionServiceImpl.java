@@ -51,6 +51,7 @@ import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.DSUtil;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
+import org.acumos.designstudio.ce.util.DSLogConstants;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.Artifact;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
@@ -95,6 +96,7 @@ import org.acumos.designstudio.ce.vo.compositeproto.ProtobufServiceOperation;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.acumos.nexus.client.data.UploadArtifactInfo;
 import org.json.JSONException;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -154,6 +156,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String result = "";
 		String error = "{\"errorCode\" : \"%s\", \"errorDescription\" : \"%s\"}";
 		logger.debug(EELFLoggerDelegator.debugLogger, " saveCompositeSolution() Begin ");
+		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		// Case 1. New Composite Solution : CID exist and SolutionID is missing.
 		if (null != dscs.getcId() && null == dscs.getSolutionId()) {
 			logger.debug(EELFLoggerDelegator.debugLogger,"Started implementation of Case 1 : cid is present and SolutionId is null");
@@ -227,6 +230,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 		logger.debug(EELFLoggerDelegator.debugLogger, " insertCompositeSolution() Begin ");
 		MLPSolution mlpSolution = new MLPSolution();
+		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
  
 			mlpSolution = new MLPSolution();
@@ -371,6 +375,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String result = null;
 		String error = "{\"errorCode\" : \"%s\", \"errorDescription\" : \"%s\"}";
 		// 1. get the solution details using CDS : MLPSolution
+		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		MLPSolution mlpSolution = cdmsClient.getSolution(dscs.getSolutionId());
 		
 		String path = DSUtil.readCdumpPath(dscs.getAuthor(), confprops.getToscaOutputFolder());
@@ -463,6 +468,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String result = "";
 		Date currentDate = new Date();
 		Instant dateInstant = Instant.now();
+		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		
 		if("PB".equals(mlpSR.getAccessTypeCode()) || "OR".equals(mlpSR.getAccessTypeCode())){
 			result = "{\"duplicateErrorCode\" : \"219\", \"duplicate\" : \"Solution In Public/Company. Please change either solution name, version or both.\"}";
@@ -530,6 +536,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 		// Set solution active to true
 		mlpSolution.setActive(true);
+		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		cdmsClient.updateSolution(mlpSolution);
 
 		// 6. Case 3 - update the solution with new version
@@ -660,9 +667,11 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 		try {
 			// 1. get the solution and solutionRevision for the solution ID.
+			cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 			MLPSolution mlpSolution = cdmsClient.getSolution(solutionId);
 			boolean solutionFound = false;
 			if (null != mlpSolution) {
+				
 				List<MLPSolutionRevision> mlpSolutionRevisions = cdmsClient.getSolutionRevisions(solutionId);
 
 				// Check the size of mlpSolutionRevisions
@@ -828,6 +837,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		String result = "[";
 
 		List<MLPSolution> mlpSolutions = null;
+		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("active", Boolean.TRUE);
@@ -945,6 +955,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		mapper.setSerializationInclusion(Include.NON_NULL);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		Date currentDate = new Date();
+		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
 			Cdump cdump = null;
 			// 1. Read the cdump file
@@ -2454,6 +2465,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 	public void getRestCCDSClient(CommonDataServiceRestClientImpl commonDataServiceRestClient) {
 		cdmsClient = commonDataServiceRestClient;
+		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 	}
 
 	public void getNexusClient(NexusArtifactClient nexusArtifactClient1, ConfigurationProperties confprops1,
@@ -2496,7 +2508,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	private void deleteMember(String solutionId) throws ServiceException {
 		
 		try {
-		List<String> parentChildList = cdmsClient.getCompositeSolutionMembers(solutionId);
+			List<String> parentChildList = cdmsClient.getCompositeSolutionMembers(solutionId);
 			if(!parentChildList.isEmpty() & parentChildList != null){
 				for(String childNode: parentChildList){
 					cdmsClient.dropCompositeSolutionMember(solutionId, childNode);

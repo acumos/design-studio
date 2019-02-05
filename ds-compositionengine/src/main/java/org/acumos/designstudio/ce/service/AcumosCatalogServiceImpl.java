@@ -30,10 +30,12 @@ import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
+import org.acumos.designstudio.ce.util.DSLogConstants;
 import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.acumos.nexus.client.RepositoryLocation;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +69,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 		String solutionRevisionId = null;
 		ByteArrayOutputStream byteArrayOutputStream = null;
 		List<MLPArtifact> mlpArtifactList;
+		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
 			// 1. Get the list of SolutionRevision for the solutionId.
 			mlpSolutionRevisionList = getSolutionRevisionsList(solutionId);
@@ -200,6 +203,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 		String solutionRevisionId = null;
 		ByteArrayOutputStream byteArrayOutputStream = null;
 		List<MLPArtifact> mlpArtifactList;
+		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
 			// 1. Get the list of SolutionRevision for the solutionId.
 			mlpSolutionRevisionList = getSolutionRevisionsList(solutionId);
@@ -286,6 +290,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 	 */
 	public void getRestClient(String url, String user, String pass) {
 		cmnDataService = (CommonDataServiceRestClientImpl) CommonDataServiceRestClientImpl.getInstance(url, user, pass);
+		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 	}
 
 	/**
