@@ -1,0 +1,153 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03ca4ddc_405a44ee",
+        "filename": "docs/release-notes.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-02-07T08:13:16Z",
+      "side": 1,
+      "message": "Please make entry for : Logging Standardization",
+      "revId": "9b884d46a7858910a2bc7045ee06c5f2d987d4f3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eec8cb91_59fcc478",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionProtoFileGeneratorServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-02-07T08:13:16Z",
+      "side": 1,
+      "message": "Please make same changes here too",
+      "range": {
+        "startLine": 137,
+        "startChar": 3,
+        "endLine": 137,
+        "endChar": 23
+      },
+      "revId": "9b884d46a7858910a2bc7045ee06c5f2d987d4f3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a86d5fb_b6a87d27",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 974,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-02-07T08:13:16Z",
+      "side": 1,
+      "message": "Changes are missing for some more methods, please check.",
+      "range": {
+        "startLine": 974,
+        "startChar": 4,
+        "endLine": 974,
+        "endChar": 5
+      },
+      "revId": "9b884d46a7858910a2bc7045ee06c5f2d987d4f3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e839c19_7ae05e20",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-02-07T08:13:16Z",
+      "side": 1,
+      "message": "Please check, changes missing of some more methods.",
+      "revId": "9b884d46a7858910a2bc7045ee06c5f2d987d4f3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86c98c5e_bc61fba1",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/DSLogAdapter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-02-07T08:13:16Z",
+      "side": 1,
+      "message": "Java doc missing",
+      "range": {
+        "startLine": 102,
+        "startChar": 8,
+        "endLine": 102,
+        "endChar": 20
+      },
+      "revId": "9b884d46a7858910a2bc7045ee06c5f2d987d4f3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "159c6fa0_cbafd865",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/DSLogAdapter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-02-07T08:13:16Z",
+      "side": 1,
+      "message": "Java doc missing for inner class, previous inner class have java doc.",
+      "range": {
+        "startLine": 356,
+        "startChar": 8,
+        "endLine": 356,
+        "endChar": 14
+      },
+      "revId": "9b884d46a7858910a2bc7045ee06c5f2d987d4f3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d8d0862_6cbc8405",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/DSLogConstants.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-02-07T08:13:16Z",
+      "side": 1,
+      "message": "Java doc missing",
+      "range": {
+        "startLine": 35,
+        "startChar": 1,
+        "endLine": 35,
+        "endChar": 7
+      },
+      "revId": "9b884d46a7858910a2bc7045ee06c5f2d987d4f3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
