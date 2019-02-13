@@ -24,6 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.Properties;
 
 import org.acumos.cds.client.ICommonDataServiceRestClient;
@@ -35,7 +36,7 @@ import org.slf4j.LoggerFactory;
 
 public class ToscaGeneratorServiceTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(ToscaGeneratorServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private String metaDataFile = "./metadata.json";
 	private String protoDataFile = "./aggregator-proto.proto";
@@ -73,7 +74,7 @@ public class ToscaGeneratorServiceTest {
 					localMetaDataFile)).thenReturn("Success");
 			logger.info("result : " + result);
 		} catch (Exception ex) {
-			logger.error("------------ Exception Occured  generateTOSCA() ----------- ", ex);
+			logger.error("Exception Occured  generateTOSCA()", ex);
 			throw ex;
 		}
 		logger.info("Toscagenerator client end");

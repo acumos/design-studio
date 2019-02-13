@@ -26,9 +26,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.invoke.MethodHandles;
 
 import org.acumos.csvdatabroker.exceptionhandler.ServiceException;
 import org.acumos.csvdatabroker.service.ProtobufService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -40,7 +43,7 @@ import com.jcraft.jsch.Session;
 
 public class RemoteScriptExecutor {
 
-	private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(RemoteScriptExecutor.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	//Environment Details 
 	private String host;
@@ -85,7 +88,7 @@ public class RemoteScriptExecutor {
 	}
 	
 	private void connect(String channelType) throws Exception {
-		logger.debug("connecting..."+host);
+		logger.info("connecting..."+host);
 		try {
 			jsch = new JSch();
 			session = jsch.getSession(user, host,port);
@@ -104,17 +107,17 @@ public class RemoteScriptExecutor {
 			}
 
 		} catch (JSchException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in connect()", e);
+			logger.error("Exception in connect()", e);
 			throw new ServiceException("Not able to Connect Remote server ","401", "Not able to Connect Remote server ", e);
 		}
 	}
 	
 	private void disconnect(String channelType) {
 		if(channelType.equals("sftp")){
-			logger.debug("disconnecting sftpChannel...");
+			logger.info("disconnecting sftpChannel...");
 			sftpChannel.disconnect();
 		} else if(channelType.equals("exec")){
-			logger.debug("disconnecting execChannel...");
+			logger.info("disconnecting execChannel...");
 			execChannel.disconnect();
 		}
 		channel.disconnect();
@@ -139,16 +142,16 @@ public class RemoteScriptExecutor {
 			writer = new OutputStreamWriter(out);
 			writer.write(script);
 			writer.close();
-			logger.debug("shell file created successfully - ");
+			logger.info("shell file created successfully - ");
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in createshellFile()", e);
+			logger.error("Exception in createshellFile()", e);
 			throw new ServiceException("Not able to create shell File ","401", "Not able to create shell File", e);
 		} finally {
 			if(null != writer){
 				try {
 					writer.close();
 				} catch (IOException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "Exception in createshellFile()", e);
+					logger.error("Exception in createshellFile()", e);
 				}
 			}
 		}
@@ -205,17 +208,17 @@ public class RemoteScriptExecutor {
             // Retrieve the exit status of the executed command
             int exitStatus = execChannel.getExitStatus();
             if (exitStatus > 0) {
-                logger.error(EELFLoggerDelegator.errorLogger,"Remote script exec error! " + exitStatus);
+                logger.error("Remote script exec error! " + exitStatus);
             }
 		} catch (Exception e){
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in executeShell()", e);
+			logger.error("Exception in executeShell()", e);
 			throw new ServiceException("Not able to execute shell File ","401", "Not able to execute shell File", e);
 		} finally {
 			if(null != reader){
 				try {
 					reader.close();
 				} catch (IOException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "Exception in executeShell()", e);
+					logger.error("Exception in executeShell()", e);
 				}
 			}
 		}
@@ -256,14 +259,14 @@ public class RemoteScriptExecutor {
             	}
             }
 		} catch (Exception e){
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getData()", e);
+			logger.error("Exception in getData()", e);
 			throw new ServiceException("Not able to read remote File ","401", "Not able to read remote File", e);
 		} finally {
 			if(null != reader){
 				try {
 					reader.close();
 				} catch (IOException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "Exception in getData()", e);
+					logger.error("Exception in getData()", e);
 				}
 			}
 			if(null != in ){
@@ -305,7 +308,7 @@ public class RemoteScriptExecutor {
             String line;
             byte[] output = null;
             while ((line = reader.readLine()) != null) {
-            	logger.debug(line);
+            	logger.info(line);
             	output = protoService.convertToProtobufFormat(line);
             	//out.write(line.getBytes());
                 out.write(output);
@@ -316,17 +319,17 @@ public class RemoteScriptExecutor {
             // Retrieve the exit status of the executed command
             int exitStatus = execChannel.getExitStatus();
             if (exitStatus > 0) {
-            	logger.error(EELFLoggerDelegator.errorLogger,"Remote script exec error! " + exitStatus);
+            	logger.error("Remote script exec error! " + exitStatus);
             }
 		} catch (Exception e){
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in executeShell()", e);
+			logger.error("Exception in executeShell()", e);
 			throw new ServiceException("Not able to execute shell File ","401", "Not able to execute shell File", e);
 		} finally {
 			if(null != reader){
 				try {
 					reader.close();
 				} catch (IOException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "Exception in executeShell()", e);
+					logger.error("Exception in executeShell()", e);
 				}
 			}
 		}
@@ -352,21 +355,21 @@ public class RemoteScriptExecutor {
             String line;
             byte[] output = null;
             while ((line = reader.readLine()) != null) {
-            	logger.debug(line);
+            	logger.info(line);
             	output = protoService.convertToProtobufFormat(line);
             	//out.write(line.getBytes());
                 out.write(output);
                 out.flush();
             }
 		} catch (Exception e){
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getData()", e);
+			logger.error("Exception in getData()", e);
 			throw new ServiceException("Not able to read remote File ","401", "Not able to read remote File", e);
 		} finally {
 			if(null != reader){
 				try {
 					reader.close();
 				} catch (IOException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "Exception in getData()", e);
+					logger.error("Exception in getData()", e);
 				}
 			}
 			if(null != in){

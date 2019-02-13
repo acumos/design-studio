@@ -21,14 +21,16 @@
 package org.acumos.designstudio.ce;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.service.MatchingModelServiceImpl;
 import org.acumos.designstudio.ce.service.SolutionServiceImpl;
 import org.acumos.designstudio.ce.util.DSUtil;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.matchingmodel.DSModelVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -49,7 +51,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @EnableScheduling
 public class Application {
 
-	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(Application.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	public static final String CONFIG_ENV_VAR_NAME = "SPRING_APPLICATION_JSON";
 	
 	
@@ -66,14 +68,14 @@ public class Application {
 	 */
 	@Scheduled(cron = "* * */6 * * *")
 	public void ExecuteForHour() throws ServiceException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " Scheduled on ExecuteForHour() Begin ");
+		logger.info("Scheduled on ExecuteForHour() Begin ");
 		try {
 			solutionServiceImpl.getUpdatedModelsbyDate();
 		} catch (Exception e) {
 			logger.error("Interrupted Exception Occured in ExecuteForHour() {}", e);
 			throw new ServiceException("Failed for Creating the Cache");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " Scheduled on ExecuteForHour() End ");
+		logger.info("Scheduled on ExecuteForHour() End ");
 	}
 
 	
@@ -97,7 +99,7 @@ public class Application {
 			DSUtil.rmdir(new File(path));
 			logger.info("main: output folder is cleaned successfully {}", path);
 		} else {
-			logger.warn("main: no configuration found in environment {}", CONFIG_ENV_VAR_NAME);
+			logger.info("main: no configuration found in environment {}", CONFIG_ENV_VAR_NAME);
 		}
 		SpringApplication.run(Application.class, args);
 	}
@@ -111,14 +113,14 @@ public class Application {
 	 */
 	@EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) throws ServiceException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() Begin ");
+		logger.info("onApplicationEvent() Begin ");
 		List<DSModelVO> dsModels = matchingModelServiceImpl.getPublicDSModels();
 		if(dsModels != null && !dsModels.isEmpty()){
 			matchingModelServiceImpl.populatePublicModelCacheForMatching(dsModels);
 		} else {
-			logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() : public model cache is empty");
+			logger.info("onApplicationEvent() : public model cache is empty");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " onApplicationEvent() End ");
+		logger.info("onApplicationEvent() End ");
     }
 	
 }

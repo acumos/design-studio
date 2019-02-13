@@ -20,11 +20,14 @@
 
 package org.acumos.csvdatabroker.controller;
 
+import java.lang.invoke.MethodHandles;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.acumos.csvdatabroker.service.ProtobufService;
-import org.acumos.csvdatabroker.util.EELFLoggerDelegator;
 import org.acumos.csvdatabroker.vo.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +41,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/verify")
 public class VerifyCsvDatabrokerController {
 
-	private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(VerifyCsvDatabrokerController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	private byte[] protobufMessage;
 	private String messageName1;
@@ -56,7 +59,7 @@ public class VerifyCsvDatabrokerController {
 			protobufMessage = result;
 			messageName1 = messageName;
 		} catch (Exception e){
-			logger.error(EELFLoggerDelegator.errorLogger, "Not able to convert to protobuf format !!!",e);
+			logger.error("Not able to convert to protobuf format !!!",e);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return new Result(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to convert to protobuf format data !!!");
 		}
@@ -70,7 +73,7 @@ public class VerifyCsvDatabrokerController {
 		try{
 			result =  protoService.readProtobufFormat(messageName1,protobufMessage);
 		} catch (Exception e){
-			logger.error(EELFLoggerDelegator.errorLogger, "Not able to convert the protobuf data !!!", e);
+			logger.error("Not able to convert the protobuf data !!!", e);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return new Result(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to convert the protobuf data !!!");
 		}

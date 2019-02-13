@@ -24,9 +24,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 
 import org.acumos.gdm.service.IGDMService;
-import org.acumos.gdm.util.EELFLoggerDelegator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +41,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/")
 public class GDMController {
-	private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(GDMController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Autowired
 	@Qualifier("GDMServiceImpl")
@@ -49,7 +51,7 @@ public class GDMController {
 	@RequestMapping(value = "/mapData", method = RequestMethod.POST)
 	public byte[] mapData(@RequestBody byte[] inputData){
 		byte[] result = null;
-		logger.debug(EELFLoggerDelegator.debugLogger,"mapData : Begin");
+		logger.info("mapData : Begin");
 		InputStream inputStream = new ByteArrayInputStream(inputData);
 		OutputStream outputStream;
 		try {
@@ -60,11 +62,11 @@ public class GDMController {
 				result = ((ByteArrayOutputStream) outputStream).toByteArray();
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Error in mapData could not process successfully !!!", e);
+			logger.error("Error in mapData could not process successfully !!!", e);
 		}
 		
 		
-		logger.debug(EELFLoggerDelegator.debugLogger,"mapData : End");
+		logger.info("mapData : End");
 		return result;
 	}
 

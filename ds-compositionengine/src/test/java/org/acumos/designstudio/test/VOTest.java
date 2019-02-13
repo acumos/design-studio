@@ -26,12 +26,12 @@ package org.acumos.designstudio.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.DSSolution;
 import org.acumos.designstudio.ce.vo.MatchingModel;
 import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
@@ -50,12 +50,12 @@ import org.json.simple.JSONArray;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class VOTest  {
-	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(VOTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private String nexusURI = "";
 	private String payloadURI ="";
 	
@@ -89,7 +89,7 @@ public class VOTest  {
 		assertNotNull(arti);
 		assertEquals("docker image", arti.getType());
 		assertEquals("fake.nexus.org/dcae/kpi_anomaly:1.0.0", arti.getUri());
-		logger.debug(EELFLoggerDelegator.debugLogger, arti.toString());
+		logger.info(arti.toString());
 	}
 	
 	@Test
@@ -121,7 +121,7 @@ public class VOTest  {
 		assertEquals("Nexus Repo", artifact.getName());
 		assertEquals("TOSCAPROTOBUF", artifact.getType());
 		assertEquals("1.0.0", artifact.getVersion());
-		logger.debug(EELFLoggerDelegator.debugLogger, artifact.toString());
+		logger.info(artifact.toString());
 		
 	}
 	
@@ -137,7 +137,7 @@ public class VOTest  {
 		aux.getTemp();
 		assertNotNull(aux);
 		assertEquals("Temp", aux.getTemp());
-		logger.debug(EELFLoggerDelegator.debugLogger, aux.toString());
+		logger.info(aux.toString());
 	}
 	
 	@Test
@@ -184,7 +184,7 @@ public class VOTest  {
 		
 		n.setContainer_name("Aggregate");
 		
-		logger.debug(EELFLoggerDelegator.debugLogger, bp.toString());
+		logger.info(bp.toString());
 		
 		assertNotNull(bp);
 		assertEquals("BluePrint", bp.getName());
@@ -231,7 +231,7 @@ public class VOTest  {
 
 		assertNotNull(res);
 		assertEquals("1.0.0", res.getVersion());
-		logger.debug(EELFLoggerDelegator.debugLogger, call.toString());
+		logger.info(call.toString());
 	}
 	
 	@Test
@@ -251,7 +251,7 @@ public class VOTest  {
 		Assert.assertEquals(s1, param.getDescription());
 		Assert.assertEquals(s2, param.getName());
 		Assert.assertEquals(s3, param.getValue());
-		logger.debug(EELFLoggerDelegator.debugLogger,   param.toString());
+		logger.info(param.toString());
 	}
 	
 	@Test
@@ -284,7 +284,7 @@ public class VOTest  {
 
 		assertNotNull(provide);
 		assertEquals("IGNORE", provide.getRoute());
-		logger.debug(EELFLoggerDelegator.debugLogger,   provide.toString());
+		logger.info(provide.toString());
 		
 	}
 	
@@ -302,7 +302,7 @@ public class VOTest  {
 		cap.setName(s2);
 		Assert.assertEquals(s1, cap.getId());
 		Assert.assertEquals(s2, cap.getName());
-		logger.debug(EELFLoggerDelegator.debugLogger,   cap.toString());
+		logger.info(cap.toString());
 	}
 	
 	@Test
@@ -327,7 +327,7 @@ public class VOTest  {
 		String s13 = "1";
 		String s14 = "1";
 		DSSolution ds = new DSSolution(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14);
-		logger.debug(EELFLoggerDelegator.debugLogger,   ds.toString());
+		logger.info(ds.toString());
 		DSSolution dss = new DSSolution();
 		dss.setAuthor(s1);
 		Assert.assertEquals(s1, dss.getAuthor());
@@ -357,7 +357,7 @@ public class VOTest  {
 		Assert.assertEquals(s13,dss.getVersion());
 		dss.setVisibilityLevel(s14);
 		Assert.assertEquals(s14,dss.getVisibilityLevel());
-		logger.debug(EELFLoggerDelegator.debugLogger,   dss.toString());
+		logger.info(dss.toString());
 	}
 	
 	@Test
@@ -378,7 +378,7 @@ public class VOTest  {
 		confProps.getNexususername();
 		confProps.getToscaOutputFolder();
 		assertNotNull(confProps);
-		logger.debug(EELFLoggerDelegator.debugLogger,   confProps.toString());
+		logger.info(confProps.toString());
 	}
 	
 	@Test

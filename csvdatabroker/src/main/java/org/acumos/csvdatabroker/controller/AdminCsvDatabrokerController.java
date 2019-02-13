@@ -20,6 +20,8 @@
 
 package org.acumos.csvdatabroker.controller;
 
+import java.lang.invoke.MethodHandles;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.acumos.csvdatabroker.exceptionhandler.ServiceException;
@@ -27,10 +29,11 @@ import org.acumos.csvdatabroker.service.CSVDatabrokerService;
 import org.acumos.csvdatabroker.service.ConfigurationService;
 import org.acumos.csvdatabroker.service.ProtobufService;
 import org.acumos.csvdatabroker.util.Constants;
-import org.acumos.csvdatabroker.util.EELFLoggerDelegator;
 import org.acumos.csvdatabroker.vo.Configuration;
 import org.acumos.csvdatabroker.vo.Protobuf;
 import org.acumos.csvdatabroker.vo.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,15 +42,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/admin")
 public class AdminCsvDatabrokerController {
 
-private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(AdminCsvDatabrokerController.class);
+private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Autowired
 	@Qualifier("CSVDatabrokerServiceImpl")
@@ -77,7 +78,7 @@ private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(AdminCs
 			
 			result = new Result(HttpServletResponse.SC_OK, "RestulsetSize updated successfully !!!" );
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Error while updating ResultsetSize", e);
+			logger.error("Error while updating ResultsetSize", e);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			result = new Result(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error while updating ResultsetSize");
 		}
@@ -98,7 +99,7 @@ private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(AdminCs
 			confService.setStart(start);
 			result = new Result(HttpServletResponse.SC_OK, "Offset reset to 0 successfully !!!" );
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Error while restting offset", e);
+			logger.error("Error while restting offset", e);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			result = new Result(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error while resetting offset");
 		}
@@ -112,7 +113,7 @@ private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(AdminCs
 		try {
 			result = confService.getStart();
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Error while fetching offset", e);
+			logger.error("Error while fetching offset", e);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			result = new Result(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error while fetching offset");
 		}
@@ -131,7 +132,7 @@ private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(AdminCs
 			}
 			return conf;
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Environment Configuration is null or not set", e);
+			logger.error("Environment Configuration is null or not set", e);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return new Result(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "No environment configuration found!  Please set the Environment configuration.");
 		}
@@ -147,7 +148,7 @@ private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(AdminCs
 			protobuf = protoService.getProtobuf();
 			return protobuf.toString();
 		} catch (Exception e){
-			logger.error(EELFLoggerDelegator.errorLogger, "Protobuf is null or not set", e);
+			logger.error("Protobuf is null or not set", e);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return new Result(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "No Protobuf found!  Please set the Environment configuration.");
 		}

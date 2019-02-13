@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -59,7 +60,7 @@ public class ProtobufGeneratorService {
 	boolean isItMessage = false;
 	int servicesLineCount = 0;
 
-	private static final Logger logger = LoggerFactory.getLogger(ProtobufGeneratorService.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	final Pattern pattern = Pattern.compile("\\((.*?)\\)");
 	private List<MessageargumentList> messageargumentList = null;
 	private List<InputMessage> listOfInputMessages = null;
@@ -90,7 +91,7 @@ public class ProtobufGeneratorService {
 	 *             On failure
 	 */
 	public String createProtoJson(String solutionId, String version, File localMetadataFile) throws ServiceException {
-		logger.debug("CreateProtoJson() started");
+		logger.info("CreateProtoJson() started");
 		protoBufClass = new ProtoBufClass();
 		messageBodyList = new ArrayList<>();
 		listOfInputAndOutputMessage = new ArrayList<>();
@@ -114,23 +115,18 @@ public class ProtobufGeneratorService {
 				protoBufToJsonString = gson1.toJson(protoBufClass);
 			} catch (Exception ex) {
 				logger.error("Exception Occured  constructListOfMessages()", ex);
-				ex.printStackTrace();
 			}
 			isMessage = false;
 			isItservice = false;
 			isItMessage = false;
 			servicesLineCount = 0;
-			logger.debug("CreateProtoJson() end");
+			logger.info("CreateProtoJson() end");
 		} catch (ServiceException ex) {
-			logger.error(
-					"Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json",
-					ex);
+			logger.error("Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json",ex);
 			throw new ServiceException(ex.getMessage(), ex.getErrorCode(), ex.getErrorDesc(), ex.getCause());
 
 		} catch (Exception ex) {
-			logger.error(
-					"Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json",
-					ex);
+			logger.error("Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json",ex);
 
 		} finally {
 			try {
@@ -139,9 +135,7 @@ public class ProtobufGeneratorService {
 				if (fr != null)
 					fr.close();
 			} catch (IOException ex) {
-				logger.error(
-						"Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json",
-						ex);
+				logger.error("Exception Occured  CreateProtoJson() when Reading the protobuf file and generating protobuf json",ex);
 			}
 		}
 		return protoBufToJsonString;
@@ -166,7 +160,7 @@ public class ProtobufGeneratorService {
 			// start package
 
 			if (line.startsWith("message")) {
-				logger.debug("costructMessage() strated");
+				logger.info("costructMessage() strated");
 				isMessage = false;
 				messageBody = new MessageBody();
 
@@ -179,11 +173,11 @@ public class ProtobufGeneratorService {
 				messageBodyList.add(messageBody);
 				protoBufClass.setListOfMessages(messageBodyList);
 				isMessage = false;
-				logger.debug("costructMessage() end");
+				logger.info("costructMessage() end");
 			}
 
 			if (line.startsWith("service")) {
-				logger.debug("constructService() started");
+				logger.info("constructService() started");
 				service = new org.acumos.designstudio.toscagenerator.vo.protobuf.Service();
 				service = constructService(line, service);
 
@@ -218,7 +212,7 @@ public class ProtobufGeneratorService {
 				}
 			} else if (isItservice && line.contains("}") && !line.isEmpty()) {
 				isItservice = false;
-				logger.debug("constructService() end");
+				logger.info("constructService() end");
 			}
 		} catch (Exception ex) {
 			logger.error("Exception Occured  parseLine()", ex);
@@ -229,7 +223,7 @@ public class ProtobufGeneratorService {
 	}
 
 	private String constructSyntax(String line) {
-		logger.debug("constructSyntax() strated");
+		logger.info("constructSyntax() strated");
 		String removequotes = "";
 		try {
 			if (line.startsWith("syntax")) {
@@ -241,15 +235,15 @@ public class ProtobufGeneratorService {
 		} catch (Exception ex) {
 			logger.error("Exception Occured  constructSyntax()", ex);
 		}
-		logger.debug("constructSyntax() end");
+		logger.info("constructSyntax() end");
 		return removequotes;
 
 	}
 
 	private String constructPackage(String line) {
-		logger.debug("constructPackage() strated");
+		logger.info("constructPackage() strated");
 		String[] fields = line.split(" ");
-		logger.debug("constructPackage() end");
+		logger.info("constructPackage() end");
 		return fields[1].replace(";", "");
 	}
 
@@ -339,7 +333,7 @@ public class ProtobufGeneratorService {
 	}
 
 	private List<InputMessage> constructInputMessage(String inputParameterString) {
-		logger.debug("constructInputMessage() strated");
+		logger.info("constructInputMessage() strated");
 		listOfInputMessages = new ArrayList<InputMessage>();
 		try {
 
@@ -353,13 +347,13 @@ public class ProtobufGeneratorService {
 		} catch (Exception ex) {
 			logger.error("Exception Occured  constructInputMessage()", ex);
 		}
-		logger.debug("constructInputMessage() end");
+		logger.info("constructInputMessage() end");
 		return listOfInputMessages;
 
 	}
 
 	private List<OutputMessage> constructOutputMessage(String outPutParameterString) {
-		logger.debug("constructOutputMessage() strated");
+		logger.info("constructOutputMessage() strated");
 		listOfOputPutMessages = new ArrayList<OutputMessage>();
 		try {
 			String[] outPutParameterArray = outPutParameterString.split(",");
@@ -372,7 +366,7 @@ public class ProtobufGeneratorService {
 		} catch (Exception ex) {
 			logger.error("constructOutputMessage() end", ex);
 		}
-		logger.debug("constructOutputMessage() end");
+		logger.info("constructOutputMessage() end");
 		return listOfOputPutMessages;
 	}
 

@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -64,7 +65,6 @@ import org.acumos.designstudio.ce.service.MatchingModelServiceComponent;
 import org.acumos.designstudio.ce.service.SolutionServiceImpl;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.DSUtil;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.Artifact;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
 import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
@@ -118,6 +118,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -132,7 +134,7 @@ import com.google.gson.Gson;
  *
  */
 public class SolutionControllerTest {
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(SolutionControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private String url = "";
 	private String user = "";
 	private String pass = "";
@@ -258,7 +260,7 @@ public class SolutionControllerTest {
 				String emptyCdumpJson = gson.toJson(cdump);
 				String path = DSUtil.createCdumpPath(userId, localpath);
 				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + sessionId, "json", emptyCdumpJson);
-				logger.debug(EELFLoggerDelegator.debugLogger, emptyCdumpJson);
+				logger.info(emptyCdumpJson);
 				response = "{\"cid\":\"" + sessionId + "\",\"success\":\"true\",\"errorMessage\":\"\"}";
 				when(confprops.getDateFormat()).thenReturn("yyyy-MM-dd HH:mm:ss.SSS");
 				when(confprops.getToscaOutputFolder()).thenReturn(localpath);
@@ -269,8 +271,7 @@ public class SolutionControllerTest {
 				
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured in createNewCompositeSolution() ",e);
+			logger.error(" Exception Occured in createNewCompositeSolution() ",e);
 			throw e;
 		}
 	}
@@ -372,7 +373,7 @@ public class SolutionControllerTest {
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.addNode(userId, null, null, sessionId, node);
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
+		logger.info(result);
 	}
 
 	@Test
@@ -471,7 +472,7 @@ public class SolutionControllerTest {
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.addNode(userId, null, null, sessionId, node);
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
+		logger.info(result);
 	}
 
 	@Test
@@ -570,7 +571,7 @@ public class SolutionControllerTest {
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.addNode(userId, null, null, sessionId, node);
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
+		logger.info(result);
 	}
 
 	@Test
@@ -590,7 +591,7 @@ public class SolutionControllerTest {
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.addNode(userId, null, null, sessionId, node);
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
+		logger.info(result);
 	}
 
 	@Test
@@ -659,7 +660,7 @@ public class SolutionControllerTest {
 		boolean result = solutionService.addLink(userId, null, null, "Node1 to DM", "202", "Node1", "1", "DM", "3",
 				"Req2", "Cap2", sessionId, property);
 		//assertFalse(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, "true");
+		logger.info("true");
 	}
 
 	@Test
@@ -722,7 +723,7 @@ public class SolutionControllerTest {
 		boolean result = solutionService.addLink(userId, null, null, "DM to Node2", "303", "DM", "3", "Model 2", "2",
 				"Req2", "Cap2", sessionId, property);
 		assertTrue(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, "true {} ", result);
+		logger.info("true {} ", result);
 	}
 
 	@Test
@@ -912,7 +913,7 @@ public class SolutionControllerTest {
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.modifyNode(userId, null, null, sessionId, "1", "Node1", ndata, fieldMap, databrokerMap,collatorMap,splitterMap);
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
+		logger.info(result);
 	}
 
 	@Test
@@ -984,7 +985,7 @@ public class SolutionControllerTest {
 		assertNotNull(databrokerMap);
 	//	String result = solutionService.modifyNode(userId, null, null, sessionId, "2", "Node8", ndata, fieldMap, databrokerMap);
 	//	assertNotNull(result);
-	//	logger.debug(EELFLoggerDelegator.debugLogger, result);
+	//	logger.info(result);
 	}
 
 	@Test
@@ -1064,7 +1065,7 @@ public class SolutionControllerTest {
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 	//	String result = solutionService.modifyNode(userId, null, null, sessionId, "8", "Node8", ndata, fieldMap, databrokerMap);
 	//	assertNotNull(result);
-	//	logger.debug(EELFLoggerDelegator.debugLogger, result);
+	//	logger.info(result);
 	}
 
 	@Test
@@ -1080,7 +1081,7 @@ public class SolutionControllerTest {
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.modifyLink(userId, sessionId, null, null, "101", "Link2");
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
+		logger.info(result);
 	}
 
 	@Test
@@ -1096,7 +1097,7 @@ public class SolutionControllerTest {
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.modifyLink(userId, sessionId, null, null, "606", "Link9");
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
+		logger.info(result);
 	}
 
 	@Test
@@ -1119,12 +1120,12 @@ public class SolutionControllerTest {
 			boolean result = solutionService.deleteLink(userId, null, null, "333", "f783f2ad-3714-4fd5-8e28-484fab2aac03");
 			assertNotNull(result);
 			if (result == true) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "Link deleted  {} ", result);
+				logger.info("Link deleted  {} ", result);
 			} else {
 				throw new ServiceException("Link Not Deleted");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Action Failed", e);
+			logger.error("Action Failed", e);
 		}
 	}
 
@@ -1143,12 +1144,12 @@ public class SolutionControllerTest {
 			boolean result = solutionService.deleteLink(userId, null, null, sessionId, "202");
 			assertNotNull(result);
 			if (result == true) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "Link deleted  {} ", result);
+				logger.info("Link deleted  {} ", result);
 			} else {
 				throw new ServiceException("Link Not Deleted");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Action Failed", e);
+			logger.error("Action Failed", e);
 		}
 	}
 
@@ -1167,12 +1168,12 @@ public class SolutionControllerTest {
 			boolean result = solutionService.deleteLink(userId, null, null, sessionId, "303");
 			assertNotNull(result);
 			if (result == true) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "Link deleted  {} ", result);
+				logger.info("Link deleted  {} ", result);
 			} else {
 				throw new ServiceException("Link Not Deleted");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Action Failed", e);
+			logger.error("Action Failed", e);
 		}
 	}
 
@@ -1191,12 +1192,12 @@ public class SolutionControllerTest {
 			boolean result = solutionService.deleteLink(userId, null, null, sessionId, "404");
 			assertNotNull(result);
 			if (result == true) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "Link deleted  {} ", result);
+				logger.info("Link deleted  {} ", result);
 			} else {
 				throw new ServiceException("Link Not Deleted");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Action Failed", e);
+			logger.error("Action Failed", e);
 		}
 	}
 
@@ -1216,12 +1217,12 @@ public class SolutionControllerTest {
 			
 			boolean result = solutionService.deleteNode(userId, "222", null, null, "Aggregator1");
 			if (result == true) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "Node deleted  {} ", result);
+				logger.info("Node deleted  {} ", result);
 			} else {
 				throw new ServiceException("Node Not Deleted");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Action Failed", e);
+			logger.error("Action Failed", e);
 		}
 	}
 
@@ -1293,8 +1294,7 @@ public class SolutionControllerTest {
 			when(resource.getInputStream()).thenReturn(inputStream);
 			String result1 = gdmService.createDeployGDM(cdump, "54321", "8fcc3384-e3f8-4520-af1c-413d9495a154");
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured in createDeployGDM ", e);
+			logger.error("Exception Occured in createDeployGDM ", e);
 		}
 		String payload = gson.toJson(cdump);
 		MLPArtifact mlpArtifact = null;
@@ -1338,11 +1338,10 @@ public class SolutionControllerTest {
 			
 			String result = csimpl.validateCompositeSolution(userId, "testPubVer", "111", "1.0.0");
 			//assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, result);
+			logger.info(result);
 			
 		} catch (Exception e1) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured in uploadArtifact() ", e1);
+			logger.error("Exception Occured in uploadArtifact() ", e1);
 		}
 		
 		
@@ -1367,13 +1366,12 @@ public class SolutionControllerTest {
 			String result = compositeService.clearCompositeSolution(userId, null, null, sessionId);
 			assertNotNull(result);
 			if (result.contains("true")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, result);
+				logger.info(result);
 			} else {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured in clearCompositeSolution() ", e);
+			logger.error("Exception Occured in clearCompositeSolution() ", e);
 		}
 	}
 
@@ -1391,13 +1389,12 @@ public class SolutionControllerTest {
 			String result = compositeService.closeCompositeSolution(userId, null, null, sessionId);
 			assertNotNull(result);
 			if (result.contains("true")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, result);
+				logger.info(result);
 			} else {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured in closeCompositeSolution() ", e);
+			logger.error("Exception Occured in closeCompositeSolution() ", e);
 		}
 	}
 
@@ -1479,9 +1476,9 @@ public class SolutionControllerTest {
 			//when(pageResponse1.getContent()).thenReturn(mlpSols);
 			
 			result = compositeServiceImpl.saveCompositeSolution(dscs);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+			logger.info("Result of Save Composite Solution :  {} ", result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+			logger.error("Exception in saveCompositeSolution" , e);
 		}		
 	}
 
@@ -1536,9 +1533,9 @@ public class SolutionControllerTest {
 			when(cmnDataService.getSolutionRevisionArtifacts(mlpSolution.getSolutionId(), mlpSolutionRevision.getRevisionId())).thenReturn(artifacts);
 			isSolutionDeleted = iCompositeSolutionService.deleteCompositeSolution(userId, mlpSolution.getSolutionId(), version);
 			//assertTrue(isSolutionDeleted);
-			logger.info(EELFLoggerDelegator.applicationLogger, "deleteCompositeSolution {}", isSolutionDeleted);
+			logger.info("deleteCompositeSolution {}", isSolutionDeleted);
 		} catch (AcumosException ex) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteCompositeSolution", ex);
+			logger.error("Exception in deleteCompositeSolution", ex);
 		}
 	}
 
@@ -1589,12 +1586,12 @@ public class SolutionControllerTest {
 			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,
 					protobufJsonString1);
 			Assert.assertNotNull(getMatchingModelsResult);
-			logger.info(EELFLoggerDelegator.applicationLogger, "getMatchingModelsResult {}", getMatchingModelsResult);
-			logger.debug(EELFLoggerDelegator.debugLogger, getMatchingModelsResult);
+			logger.info("getMatchingModelsResult {}", getMatchingModelsResult);
+			logger.info(getMatchingModelsResult);
 		} catch (JSONException je) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getMatchingModels", je);
+			logger.error("Exception in getMatchingModels", je);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getMatchingModels",  ex);
+			logger.error("Exception in getMatchingModels",  ex);
 		}
 	}
 
@@ -1621,11 +1618,11 @@ public class SolutionControllerTest {
 			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,
 					protobufJsonString1);
 			Assert.assertNotNull(getMatchingModelsResult);
-			logger.debug(EELFLoggerDelegator.debugLogger, getMatchingModelsResult);
+			logger.info(getMatchingModelsResult);
 		} catch (JSONException je) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getMatchingModels1" , je);
+			logger.error("Exception in getMatchingModels1" , je);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getMatchingModels1" ,ex);
+			logger.error("Exception in getMatchingModels1" ,ex);
 		}
 
 	}
@@ -1694,10 +1691,10 @@ public class SolutionControllerTest {
 			
 			String result = solutionService.readCompositeSolutionGraph(userId, sId, version);
 			Assert.assertNotNull(result);
-			logger.info(EELFLoggerDelegator.applicationLogger, "readCompositeSolutionGraph {}", result);
+			logger.info("readCompositeSolutionGraph {}", result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error(EELFLoggerDelegator.errorLogger,"exception in readCompositeSolutionGraph Test", e);
+			logger.error("exception in readCompositeSolutionGraph Test", e);
 		}
 		
 	}
@@ -1792,7 +1789,7 @@ public class SolutionControllerTest {
            String result = solutionService.getSolutions("111");
            assertNotNull(result);
    		} catch(Exception e){
-   			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getSolutionsReturnSolution Test:" , e);
+   			logger.error("Exception in getSolutionsReturnSolution Test:" , e);
    		}
     }
 
@@ -1815,9 +1812,9 @@ public class SolutionControllerTest {
 			when(confprops.getDateFormat()).thenReturn(sdf.format(new Date()));
 			String result = compositeService.getCompositeSolutions(userId, visibilityLevel);
 			Assert.assertNotNull(result);
-			logger.info(EELFLoggerDelegator.applicationLogger, "getCompositeSolutions {}", result);
+			logger.info("getCompositeSolutions {}", result);
 		} catch (AcumosException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getCompositeSolutions" , e);
+			logger.error("Exception in getCompositeSolutions" , e);
 		}
 	}
 
@@ -1837,7 +1834,7 @@ public class SolutionControllerTest {
 			repositoryLocation.setPassword(CONFIG.getProperty("nexus.nexuspasswordTest"));
 			nexusArtifactClient = new NexusArtifactClient(repositoryLocation);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,"exception in getNexusClient", e);
+			logger.error("exception in getNexusClient", e);
 		}
 		return nexusArtifactClient;
 	}
@@ -1922,9 +1919,9 @@ public class SolutionControllerTest {
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			
 			result = compositeServiceImpl.updateCompositeSolution(dscs); 
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+			logger.info("Result of Save Composite Solution :  {} ", result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+			logger.error("Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -2012,9 +2009,9 @@ public class SolutionControllerTest {
 			
 			
 			result = compositeServiceImpl.updateCompositeSolution(dscs); 
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+			logger.info("Result of Save Composite Solution :  {} ", result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+			logger.error("Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -2121,9 +2118,9 @@ public class SolutionControllerTest {
 					fileInputStream)).thenReturn(artifactInfo);
 			
 			result = compositeServiceImpl.updateCompositeSolution(dscs); 
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+			logger.info("Result of Save Composite Solution :  {} ", result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+			logger.error("Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -2208,9 +2205,9 @@ public class SolutionControllerTest {
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			
 			result = compositeServiceImpl.updateCompositeSolution(dscs); 
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+			logger.info("Result of Save Composite Solution :  {} ", result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+			logger.error("Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -2295,9 +2292,9 @@ public class SolutionControllerTest {
 			when(confprops.getDateFormat()).thenReturn("yyyy-MM-dd HH:mm:ss.SSS");
 			
 			result = compositeServiceImpl.updateCompositeSolution(dscs); 
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+			logger.info("Result of Save Composite Solution :  {} ", result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+			logger.error("Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -2339,9 +2336,9 @@ public class SolutionControllerTest {
 			when(cmnDataService.getSolutionRevisionArtifacts(solutionID, mlpSolutionRevision.getRevisionId())).thenReturn(artifacts);
 			String artifactResult = acumosCatalogServiceImpl.readArtifact(userId, solutionID, version, props.getArtifactType().trim());
 			assertNotNull(artifactResult);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+			logger.info("Result of Save Composite Solution :  {} ", result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+			logger.error("Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -2949,7 +2946,7 @@ public class SolutionControllerTest {
 				 result = solutionService.addNode(userId, null, null, sessionId, databrokerNode);
 			}
 			assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, result);
+			logger.info(result);
 		}
 
 	/**
@@ -3043,9 +3040,9 @@ public class SolutionControllerTest {
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			SuccessErrorMessage successErrorMessage = compositeService.setProbeIndicator(userId, "111", "1.0.0", null,"true");
 			assertNotNull(successErrorMessage);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", successErrorMessage);
+			logger.info("Result of Save Composite Solution :  {} ", successErrorMessage);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
+			logger.error("Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -3065,9 +3062,9 @@ public class SolutionControllerTest {
 			//when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			boolean flag = dsUtil.isValidJsonSchema(path+cdumpFileName);
 			assertNotNull(flag);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of isValidJsonSchemaTest :  {} ", flag);
+			logger.info("Result of isValidJsonSchemaTest :  {} ", flag);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in isValidJsonSchemaTest" , e);
+			logger.error("Exception in isValidJsonSchemaTest" , e);
 		}
 		
 	}
@@ -3086,11 +3083,11 @@ public class SolutionControllerTest {
 			
 			String result = commandUtils.imageFullNameFrom(registry, repoAndImg, tag);
 			assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of imageFullNameFrom :  {} ", result);
+			logger.info("Result of imageFullNameFrom :  {} ", result);
 			
 			
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in imageFullNameFrom" , e);
+			logger.error("Exception in imageFullNameFrom" , e);
 		}
 		
 	}
@@ -3105,10 +3102,10 @@ public class SolutionControllerTest {
 			
 			String result = commandUtils.addLatestTagIfNeeded(fullImageName);
 			assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of addLatestTagIfNeeded :  {} ", result);
+			logger.info("Result of addLatestTagIfNeeded :  {} ", result);
 			
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in addLatestTagIfNeeded" , e);
+			logger.error("Exception in addLatestTagIfNeeded" , e);
 		}
 		
 	}
@@ -3122,10 +3119,10 @@ public class SolutionControllerTest {
 			
 			long result = commandUtils.sizeInBytes("1");
 			assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of sizeInBytes :  {} ", result);
+			logger.info("Result of sizeInBytes :  {} ", result);
 			
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in sizeInBytes" , e);
+			logger.error("Exception in sizeInBytes" , e);
 		}
 		
 	}
@@ -3172,10 +3169,10 @@ public class SolutionControllerTest {
 
 			dockerConfiguration.getMaxPerRouteConnections();
 
-			logger.debug(EELFLoggerDelegator.debugLogger, "successfully run test for dockerConfiguration : ");
+			logger.info("successfully run test for dockerConfiguration : ");
 			
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in dockerConfiguration" , e);
+			logger.error("Exception in dockerConfiguration" , e);
 		}
 		
 	}
@@ -3246,10 +3243,10 @@ public class SolutionControllerTest {
 			property.getProtoArtifactType();
 			
 
-			logger.debug(EELFLoggerDelegator.debugLogger, "successfully run test for configuration : ");
+			logger.info("successfully run test for configuration : ");
 			
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in configuration" , e);
+			logger.error("Exception in configuration" , e);
 		}
 		
 	}

@@ -20,7 +20,10 @@
 
 package org.acumos.sqldatabroker;
 
-import org.acumos.sqldatabroker.util.EELFLoggerDelegator;
+import java.lang.invoke.MethodHandles;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,7 +33,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
 public class SQLDatabrokerApplication {
-private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(SQLDatabrokerApplication.class);
+private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	/**
 	 * 

@@ -20,6 +20,8 @@
 
 package org.acumos.designstudio.toscagenerator.exceptionhandler;
 
+import java.lang.invoke.MethodHandles;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +34,7 @@ public abstract class AcumosException extends Exception {
 
 	private static final long serialVersionUID = 5967973881519668649L;
 
-	private static final Logger logger = LoggerFactory.getLogger(AcumosException.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private  transient Object param;
 	private  final String errorCode;
@@ -52,7 +54,7 @@ public abstract class AcumosException extends Exception {
 
 	public AcumosException(String message, String errorCode, String errorDesc) {
 		super(message);
-		logger.debug(message);
+		logger.info(message);
 		this.errorCode = errorCode;
 		this.errorDesc = errorDesc;
 	}

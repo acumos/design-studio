@@ -23,6 +23,7 @@ package org.acumos.designstudio.toscagenerator.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class Properties {
-	private static final Logger logger = LoggerFactory.getLogger(Properties.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private static String propertyFileName = "TOSCAApplication.properties";
 
@@ -47,7 +48,7 @@ public class Properties {
 	}
 
 	private static void getMainProperties() {
-		logger.debug("--------------- getMainProperties() started -------------");
+		logger.info("getMainProperties() started ");
 
 		if (mainProperties == null) {
 			InputStream is = null;
@@ -56,15 +57,15 @@ public class Properties {
 				Properties pro = new Properties();
 				is = pro.getClass().getResourceAsStream("/" + propertyFileName);
 				if (is == null) {
-					logger.debug("Not found in classpath trying to load from filesystem");
+					logger.info("Not found in classpath trying to load from filesystem");
 					is = new FileInputStream("./TOSCAApplication.properties");
 				}
 				mainProperties.load(is);
 
 				configurationProperties = ConfigurationProperties.getConfigurationProperties();
-				logger.debug("------------  getMainProperties() ended --------------");
+				logger.info("getMainProperties() ended");
 			} catch (Exception e) {
-				logger.error("-------------- Exception Occured getMainProperties() --------------", e);
+				logger.error("Exception Occured getMainProperties()", e);
 			}
 		}
 	}
@@ -78,7 +79,7 @@ public class Properties {
 	 * @return Temporary folder path
 	 */
 	public static String getTempFolderPath(String solutionID, String version) {
-		logger.debug("--------------- getTempFolderPath() started --------------");
+		logger.info("getTempFolderPath() started");
 		String path = configurationProperties.getToscaOutputFolder();
 		int pathlength = 0;
 		String lastchar = "";
@@ -92,14 +93,14 @@ public class Properties {
 			}
 			// create the directory for the solution and version specified
 			File dir = new File(path);
-			logger.debug("------------ Directory for Solution and Version : -------------" + dir);
+			logger.info("Directory for Solution and Version : " + dir);
 			if (!dir.exists()) {
-				logger.debug("------------ Directory not exists for Solution and Version : --------------------");
+				logger.info("Directory not exists for Solution and Version");
 				dir.mkdir();
-				logger.debug("----------- New Directory created for Solution and Version : ----------------" + dir);
+				logger.info("New Directory created for Solution and Version :" + dir);
 			}
 		}
-		logger.debug("-------------  getTempFolderPath() ended ---------------");
+		logger.info("getTempFolderPath() ended --");
 		return path;
 	}
 

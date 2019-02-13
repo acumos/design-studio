@@ -20,14 +20,17 @@
 
 package org.acumos.designstudio.ce.service;
 
+import java.lang.invoke.MethodHandles;
+
 import org.acumos.designstudio.ce.docker.DockerConfiguration;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.cdump.Cdump;
 import org.acumos.designstudio.ce.vo.cdump.Nodes;
 import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -35,7 +38,7 @@ import org.springframework.stereotype.Service;
 @Service("DataBrokerServiceImpl")
 public class DataBrokerServiceImpl implements IDataBrokerService {
 
-private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(DataBrokerServiceImpl.class);
+private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Autowired
 	private ConfigurationProperties confprops;

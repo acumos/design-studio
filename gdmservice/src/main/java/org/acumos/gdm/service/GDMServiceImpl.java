@@ -24,22 +24,21 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 import org.acumos.converter.Conversion;
 import org.acumos.converter.ConversionEnum;
 import org.acumos.converter.ConversionException;
-import org.acumos.gdm.util.EELFLoggerDelegator;
 import org.acumos.vo.DataVO.input;
 import org.acumos.vo.DataVO.output;
 import org.acumos.vo.mapping.DataMap;
 import org.acumos.vo.mapping.InputField;
 import org.acumos.vo.mapping.MapInput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -53,7 +52,7 @@ import com.google.protobuf.Descriptors.FieldDescriptor;
 @Service("GDMServiceImpl")
 public class GDMServiceImpl implements IGDMService {
 
-	private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(GDMServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	private static final String FIELD_MAPPING_FILE_NAME = "classpath:FieldMapping.json";
 	
@@ -71,7 +70,7 @@ public class GDMServiceImpl implements IGDMService {
 		try {
 			result = process(inputStream);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Error in mapData could not process successfully !!!", e);
+			logger.error("Error in mapData could not process successfully !!!", e);
 			throw e;
 		}
 		return result;
@@ -79,7 +78,7 @@ public class GDMServiceImpl implements IGDMService {
 	
 	private OutputStream process(InputStream inputStream)
 			throws IOException, JsonParseException, JsonMappingException, ConversionException {
-		logger.debug(EELFLoggerDelegator.debugLogger," process() : Begin"); 
+		logger.info("process() : Begin"); 
 		//1. Read the data in to input message.
 		input.Builder inputMessage = input.newBuilder();
 		inputMessage.mergeFrom(inputStream);
@@ -91,7 +90,7 @@ public class GDMServiceImpl implements IGDMService {
 		ByteArrayOutputStream result = new ByteArrayOutputStream();
 		//4. Return the stream. 
 		outputMessage.build().writeTo(result);
-		logger.debug(EELFLoggerDelegator.debugLogger,	"process() : End");
+		logger.info("process() : End");
 		return result;
 	}
 
@@ -111,7 +110,7 @@ public class GDMServiceImpl implements IGDMService {
 				inputfieldDesc = inputMessage.getDescriptorForType().findFieldByNumber(Integer.valueOf(inputField.getTag()));
 				Object inputvalue = inputMessage.getField(inputfieldDesc);
 				Object outputvalue = null;
-				logger.debug("inputField " + inputField.getTag() + " value : " + inputvalue);
+				logger.info("inputField " + inputField.getTag() + " value : " + inputvalue);
 				outputfieldDesc = outputMessage.getDescriptorForType().findFieldByNumber(Integer.valueOf(inputField.getMapped_to_field()));
 				conversionValue = inputfieldDesc.getType() + "TO" + outputfieldDesc.getType();
 				if(inputfieldDesc.isRepeated()){
@@ -121,7 +120,7 @@ public class GDMServiceImpl implements IGDMService {
 				}
 				
 				outputMessage.setField(outputfieldDesc, outputvalue );
-				logger.debug(EELFLoggerDelegator.debugLogger,"outputField " + inputField.getMapped_to_field() + " value : " + outputMessage.getField(outputfieldDesc));
+				logger.info("outputField " + inputField.getMapped_to_field() + " value : " + outputMessage.getField(outputfieldDesc));
 			}
 		}
 		return outputMessage;

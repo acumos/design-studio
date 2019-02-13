@@ -30,7 +30,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.16.RELEASE</version>
+		<version>2.1.1.RELEASE</version>
 		<!-- silence warning about parent relative path -->
 		<relativePath />
 	</parent>
@@ -52,19 +52,13 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.7</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com.att.eelf</groupId>
-			<artifactId>eelf-core</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-
+		
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<!-- Spring chooses <version>${logback.version}</version> -->
 		</dependency>
-
+		
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
@@ -107,11 +101,6 @@
 			<artifactId>junit</artifactId>
 			<!-- Spring sets the <version>4.11</version> -->
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<!-- <version>1.1.1</version> -->
 		</dependency>
 		
 		<dependency>

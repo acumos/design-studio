@@ -20,11 +20,14 @@
 
 package org.acumos.designstudio.ce.config;
 
+import java.lang.invoke.MethodHandles;
+
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.acumos.nexus.client.RepositoryLocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +43,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @Configuration
 public class AppConfig {
-	private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(AppConfig.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	@Autowired
 	private ConfigurationProperties confProps;

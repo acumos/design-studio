@@ -23,7 +23,10 @@
  */
 package org.acumos.designstudio.ce.exceptionhandler;
 
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
+import java.lang.invoke.MethodHandles;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -35,7 +38,7 @@ public abstract class AcumosException extends Exception {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(AcumosException.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private transient Object param;
 	private String errorCode;
