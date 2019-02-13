@@ -20,6 +20,8 @@
 
 package org.acumos.designstudio.toscagenerator.exceptionhandler;
 
+import java.lang.invoke.MethodHandles;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,9 +31,8 @@ public abstract class CustomException extends Exception {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LoggerFactory.getLogger(CustomException.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	// TODO : for showing the multiple exception on UI level
 	private Object param;
 	private String errorCode;
 	private String errorDesc;
@@ -58,7 +59,7 @@ public abstract class CustomException extends Exception {
 
 	public CustomException(String message, String errorCode, String errorDesc) {
 		super(message);
-		logger.debug(message);
+		logger.info(message);
 		this.errorCode = errorCode;
 		this.errorDesc = errorDesc;
 	}

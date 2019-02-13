@@ -20,6 +20,7 @@
 
 package org.acumos.csvdatabroker.service;
 
+import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,6 @@ import java.util.Stack;
 
 import org.acumos.csvdatabroker.exceptionhandler.ServiceException;
 import org.acumos.csvdatabroker.util.Constants;
-import org.acumos.csvdatabroker.util.EELFLoggerDelegator;
 import org.acumos.csvdatabroker.util.ProtobufUtil;
 import org.acumos.csvdatabroker.vo.Configuration;
 import org.acumos.csvdatabroker.vo.DBInputField;
@@ -42,6 +42,8 @@ import org.acumos.csvdatabroker.vo.Protobuf;
 import org.acumos.csvdatabroker.vo.ProtobufMessage;
 import org.acumos.csvdatabroker.vo.ProtobufMessageField;
 import org.acumos.csvdatabroker.vo.ProtobufServiceOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -55,8 +57,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 @Component("ProtobufServiceImpl")
 public class ProtobufServiceImpl implements ProtobufService {
-	private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ProtobufServiceImpl.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());	
 	private Protobuf protobuf; 
 	private DynamicSchema protobufSchema;
 	
@@ -78,7 +79,7 @@ public class ProtobufServiceImpl implements ProtobufService {
 			setProbufSchem(protobuf);
 			
 		} catch (Exception e){
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in processProtobuf()", e);
+			logger.error("Exception in processProtobuf()", e);
 			throw new ServiceException("Invalid Protobuf or Protobuf Definition not found","401", "Invalid Protobuf or Protobuf Definition not found", e);
 		}
 	}

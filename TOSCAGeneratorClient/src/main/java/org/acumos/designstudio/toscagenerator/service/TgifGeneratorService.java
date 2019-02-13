@@ -20,6 +20,7 @@
 
 package org.acumos.designstudio.toscagenerator.service;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Iterator;
 
 import org.acumos.designstudio.toscagenerator.exceptionhandler.AcumosException;
@@ -51,7 +52,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class TgifGeneratorService {
 
-	private static final Logger logger = LoggerFactory.getLogger(TgifGeneratorService.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 * 
@@ -66,7 +67,7 @@ public class TgifGeneratorService {
 	 *             On failure
 	 */
 	public Artifact createTgif1(String solutionID, String version, String modelMetaData) throws AcumosException {
-		logger.debug("--------  createTgif() Started ------------");
+		logger.info("createTgif() Started");
 		Artifact result = null;
 		String path = Properties.getTempFolderPath(solutionID, version);
 		JSONParser parser = new JSONParser();
@@ -78,11 +79,11 @@ public class TgifGeneratorService {
 			result = new Artifact("tgif", "json", solutionID, version, path, jsonString.length());
 
 		} catch (Exception e) {
-			logger.error("------------- Exception Occured  createTgif() -------------", e);
-			throw new ServiceException(" --------------- Exception Occured decryptAndWriteTofile() --------------",
+			logger.error("Exception Occured  createTgif()", e);
+			throw new ServiceException("Exception Occured decryptAndWriteTofile()",
 					Properties.getDecryptionErrorCode(), Properties.getDecryptionErrorDesc(), e.getCause());
 		}
-		logger.debug("--------  createTgif() End ------------");
+		logger.info("createTgif() End");
 		return result;
 	}
 
@@ -102,7 +103,7 @@ public class TgifGeneratorService {
 	 */
 	public Artifact createTgif(String solutionID, String version, String protobuf, String metaData)
 			throws AcumosException {
-		logger.debug("--------  createTgif() Started ------------");
+		logger.info("createTgif() Started");
 		Artifact result = null;
 		String path = Properties.getTempFolderPath(solutionID, version);
 		JSONParser parser = new JSONParser();
@@ -119,20 +120,19 @@ public class TgifGeneratorService {
 			jsonString = mapper.writeValueAsString(tgif);
 			jsonString = jsonString.replace("[null]", "[]");
 			jsonString = jsonString.replace("null", "{}");
-			logger.debug("Generated TGIF.json : " + jsonString);
+			logger.info("Generated TGIF.json : " + jsonString);
 			ToscaUtil.writeDataToFile(path, "TGIF", "json", jsonString);
 			result = new Artifact("TGIF", "json", solutionID, version, path, jsonString.length());
 
 		} catch (Exception e) {
-			logger.error("------------- Exception Occured in createTgif() -------------", e);
+			logger.error("Exception Occured in createTgif()", e);
 			logger.error("metaData : " + metaData);
 			logger.error("protobuf : " + protobuf);
 			logger.error("tgif : " + jsonString);
-			throw new ServiceException(
-					" --------------- Exception Occurred parsing either metaData or protobuf --------------",
+			throw new ServiceException("Exception Occurred parsing either metaData or protobuf",
 					Properties.getDecryptionErrorCode(), "Error creating TGIF details", e.getCause());
 		}
-		logger.debug("--------  createTgif() End ------------");
+		logger.info("createTgif() End");
 		return result;
 	}
 
@@ -144,7 +144,7 @@ public class TgifGeneratorService {
 	 * @return
 	 */
 	private Tgif populateTgif(String version, JSONObject metaDataJson, JSONObject protobufJson) {
-		logger.debug("--------  populateTgif() Begin ------------");
+		logger.info("populateTgif() Begin");
 
 		@SuppressWarnings("unchecked")
 		String solutionName = metaDataJson.getOrDefault("name", "Key not found").toString();
@@ -175,7 +175,7 @@ public class TgifGeneratorService {
 
 		Tgif result = new Tgif(self, streams, services, parameters, auxiliary, artifacts);
 
-		logger.debug("--------  populateTgif() End ------------");
+		logger.info("populateTgif() End");
 		return result;
 	}
 
@@ -325,7 +325,7 @@ public class TgifGeneratorService {
 			message = (JSONObject) itr.next();
 			messageName = (String) message.get("messageName");
 			if (messageName.equals(msgName)) {
-				logger.debug("message : " + message.toJSONString());
+				logger.info("message : " + message.toJSONString());
 				break;
 			}
 		}

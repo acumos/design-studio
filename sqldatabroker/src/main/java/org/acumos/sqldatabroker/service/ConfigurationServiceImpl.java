@@ -20,15 +20,18 @@
 
 package org.acumos.sqldatabroker.service;
 
+import java.lang.invoke.MethodHandles;
+
 import org.acumos.sqldatabroker.util.DatabrokerConstants;
-import org.acumos.sqldatabroker.util.EELFLoggerDelegator;
 import org.acumos.sqldatabroker.vo.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 
 @Component("ConfigurationServiceImpl")
 public class ConfigurationServiceImpl implements ConfigurationService {
-	private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ConfigurationServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	
 	private Configuration conf;

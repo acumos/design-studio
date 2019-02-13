@@ -23,12 +23,14 @@
 package org.acumos.designstudio.ce.docker;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.BuildImageCmd;
@@ -44,8 +46,7 @@ import com.github.dockerjava.core.command.BuildImageResultCallback;
  *      build</A>
  */
 public class CreateImageCommand extends DockerCommand {
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(CreateImageCommand.class);
-
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private final File dockerFolder;
 
 	private final String imageName;
@@ -119,53 +120,52 @@ public class CreateImageCommand extends DockerCommand {
 			throw new IllegalArgumentException("configured dockerFolder '" + dockerFolder + "' does not exist.");
 		}
 		final Map<String, String> buildArgsMap = new HashMap<String, String>();
-		logger.debug(EELFLoggerDelegator.debugLogger,
-				" Docker buildArgsMap for testing {}" , buildArgsMap);
+		logger.info(" Docker buildArgsMap for testing {}" , buildArgsMap);
 		if ((buildArgs != null) && (!buildArgs.trim().isEmpty())) {
-			logger.info(EELFLoggerDelegator.applicationLogger, "Parsing buildArgs: {}" , buildArgs);
+			logger.info("Parsing buildArgs: {}" , buildArgs);
 			String[] split = buildArgs.split(",|;");
 			for (String arg : split) {
 				String[] pair = arg.split("=");
 				if (pair.length == 2) {
 					buildArgsMap.put(pair[0].trim(), pair[1].trim());
 				} else {
-					logger.error(EELFLoggerDelegator.errorLogger, "Invalid format for  {}. Buildargs should be formatted as key=value" ,arg);
+					logger.error("Invalid format for  {}. Buildargs should be formatted as key=value" ,arg);
 				}
 			}
 		}
 		String dockerFile = this.dockerFile == null ? "Dockerfile" : this.dockerFile;
 		File docker = new File(dockerFolder, dockerFile);
-		logger.debug(EELFLoggerDelegator.debugLogger, "Docker File for testing {}",  docker);
+		logger.info("Docker File for testing {}",  docker);
 		if (!docker.exists()) {
 			throw new IllegalArgumentException(
 					String.format("Configured Docker file '%s' does not exist.", dockerFile));
 		}
 		DockerClient client = getClient();
-		logger.debug(EELFLoggerDelegator.debugLogger, "Docker Client for testing {}", client);
+		logger.info("Docker Client for testing {}", client);
 		try {
-			logger.debug(EELFLoggerDelegator.debugLogger, "Docker callback for entered");
+			logger.info("Docker callback for entered");
 			BuildImageResultCallback callback = new BuildImageResultCallback() {
 				@Override
 				public void onNext(BuildResponseItem item) {
 					if (item.getStream() != null)
-						logger.debug(EELFLoggerDelegator.debugLogger, " :  {}", item.getStream());
+						logger.info("StreamData :  {}", item.getStream());
 					else
-						logger.debug(EELFLoggerDelegator.debugLogger, ": {}", item);
+						logger.info("StreamData: {}", item);
 					super.onNext(item);
 				}
 
 				@Override
 				public void onError(Throwable throwable) {
-					logger.error(EELFLoggerDelegator.errorLogger, "Failed to creating docker image", throwable);
+					logger.error("Failed to creating docker image", throwable);
 					throwable.printStackTrace();
 					super.onError(throwable);
 				}
 			};
-			logger.debug(EELFLoggerDelegator.debugLogger,"Docker callback for closed {} " , callback);
+			logger.info("Docker callback for closed {} " , callback);
 			BuildImageCmd buildImageCmd = client.buildImageCmd(docker)
 					.withTags(new HashSet<>(Arrays.asList(imageName + ":" + imageTag))).withNoCache(noCache)
 					.withRemove(rm);// .withTag(imageName + ":" + imageTag)
-			logger.debug(EELFLoggerDelegator.debugLogger,"Docker buildImageCmd for testing {}" , buildImageCmd);
+			logger.info("Docker buildImageCmd for testing {}" , buildImageCmd);
 			if (!buildArgsMap.isEmpty()) {
 				for (final Map.Entry<String, String> entry : buildArgsMap.entrySet()) {
 					buildImageCmd = buildImageCmd.withBuildArg(entry.getKey(), entry.getValue());
@@ -173,14 +173,14 @@ public class CreateImageCommand extends DockerCommand {
 			}
 			BuildImageResultCallback result = buildImageCmd.exec(callback);
 
-			logger.debug(EELFLoggerDelegator.debugLogger,"Docker result for testing start {} " , result);
+			logger.info("Docker result for testing start {} " , result);
 
 			this.imageId = result.awaitImageId();
 
-			logger.debug(EELFLoggerDelegator.debugLogger,"Docker result for testing end {} ", result);
+			logger.info("Docker result for testing end {} ", result);
 
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "RuntimeException has came", e);
+			logger.error("RuntimeException has came", e);
 			throw new RuntimeException(e);
 		}
 	}

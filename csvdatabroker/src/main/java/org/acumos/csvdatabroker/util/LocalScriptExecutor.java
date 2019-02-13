@@ -26,22 +26,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.concurrent.TimeUnit;
 
-import org.acumos.csvdatabroker.service.ConfigurationService;
-import org.acumos.csvdatabroker.service.ConfigurationServiceImpl;
 import org.acumos.csvdatabroker.service.ProtobufService;
-import org.acumos.csvdatabroker.service.ProtobufServiceImpl;
-import org.acumos.csvdatabroker.vo.Configuration;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.acumos.csvdatabroker.exceptionhandler.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LocalScriptExecutor {
 	
-	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(LocalScriptExecutor.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private static String OS = System.getProperty("os.name").toLowerCase();
 	
 	private String localPath; 
@@ -99,13 +93,13 @@ public class LocalScriptExecutor {
         }
         long endTime = System.nanoTime();
         long elapsedTimeInMillis = TimeUnit.MILLISECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS);
-        logger.debug("File processed in : " + elapsedTimeInMillis + " ms");
+        logger.info("File processed in : " + elapsedTimeInMillis + " ms");
         } finally {
         	if(null != reader){
 				try {
 					reader.close();
 				} catch (IOException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "Exception in getData()", e);
+					logger.error("Exception in getData()", e);
 				}
 			}
         }
@@ -161,7 +155,7 @@ public class LocalScriptExecutor {
 				try {
 					reader.close();
 				} catch (IOException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "Exception in executeScript()", e);
+					logger.error("Exception in executeScript()", e);
 				}
 			}
 		}
@@ -190,20 +184,20 @@ public class LocalScriptExecutor {
         byte[] output = null;
         try {
         while ( (line = reader.readLine()) != null) {
-        	logger.debug(line);
+        	logger.info(line);
 			output = protoService.convertToProtobufFormat(line);
 			out.write(output);
 			out.flush();
         }
         long endTime = System.nanoTime();
         long elapsedTimeInMillis = TimeUnit.MILLISECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS);
-        logger.debug("File processed in : " + elapsedTimeInMillis + " ms");
+        logger.info("File processed in : " + elapsedTimeInMillis + " ms");
         } finally {
         	if(null != reader){
 				try {
 					reader.close();
 				} catch (IOException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "Exception in getData()", e);
+					logger.error("Exception in getData()", e);
 				}
 			}
         }
@@ -231,7 +225,7 @@ public class LocalScriptExecutor {
 				byte[] output = null;
 				reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 				while ((line = reader.readLine()) != null) {
-					logger.debug(line);
+					logger.info(line);
 					output = protoService.convertToProtobufFormat(line);
 					out.write(output);
 					out.flush();
@@ -248,7 +242,7 @@ public class LocalScriptExecutor {
 				try {
 					reader.close();
 				} catch (IOException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "Exception in executeScript()", e);
+					logger.error("Exception in executeScript()", e);
 				}
 			}
 		}
@@ -268,20 +262,20 @@ public class LocalScriptExecutor {
 	@Deprecated
 	public void createScriptFile(String script) throws IOException {
 		if (isWindows()) {
-            logger.debug("This is Windows");
+            logger.info("This is Windows");
             //create .bat file 
             DSUtil.writeDataToFile(localPath, scriptFileName, "bat", script);
         } else if (isMac()) {
-        	logger.debug("This is Mac");
+        	logger.info("This is Mac");
         	DSUtil.writeDataToFile(localPath, scriptFileName, "sh", script);
         } else if (isUnix()) {
-        	logger.debug("This is Unix or Linux");
+        	logger.info("This is Unix or Linux");
         	DSUtil.writeDataToFile(localPath, scriptFileName, "sh", script);
         } else if (isSolaris()) {
-        	logger.debug("This is Solaris");
+        	logger.info("This is Solaris");
         	DSUtil.writeDataToFile(localPath, scriptFileName, "sh", script);
         } else {
-        	logger.debug("Your OS is not support!!");
+        	logger.info("Your OS is not support!!");
         }
 		
 	}
@@ -290,18 +284,18 @@ public class LocalScriptExecutor {
 	private ProcessBuilder getProcessBuilder() {
 		ProcessBuilder processBuilder = null;
 		if (isWindows()) {
-			logger.debug("This is Windows");
+			logger.info("This is Windows");
 			processBuilder = new ProcessBuilder("cmd", "/c", "default.bat");
 			
 		} else if (isMac()) {
-			logger.debug("Mac OS is not supported");
+			logger.info("Mac OS is not supported");
 		} else if (isUnix()) {
-			logger.debug("This is Unix or Linux");
+			logger.info("This is Unix or Linux");
 			processBuilder = new ProcessBuilder("sh", "-c", "default.sh");
 		} else if (isSolaris()) {
-			logger.debug("Solaris OS is not supported");
+			logger.info("Solaris OS is not supported");
 		} else {
-			logger.debug("Your OS is not support!!");
+			logger.info("Your OS is not support!!");
 		}
 		File dir = new File(localPath);
 		

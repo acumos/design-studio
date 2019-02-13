@@ -21,12 +21,14 @@
 package org.acumos.csvdatabroker.service;
 
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 
 import org.acumos.csvdatabroker.exceptionhandler.ServiceException;
-import org.acumos.csvdatabroker.util.EELFLoggerDelegator;
 import org.acumos.csvdatabroker.util.LocalScriptExecutor;
 import org.acumos.csvdatabroker.util.RemoteScriptExecutor;
 import org.acumos.csvdatabroker.vo.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -34,7 +36,7 @@ import org.springframework.stereotype.Component;
 @Component("CSVDatabrokerServiceImpl")
 public class CSVDatabrokerServiceImpl implements CSVDatabrokerService {
 
-	private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(CSVDatabrokerServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Autowired
 	@Qualifier("ConfigurationServiceImpl")
@@ -67,7 +69,7 @@ public class CSVDatabrokerServiceImpl implements CSVDatabrokerService {
 				localExecutor.getData(out, conf.getLocalFilePath());
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "No environment configuration found!!", e);
+			logger.error("No environment configuration found!!", e);
 			throw new ServiceException("No environment configuration found!  Please set the Environment configuration.","401", "Exception in writeDataTo()", e);
 		}
 	}
@@ -93,7 +95,7 @@ public class CSVDatabrokerServiceImpl implements CSVDatabrokerService {
 			}
 			confService.incrementStart();
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "No environment configuration found!!", e);
+			logger.error("No environment configuration found!!", e);
 			throw new ServiceException("No environment configuration found!  Please set the Environment configuration.","401", "Exception in getData()", e);
 		}
 		return result;

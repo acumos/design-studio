@@ -22,16 +22,26 @@ package org.acumos.designstudio.toscagenerator.test;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.*;
+import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.acumos.designstudio.toscagenerator.util.EELFLoggerDelegator;
-import org.acumos.designstudio.toscagenerator.vo.protobuf.*;
+import org.acumos.designstudio.toscagenerator.vo.protobuf.InputMessage;
+import org.acumos.designstudio.toscagenerator.vo.protobuf.MessageBody;
+import org.acumos.designstudio.toscagenerator.vo.protobuf.MessageargumentList;
+import org.acumos.designstudio.toscagenerator.vo.protobuf.Operation;
+import org.acumos.designstudio.toscagenerator.vo.protobuf.Option;
+import org.acumos.designstudio.toscagenerator.vo.protobuf.OutputMessage;
+import org.acumos.designstudio.toscagenerator.vo.protobuf.ProtoBufClass;
+import org.acumos.designstudio.toscagenerator.vo.protobuf.Service;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
 public class ProtobufTest {
-	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(TGIFTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 * The test case method generates protoBuf.json. The file is utilized to

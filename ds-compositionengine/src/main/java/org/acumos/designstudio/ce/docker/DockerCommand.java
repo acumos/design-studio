@@ -22,7 +22,10 @@
 
 package org.acumos.designstudio.ce.docker;
 
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
+import java.lang.invoke.MethodHandles;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.exception.DockerException;
@@ -32,8 +35,7 @@ import com.github.dockerjava.api.exception.DockerException;
  */
 public abstract class DockerCommand
 {
-	// logger 
-		public static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(DockerCommand.class);
+		private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 		
 	protected DockerClient client;
 

@@ -24,6 +24,7 @@
 package org.acumos.designstudio.toscagenerator;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * This class is the main controller for the TOSCA Model Generator Client
  */
 public class ToscaGeneratorClient {
-	private static final Logger logger = LoggerFactory.getLogger(ToscaGeneratorClient.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	ToscaGeneratorService service = null;
 	ProtobufGeneratorService protoService = null;
@@ -129,7 +130,7 @@ public class ToscaGeneratorClient {
 	public String generateTOSCA(String ownerID, String solutionID, String version, String solutionRevisionID,
 			File localProtobufFile, File localMetadataFile) throws AcumosException {
 
-		logger.info("-------------- generateTOSCA() ----- : Begin");
+		logger.info("generateTOSCA(): Begin");
 		String result = null;
 		String success = "{solutionID:\"%s\",version:\"%s\"}";
 		String error = "{errorCode : \"%s\", errorDescription : \"%s\"}";
@@ -171,15 +172,15 @@ public class ToscaGeneratorClient {
 				// 5. Invoke the library to store the files in Nexus :
 				service.uploadFilesToRepository(solutionID, version, toscaFiles);
 
-				// Testing -- Begin
-				logger.debug("-------- After uploading in Nexus ----------");
+				// Testing Begin
+				logger.info("After uploading in Nexus");
 				if (toscaFiles != null && !toscaFiles.isEmpty()) {
 					for (Artifact artifact : toscaFiles) {
-						logger.debug("SolutionID :" + artifact.getSolutionID());
-						logger.debug("version :" + artifact.getVersion());
-						logger.debug("ArtifactType : " + artifact.getType());
-						logger.debug("ArtifactType : " + artifact.getPayloadURI());
-						logger.debug(artifact.getNexusURI());
+						logger.info("SolutionID :" + artifact.getSolutionID());
+						logger.info("version :" + artifact.getVersion());
+						logger.info("ArtifactType : " + artifact.getType());
+						logger.info("ArtifactType : " + artifact.getPayloadURI());
+						logger.info(artifact.getNexusURI());
 					}
 				}
 				// 6. Invoke the Common Data Microservice putArtifact
@@ -188,13 +189,13 @@ public class ToscaGeneratorClient {
 			} else {
 				result = String.format(error, Properties.getMetaDataErrorCode(), Properties.getMetaDataErrorDesc());
 			}
-			logger.info("--------------generateTOSCA() ----- : End");
+			logger.info("generateTOSCA(): End");
 		} catch (AcumosException e) {
-			logger.error("--------- Exception in  TOSCA Model Generator Client -----------", e);
+			logger.error("Exception in  TOSCA Model Generator Client --", e);
 			result = String.format(error, e.getErrorCode(), e.getErrorDesc());
 
 		} catch (Exception e) {
-			logger.error("--------- Exception in  TOSCA Model Generator Client -----------", e);
+			logger.error("Exception in  TOSCA Model Generator Client --", e);
 			result = String.format(error, Properties.getTOSCAFileGenerationErrorCode(),
 					Properties.getTOSCAFileGenerationErrorDesc(), Properties.getTOSCAFileGenerationErrorDesc());
 			throw new ControllerException(e.getMessage(), Properties.getTOSCAFileGenerationErrorCode(),
@@ -215,20 +216,20 @@ public class ToscaGeneratorClient {
 	 * @throws AcumosException
 	 */
 	private static void deleteTOSCAFiles(String solutionID, String version) throws AcumosException {
-		logger.info("--------  deleteTOSCAFiles() Started ------------");
+		logger.info("deleteTOSCAFiles() Started");
 
 		String path = Properties.getTempFolderPath(solutionID, version);
 		File directory = new File(path);
 
 		// make sure directory exists
 		if (!directory.exists()) {
-			logger.debug("----------- Directory does not exist. ----------");
+			logger.info("Directory does not exist.");
 		} else {
 			try {
 				ToscaUtil.delete(directory);
-				logger.info("----------- deleteTOSCAFiles() Ended ----------------");
+				logger.info("deleteTOSCAFiles() Ended");
 			} catch (Exception e) {
-				logger.error("--------- Exception deleteTOSCAFiles() -------------", e);
+				logger.error("Exception deleteTOSCAFiles()", e);
 				throw new ControllerException(e.getMessage(), Properties.getFileDeletionErrorCode(),
 						Properties.getFileDeletionErrorDesc(), e);
 			}
