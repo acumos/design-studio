@@ -25,6 +25,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.lang.invoke.MethodHandles;
+
 import org.acumos.designstudio.toscagenerator.exceptionhandler.AcumosException;
 import org.acumos.designstudio.toscagenerator.service.TgifGeneratorService;
 import org.acumos.designstudio.toscagenerator.vo.Artifact;
@@ -33,7 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TgifGeneratorServiceTest {
-	private static final Logger logger = LoggerFactory.getLogger(TgifGeneratorServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 * The test case is used to create TGIF.json by using a method createTgif

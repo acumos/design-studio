@@ -20,9 +20,11 @@
 
 package org.acumos.designstudio.toscagenerator.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 
 import org.acumos.designstudio.toscagenerator.service.ProtobufGeneratorService;
 import org.junit.Test;
@@ -35,7 +37,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ProtobufToJsonConversionTest {
-	private static final Logger logger = LoggerFactory.getLogger(ProtobufToJsonConversionTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 * The test case is used to create protoBuf.json by using a method
@@ -74,10 +76,10 @@ public class ProtobufToJsonConversionTest {
 		assertNotNull(predProto4);
 		assertNotNull(testProto5);
 
-		logger.debug("Aggregator Result :" + aggrProto1);
-		logger.debug("Alarm Generator Result :" + alarmgenProto2);
-		logger.debug("Classifier Result :" + clasProto3);
-		logger.debug("Predictor Result :" + predProto4);
-		logger.debug("Test Demo Result :" + testProto5);
+		logger.info("Aggregator Result :" + aggrProto1);
+		logger.info("Alarm Generator Result :" + alarmgenProto2);
+		logger.info("Classifier Result :" + clasProto3);
+		logger.info("Predictor Result :" + predProto4);
+		logger.info("Test Demo Result :" + testProto5);
 	}
 }

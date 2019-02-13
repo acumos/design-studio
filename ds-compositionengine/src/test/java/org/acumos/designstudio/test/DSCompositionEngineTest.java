@@ -20,12 +20,14 @@
 
 package org.acumos.designstudio.test;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Properties;
 
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.client.ICommonDataServiceRestClient;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -33,7 +35,7 @@ import org.junit.Before;
  *
  */
 public class DSCompositionEngineTest {
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(DSCompositionEngineTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private String url = "";
 	private String user = "";
 	private String pass = "";

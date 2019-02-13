@@ -20,8 +20,11 @@
 
 package org.acumos.designstudio.ce.docker;
 
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
+import java.lang.invoke.MethodHandles;
+
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.PushImageCmd;
@@ -37,6 +40,8 @@ import com.github.dockerjava.core.command.PushImageResultCallback;
  *      push</A>
  */
 public class PushImageCommand extends DockerCommand {
+	
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private final String image;
 
 	private final String tag;
@@ -89,7 +94,7 @@ public class PushImageCommand extends DockerCommand {
 
 			@Override
 			public void onError(Throwable throwable) {
-				logger.error(EELFLoggerDelegator.errorLogger, "Failed to push image: {} ", throwable);
+				logger.error("Failed to push image: {} ", throwable);
 				super.onError(throwable);
 			}
 		};

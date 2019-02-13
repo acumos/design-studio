@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -52,7 +53,7 @@ import org.slf4j.LoggerFactory;
 
 
 public class ToscaGeneratorService {
-	private static final Logger logger = LoggerFactory.getLogger(ToscaGeneratorService.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	/**
 	 * 
@@ -251,9 +252,9 @@ public class ToscaGeneratorService {
 		if (toscaFiles != null && !toscaFiles.isEmpty()) {
 			for (Artifact a : toscaFiles) {
 				cArtifact = new MLPArtifact();
-				logger.debug("Type : " + a.getType());
-				logger.debug("ArtifactTypeCode : " + Properties.getTOSCATypeCode(a.getType()));
-				logger.debug("Descripton : " + "Tosca file : " + a.getName() + " for SolutionID : " + a.getSolutionID()
+				logger.info("Type : " + a.getType());
+				logger.info("ArtifactTypeCode : " + Properties.getTOSCATypeCode(a.getType()));
+				logger.info("Descripton : " + "Tosca file : " + a.getName() + " for SolutionID : " + a.getSolutionID()
 						+ " with version : " + a.getVersion());
 				cArtifact.setArtifactTypeCode(Properties.getTOSCATypeCode(a.getType()));
 				cArtifact.setDescription("Tosca file : " + a.getName() + " for SolutionID : " + a.getSolutionID()

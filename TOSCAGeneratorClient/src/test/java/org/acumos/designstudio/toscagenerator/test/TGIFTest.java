@@ -20,11 +20,10 @@
 
 package org.acumos.designstudio.toscagenerator.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
-import java.util.*;
+import java.lang.invoke.MethodHandles;
 
-import org.acumos.designstudio.toscagenerator.util.EELFLoggerDelegator;
 import org.acumos.designstudio.toscagenerator.vo.tgif.Call;
 import org.acumos.designstudio.toscagenerator.vo.tgif.Provide;
 import org.acumos.designstudio.toscagenerator.vo.tgif.Request;
@@ -37,6 +36,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
@@ -46,7 +47,7 @@ import com.google.gson.Gson;
  *
  */
 public class TGIFTest {
-	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(TGIFTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 * The test case is used to test the representation of TGIF.json in the
@@ -91,7 +92,7 @@ public class TGIFTest {
 		assertNotNull(tgif);
 		Gson gson = new Gson();
 		String tgifoJsonString = gson.toJson(tgif);
-		logger.debug(EELFLoggerDelegator.debugLogger, "result " + tgifoJsonString);
+		logger.info("result " + tgifoJsonString);
 
 	}
 

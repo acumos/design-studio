@@ -20,17 +20,20 @@
 
 package org.acumos.sqldatabroker.jdbc.datasource;
 
+import java.lang.invoke.MethodHandles;
+
 import org.acumos.sqldatabroker.exceptionhandler.ServiceException;
 import org.acumos.sqldatabroker.util.DatabrokerConstants;
-import org.acumos.sqldatabroker.util.EELFLoggerDelegator;
 import org.acumos.sqldatabroker.vo.Configuration;
 import org.apache.commons.dbcp.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataSourceFactory {
 
-	private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(DataSourceFactory.class);	
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	/**
 	 * Return the BasicDataSource instance as per the data source class name configured in the configuration instance passed in. 
@@ -61,7 +64,7 @@ public class DataSourceFactory {
 				return null;
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception while creating DataSource", e);
+			logger.error("Exception while creating DataSource", e);
 			throw new ServiceException("Exception while creating DataSource.", "401", "Exception in getDataSource()",e);
 		}
 

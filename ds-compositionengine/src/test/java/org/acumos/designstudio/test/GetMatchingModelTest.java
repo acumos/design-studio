@@ -22,18 +22,20 @@ package org.acumos.designstudio.test;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Properties;
 
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.client.ICommonDataServiceRestClient;
 import org.acumos.designstudio.ce.service.SolutionServiceImpl;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.acumos.nexus.client.RepositoryLocation;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -41,7 +43,7 @@ import org.junit.Test;
  *
  */
 public class GetMatchingModelTest {
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(GetMatchingModelTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private String url = "";
 	private String user = "";
 	private String pass = "";
@@ -83,7 +85,7 @@ public class GetMatchingModelTest {
 			repositoryLocation.setPassword(CONFIG.getProperty("nexus.nexuspasswordTest"));
 			nexusArtifactClient = new NexusArtifactClient(repositoryLocation);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "", e);
+			logger.error("Exception in getNexusClient() : ", e);
 		}
 		return nexusArtifactClient;
 	}
@@ -112,11 +114,11 @@ public class GetMatchingModelTest {
 			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,
 					protobufJsonString1);
 			assertNotNull(getMatchingModelsResult);
-			logger.debug(EELFLoggerDelegator.debugLogger, getMatchingModelsResult);
+			logger.info(getMatchingModelsResult);
 		} catch (JSONException je) {
-			logger.error(EELFLoggerDelegator.errorLogger, "", je);
+			logger.error("Exception in getMatchingModels() : ", je);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger,"", ex);
+			logger.error("Exception in getMatchingModels() : ", ex);
 		}
 
 	}

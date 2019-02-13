@@ -26,12 +26,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -41,7 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 public class DSUtil {
-	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(DSUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 
 	/**
@@ -54,7 +57,7 @@ public class DSUtil {
 	 *             In case of any exception, this method throws the IOException
 	 */
 	public static String readFile(String filePath) throws IOException {
-		logger.debug(EELFLoggerDelegator.debugLogger, "  readFile() started ");
+		logger.info("readFile() started ");
 		FileReader fr = new FileReader(filePath);
 		BufferedReader br = new BufferedReader(fr);
 		try {
@@ -66,7 +69,7 @@ public class DSUtil {
 				sb.append("\n");
 				line = br.readLine();
 			}
-			logger.debug(EELFLoggerDelegator.debugLogger, " readFile() ended ");
+			logger.info("readFile() ended ");
 			return sb.toString();
 		} finally {
 			fr.close();
@@ -88,7 +91,7 @@ public class DSUtil {
 	 * 			Throws IOException while writing data.
 	 */
 	public static void writeDataToFile(String path, String fileName, String extension, String data) throws IOException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " writeDataToFile() started ");
+		logger.info("writeDataToFile() started ");
 		FileWriter fileWriter = null;
 		BufferedWriter bufferedWriter = null;
 		
@@ -101,7 +104,7 @@ public class DSUtil {
 			bufferedWriter = new BufferedWriter(fileWriter);
 			bufferedWriter.write(data);
 
-			logger.debug(EELFLoggerDelegator.debugLogger, " writeDataToFile() ended ");
+			logger.info("writeDataToFile() ended ");
 		} finally {
 			
 			if (null != bufferedWriter) {
@@ -133,8 +136,7 @@ public class DSUtil {
 				schema.validate(new JSONObject(jsonString)); // throws a ValidationException if this object is invalid
 				return true;
 			} catch (JSONException e) {
-				logger.error(EELFLoggerDelegator.errorLogger,
-						"Exception Occured in  isValidJsonSchema() ", e);
+				logger.error("Exception Occured in  isValidJsonSchema() ", e);
 				return false;
 			}
 	}
@@ -185,7 +187,7 @@ public class DSUtil {
 		if (file.exists()) {
 			deleted = file.delete();
 			if (deleted) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "file deleted successfully");
+				logger.info("file deleted successfully");
 			}
 		}
 	}
@@ -209,7 +211,7 @@ public class DSUtil {
 					}
 					fRemoved = tmpF.delete();
 					if (fRemoved) {
-						logger.debug(EELFLoggerDelegator.debugLogger, "temp folder removed");
+						logger.info("temp folder removed");
 					}
 				}
 			}
@@ -245,15 +247,13 @@ public class DSUtil {
 		try {
 			mapper.readTree(requirements);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured   isValidJsonSchemaContents_List() ", ex);
+			logger.error("Exception Occured   isValidJsonSchemaContents_List() ", ex);
 			sb.append("requirements ");
 		}
 		try {
 			mapper.readTree(capabilities);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured   isValidJsonSchemaContents_List() ", ex);
+			logger.error("Exception Occured   isValidJsonSchemaContents_List() ", ex);
 			sb.append("capabilities");
 		}
 		return sb.toString();
@@ -270,8 +270,7 @@ public class DSUtil {
 		try {
 			mapper.readTree(relationship);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured   isValidJsonaddLink() ", ex);
+			logger.error("Exception Occured   isValidJsonaddLink() ", ex);
 			err = "relationship";
 		}
 		return err;
@@ -290,8 +289,7 @@ public class DSUtil {
 			mapper.readTree(jsonInString);
 			return true;
 		} catch (IOException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured   isValidJsonaddLink() ", e);
+			logger.error("Exception Occured   isValidJsonaddLink() ", e);
 			return false;
 		}
 	}

@@ -22,17 +22,17 @@ package org.acumos.sqldatabroker.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.acumos.sqldatabroker.exceptionhandler.ServiceException;
 import org.acumos.sqldatabroker.service.ConfigurationService;
 import org.acumos.sqldatabroker.service.ProtobufService;
-import org.acumos.sqldatabroker.service.ProtobufServiceImpl;
 import org.acumos.sqldatabroker.service.SQLDatabrokerService;
-import org.acumos.sqldatabroker.util.EELFLoggerDelegator;
 import org.acumos.sqldatabroker.vo.Configuration;
 import org.acumos.sqldatabroker.vo.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,15 +42,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.annotations.ApiOperation;
 
 @RestController
 public class SQLDatabrokerController {
-	private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(SQLDatabrokerController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Autowired
 	@Qualifier("SQLDatabrokerServiceImpl")
@@ -77,7 +73,7 @@ public class SQLDatabrokerController {
 			result = new Result(HttpServletResponse.SC_OK, "Environment configured successfully !!!" );
 			
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Error while setting Environment configuration", e);
+			logger.error("Error while setting Environment configuration", e);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			result = new Result(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error while setting Environment configuration");
 		}
@@ -94,7 +90,7 @@ public class SQLDatabrokerController {
 			try {
 				result = service.getOneRecord();
 			} catch (Exception e) {
-				logger.error(EELFLoggerDelegator.errorLogger, "No Data Found !!!", e);
+				logger.error("No Data Found !!!", e);
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				return new Result(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "No Data Found !!!");
 			}

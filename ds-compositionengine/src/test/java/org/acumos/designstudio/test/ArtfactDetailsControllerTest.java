@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +33,6 @@ import org.acumos.designstudio.ce.controller.ArtfactDetailsController;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.service.AcumosCatalogServiceImpl;
 import org.acumos.designstudio.ce.service.ICompositeSolutionService;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.nexus.client.RepositoryLocation;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,11 +41,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 
 public class ArtfactDetailsControllerTest {
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ArtfactDetailsControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	public static Properties CONFIG = new Properties();
 	RepositoryLocation repositoryLocation = null;
 	String solutionId = "010646b2-0298-4d25-9571-b775c3737bb6";
@@ -86,9 +88,8 @@ public class ArtfactDetailsControllerTest {
 					.thenReturn(resultStatment);
 			String results = acumosCatalogServiceImpl.readArtifact(userId, solutionId, version, artifactType);
 			assertNotNull(results);
-			logger.debug(EELFLoggerDelegator.debugLogger, results);
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "CDUMP file not created", e);
+			logger.error("CDUMP file not created", e);
 			throw e;
 		}
 	}
@@ -132,9 +133,8 @@ public class ArtfactDetailsControllerTest {
 		try {			
 			when(props.getProtoArtifactType()).thenReturn("PJ");	
 			String results = acumosCatalogServiceImpl.readArtifact(userId, solutionId, version, props.getProtoArtifactType().trim());
-			logger.debug(EELFLoggerDelegator.debugLogger, results);
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "CDUMP file not created", e);
+			logger.error("CDUMP file not created", e);
 			throw e;
 		}
 	}

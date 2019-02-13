@@ -26,8 +26,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.io.FileNotFoundException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +39,6 @@ import org.acumos.designstudio.ce.controller.SolutionController;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.service.ICompositeSolutionService;
 import org.acumos.designstudio.ce.service.SolutionServiceImpl;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
 import org.acumos.designstudio.ce.vo.cdump.Argument;
 import org.acumos.designstudio.ce.vo.cdump.Capabilities;
@@ -75,12 +74,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.jayway.jsonpath.InvalidJsonException;
 
 public class ControllersTest {
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ControllersTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	// CCDS TechMDev(8003) UserId, change it if the CCDS port changes.
 	String userId = "8fcc3384-e3f8-4520-af1c-413d9495a154";
 	// The local path folder which is there in local project Directory.
@@ -123,12 +124,12 @@ public class ControllersTest {
 			String results = solutionController.createNewCompositeSolution(userId);
 			assertNotNull(results);
 			if (results.contains("true")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
+				logger.info(results);
 			} else {
 				throw new ServiceException("Not created", "4xx", "Unable to create composite solution");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "CDUMP file not created", e);
+			logger.error("CDUMP file not created", e);
 			throw e;
 		}
 	}
@@ -227,9 +228,9 @@ public class ControllersTest {
 			when(solutionService.addNode(userId, null, null, sessionId, node))
 					.thenReturn("{\"success\" : \"true\", \"errorDescription\" : \"\"}");
 			String results = solutionController.addNode(userId, null, null, sessionId, node);
-			logger.debug(EELFLoggerDelegator.debugLogger, results);
+			logger.info(results);
 		} catch (InvalidJsonException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in addNode() testcase: JSON schema not valid", e);
+			logger.error("Exception in addNode() testcase: JSON schema not valid", e);
 		}
 	}
 
@@ -252,14 +253,14 @@ public class ControllersTest {
 			String results = solutionController.addLink(userId, null, null, "Model to Model", "101", "Model 1", "1",
 					"Model 2", "2", "sourceNodeRequirement", "targetNodeCapabilityName", sessionId, property);
 			assertNotNull(results);
-			logger.debug(EELFLoggerDelegator.debugLogger, results);
+			logger.info(results);
 			if (results.contains("true")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
+				logger.info(results);
 			} else {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in addLink() testcase: CDUMP file not found", e);
+			logger.error("Exception in addLink() testcase: CDUMP file not found", e);
 		}
 
 	}
@@ -312,12 +313,12 @@ public class ControllersTest {
 					"Model 2", "2", "sourceNodeRequirement", "targetNodeCapabilityName", sessionId, property);
 			assertNotNull(results);
 			if (results.contains("false")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
+				logger.info(results);
 			} else {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in addLink1() testcase: Cdump file not found", e);
+			logger.error("Exception in addLink1() testcase: Cdump file not found", e);
 		}
 	}
 
@@ -335,15 +336,14 @@ public class ControllersTest {
 			when(solutionService.deleteNode(userId, null, null, sessionId, "1")).thenReturn(true);
 			String results = solutionController.deleteNode(userId, null, null, sessionId, "1");
 			assertNotNull(results);
-			logger.debug(EELFLoggerDelegator.debugLogger, results);
+			logger.info(results);
 			if (results.contains("true")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
+				logger.info(results);
 			} else {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteNode() testcase: CDUMP file not found",
-					e);
+			logger.error("Exception in deleteNode() testcase: CDUMP file not found",e);
 		}
 	}
 
@@ -361,15 +361,14 @@ public class ControllersTest {
 			when(solutionService.deleteNode(userId, null, null, sessionId, "1")).thenReturn(false);
 			String results = solutionController.deleteNode(userId, null, null, sessionId, "1");
 			assertNotNull(results);
-			logger.debug(EELFLoggerDelegator.debugLogger, results);
+			logger.info(results);
 			if (results.contains("false")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
+				logger.info(results);
 			} else {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteNode1() testcase: CDUMP file not found",
-					e);
+			logger.error("Exception in deleteNode1() testcase: CDUMP file not found",e);
 		}
 	}
 
@@ -388,13 +387,12 @@ public class ControllersTest {
 			String results = solutionController.deleteLink(userId, null, null, sessionId, "101");
 			assertNotNull(results);
 			if (results.contains("true")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
+				logger.info(results);
 			} else {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteLink() testcase: CDUMP file not found",
-					e);
+			logger.error("Exception in deleteLink() testcase: CDUMP file not found",e);
 		}
 	}
 
@@ -411,13 +409,12 @@ public class ControllersTest {
 			String results = solutionController.clearCompositeSolution(userId, null, "1.0.0", sessionId);
 			assertNotNull(results);
 			if (results.contains("cleared")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
+				logger.info(results);
 			} else {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Exception in clearCompositeSolution() testcase: CDUMP file not found", e);
+			logger.error("Exception in clearCompositeSolution() testcase: CDUMP file not found", e);
 		}
 	}
 
@@ -434,13 +431,12 @@ public class ControllersTest {
 			String results = solutionController.closeCompositeSolution(userId, null, "1.0.0", sessionId);
 			assertNotNull(results);
 			if (results.contains("closed")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
+				logger.info(results);
 			} else {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Exception in closeCompositeSolution() testcase: CDUMP file not found", e);
+			logger.error("Exception in closeCompositeSolution() testcase: CDUMP file not found", e);
 		}
 	}
 
@@ -456,10 +452,9 @@ public class ControllersTest {
 			when(compositeServiceImpl.deleteCompositeSolution(userId, sessionId, "1.0.0")).thenReturn(true);
 			String results = solutionController.deleteCompositeSolution(userId, sessionId, "1.0.0");
 			assertNotNull(results);
-			logger.debug(EELFLoggerDelegator.debugLogger, results);
+			logger.info(results);
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Exception in deleteCompositeColution() testcase: Not deleted", e);
+			logger.error("Exception in deleteCompositeColution() testcase: Not deleted", e);
 			throw e;
 		}
 	}
@@ -477,12 +472,12 @@ public class ControllersTest {
 			String results = solutionController.deleteCompositeSolution(userId, sessionId, "1.0.0");
 			assertNotNull(results);
 			if (results.contains("false")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
+				logger.info(results);
 			} else {
 				throw new ServiceException("Not deleted", "4xx", "Exception : Unable to delete requested Solution");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Unable to delete requested Solution", e);
+			logger.error("Unable to delete requested Solution", e);
 			throw e;
 		}
 	}
@@ -500,12 +495,12 @@ public class ControllersTest {
 			String results = solutionController.getCompositeSolutions(userId, "OR");
 			assertNotNull(results);
 			if (results.contains("Composite solution")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
+				logger.info(results);
 			} else {
 				throw new ServiceException("Empty List returned", "4xx", "No composite solutions found");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "No composite solutions found", e);
+			logger.error("No composite solutions found", e);
 		}
 	}
 
@@ -523,12 +518,12 @@ public class ControllersTest {
 			String results = solutionController.getSolutions(userId);
 			assertNotNull(results);
 			if (results.contains("solutionId")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
+				logger.info(results);
 			} else {
 				throw new ServiceException("Empty result", "4xx", "No Models found");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "No Models found", e);
+			logger.error("No Models found", e);
 			throw e;
 		}
 	}
@@ -676,12 +671,12 @@ public class ControllersTest {
 					dataConnector);
 			assertNotNull(results);
 			if (results.contains("Modified")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
+				logger.info(results);
 			} else {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in modifyNode(): CDUMP file not found", e);
+			logger.error("Exception in modifyNode(): CDUMP file not found", e);
 		}
 	}
 
@@ -701,12 +696,12 @@ public class ControllersTest {
 			String results = solutionController.modifyLink(userId, sessionId, null, null, "202", "Model to DM");
 			assertNotNull(results);
 			if (results.contains("Modified")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
+				logger.info(results);
 			} else {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in modifyLink: CDUMP file not found", e);
+			logger.error("Exception in modifyLink: CDUMP file not found", e);
 		}
 	}
 
@@ -743,7 +738,7 @@ public class ControllersTest {
 		assertEquals("CP", dscs.getToolKit());
 		assertEquals("PV", dscs.getVisibilityLevel());
 		assertEquals("description", dscs.getDescription());
-		logger.debug(EELFLoggerDelegator.debugLogger, "results");
+		logger.info("results");
 	}
 	
 	@Test
@@ -754,11 +749,11 @@ public class ControllersTest {
 	 */
 	public void getVersionTest() throws Exception {
 		try {
-			logger.debug(EELFLoggerDelegator.debugLogger, "Calling Controller Method to display version");
+			logger.info("Calling Controller Method to display version");
 			String result = adminController.getVersion(response);
 			assertNotNull(result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getVersionTest", e);
+			logger.error("Exception in getVersionTest", e);
 		}
 	}
 	

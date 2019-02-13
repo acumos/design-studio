@@ -2,18 +2,20 @@ package org.acumos.sqldatabroker.service;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.ResultSetMetaData;
 
 import javax.sql.DataSource;
 
 import org.acumos.sqldatabroker.exceptionhandler.ServiceException;
 import org.acumos.sqldatabroker.jdbc.datasource.DataSourceFactory;
-import org.acumos.sqldatabroker.util.EELFLoggerDelegator;
 import org.acumos.sqldatabroker.vo.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -23,7 +25,7 @@ import org.springframework.stereotype.Component;
 public class SQLDatabrokerServiceImpl implements SQLDatabrokerService {
 
 	
-	private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(SQLDatabrokerServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	private final String SQLSELECT = "select * from ";
 	private final String MYSQLLIMIT_ONE = " LIMIT %s, 1 ";
@@ -97,27 +99,27 @@ public class SQLDatabrokerServiceImpl implements SQLDatabrokerService {
 			}
 			
 		} catch (CloneNotSupportedException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "No environment configuration found", e);
+			logger.error("No environment configuration found", e);
 			throw new ServiceException("No environment configuration found!  Please set the Environment configuration.","401", "Exception in getOneRecord()", e);
 		} catch (SQLException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "SQL Exception : Error getting data", e);
+			logger.error("SQL Exception : Error getting data", e);
 			throw new ServiceException("SQL Exception : Error getting data !!","401", "Exception in getOneRecord()", e);
 		} catch (Exception e){
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception : Error getting data", e);
+			logger.error("Exception : Error getting data", e);
 			throw new ServiceException("Exception : Error getting data !!","401", "Exception in getOneRecord()", e);
 		} finally {
 			if(rs != null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "SQL Exception : Not able to close resultset", e);
+					logger.error("SQL Exception : Not able to close resultset", e);
 				}
 			}
 			if(stmt != null) {
 				try {
 					stmt.close();
 				} catch (SQLException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "SQL Exception : Not able to close statement", e);
+					logger.error("SQL Exception : Not able to close statement", e);
 				}
 			}
 		}

@@ -23,6 +23,7 @@ package org.acumos.designstudio.ce.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,7 +40,6 @@ import org.acumos.cds.transport.RestPageResponse;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.DSLogConstants;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.ModelCacheForMatching;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.cdump.ComplexType;
@@ -53,6 +53,8 @@ import org.acumos.designstudio.ce.vo.tgif.Provide;
 import org.acumos.designstudio.ce.vo.tgif.Service;
 import org.acumos.designstudio.ce.vo.tgif.Tgif;
 import org.acumos.nexus.client.NexusArtifactClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -63,7 +65,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class MatchingModelServiceImpl implements IMatchingModelService{
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(MatchingModelServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Autowired
 	MatchingModelServiceComponent matchingModelServiceComponent;
@@ -90,7 +92,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 	
 	@Override
 	public List<DSModelVO> getPublicDSModels() throws ServiceException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " getPublicDSModels() Begin ");
+		logger.info("getPublicDSModels() Begin ");
 		List<DSModelVO> modelsList = new ArrayList<DSModelVO>();
 		List<MLPSolution> mlpSolutionsList = null;
 		Map<String, Object> queryParameters = new HashMap<>();
@@ -106,9 +108,9 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 						new RestPageRequest(0, confprops.getSolutionResultsetSize()));
 				mlpSolutionsList = pageResponse.getContent();
 				if (null == mlpSolutionsList) {
-					logger.debug(EELFLoggerDelegator.debugLogger, " CommonDataService returned null Solution list");
+					logger.info("CommonDataService returned null Solution list");
 				} else if (mlpSolutionsList.isEmpty()) {
-					logger.debug(EELFLoggerDelegator.debugLogger, " CommonDataService returned empty Solution list");
+					logger.info("CommonDataService returned empty Solution list");
 				} else {
 					String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
 					String pbAccessTypeCode = props.getPublicAccessTypeCode();
@@ -143,26 +145,26 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 				}
 				break;
 			} catch (Exception e) {
-				logger.warn("getPublicDSModels() : Connection to CDS failed...trying with {} attempt :", i);
-				logger.error(EELFLoggerDelegator.errorLogger,"getPublicDSModels() : Connection to CDS failed with exception ", e);
+				logger.info("getPublicDSModels() : Connection to CDS failed...trying with {} attempt :", i);
+				logger.error("getPublicDSModels() : Connection to CDS failed with exception ", e);
 				try {
 					Thread.sleep(cdsCheckInterval);
 				} catch (InterruptedException ie) {
-					logger.error(EELFLoggerDelegator.errorLogger,"getPublicDSModels() : Connection to CDS failed...trying with {} attempt ", i);
+					logger.error("getPublicDSModels() : Connection to CDS failed...trying with {} attempt ", i);
 				}
 				if (i >= cdsCheckAttempt - 1) {
 					throw new ServiceException("Connection to CDS failed");
 				}
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " getPublicDSModels() End ");
+		logger.info("getPublicDSModels() End ");
 		return modelsList;
 	}
 	
 	
 	@Override
 	public List<DSModelVO> getPrivateDSModels(String userId) throws ServiceException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " getPrivateDSModels() Begin ");
+		logger.info("getPrivateDSModels() Begin ");
 		List<DSModelVO> modelsList = new ArrayList<DSModelVO>();
 		List<MLPSolution> mlpSolutionsList = null;
 		Map<String, Object> queryParameters = new HashMap<>();
@@ -172,9 +174,9 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 				new RestPageRequest(0, props.getSolutionResultsetSize()));
 		mlpSolutionsList = pageResponse.getContent();
 		if (null == mlpSolutionsList) {
-			logger.debug(EELFLoggerDelegator.debugLogger, " CommonDataService returned null Solution list");
+			logger.info("CommonDataService returned null Solution list");
 		} else if (mlpSolutionsList.isEmpty()) {
-			logger.debug(EELFLoggerDelegator.debugLogger, " CommonDataService returned empty Solution list");
+			logger.info("CommonDataService returned empty Solution list");
 		} else {
 			String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
 			String prAccessTypeCode = props.getPrivateAccessTypeCode();
@@ -198,14 +200,14 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 				}
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " getPrivateDSModels() End ");
+		logger.info("getPrivateDSModels() End ");
 		return modelsList;
 	}
 	
 	
 	@Override
 	public void populatePublicModelCacheForMatching(List<DSModelVO> models) throws ServiceException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " populatePublicModelCacheForMatching() Begin ");
+		logger.info("populatePublicModelCacheForMatching() Begin ");
 		HashMap<KeyVO, List<ModelDetailVO>> result = null;
 		
 		try {
@@ -217,31 +219,31 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 			result.putAll(modelCache);
 			modelCacheForMatching.setPublicModelCache(result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in populatePublicModelCacheForMatching() ", e);
+			logger.error("Exception in populatePublicModelCacheForMatching() ", e);
 			throw new ServiceException("Failed to read the Model");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " populatePublicModelCacheForMatching() End ");
+		logger.info("populatePublicModelCacheForMatching() End ");
 	}
 	
 	
 	@Override
 	public void removePublicModelCacheForMatching(List<DSModelVO> models) throws ServiceException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " removePublicModelCacheForMatching() Begin ");
+		logger.info("removePublicModelCacheForMatching() Begin ");
 		HashMap<KeyVO, List<ModelDetailVO>> modelCache;
 		try {
 			modelCache = removeModelFromCache(models);
 			modelCacheForMatching.setPublicModelCache(modelCache);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in populatePublicModelCacheForMatching() ", e);
+			logger.error("Exception in populatePublicModelCacheForMatching() ", e);
 			throw new ServiceException("Failed to read the Model");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " removePublicModelCacheForMatching() End ");
+		logger.info("removePublicModelCacheForMatching() End ");
 	}
 	
 	
 	@Override
 	public void populatePrivateModelCacheForMatching(String userId, List<DSModelVO> models) throws ServiceException {
-	    logger.debug(EELFLoggerDelegator.debugLogger, " populatePrivateModelCacheForMatching() Begin ");
+	    logger.info("populatePrivateModelCacheForMatching() Begin ");
 		Map<KeyVO, List<ModelDetailVO>> privateModelCache = null;
 		privateModelCache = modelCacheForMatching.getPrivateModelCache(userId);
 		
@@ -252,12 +254,12 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 		privateModelCache.putAll(modelCache);
 		modelCacheForMatching.setUserPrivateModelCache(userId, privateModelCache);
 		Date lastExceutionTime = modelCacheForMatching.getUserPrivateModelUpdateTime(userId);
-		logger.debug(EELFLoggerDelegator.debugLogger, " lastExceutionTime : " + lastExceutionTime);
-		logger.debug(EELFLoggerDelegator.debugLogger, " populatePrivateModelCacheForMatching() End ");
+		logger.info("lastExceutionTime : " + lastExceutionTime);
+		logger.info("populatePrivateModelCacheForMatching() End ");
 	}
 	
 	private  HashMap<KeyVO, List<ModelDetailVO>> removeModelFromCache(List<DSModelVO> dsModels) throws ServiceException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " removeModelFromCache() Begin ");
+		logger.info("removeModelFromCache() Begin ");
 		HashMap<KeyVO, List<ModelDetailVO>> result = null;
 		result = (HashMap<KeyVO, List<ModelDetailVO>>) modelCacheForMatching.getPublicModelCache();
 		
@@ -281,7 +283,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 						if (props.getArtifactType().equalsIgnoreCase(mlpArtifact.getArtifactTypeCode())) { //get TGIF file
 							try {
 								tgifFileNexusURI = mlpArtifact.getUri();
-								logger.debug(EELFLoggerDelegator.debugLogger,  " TgifFileNexusURI  : " + tgifFileNexusURI );
+								logger.info("TgifFileNexusURI  : " + tgifFileNexusURI );
 								byteArrayOutputStream = getPayload(tgifFileNexusURI);
 								if(null != byteArrayOutputStream && !byteArrayOutputStream.toString().isEmpty()){
 									mapper.configure(Feature.AUTO_CLOSE_SOURCE, true);
@@ -318,7 +320,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 														}
 													}
 												} catch (IOException e) {
-													logger.error(EELFLoggerDelegator.errorLogger, " exception occured in Provides part in removeModelFromCache()", e);
+													logger.error("exception occured in Provides part in removeModelFromCache()", e);
 													throw new ServiceException("Failed to read the Model");
 												}
 											}
@@ -349,7 +351,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 														}
 													}
 												} catch (IOException e) {
-													logger.error(EELFLoggerDelegator.errorLogger, " exception occured in Calls Part in removeModelFromCache()", e);
+													logger.error("exception occured in Calls Part in removeModelFromCache()", e);
 													throw new ServiceException("Failed to read the Model");
 												}
 											}
@@ -357,7 +359,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 									}
 								}
 							} catch (Exception e) {
-								logger.error(EELFLoggerDelegator.errorLogger, " exception occured in removeModelFromCache()", e);
+								logger.error("exception occured in removeModelFromCache()", e);
 								throw new ServiceException("Failed to read the Model");
 							}
 						}
@@ -366,12 +368,12 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 				}
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " removeModelFromCache() End ");
+		logger.info("removeModelFromCache() End ");
 		return result; 
 	}
 	
 	private HashMap<KeyVO, List<ModelDetailVO>> constructModelCache(List<DSModelVO> models) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " constructModelCache() Begin ");
+		logger.info("constructModelCache() Begin ");
 		HashMap<KeyVO, List<ModelDetailVO>> result = null;
 		List<ModelDetailVO> modelDetailVOs = null;
 		List<MLPArtifact> mlpArtifacts = null;
@@ -397,7 +399,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 					if (props.getArtifactType().equalsIgnoreCase(mlpArtifact.getArtifactTypeCode())) { // get TGIF file
 						try {
 							tgifFileNexusURI = mlpArtifact.getUri();
-							logger.debug(EELFLoggerDelegator.debugLogger, " TgifFileNexusURI 1  : " + tgifFileNexusURI);
+							logger.info("TgifFileNexusURI 1  : " + tgifFileNexusURI);
 							byteArrayOutputStream = getPayload(tgifFileNexusURI);
 							if (null != byteArrayOutputStream && !byteArrayOutputStream.toString().isEmpty()) {
 								mapper.configure(Feature.AUTO_CLOSE_SOURCE, true);
@@ -493,19 +495,19 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 								}
 							}
 						} catch (Exception e) {
-							logger.debug(EELFLoggerDelegator.debugLogger, " Some exception so ignored record for Tgif FileNexus URI : {} ", tgifFileNexusURI);
-							logger.error(EELFLoggerDelegator.errorLogger, " exception occured in getModelCache()", e);
+							logger.info("Some exception so ignored record for Tgif FileNexus URI : {} ", tgifFileNexusURI);
+							logger.error("exception occured in getModelCache()", e);
 						}
 					}
 				}
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " constructModelCache() End ");
+		logger.info("constructModelCache() End ");
 		return result;
 	}
 	
 	private boolean getIsNested(List<MessageargumentList> messagearguments) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " getIsNested() Begin ");
+		logger.info("getIsNested() Begin ");
 		boolean isNestedMessage = false;
 		ComplexType complexType = null;
 		for(MessageargumentList msgargument : messagearguments) {
@@ -515,7 +517,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 				break;
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " getIsNested() End ");
+		logger.info("getIsNested() End ");
 		return isNestedMessage;
 	}
 	
@@ -524,7 +526,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 		try {
 			outputStream = nexusArtifactClient.getArtifact(uri);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getPayload()", e);
+			logger.error("Exception in getPayload()", e);
 			throw new ServiceException("Exception Occured in getPayload() method");
 		}
 		return outputStream;
