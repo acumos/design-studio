@@ -20,15 +20,18 @@
 
 package org.acumos.csvdatabroker.service;
 
+import java.lang.invoke.MethodHandles;
+
 import org.acumos.csvdatabroker.util.Constants;
-import org.acumos.csvdatabroker.util.EELFLoggerDelegator;
 import org.acumos.csvdatabroker.vo.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 
 @Component("ConfigurationServiceImpl")
 public class ConfigurationServiceImpl implements ConfigurationService {
-	private final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ConfigurationServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	
 	private Configuration conf;

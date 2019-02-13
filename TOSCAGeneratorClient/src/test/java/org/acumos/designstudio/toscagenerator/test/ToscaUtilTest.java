@@ -19,17 +19,13 @@
  */
 package org.acumos.designstudio.toscagenerator.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 
-import org.acumos.designstudio.toscagenerator.service.ProtobufGeneratorService;
 import org.acumos.designstudio.toscagenerator.util.ToscaUtil;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.junit.Test;
 
 public class ToscaUtilTest {

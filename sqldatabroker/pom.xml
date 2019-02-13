@@ -30,7 +30,7 @@
   <parent>
 	<groupId>org.springframework.boot</groupId>
 	<artifactId>spring-boot-starter-parent</artifactId>
-	<version>1.5.16.RELEASE</version>
+	<version>2.1.1.RELEASE</version>
 	<!-- silence warning about parent relative path -->
   	<relativePath />
   </parent>
@@ -56,12 +56,6 @@
 		<groupId>org.slf4j</groupId>
 		<artifactId>slf4j-api</artifactId>
 		<version>1.7.7</version>
-	</dependency>
-
-	<dependency>
-		<groupId>com.att.eelf</groupId>
-		<artifactId>eelf-core</artifactId>
-		<version>1.0.0</version>
 	</dependency>
 
 	<dependency>
@@ -113,12 +107,7 @@
 		<!-- Spring sets the <version>4.11</version> -->
 		<scope>test</scope>
 	</dependency>
-	<dependency>
-		<groupId>com.googlecode.json-simple</groupId>
-		<artifactId>json-simple</artifactId>
-		<!-- <version>1.1.1</version> -->
-	</dependency>
-
+	
 	<dependency>
 		<groupId>com.google.code.gson</groupId>
 		<artifactId>gson</artifactId>
@@ -168,21 +157,20 @@
 			<artifactId>mariadb-java-client</artifactId>
 			<version>2.3.0</version>
 		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/commons-dbcp/commons-dbcp -->
 		<dependency>
 		    <groupId>commons-dbcp</groupId>
 		    <artifactId>commons-dbcp</artifactId>
 		    <!-- <version>1.4</version> -->
 		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/commons-pool/commons-pool -->
 		<dependency>
 		    <groupId>commons-pool</groupId>
 		    <artifactId>commons-pool</artifactId>
 		    <!-- <version>1.4</version> -->
 		</dependency>
-		
-		
-		
   </dependencies>
   <build>
 	<resources>

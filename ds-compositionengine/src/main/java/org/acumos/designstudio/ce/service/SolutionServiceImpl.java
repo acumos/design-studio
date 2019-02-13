@@ -23,6 +23,7 @@ package org.acumos.designstudio.ce.service;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -50,7 +51,6 @@ import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.DSLogConstants;
 import org.acumos.designstudio.ce.util.DSUtil;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.ModelCacheForMatching;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.DSPayloadDto;
@@ -86,6 +86,8 @@ import org.acumos.designstudio.ce.vo.protobuf.MessageBody;
 import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.json.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -102,7 +104,7 @@ import com.google.gson.JsonIOException;
 
 @Service("solutionServiceImpl")
 public class SolutionServiceImpl implements ISolutionService {
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(SolutionServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Autowired
 	MatchingModelServiceComponent matchingModelServiceComponent;
@@ -131,7 +133,7 @@ public class SolutionServiceImpl implements ISolutionService {
 	
 	@Override
 	public void getUpdatedModelsbyDate() throws InterruptedException, ServiceException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " getCacheMechanism() Begin ");
+		logger.info("getCacheMechanism() Begin ");
 		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
 			Map<KeyVO, List<ModelDetailVO>> publicModelCache = modelCacheForMatching.getPublicModelCache();
@@ -167,14 +169,14 @@ public class SolutionServiceImpl implements ISolutionService {
 			logger.error("Interrupted Exception Occured in getCacheMechanism() {}", e);
 			throw new ServiceException("Failed for Creating the Cache");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " getCacheMechanism() End ");
+		logger.info("getCacheMechanism() End ");
 	}
 	
 	
 	@Override
 	public String getSolutions(String userID) throws ServiceException {
 
-		logger.debug(EELFLoggerDelegator.debugLogger, " getSolutions() Begin ");
+		logger.info("getSolutions() Begin ");
 		String result = null;
 		List<MLPSolution> mlpSolutionsList = null;
 		String solutionId = null;
@@ -191,13 +193,13 @@ public class SolutionServiceImpl implements ISolutionService {
 			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
 					new RestPageRequest(0, confprops.getSolutionResultsetSize()));
 			mlpSolutionsList = pageResponse.getContent();
-			logger.debug(EELFLoggerDelegator.debugLogger, " The Date Format :  {} ", confprops.getDateFormat());
+			logger.info("The Date Format :  {} ", confprops.getDateFormat());
 			if (null == mlpSolutionsList) {
-				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned null Solution list");
+				logger.info("CommonDataService returned null Solution list");
 			} else if (mlpSolutionsList.isEmpty()) {
-				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned empty Solution list");
+				logger.info("CommonDataService returned empty Solution list");
 			} else {
-				logger.debug(EELFLoggerDelegator.debugLogger," CommonDataService returned Solution list of size :  {} ", mlpSolutionsList.size());
+				logger.info("CommonDataService returned Solution list of size :  {} ", mlpSolutionsList.size());
 				List<MLPSolution> matchingModelsolutionList  = new ArrayList<MLPSolution>();
 				// Get the TypeCodes from Properties file
 				String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
@@ -238,11 +240,11 @@ public class SolutionServiceImpl implements ISolutionService {
 				result = props.getSolutionErrorDescription();
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutions() ", e);
+			logger.error("Exception in getSolutions() ", e);
 			throw new ServiceException("  Exception in getSolutions() ", props.getSolutionErrorCode(),
 					props.getSolutionErrorDesc());
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " getSolutions() End ");
+		logger.info("getSolutions() End ");
 		return result;
 	}
 
@@ -264,7 +266,7 @@ public class SolutionServiceImpl implements ISolutionService {
 
 	@Override
 	public String getMatchingModels(String userId, String portType, JSONArray protobufJsonString) throws Exception {
-		logger.debug(EELFLoggerDelegator.debugLogger, " getMatchingModels() Begin ");
+		logger.info("getMatchingModels() Begin ");
 		String jsonInString = null;
 		List<MatchingModel> matchingModelList = new ArrayList<>();
 		List<MessageargumentList> inMsgArgList = mapper.readValue(protobufJsonString.toString(), 
@@ -273,7 +275,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		matchingModelList = getPublicMatchingModels(portType,inMsgArgList);
 		//Check if user private cache is old to recent.
 		Date lastExecutionTime = modelCacheForMatching.getUserPrivateModelUpdateTime(userId);
-		logger.debug(EELFLoggerDelegator.debugLogger, " lastExecutionTime : " + lastExecutionTime);
+		logger.info("lastExecutionTime : " + lastExecutionTime);
 		if(null != lastExecutionTime){
 			Long minutes = TimeUnit.MILLISECONDS.toMinutes((new Date()).getTime() - lastExecutionTime.getTime());
 			if (minutes > props.getPrivateCacheRemovalTime()) { //If difference is more than configurable min then cache is too old.  
@@ -283,13 +285,13 @@ public class SolutionServiceImpl implements ISolutionService {
 		// get the private matching models
 		matchingModelList.addAll(getPrivateMatchingModels(userId, portType,inMsgArgList));
 		jsonInString = mapper.writeValueAsString(matchingModelList);
-		logger.debug(EELFLoggerDelegator.debugLogger, " getMatchingModels() End ");
+		logger.info("getMatchingModels() End ");
 		return jsonInString;
 	}
 
 	@Override
 	public String createNewCompositeSolution(String userId) throws AcumosException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " createNewCompositeSolution() : Begin ");
+		logger.info("createNewCompositeSolution() : Begin ");
 		String response = null;
 		String sessionId = "";
 		try {
@@ -306,19 +308,16 @@ public class SolutionServiceImpl implements ISolutionService {
 				String emptyCdumpJson = gson.toJson(cdump);
 				String path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
 				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", emptyCdumpJson);
-				logger.debug(EELFLoggerDelegator.debugLogger, emptyCdumpJson);
 				response = "{\"cid\":\"" + sessionId + "\",\"success\":\"true\",\"errorMessage\":\"\"}";
 			} else {
 				response = "{\"cid\":\"" + sessionId
 						+ "\",\"success\":\"false\",\"errorMessage\":\"User Id Required\"}";
-				logger.debug(EELFLoggerDelegator.debugLogger, response);
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured in createNewCompositeSolution() ", e);
+			logger.error("Exception Occured in createNewCompositeSolution() ", e);
 			throw new NoSuchElementException("Failed to create NewCompositeSolution");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " createNewCompositeSolution() : End ");
+		logger.info("createNewCompositeSolution() : End ");
 		return response;
 	}
 
@@ -326,7 +325,7 @@ public class SolutionServiceImpl implements ISolutionService {
 	public String addNode(String userId, String solutionId, String version, String cid, Nodes node) {
 		String results = "";
 		String resultTemplate = "{\"success\" : \"%s\", \"errorDescription\" : \"%s\"}";
-		logger.debug(EELFLoggerDelegator.debugLogger, " addNode() : Begin  ");
+		logger.info("addNode() : Begin  ");
 		Property[] propertyarray = node.getProperties();
 		try {
 			mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -415,10 +414,10 @@ public class SolutionServiceImpl implements ISolutionService {
 			mapper.writeValue(new File(path.concat(cdumpFileName)), cdump);
 
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in addNode() ", e);
+			logger.error("Exception in addNode() ", e);
 			results = String.format(resultTemplate, false, "Node not Added");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " addNode() : End  ");
+		logger.info("addNode() : End  ");
 		return results;
 	}
 
@@ -428,7 +427,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		String solutionRevisionId = "";
 		String description = "";
 		DSPayloadDto dsPayload = new DSPayloadDto();
-		logger.debug(EELFLoggerDelegator.debugLogger, " fetchJsonTOSCA()  : Begin ");
+		logger.info("fetchJsonTOSCA()  : Begin ");
 		String result = "";
 		ByteArrayOutputStream byteArrayOutputStream = null;
 		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
@@ -441,8 +440,7 @@ public class SolutionServiceImpl implements ISolutionService {
 						if (mlp.getVersion().equalsIgnoreCase(version)) {
 							solutionRevisionId = mlp.getRevisionId();
 							isValidVersion = true;
-							logger.debug(EELFLoggerDelegator.debugLogger,
-									" SolutionRevisonId for Version :  {} ", solutionRevisionId );
+							logger.info("SolutionRevisonId for Version :  {} ", solutionRevisionId );
 							break;
 						}
 					}
@@ -460,7 +458,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				for (MLPArtifact mlpArti : mlpArtifact) {
 					if (mlpArti.getArtifactTypeCode().equalsIgnoreCase(props.getArtifactTypeCode())) {
 						nexusURI = mlpArti.getUri();
-						logger.debug(EELFLoggerDelegator.debugLogger, " Nexus URI :  {} ", nexusURI );
+						logger.info("Nexus URI :  {} ", nexusURI );
 						break;
 					}
 				}
@@ -474,14 +472,13 @@ public class SolutionServiceImpl implements ISolutionService {
 				String path = DSUtil.createCdumpPath(userId, confprops.getToscaOutputFolder());
 				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionID, "json", result);
 				result = mapper.writeValueAsString(dsPayload);
-				logger.debug(EELFLoggerDelegator.debugLogger," Response in String Format :  {} ", result );
+				logger.info("Response in String Format :  {} ", result );
 
 			} else {
 				result = "{\"error\": \"CDUMP Artifact Not Found for this solution\"}";
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " exception occured in readCompositeSolutionGraph()",
-					e);
+			logger.error("exception occured in readCompositeSolutionGraph()",e);
 			throw new ServiceException("Failed to read the CompositeSolution");
 		} finally {
 			try {
@@ -489,12 +486,11 @@ public class SolutionServiceImpl implements ISolutionService {
 					byteArrayOutputStream.close();
 				}
 			} catch (IOException e) {
-				logger.error(EELFLoggerDelegator.errorLogger,
-						"Error : Exception in readArtifact() : Failed to close the byteArrayOutputStream", e);
+				logger.error("Error : Exception in readArtifact() : Failed to close the byteArrayOutputStream", e);
 				throw new ServiceException("Failed to read the CompositeSolution");
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " fetchJsonTOSCA()  : End ");
+		logger.info("fetchJsonTOSCA()  : End ");
 		return result;
 	}
 
@@ -502,7 +498,7 @@ public class SolutionServiceImpl implements ISolutionService {
 	@Override
 	public String modifyNode(String userId, String solutionId, String version, String cid, String nodeId,
 			String nodeName, String ndata, FieldMap fieldmap, DataBrokerMap databrokerMap, CollatorMap collatorMap, SplitterMap splitterMap) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode() : Begin");
+		logger.info("modifyNode() : Begin");
 		String results = "";
 		String resultTemplate = "{\"success\" : \"%s\", \"errorDescription\" : \"%s\"}";
 		try {
@@ -577,20 +573,20 @@ public class SolutionServiceImpl implements ISolutionService {
 					}
 				}
 				mapper.writeValue(new File(path.concat(cdumpFileName).concat(".json")), cdump);
-				logger.debug(EELFLoggerDelegator.debugLogger, " Node Modified Successfully ");
+				logger.info("Node Modified Successfully ");
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in  modifyNode() ", e);
+			logger.error("Exception in  modifyNode() ", e);
 			results = String.format(resultTemplate, false, "Not able to modify the Node");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()   : End");
+		logger.info("modifyNode()   : End");
 		return results;
 	}
 
 	@Override
 	public String modifyLink(String userId, String cid, String solutionId, String version, String linkId,
 			String linkName) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyLink()  : Begin");
+		logger.info("modifyLink()  : Begin");
 		String results = "";
 		String resultTemplate = "{\"success\" : \"%s\", \"errorDescription\" : \"%s\"}";
 		try {
@@ -618,20 +614,20 @@ public class SolutionServiceImpl implements ISolutionService {
 					}
 				}
 				mapper.writeValue(new File(path.concat(cdumpFileName).concat(".json")), cdump);
-				logger.debug(EELFLoggerDelegator.debugLogger, " Link Modified Successfully ");
+				logger.info("Link Modified Successfully ");
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in  modifyLink() ", e);
+			logger.error("Exception in  modifyLink() ", e);
 			results = String.format(resultTemplate, false, "Not able to modify the Link");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyLink()  : End");
+		logger.info("modifyLink()  : End");
 		return results;
 	}
 
 	@Override
 	public boolean deleteNode(String userId, String solutionId, String version, String cid, String nodeId)
 			throws AcumosException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " deleteNode() in SolutionServiceImpl : Begin ");
+		logger.info("deleteNode() in SolutionServiceImpl : Begin ");
 		boolean deletedNode = false;
 		try {
 			String id = "";
@@ -690,22 +686,22 @@ public class SolutionServiceImpl implements ISolutionService {
 						DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
 					}
 				} catch (JsonParseException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, " JsonParseException in deleteNode() ", e);
+					logger.error("JsonParseException in deleteNode() ", e);
 					throw e;
 				} catch (JsonMappingException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, " JsonMappingException in deleteNode() ", e);
+					logger.error("JsonMappingException in deleteNode() ", e);
 					throw e;
 				} catch (IOException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, " IOException in deleteNode() ", e);
+					logger.error("IOException in deleteNode() ", e);
 					throw e;
 				}
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in deleteNode() ", e);
+			logger.error("Exception in deleteNode() ", e);
 			throw new ServiceException("Failed to Delete the Node", props.getSolutionErrorCode(),
 					"Failed to Delete the Node");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " deleteNode() in SolutionServiceImpl : Ends ");
+		logger.info("deleteNode() in SolutionServiceImpl : Ends ");
 		return deletedNode;
 	}
 
@@ -713,7 +709,7 @@ public class SolutionServiceImpl implements ISolutionService {
 	public boolean addLink(String userId, String solutionId, String version, String linkName, String linkId,
 			String sourceNodeName, String sourceNodeId, String targetNodeName, String targetNodeId,
 			String sourceNodeRequirement, String targetNodeCapabilityName, String cid, Property property) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " addLink() in SolutionServiceImpl : Begin ");
+		logger.info("addLink() in SolutionServiceImpl : Begin ");
 		String id = "";
 		Gson gson = new Gson();
 		String nodeToUpdate = "";
@@ -816,21 +812,21 @@ public class SolutionServiceImpl implements ISolutionService {
 				String jsonInString = gson.toJson(cdump);
 				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + id, "json", jsonInString);
 			} catch (JsonIOException e) {
-				logger.error(EELFLoggerDelegator.errorLogger, "Exception in addLink() ", e);
+				logger.error("Exception in addLink() ", e);
 				addedLink = false;
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured in addLink() ", e);
+			logger.error("Exception Occured in addLink() ", e);
 			addedLink = false;
 		}
 
-		logger.debug(EELFLoggerDelegator.debugLogger, " addLink() in SolutionServiceImpl : End ");
+		logger.info("addLink() in SolutionServiceImpl : End ");
 		return addedLink;
 	}
 
 	@Override
 	public boolean deleteLink(String userId, String solutionId, String version, String cid, String linkId) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " deleteLink() in SolutionServiceImpl : Begin ");
+		logger.info("deleteLink() in SolutionServiceImpl : Begin ");
 		String id = "";
 		String cdumpFileName;
 		String sourceNodeId = null;
@@ -865,7 +861,7 @@ public class SolutionServiceImpl implements ISolutionService {
 							// delete properties field from DM
 							for (Nodes node : nodesList) {
 								// For all NodeTypes input is SourceNodeId which is same as nodeId in Nodes
-								logger.debug(EELFLoggerDelegator.debugLogger, "1. For all NodeTypes input is SourceNodeId which is same as nodeId in Nodes ");
+								logger.info("1. For all NodeTypes input is SourceNodeId which is same as nodeId in Nodes ");
 								if (node.getNodeId().equals(sourceNodeId) && node.getProperties().length != 0) {
 									if (props.getGdmType().equals(node.getType().getName())) {
 										node.getProperties()[0].getData_map().setMap_outputs(new MapOutput[0]);
@@ -879,9 +875,9 @@ public class SolutionServiceImpl implements ISolutionService {
 											dbiField.setMapped_to_field("");
 										}
 										// Collator map Output which have only one output link
-										logger.debug(EELFLoggerDelegator.debugLogger, " Collator map Output which have only one output link ");
+										logger.info("Collator map Output which have only one output link ");
 									} else if (props.getCollatorType().equals(node.getType().getName())) {
-										logger.debug(EELFLoggerDelegator.debugLogger, "Output Message Signature set as empty for Collator");
+										logger.info("Output Message Signature set as empty for Collator");
 										node.getProperties()[0].getCollator_map().setOutput_message_signature("");
 										node.getProperties()[0].getCollator_map()
 												.setMap_outputs(new CollatorMapOutput[0]);
@@ -889,19 +885,19 @@ public class SolutionServiceImpl implements ISolutionService {
 										// Splitter Map Output which may have single or multiple link(s)
 										
 									} else if (props.getSplitterType().equals(node.getType().getName())) {
-										logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
+										logger.info("splitterLink() : Begin  ");
 										splitterLink(linkId, relationsList, node);
-										logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : End ");
+										logger.info("splitterLink() : End ");
 									}
 								}
 								
 								// For all NodeTypes input is targetNodeId which is same as nodeId in Nodes
 								if (node.getNodeId().equals(targetNodeId) && node.getProperties().length != 0) {
-									logger.debug(EELFLoggerDelegator.debugLogger, " For all NodeTypes input is targetNodeId which is same as nodeId in Nodes");
+									logger.info("For all NodeTypes input is targetNodeId which is same as nodeId in Nodes");
 									if (props.getGdmType().equals(node.getType().getName())) {
 										node.getProperties()[0].getData_map().setMap_inputs(new MapInputs[0]);
 									} else if (props.getSplitterType().equals(node.getType().getName())) {
-										logger.debug(EELFLoggerDelegator.debugLogger,"Input Message Signature set as empty for Splitter");
+										logger.info("Input Message Signature set as empty for Splitter");
 										node.getProperties()[0].getSplitter_map().setInput_message_signature("");
 										node.getProperties()[0].getSplitter_map()
 												.setMap_inputs(new SplitterMapInput[0]);
@@ -921,7 +917,7 @@ public class SolutionServiceImpl implements ISolutionService {
 											// If the targetNodeId List size is having only one means collator contains one input and need to delete
 											// the entire mapInputs and Source table details
 											if (targetNodeList.size() == 0) {
-												logger.debug(EELFLoggerDelegator.debugLogger," If the targetNodeId List size is having only one means collator contains one input.");
+												logger.info("If the targetNodeId List size is having only one means collator contains one input.");
 												if (props.getCollatorType().equals(node.getType().getName())) {
 													node.getProperties()[0].getCollator_map()
 															.setMap_inputs(new CollatorMapInput[0]);
@@ -929,7 +925,7 @@ public class SolutionServiceImpl implements ISolutionService {
 												// If the targetNodeId List size is more than one means collator contains more than one inputs and need to
 												// delete the only deleted link related mapping details mapInputs and Source table details
 											} else {
-												logger.debug(EELFLoggerDelegator.debugLogger," If the targetNodeId List size is more than one means collator contains more than one inputs.");
+												logger.info("If the targetNodeId List size is more than one means collator contains more than one inputs.");
 												CollatorMapInput[] cmInput = node.getProperties()[0].getCollator_map()
 														.getMap_inputs();
 												List<CollatorMapInput> cim = new LinkedList<>(Arrays.asList(cmInput));
@@ -963,9 +959,9 @@ public class SolutionServiceImpl implements ISolutionService {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger," Exception in deleteLink() in SolutionServiceImpl", e);
+			logger.error("Exception in deleteLink() in SolutionServiceImpl", e);
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " deleteLink() in SolutionServiceImpl End ");
+		logger.info("deleteLink() in SolutionServiceImpl End ");
 		return deletedLink;
 	}
 
@@ -1012,7 +1008,7 @@ public class SolutionServiceImpl implements ISolutionService {
 	 * 		 Throws AcumosException while getting protoUrl, Use for getting the nexusURI for solution.
 	 */
 	public String getProtoUrl(String solutionId, String version, String artifactType, String fileExtention) throws AcumosException {
-		logger.debug(EELFLoggerDelegator.debugLogger, "getProtoUrl() : Begin");
+		logger.info("getProtoUrl() : Begin");
 
 		String nexusURI = "";
 		List<MLPSolutionRevision> mlpSolutionRevisionList = null;
@@ -1024,7 +1020,7 @@ public class SolutionServiceImpl implements ISolutionService {
 			try {
 				mlpSolutionRevisionList = cmnDataService.getSolutionRevisions(solutionId);
 			} catch (Exception e) {
-				logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutionRevisions() ",e);
+				logger.error("Exception in getSolutionRevisions() ",e);
 				throw new ServiceException("Failed to get the SolutionRevisionList");
 			}
 
@@ -1032,13 +1028,13 @@ public class SolutionServiceImpl implements ISolutionService {
 			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
 				solutionRevisionId = mlpSolutionRevisionList.stream().filter(mlp -> mlp.getVersion().equals(version))
 						.findFirst().get().getRevisionId();
-				logger.debug(EELFLoggerDelegator.debugLogger, " SolutionRevisonId for Version :  {} ", solutionRevisionId );
+				logger.info("SolutionRevisonId for Version :  {} ", solutionRevisionId );
 			}
 		} catch (NoSuchElementException | NullPointerException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
+			logger.error("Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
 			throw new NoSuchElementException("Failed to fetch the Solution Revision Id of the solutionId for the user");
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
+			logger.error("Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
 			throw new ServiceException("Failed to fetch the Solution Revision Id for the solutionId " + solutionId);
 		}
 
@@ -1068,17 +1064,17 @@ public class SolutionServiceImpl implements ISolutionService {
 						}
 						
 					}
-					logger.debug(EELFLoggerDelegator.debugLogger, " Nexus URI :  {} ", nexusURI );
+					logger.info("Nexus URI :  {} ", nexusURI );
 				} catch (NoSuchElementException | NullPointerException e) {
-					logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",e);
+					logger.error("Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",e);
 					throw new NoSuchElementException("Could not search the artifact URI for artifactType " + artifactType);
 				} catch (Exception e) {
-					logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",e);
+					logger.error("Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",e);
 					throw new ServiceException(" Exception Occured decryptAndWriteTofile() ", "501","Could not search the artifact URI for artifactType " + artifactType, e.getCause());
 				}
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "getProtoUrl() : End");
+		logger.info("getProtoUrl() : End");
 		return nexusURI;
 	}
 	
@@ -1092,8 +1088,8 @@ public class SolutionServiceImpl implements ISolutionService {
 		for(DSSolution dss : dsSolutionList){
 			//check if it appears twice in clone
 			cnt = 0;
-			logger.debug(EELFLoggerDelegator.debugLogger, " dss.getSolutionName() " + dss.getSolutionName());
-            logger.debug(EELFLoggerDelegator.debugLogger, " dss.getVersion() " + dss.getVersion());
+			logger.info("dss.getSolutionName() " + dss.getSolutionName());
+            logger.info("dss.getVersion() " + dss.getVersion());
             if(null == dss.getSolutionName() && null == dss.getVersion() ){
             	break;
             }
@@ -1102,8 +1098,8 @@ public class SolutionServiceImpl implements ISolutionService {
                 if(null == dss1.getSolutionName() && null == dss1.getVersion()){
                 	break;
                 } else if(dss.getSolutionName().equals(dss1.getSolutionName()) && dss.getVersion().equals(dss1.getVersion())){
-                	logger.debug(EELFLoggerDelegator.debugLogger, " dss1.getSolutionName() " + dss1.getSolutionName());
-                    logger.debug(EELFLoggerDelegator.debugLogger, " dss1.getVersion() " + dss1.getVersion());
+                	logger.info("dss1.getSolutionName() " + dss1.getSolutionName());
+                    logger.info("dss1.getVersion() " + dss1.getVersion());
 					cnt++;
 				}
 				if(cnt == 2){  //indicating that same solution name and version appeared twice, so no need to check further 
@@ -1157,15 +1153,15 @@ public class SolutionServiceImpl implements ISolutionService {
 
 	
 	private List<MLPSolutionRevision> getSolutionRevisions(String solutionId) throws Exception {
-		logger.debug(EELFLoggerDelegator.debugLogger, " getSolutionRevisions() : Begin ");
+		logger.info("getSolutionRevisions() : Begin ");
 		List<MLPSolutionRevision> solRevisions = null;
 		try {
 			solRevisions = cmnDataService.getSolutionRevisions(solutionId);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getSolutionRevisions() ", e);
+			logger.error("Exception in getSolutionRevisions() ", e);
 			throw e;
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " getSolutionRevisions() : End ");
+		logger.info("getSolutionRevisions() : End ");
 		return solRevisions;
 	}
 
@@ -1174,7 +1170,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		try {
 			mlpArtifacts = cmnDataService.getSolutionRevisionArtifacts(solutionId, solutionRevisionId);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getListOfArtifacts() ", e);
+			logger.error("Exception in getListOfArtifacts() ", e);
 			throw e;
 		}
 		return mlpArtifacts;
@@ -1185,7 +1181,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		try {
 			outputStream = nexusArtifactClient.getArtifact(uri);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getPayload()", e);
+			logger.error("Exception in getPayload()", e);
 		}
 		return outputStream;
 	}
@@ -1199,14 +1195,14 @@ public class SolutionServiceImpl implements ISolutionService {
 				return false;
 			}
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in isSolutionIdValid() ", ex);
+			logger.error("Exception in isSolutionIdValid() ", ex);
 			return false;
 		}
 	}
 
 	
 	private void updateSplitterMap(SplitterMap splitterMap, Nodes nodesData) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : Begin");
+		logger.info("modifyNode()  : Begin");
 		Property properties[] = nodesData.getProperties();
 		Property newProperty = null;
 		// If In case of properties Contains SplitterMap 
@@ -1237,12 +1233,12 @@ public class SolutionServiceImpl implements ISolutionService {
 			Property newproperties[] = new Property[1];
 			newproperties[0] = newProperty;
 			nodesData.setProperties(newproperties);
-			logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode() : End");
+			logger.info("modifyNode() : End");
 		}
 	}
 
 	private void updateCollatorMap(CollatorMap collatorMap, Nodes nodesData) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : Begin");
+		logger.info("modifyNode()  : Begin");
 		Property properties[] = nodesData.getProperties();
 		Property newProperty = null;
 		ArrayList<Property> propertyList = new ArrayList<Property>(Arrays.asList(properties));
@@ -1273,12 +1269,12 @@ public class SolutionServiceImpl implements ISolutionService {
 			Property newproperties[] = new Property[1];
 			newproperties[0] = newProperty;
 			nodesData.setProperties(newproperties);
-			logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode() : End");
+			logger.info("modifyNode() : End");
 		}
 	}
 
 	private void updateDataBroker(DataBrokerMap databrokerMap, Nodes nodesData) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : Begin");
+		logger.info("modifyNode()  : Begin");
 		Property properties[] = nodesData.getProperties();
 		Property newProperty = null;
 		if(null != properties){
@@ -1348,13 +1344,13 @@ public class SolutionServiceImpl implements ISolutionService {
 				properties[cnt] = p;
 				cnt++;
 			}
-			logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : End");
+			logger.info("modifyNode()  : End");
 			nodesData.setProperties(properties);
 		}
 	}
 
 	private void updateDataMapper(FieldMap fieldmap, Property[] properties) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode(): Begin");
+		logger.info("modifyNode(): Begin");
 		if (null != properties && properties.length != 0) {
 			// iterate through each property
 			for (Property props : properties) {
@@ -1398,7 +1394,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				}
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " modifyNode()  : End");
+		logger.info("modifyNode()  : End");
 	}
 
 	
@@ -1524,7 +1520,7 @@ public class SolutionServiceImpl implements ISolutionService {
 	 */
 	private List<MatchingModel> getPrivateMatchingModels(String userId, String portType,
 			List<MessageargumentList> inMsgArgList) throws ServiceException, JsonParseException, JsonMappingException, IOException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " getPrivateMatchingModels() Begin ");
+		logger.info("getPrivateMatchingModels() Begin ");
 		List<MatchingModel> matchingModelList = new ArrayList<MatchingModel>();
 		
 		Map<KeyVO, List<ModelDetailVO>> privateModelCache = modelCacheForMatching.getPrivateModelCache(userId);
@@ -1536,7 +1532,7 @@ public class SolutionServiceImpl implements ISolutionService {
 			modelCacheForMatching.setUserPrivateModelUpdateTime(userId, new Date());
 		}
 		matchingModelList = getMatchingModels(portType, inMsgArgList, privateModelCache);
-		logger.debug(EELFLoggerDelegator.debugLogger, " getPrivateMatchingModels() End ");
+		logger.info("getPrivateMatchingModels() End ");
 		return matchingModelList;
 	}
 
@@ -1550,11 +1546,11 @@ public class SolutionServiceImpl implements ISolutionService {
 	 */
 	private List<MatchingModel> getPublicMatchingModels(String portType,
 			List<MessageargumentList> inMsgArgList) throws IOException, JsonParseException, JsonMappingException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " getPublicMatchingModels() Begin ");
+		logger.info("getPublicMatchingModels() Begin ");
 		List<MatchingModel> matchingModelList = null;
 		Map<KeyVO, List<ModelDetailVO>> publicModelCache = modelCacheForMatching.getPublicModelCache();
 		matchingModelList = getMatchingModels(portType, inMsgArgList, publicModelCache);
-		logger.debug(EELFLoggerDelegator.debugLogger, " getPublicMatchingModels() End ");
+		logger.info("getPublicMatchingModels() End ");
 		return matchingModelList;
 	}
 
@@ -1570,7 +1566,7 @@ public class SolutionServiceImpl implements ISolutionService {
 	private List<MatchingModel> getMatchingModels(String portType, List<MessageargumentList> inMsgArgList,
 			Map<KeyVO, List<ModelDetailVO>> modelCache)
 			throws IOException, JsonParseException, JsonMappingException {
-		logger.debug(EELFLoggerDelegator.debugLogger, " getMatchingModels() Begin ");
+		logger.info("getMatchingModels() Begin ");
 		List<MatchingModel> matchingModelList = new ArrayList<MatchingModel>();;
 		KeyVO inKeyVO;
 		MatchingModel matchingModel = null;
@@ -1642,12 +1638,12 @@ public class SolutionServiceImpl implements ISolutionService {
 				} 
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " getMatchingModels() End ");
+		logger.info("getMatchingModels() End ");
 		return matchingModelList;
 	}
 	
 	private boolean getIsNested(List<MessageargumentList> messagearguments) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " getIsNested() Begin ");
+		logger.info("getIsNested() Begin ");
 		boolean isNestedMessage = false;
 		ComplexType complexType = null;
 		for(MessageargumentList msgargument : messagearguments) {
@@ -1657,7 +1653,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				break;
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " getIsNested() End ");
+		logger.info("getIsNested() End ");
 		return isNestedMessage;
 	}
 	
@@ -1699,7 +1695,7 @@ public class SolutionServiceImpl implements ISolutionService {
 
 	
 	private void splitterLink(String linkId, List<Relations> relationsList, Nodes node) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
+		logger.info("splitterLink() : Begin  ");
 		List<String> sourceNodeList = new ArrayList<String>();
 		String target = null;
 		if (null != node.getProperties()[0].getSplitter_map().getMap_outputs()) {
@@ -1736,13 +1732,13 @@ public class SolutionServiceImpl implements ISolutionService {
 				}
 				SplitterMapOutput newSplOut[] = spMapOut.toArray(new SplitterMapOutput[spMapOut.size()]);
 				node.getProperties()[0].getSplitter_map().setMap_outputs(newSplOut);
-				logger.debug(EELFLoggerDelegator.debugLogger, "splitterLink() : Begin  ");
+				logger.info("splitterLink() : Begin  ");
 			}
 		}
 	}
 	
 	private List<DSModelVO> getDSModels(RestPageResponse<MLPSolution> mlpSolutionPageResponse) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " getDSModels() Begin ");
+		logger.info("getDSModels() Begin ");
 		List<MLPSolution> mlpSolutionsList = null;
 		mlpSolutionsList = mlpSolutionPageResponse.getContent();
 		List<MLPSolutionRevision> solutionRevisions = null;
@@ -1762,7 +1758,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				dsModelsList.add(modelVO);
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, " getDSModels() End ");
+		logger.info("getDSModels() End ");
 		return dsModelsList;
 	}
 	

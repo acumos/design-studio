@@ -20,6 +20,8 @@
 
 package org.acumos.designstudio.ce.util;
 
+import org.slf4j.MDC;
+
 /**
  * Constants for standard headers, MDCs, etc.
 */
@@ -114,6 +116,16 @@ public final class DSLogConstants {
 	}
 	
 	/**
+	 * Overrideable method to set MDCs based on property values.
+	 */
+	public static void setDefaultMDCs() {
+		MDC.put(MDCs.RESPONSE_CODE, "200");
+		MDC.put(MDCs.RESPONSE_DESCRIPTION, "200 OK");
+		MDC.put(MDCs.RESPONSE_SEVERITY, ResponseSeverity.INFO.toString());
+		MDC.put(MDCs.RESPONSE_STATUS_CODE, ResponseStatus.INPROGRESS.toString());
+	}
+	
+	/**
 	 * Response success or not, for setting <tt>StatusCode</tt>.
 	 */
 	public enum ResponseStatus {
@@ -123,6 +135,22 @@ public final class DSLogConstants {
 
 		/** Not. */
 		ERROR,
+		
+		/** Inprogress. */
+		INPROGRESS 
+	}
+	
+	/**
+	 * Response of log level, for setting Severity.
+	 */
+	public enum ResponseSeverity {
+
+		INFO,
+		ERROR,
+		TRACE,
+		DEBUG,
+		WARN,
+		FATAL
 	}
 
 }

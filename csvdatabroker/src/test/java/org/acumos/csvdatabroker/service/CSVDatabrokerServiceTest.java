@@ -21,15 +21,16 @@
 package org.acumos.csvdatabroker.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.acumos.csvdatabroker.exceptionhandler.ServiceException;
 import org.acumos.csvdatabroker.util.Constants;
-import org.acumos.csvdatabroker.util.EELFLoggerDelegator;
 import org.acumos.csvdatabroker.util.LocalScriptExecutor;
 import org.acumos.csvdatabroker.util.RemoteScriptExecutor;
 import org.acumos.csvdatabroker.vo.Configuration;
@@ -40,10 +41,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import static org.mockito.Mockito.when;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.jcraft.jsch.ChannelSftp;
@@ -76,7 +78,7 @@ public class CSVDatabrokerServiceTest {
 	@Mock
 	Protobuf protobuf;
 	
-	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(LocalScriptExecutor.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Before
 	public void setUp() throws Exception {
@@ -172,7 +174,7 @@ public class CSVDatabrokerServiceTest {
 			when(jSch.getSession("test", "xyz", 2300)).thenReturn(session);
 	        when(session.openChannel("sftp")).thenReturn(sftp);
 			remoteScriptExecutor.getData(out, localpath+"Test.csv");
-			logger.debug("getData() : Succesfully Executed Test case");
+			logger.info("getData() : Succesfully Executed Test case");
 		} catch(Exception e){
 			logger.error("getData() : Exception in Test case : getData()");
 		}
@@ -210,7 +212,7 @@ public class CSVDatabrokerServiceTest {
 			
 			when(protobuf.getService().getOperations()).thenReturn(operations);		
 			localScriptExecutor.getData(out, localpath);
-			logger.debug("getData() : Succesfully executed Test case");
+			logger.info("getData() : Succesfully executed Test case");
 		} catch(Exception e){
 			logger.error("getData() : Exception in Test case : getData()");
 		}

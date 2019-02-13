@@ -24,8 +24,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 
-import org.acumos.gdm.util.EELFLoggerDelegator;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,6 +33,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -43,7 +45,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration
 public class GDMServiceImplTest {
 
-	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(GDMServiceImplTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Mock
 	ResourceLoader resourceLoader;
@@ -85,7 +87,7 @@ public class GDMServiceImplTest {
 
 	    if ( !testResource.exists() )
 	    {
-	    	logger.debug(EELFLoggerDelegator.debugLogger,"Could not load test resource: " + testResource );
+	    	logger.info("Could not load test resource: " + testResource );
 	    }
 	    return testResource;
 	}

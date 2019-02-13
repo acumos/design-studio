@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.invoke.MethodHandles;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -38,7 +39,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ToscaUtil {
-	private static final Logger logger = LoggerFactory.getLogger(ToscaUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 * 
@@ -52,14 +53,14 @@ public class ToscaUtil {
 	 *            Data to write
 	 */
 	public static void writeDataToFile(String path, String fileName, String extension, String data) {
-		logger.debug("-------------- writeDataToFile() started --------------");
+		logger.info("writeDataToFile() started");
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(path + fileName + "." + extension, "UTF-8");
 			writer.write(data);
-			logger.debug("-------------- writeDataToFile() ended -------------");
+			logger.info("writeDataToFile() ended");
 		} catch (Exception e) {
-			logger.error(" --------------- Exception Occured   writeDataToFile() ----------------" + fileName, e);
+			logger.error("Exception Occured   writeDataToFile()" + fileName, e);
 		} finally {
 			if (null != writer) {
 				writer.close();
@@ -77,7 +78,7 @@ public class ToscaUtil {
 	 *             On failure to read
 	 */
 	public static String readFile(String filePath) throws IOException {
-		logger.debug("-----------  readFile() started --------------");
+		logger.info("readFile() started");
 		FileReader fr = new FileReader(filePath);
 		BufferedReader br = new BufferedReader(fr);
 		try {
@@ -89,7 +90,7 @@ public class ToscaUtil {
 				sb.append("\n");
 				line = br.readLine();
 			}
-			logger.debug("----------- readFile() ended ------------");
+			logger.info("readFile() ended");
 			return sb.toString();
 		} finally {
 			br.close();
@@ -106,7 +107,7 @@ public class ToscaUtil {
 	 *             On failure to close file
 	 */
 	public static String readJSONFile(String filePath) throws Exception {
-		logger.debug("------------- readJSONFile() started -------------");
+		logger.info("readJSONFile() started");
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject = null;
 		FileReader fr = null;
@@ -114,20 +115,20 @@ public class ToscaUtil {
 			fr = new FileReader(filePath);
 			Object obj = parser.parse(new FileReader(filePath));
 			jsonObject = (JSONObject) obj;
-			logger.debug("JSON Object : " + jsonObject.toJSONString());
+			logger.info("JSON Object : " + jsonObject.toJSONString());
 
 		} catch (FileNotFoundException e) {
-			logger.error(" ---------- Exception Occured  readJSONFile() -----------", e);
+			logger.error("Exception Occured  readJSONFile() ", e);
 		} catch (IOException e) {
-			logger.error("----------- Exception Occured readJSONFile() -------------", e);
+			logger.error("Exception Occured readJSONFile()", e);
 		} catch (org.json.simple.parser.ParseException e) {
-			logger.error(" ------------- Exception Occured readJSONFile()-----------", e);
+			logger.error("Exception Occured readJSONFile()", e);
 		} finally {
 			if (null != fr) {
 				fr.close();
 			}
 		}
-		logger.debug("-----------  readJSONFile() ended ------------");
+		logger.info("readJSONFile() ended");
 		return jsonObject.toJSONString();
 	}
 
@@ -139,7 +140,7 @@ public class ToscaUtil {
 	 *             On failure to delete
 	 */
 	public static void delete(File file) throws IOException {
-		logger.debug("------------  delete() started ------------");
+		logger.info("delete() started");
 		try {
 			if (file.isDirectory()) {
 
@@ -147,7 +148,7 @@ public class ToscaUtil {
 				if (file.list().length == 0) {
 
 					file.delete();
-					logger.debug("--------- Directory is deleted : ----------- " + file.getAbsolutePath());
+					logger.info("Directory is deleted :  " + file.getAbsolutePath());
 
 				} else {
 
@@ -167,18 +168,18 @@ public class ToscaUtil {
 					// check the directory again, if empty then delete it
 					if (file.list().length == 0) {
 						file.delete();
-						logger.debug(" -------Directory is deleted :------------- " + file.getAbsolutePath());
+						logger.info("Directory is deleted :" + file.getAbsolutePath());
 					}
 				}
 
 			} else {
 				// if file, then delete it
 				file.delete();
-				logger.debug("---------File is deleted :----------- " + file.getAbsolutePath());
+				logger.info("File is deleted : " + file.getAbsolutePath());
 			}
-			logger.debug("------------- delete() ended ---------------");
+			logger.info("delete() ended");
 		} catch (Exception ex) {
-			logger.error("----------- Exceptoin Occured delete() ---------------", ex);
+			logger.error(" Exceptoin Occured delete()", ex);
 
 		}
 	}
