@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a2c8706_d53bc872",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/ToscaGeneratorClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-02-14T09:57:53Z",
+      "side": 1,
+      "message": "Keep the logging level debug, viz., logger.debug()",
+      "range": {
+        "startLine": 176,
+        "startChar": 11,
+        "endLine": 176,
+        "endChar": 15
+      },
+      "revId": "8264e12b5a975682e68d4ea74ca6690cff2e6d52",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4cced7d1_d5efa3c7",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/ToscaGeneratorClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-02-14T09:57:53Z",
+      "side": 1,
+      "message": "Keep the logging level debug, viz., logger.debug(). Please update at all the places.",
+      "range": {
+        "startLine": 179,
+        "startChar": 13,
+        "endLine": 179,
+        "endChar": 17
+      },
+      "revId": "8264e12b5a975682e68d4ea74ca6690cff2e6d52",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
