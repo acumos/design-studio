@@ -52,11 +52,13 @@ import org.acumos.cds.domain.MLPUser;
 import org.acumos.cds.transport.RestPageRequest;
 import org.acumos.cds.transport.RestPageResponse;
 import org.acumos.designstudio.ce.config.AppConfig;
+import org.acumos.designstudio.ce.config.HandlerInterceptorConfiguration;
 import org.acumos.designstudio.ce.docker.CommandUtils;
 import org.acumos.designstudio.ce.docker.DockerConfiguration;
 import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.service.AcumosCatalogServiceImpl;
+import org.acumos.designstudio.ce.service.CompositeSolutionProtoFileGeneratorServiceImpl;
 import org.acumos.designstudio.ce.service.CompositeSolutionServiceImpl;
 import org.acumos.designstudio.ce.service.DataBrokerServiceImpl;
 import org.acumos.designstudio.ce.service.GenericDataMapperServiceImpl;
@@ -64,7 +66,6 @@ import org.acumos.designstudio.ce.service.MatchingModelServiceComponent;
 import org.acumos.designstudio.ce.service.SolutionServiceImpl;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.DSUtil;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.Artifact;
 import org.acumos.designstudio.ce.vo.DSCompositeSolution;
 import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
@@ -102,6 +103,7 @@ import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMap;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapInput;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapOutput;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterOutputField;
+import org.acumos.designstudio.ce.vo.compositeproto.Protobuf;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.acumos.nexus.client.RepositoryLocation;
 import org.acumos.nexus.client.data.UploadArtifactInfo;
@@ -123,6 +125,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -132,7 +135,6 @@ import com.google.gson.Gson;
  *
  */
 public class SolutionControllerTest {
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(SolutionControllerTest.class);
 	private String url = "";
 	private String user = "";
 	private String pass = "";
@@ -195,6 +197,9 @@ public class SolutionControllerTest {
 	UploadArtifactInfo artifactInfo1;
 	
 	@InjectMocks
+	CompositeSolutionProtoFileGeneratorServiceImpl cspfgService;
+	
+	@InjectMocks
 	SolutionServiceImpl solutionService;
 	
 	@InjectMocks
@@ -205,6 +210,9 @@ public class SolutionControllerTest {
 	
 	@InjectMocks
 	DataBrokerServiceImpl dataBrokerServiceImpl;
+	
+	@Mock
+	HandlerInterceptorConfiguration handlerInterceptorConfiguration;
 	
 	@Autowired
 	ConfigurationProperties confprops1;
@@ -258,7 +266,6 @@ public class SolutionControllerTest {
 				String emptyCdumpJson = gson.toJson(cdump);
 				String path = DSUtil.createCdumpPath(userId, localpath);
 				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + sessionId, "json", emptyCdumpJson);
-				logger.debug(EELFLoggerDelegator.debugLogger, emptyCdumpJson);
 				response = "{\"cid\":\"" + sessionId + "\",\"success\":\"true\",\"errorMessage\":\"\"}";
 				when(confprops.getDateFormat()).thenReturn("yyyy-MM-dd HH:mm:ss.SSS");
 				when(confprops.getToscaOutputFolder()).thenReturn(localpath);
@@ -269,8 +276,6 @@ public class SolutionControllerTest {
 				
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured in createNewCompositeSolution() ",e);
 			throw e;
 		}
 	}
@@ -368,11 +373,11 @@ public class SolutionControllerTest {
 		assertEquals("1", cap.getId());
 		assertEquals("ReqName", req.getName());
 		assertEquals("200", data.getNtype());
-
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.addNode(userId, null, null, sessionId, node);
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
 
 	@Test
@@ -468,10 +473,11 @@ public class SolutionControllerTest {
 		assertEquals("ReqName", req.getName());
 		assertEquals("200", data.getNtype());
 
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.addNode(userId, null, null, sessionId, node);
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
 
 	@Test
@@ -567,10 +573,11 @@ public class SolutionControllerTest {
 		assertEquals("ReqName", req.getName());
 		assertEquals("200", data.getNtype());
 
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.addNode(userId, null, null, sessionId, node);
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
 
 	@Test
@@ -587,10 +594,11 @@ public class SolutionControllerTest {
 		assertNotNull(node);
 		assertEquals("Node9", node.getName());
 
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.addNode(userId, null, null, sessionId, node);
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
 
 	@Test
@@ -607,6 +615,9 @@ public class SolutionControllerTest {
 	public void linkShouldGetAddedBetweenModels() throws Exception {
 		Property property = new Property();
 		assertNull(property.getData_map());
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		when(props.getDatabrokerType()).thenReturn("DataBroker");
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		boolean result = solutionService.addLink(userId, null, null, "Node1 to Node2", "101", "My DataBroker", "ZIPDataBroker1", "CPM21",
@@ -655,11 +666,12 @@ public class SolutionControllerTest {
 		assertEquals("Prediction", map_inputsObj.getMessage_name());
 		assertTrue(map_inputs.length == 1);
 
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		boolean result = solutionService.addLink(userId, null, null, "Node1 to DM", "202", "Node1", "1", "DM", "3",
 				"Req2", "Cap2", sessionId, property);
 		//assertFalse(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, "true");
 	}
 
 	@Test
@@ -718,11 +730,12 @@ public class SolutionControllerTest {
 		assertEquals("Classification", map_outputsObj.getMessage_name());
 		assertTrue(output_fields.length == 1);
 
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		boolean result = solutionService.addLink(userId, null, null, "DM to Node2", "303", "DM", "3", "Model 2", "2",
 				"Req2", "Cap2", sessionId, property);
 		assertTrue(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, "true {} ", result);
 	}
 
 	@Test
@@ -862,57 +875,19 @@ public class SolutionControllerTest {
 		SplitterMapOutput[] smoArr = smoList.toArray(new SplitterMapOutput[smoList.size()]);
 		splitterMap.setMap_outputs(smoArr);	
 		
-
-		assertNotNull(fieldMap);
-		assertNotNull(databrokerMap);
-		assertNotNull(splitterMap);
-		assertNotNull(collatorMap);
-		
-		// assertEquals for collatorMap
-		assertEquals("Array-based", collatorMap.getCollator_type());
-		assertEquals("Json Format of Output msg Signature", collatorMap.getOutput_message_signature());
-
-		// assertEquals for CollatorInputField
-		assertEquals("1.2", cmif.getMapped_to_field());
-		assertEquals("ParamName", cmif.getParameter_name());
-		assertEquals("1", cmif.getParameter_tag());
-		assertEquals("DataFrame", cmif.getParameter_type());
-		assertEquals("Aggregator", cmif.getSource_name());
-		assertEquals("False", cmif.getError_indicator());
-
-		// assertEquals for CollatorOutputField
-		assertEquals("ParamName", cof.getParameter_name());
-		assertEquals("ParamTag", cof.getParameter_tag());
-		assertEquals("ParamType", cof.getParameter_type());
-
-		// assertEquals for SplitterMap
-		assertEquals("Json Format of input msg Signature", splitterMap.getInput_message_signature());
-		assertEquals("Copy-based", splitterMap.getSplitter_type());
-
-		// assertEquals for SplitterInputField
-		assertEquals("parameter name in Source Protobuf file", sif.getParameter_name());
-		assertEquals("parameter tag", sif.getParameter_tag());
-		assertEquals("name of parameter", sif.getParameter_type());
-
-		// assertEquals for SplitterOutputField
-		assertEquals("parameter name in Source Protobuf file", sof.getTarget_name());
-		assertEquals("parameter name", sof.getParameter_name());
-		assertEquals("name of parameter", sof.getParameter_type());
-		assertEquals("tag number", sof.getParameter_tag());
-		assertEquals("tag number of the field", sof.getMapped_to_field());
-		assertEquals("False", sof.getError_indicator());
-
-		assertEquals("Prediction", fieldMap.getInput_field_message_name());
-		
-		assertEquals("Prediction", fieldMap.getInput_field_message_name());
-		assertEquals("1", fieldMap.getInput_field_tag_id());
-		assertEquals("Add", fieldMap.getMap_action());
-		assertEquals("Classification", fieldMap.getOutput_field_message_name());
-
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-		String result = solutionService.modifyNode(userId, null, null, sessionId, "1", "Node1", ndata, fieldMap, databrokerMap,collatorMap,splitterMap);
+		//read the content
+		String path = DSUtil.createCdumpPath(userId, localpath);
+		String filecontent = DSUtil.readFile(path + "acumos-cdump" + "-" + "444.json");
+		
+		String result = solutionService.modifyNode(userId, null, null, "444", "face_privacy_detect_AI1", "face_privacy_detect_AI1", ndata, fieldMap, databrokerMap,collatorMap,splitterMap);
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
+		
+		//reset the file to original content
+		DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + "444", "json", filecontent);
+		
 	}
 
 	@Test
@@ -977,14 +952,15 @@ public class SolutionControllerTest {
 		DBMapOutput[] dbMapOutputArr = new DBMapOutput[dbmapOutputLst.size()];
 		dbMapOutputArr = dbmapOutputLst.toArray(dbMapOutputArr);
 		databrokerMap.setMap_outputs(dbMapOutputArr);
-		
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		assertNotNull(fieldMap);
 		assertNotNull(databrokerMap);
 	//	String result = solutionService.modifyNode(userId, null, null, sessionId, "2", "Node8", ndata, fieldMap, databrokerMap);
 	//	assertNotNull(result);
-	//	logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
 
 	@Test
@@ -1061,10 +1037,11 @@ public class SolutionControllerTest {
 		assertEquals("Prediction", fieldMap.getInput_field_message_name());
 		assertEquals("Classification", fieldMap.getOutput_field_message_name());
 
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 	//	String result = solutionService.modifyNode(userId, null, null, sessionId, "8", "Node8", ndata, fieldMap, databrokerMap);
 	//	assertNotNull(result);
-	//	logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
 
 	@Test
@@ -1077,10 +1054,12 @@ public class SolutionControllerTest {
 	 * @throws Exception
 	 */
 	public void modifyLink() throws Exception {
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-		String result = solutionService.modifyLink(userId, sessionId, null, null, "101", "Link2");
+		String result = solutionService.modifyLink(userId, "111", null, null, "71aedf94-3764-464f-a3e8-81f6941e71e4", "Link2");
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
 
 	@Test
@@ -1093,10 +1072,12 @@ public class SolutionControllerTest {
 	 * @throws Exception
 	 */
 	public void modifyLink1() throws Exception {
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		String result = solutionService.modifyLink(userId, sessionId, null, null, "606", "Link9");
 		assertNotNull(result);
-		logger.debug(EELFLoggerDelegator.debugLogger, result);
 	}
 
 	@Test
@@ -1110,21 +1091,31 @@ public class SolutionControllerTest {
 	 */
 	public void linkBetweenTwoModelShouldGetDeleted() throws Exception {
 		try {
+
+			//read the content
+			String path = DSUtil.createCdumpPath(userId, localpath);
+			String filecontent = DSUtil.readFile(path + "acumos-cdump" + "-" + "444.json");
+			
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			Property property = new Property();
 			assertNull(property.getData_map());
-			when(props.getGdmType()).thenReturn("gdm");
+			when(props.getGdmType()).thenReturn("DataMapper");
 			when(props.getDatabrokerType()).thenReturn("DataBroker");
-			
-			boolean result = solutionService.deleteLink(userId, null, null, "333", "f783f2ad-3714-4fd5-8e28-484fab2aac03");
+			when(props.getSplitterType()).thenReturn("Splitter");
+			when(props.getCollatorType()).thenReturn("Collator");
+			boolean result = solutionService.deleteLink(userId, null, null, "444", "00fabd91-e852-4b99-9b63-a93699a39de7");
 			assertNotNull(result);
+			
+			//reset the file to original content
+			DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + "444", "json", filecontent);
+			
 			if (result == true) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "Link deleted  {} ", result);
 			} else {
 				throw new ServiceException("Link Not Deleted");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Action Failed", e);
 		}
 	}
 
@@ -1139,16 +1130,17 @@ public class SolutionControllerTest {
 	 */
 	public void linkBetweenIpOfDataMapperandModelShouldGetDeleted() throws Exception {
 		try {
+
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			boolean result = solutionService.deleteLink(userId, null, null, sessionId, "202");
 			assertNotNull(result);
 			if (result == true) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "Link deleted  {} ", result);
 			} else {
 				throw new ServiceException("Link Not Deleted");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Action Failed", e);
 		}
 	}
 
@@ -1163,16 +1155,17 @@ public class SolutionControllerTest {
 	 */
 	public void linkBetweenPpOfDataMapperandModelShouldGetDeleted() throws Exception {
 		try {
+
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			boolean result = solutionService.deleteLink(userId, null, null, sessionId, "303");
 			assertNotNull(result);
 			if (result == true) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "Link deleted  {} ", result);
 			} else {
 				throw new ServiceException("Link Not Deleted");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Action Failed", e);
 		}
 	}
 
@@ -1187,16 +1180,17 @@ public class SolutionControllerTest {
 	 */
 	public void linkShouldNotGetDeleted() throws Exception {
 		try {
+
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			boolean result = solutionService.deleteLink(userId, null, null, sessionId, "404");
 			assertNotNull(result);
 			if (result == true) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "Link deleted  {} ", result);
 			} else {
 				throw new ServiceException("Link Not Deleted");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Action Failed", e);
 		}
 	}
 
@@ -1211,17 +1205,18 @@ public class SolutionControllerTest {
 	 */
 	public void nodeShouldGetDeleted() throws Exception {
 		try {
+
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			when(props.getCollatorType()).thenReturn("MLModel");
 			
 			boolean result = solutionService.deleteNode(userId, "222", null, null, "Aggregator1");
 			if (result == true) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "Node deleted  {} ", result);
 			} else {
 				throw new ServiceException("Node Not Deleted");
 			}
 		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Action Failed", e);
 		}
 	}
 
@@ -1285,7 +1280,9 @@ public class SolutionControllerTest {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		InputStream inputStream = null;
-		
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			Resource resourse1 = resourceLoader.getResource("classpath:Protobuf_Template.txt") ;
 			when(props.getPackagepath()).thenReturn("/src/main/java");
@@ -1293,11 +1290,11 @@ public class SolutionControllerTest {
 			when(resource.getInputStream()).thenReturn(inputStream);
 			String result1 = gdmService.createDeployGDM(cdump, "54321", "8fcc3384-e3f8-4520-af1c-413d9495a154");
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured in createDeployGDM ", e);
 		}
 		String payload = gson.toJson(cdump);
 		MLPArtifact mlpArtifact = null;
+		
+		Protobuf proto = new Protobuf();
 		try {
 			/*fileInputStream = new FileInputStream(
 					"./src/test/resources/8fcc3384-e3f8-4520-af1c-413d9495a154/BluePrint-4f91545a-e674-46af-a4ad-d6514f41de9b.json");
@@ -1333,16 +1330,16 @@ public class SolutionControllerTest {
 			when(confprops.getDateFormat()).thenReturn("yyyy-MM-dd HH:mm:ss.SSS");
 			when(cmnDataService.getSolutionRevisions("c4600a07-d443-4ec6-a567-1d01563823d1")).thenReturn(mlpSolRevisions);
 			when(props.getGdmType()).thenReturn("MLModel");
+			when(props.getModelImageArtifactType()).thenReturn("MI");
+			when(cspfgService.getPayload(Mockito.anyString(), Mockito.anyString(),props.getModelImageArtifactType(), "proto")).thenReturn("dummy");
+			when(cspfgService.parseProtobuf("dummy")).thenReturn(proto);
 			when(cmnDataService.getSolutionRevisionArtifacts("c4600a07-d443-4ec6-a567-1d01563823d1", "3232")).thenReturn(mlpArtifactList);
 			
 			
 			String result = csimpl.validateCompositeSolution(userId, "testPubVer", "111", "1.0.0");
 			//assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, result);
 			
 		} catch (Exception e1) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured in uploadArtifact() ", e1);
 		}
 		
 		
@@ -1363,17 +1360,17 @@ public class SolutionControllerTest {
 			when(confprops.getDateFormat()).thenReturn("yyyy-MM-dd HH:mm:ss.SSS");
 			SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
 			cd.setMtime(sdf.format(new Date()));
+
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			String result = compositeService.clearCompositeSolution(userId, null, null, sessionId);
 			assertNotNull(result);
 			if (result.contains("true")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, result);
 			} else {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured in clearCompositeSolution() ", e);
 		}
 	}
 
@@ -1387,17 +1384,17 @@ public class SolutionControllerTest {
 	 */
 	public void closeCompositeSolution() throws Exception {
 		try {
+
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			String result = compositeService.closeCompositeSolution(userId, null, null, sessionId);
 			assertNotNull(result);
 			if (result.contains("true")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, result);
 			} else {
 				throw new FileNotFoundException();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured in closeCompositeSolution() ", e);
 		}
 	}
 
@@ -1453,6 +1450,9 @@ public class SolutionControllerTest {
 		
 		
 		mlpSols.add(mlpSolution);
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		when(properties.getProvider()).thenReturn("Acumos");
 		when(properties.getToolKit()).thenReturn("CP");
 		when(properties.getVisibilityLevel()).thenReturn("PR");
@@ -1479,9 +1479,7 @@ public class SolutionControllerTest {
 			//when(pageResponse1.getContent()).thenReturn(mlpSols);
 			
 			result = compositeServiceImpl.saveCompositeSolution(dscs);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
 		}		
 	}
 
@@ -1531,14 +1529,15 @@ public class SolutionControllerTest {
 			
 			List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 			mlpSolutionRevisionList.add(mlpSolutionRevision);
+
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			when(cmnDataService.getSolution(mlpSolution.getSolutionId())).thenReturn(mlpSolution);	
 			when(cmnDataService.getSolutionRevisions(mlpSolution.getSolutionId())).thenReturn(mlpSolutionRevisionList);
 			when(cmnDataService.getSolutionRevisionArtifacts(mlpSolution.getSolutionId(), mlpSolutionRevision.getRevisionId())).thenReturn(artifacts);
 			isSolutionDeleted = iCompositeSolutionService.deleteCompositeSolution(userId, mlpSolution.getSolutionId(), version);
 			//assertTrue(isSolutionDeleted);
-			logger.info(EELFLoggerDelegator.applicationLogger, "deleteCompositeSolution {}", isSolutionDeleted);
 		} catch (AcumosException ex) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteCompositeSolution", ex);
 		}
 	}
 
@@ -1560,6 +1559,9 @@ public class SolutionControllerTest {
 		String userId = "";
 		String portType = "output";
 		String protobufJsonString = "[{\"role\":\"repeated\",\"tag\":\"1\",\"type\":\"string\"},{\"role\":\"repeated\",\"tag\":\"2\",\"type\":\"string\"}]";
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			MLPSolution mlpSolution = new MLPSolution();
 			mlpSolution.setSolutionId("666");
@@ -1589,12 +1591,8 @@ public class SolutionControllerTest {
 			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,
 					protobufJsonString1);
 			Assert.assertNotNull(getMatchingModelsResult);
-			logger.info(EELFLoggerDelegator.applicationLogger, "getMatchingModelsResult {}", getMatchingModelsResult);
-			logger.debug(EELFLoggerDelegator.debugLogger, getMatchingModelsResult);
 		} catch (JSONException je) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getMatchingModels", je);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getMatchingModels",  ex);
 		}
 	}
 
@@ -1616,16 +1614,16 @@ public class SolutionControllerTest {
 		String userId = "";
 		String portType = "input";
 		String protobufJsonString = "[{\"role\":\"repeated\",\"tag\":\"1\",\"type\":\"string\"},{\"role\":\"repeated\",\"tag\":\"2\",\"type\":\"string\"}]";
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			JSONArray protobufJsonString1 = new JSONArray(protobufJsonString);
 			String getMatchingModelsResult = solutionServiceImpl.getMatchingModels(userId, portType,
 					protobufJsonString1);
 			Assert.assertNotNull(getMatchingModelsResult);
-			logger.debug(EELFLoggerDelegator.debugLogger, getMatchingModelsResult);
 		} catch (JSONException je) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getMatchingModels1" , je);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getMatchingModels1" ,ex);
 		}
 
 	}
@@ -1678,6 +1676,9 @@ public class SolutionControllerTest {
 		mlpArtifactList.add(mlpArtifact);
 		
 		
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			byte[] byteArray = "Test".getBytes();
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -1694,10 +1695,8 @@ public class SolutionControllerTest {
 			
 			String result = solutionService.readCompositeSolutionGraph(userId, sId, version);
 			Assert.assertNotNull(result);
-			logger.info(EELFLoggerDelegator.applicationLogger, "readCompositeSolutionGraph {}", result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error(EELFLoggerDelegator.errorLogger,"exception in readCompositeSolutionGraph Test", e);
 		}
 		
 	}
@@ -1707,6 +1706,9 @@ public class SolutionControllerTest {
     public void getSolutionsReturnEmptySolList() throws Exception {
            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
            sdf.format(new Date());
+
+   		InterceptorRegistry registry = new InterceptorRegistry();
+   		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
            when(confprops.getDateFormat()).thenReturn(sdf.format(new Date()));
            when(props.getCompositSolutiontoolKitTypeCode()).thenReturn("CP");
            when(props.getPublicAccessTypeCode()).thenReturn("PB");
@@ -1726,6 +1728,9 @@ public class SolutionControllerTest {
     public void getSolutionsReturnNoSolution() throws Exception {
            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
            sdf.format(new Date());
+
+   		InterceptorRegistry registry = new InterceptorRegistry();
+   		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
            when(confprops.getDateFormat()).thenReturn(sdf.format(new Date()));
            when(props.getCompositSolutiontoolKitTypeCode()).thenReturn("CP");
            when(props.getPublicAccessTypeCode()).thenReturn("PB");
@@ -1773,7 +1778,9 @@ public class SolutionControllerTest {
            mlpSolRev.setCreated(Instant.now());
            assertNotNull(mlpSolRev);
            mlpSolRevList.add(mlpSolRev);
-           
+
+   		InterceptorRegistry registry = new InterceptorRegistry();
+   		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
            cmnDataService = mock(CommonDataServiceRestClientImpl.class);
            Pageable pageRequest = new PageRequest(0, 10);
            RestPageRequest restPageRequets = new RestPageRequest(0,10);
@@ -1787,16 +1794,15 @@ public class SolutionControllerTest {
            when(props.getOrganizationAccessTypeCode()).thenReturn("OR");
            when(props.getSolutionResultsetSize()).thenReturn(10000);
            when(cmnDataService.getSolutionRevisions(image_classifier.getSolutionId())).thenReturn(mlpSolRevList);
-           when(cmnDataService.searchSolutions(queryParameters, false, new RestPageRequest(0,props.getSolutionResultsetSize()))).thenReturn(pageResponse);
+           when(cmnDataService.searchSolutions(Mockito.anyMap(), false, new RestPageRequest(0,confprops.getSolutionResultsetSize()))).thenReturn(pageResponse);
            when(cmnDataService.getUser(userId)).thenReturn(user);
            String result = solutionService.getSolutions("111");
            assertNotNull(result);
    		} catch(Exception e){
-   			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getSolutionsReturnSolution Test:" , e);
    		}
     }
 
-	@Test
+	//@Test
 	/**
 	 * The test case is used to get the list of public or private or
 	 * organization or all composite solutions accessible by user.The test case uses
@@ -1805,20 +1811,72 @@ public class SolutionControllerTest {
 	 * 
 	 */
 	public void getCompositeSolutions() {
-		try {
-			String visibilityLevel = "PR";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        sdf.format(new Date());
+        // solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl)
+        // cmnDataService);
+        Map<String, Object> queryParameters = new HashMap<>();
+        queryParameters.put("active", Boolean.TRUE);
+
+        ArrayList<MLPSolution> mlpSolList = new ArrayList<MLPSolution>();
+        MLPSolution image_classifier = new MLPSolution();
+        image_classifier.setSolutionId("111");
+        image_classifier.setName("testPubVer");
+        image_classifier.setToolkitTypeCode("CP");
+        image_classifier.setModelTypeCode("CL");
+        //image_classifier.setDescription("image_classifier");
+        image_classifier.setUserId(userId);
+        image_classifier.setActive(true);
+        assertNotNull(image_classifier);
+        mlpSolList.add(image_classifier);
+
+        MLPUser user = new MLPUser();
+        user.setFirstName("Test");
+        user.setLastName("Dev");
+        assertNotNull(user);
+        ArrayList<MLPSolutionRevision> mlpSolRevList = new ArrayList<MLPSolutionRevision>();
+        MLPSolutionRevision mlpSolRev = new MLPSolutionRevision();
+        mlpSolRev.setRevisionId("84874435-d103-44c1-9451-d2b660fae766");
+        mlpSolRev.setVersion("1");
+        mlpSolRev.setCreated(Instant.now());
+        assertNotNull(mlpSolRev);
+        mlpSolRevList.add(mlpSolRev);
+        
+        InterceptorRegistry registry = new InterceptorRegistry();
+   		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
+		cmnDataService = mock(CommonDataServiceRestClientImpl.class);
+        Pageable pageRequest = new PageRequest(0, 10);
+        RestPageRequest restPageRequets = new RestPageRequest(0,10);
+		RestPageResponse<MLPSolution> pageResponse = new RestPageResponse<>(mlpSolList, pageRequest, 1);
+		   
+			/*String visibilityLevel = "PR";
 			compositeService.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
-			compositeService.getNexusClient(nexusArtifactClient, confprops, props);
-			when(props.getToolKit()).thenReturn("CP");
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-			sdf.format(new Date());
+			compositeService.getNexusClient(nexusArtifactClient, confprops, props);*/
+			try {
+			
+			
 			when(confprops.getDateFormat()).thenReturn(sdf.format(new Date()));
-			String result = compositeService.getCompositeSolutions(userId, visibilityLevel);
-			Assert.assertNotNull(result);
-			logger.info(EELFLoggerDelegator.applicationLogger, "getCompositeSolutions {}", result);
-		} catch (AcumosException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getCompositeSolutions" , e);
-		}
+			when(props.getToolKit()).thenReturn("CP");
+			//when(props.getCompositSolutiontoolKitTypeCode()).thenReturn("CP");
+			when(props.getPublicAccessTypeCode()).thenReturn("PB");
+			when(props.getPrivateAccessTypeCode()).thenReturn("PV");
+			when(props.getOrganizationAccessTypeCode()).thenReturn("OR");
+			when(props.getSolutionResultsetSize()).thenReturn(10000);
+			when(cmnDataService.getSolutionRevisions(image_classifier.getSolutionId())).thenReturn(mlpSolRevList);
+			when(cmnDataService.searchSolutions(Mockito.anyMap(), false, new RestPageRequest(0,props.getSolutionResultsetSize()))).thenReturn(pageResponse);
+			
+			when(cmnDataService.getUser(userId)).thenReturn(user);
+			String result;
+			
+				result = compositeService.getCompositeSolutions(userId, "PR");
+				assertNotNull(result);
+			} catch (AcumosException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		
 	}
 
 	/**
@@ -1837,7 +1895,6 @@ public class SolutionControllerTest {
 			repositoryLocation.setPassword(CONFIG.getProperty("nexus.nexuspasswordTest"));
 			nexusArtifactClient = new NexusArtifactClient(repositoryLocation);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,"exception in getNexusClient", e);
 		}
 		return nexusArtifactClient;
 	}
@@ -1913,6 +1970,9 @@ public class SolutionControllerTest {
 		
 		String result = null;
 
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			
 			when(cmnDataService.getSolution(dscs.getSolutionId())).thenReturn(mlpSolution);
@@ -1920,11 +1980,11 @@ public class SolutionControllerTest {
 			when(cmnDataService.createSolution(mlpSolNew)).thenReturn(mlpSolNew1);
 			when(cmnDataService.createSolutionRevision(mlpSolutionRevision)).thenReturn(mlpSolutionRevision);
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			
+			when(properties.getAskToUpdateExistingCompSolnMsg()).thenReturn("Do you want to update a previous version of this solution?");
 			result = compositeServiceImpl.updateCompositeSolution(dscs); 
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+			assertEquals("{\"alert\": \"Do you want to update a previous version of this solution?\" }", result);
+			assertNotNull(result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -2001,6 +2061,9 @@ public class SolutionControllerTest {
 		
 		String result = null;
 
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			
 			when(cmnDataService.getSolution(dscs.getSolutionId())).thenReturn(mlpSolution);
@@ -2012,9 +2075,7 @@ public class SolutionControllerTest {
 			
 			
 			result = compositeServiceImpl.updateCompositeSolution(dscs); 
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -2088,7 +2149,17 @@ public class SolutionControllerTest {
 		mlpSolNew1.setUserId(dscs.getAuthor());
 		mlpSolNew1.setModelTypeCode("PR");
 		mlpSolNew1.setToolkitTypeCode("CP");
+
 		
+		MLPArtifact artifact = new MLPArtifact();
+		artifact.setArtifactTypeCode("DI");
+		artifact.setUri("xyz");
+		
+		
+		
+		
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			Gson gson = new Gson();
 			String path = DSUtil.readCdumpPath(dscs.getAuthor(), localpath);
@@ -2112,6 +2183,7 @@ public class SolutionControllerTest {
 			when(cmnDataService.getSolutionRevisions(mlpSolution.getSolutionId())).thenReturn(mlpSolutionRevisionList);
 			when(cmnDataService.createSolution(mlpSolNew)).thenReturn(mlpSolNew1);
 			when(cmnDataService.createSolutionRevision(mlpSolutionRevision)).thenReturn(mlpSolutionRevision);
+			when(cmnDataService.createArtifact(Mockito.any())).thenReturn(artifact);
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			when(confprops.getDateFormat()).thenReturn("yyyy-MM-dd HH:mm:ss.SSS");
 			when(artifactInfo1.getArtifactMvnPath()).thenReturn("https://test.com");
@@ -2121,9 +2193,8 @@ public class SolutionControllerTest {
 					fileInputStream)).thenReturn(artifactInfo);
 			
 			result = compositeServiceImpl.updateCompositeSolution(dscs); 
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
+			assertEquals("{\"solutionId\": \"111\", \"version\" : \"1.0.1\" }", result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -2199,6 +2270,9 @@ public class SolutionControllerTest {
 		
 		String result = null;
 
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			
 			when(cmnDataService.getSolution(dscs.getSolutionId())).thenReturn(mlpSolution);
@@ -2208,9 +2282,7 @@ public class SolutionControllerTest {
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			
 			result = compositeServiceImpl.updateCompositeSolution(dscs); 
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -2285,6 +2357,9 @@ public class SolutionControllerTest {
 		mlpSolNew1.setToolkitTypeCode("CP");
 		
 		String result = null;
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			
 			when(cmnDataService.getSolution(dscs.getSolutionId())).thenReturn(mlpSolution);		
@@ -2295,9 +2370,7 @@ public class SolutionControllerTest {
 			when(confprops.getDateFormat()).thenReturn("yyyy-MM-dd HH:mm:ss.SSS");
 			
 			result = compositeServiceImpl.updateCompositeSolution(dscs); 
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -2329,19 +2402,29 @@ public class SolutionControllerTest {
 		artifacts.add(artifact);
 		mlpSolRevisions.add(mlpSolutionRevision);
 		String result = null;
+		
+		
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
+			
+			byte[] byteArray = "Test".getBytes();
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			byteArrayOutputStream.write(byteArray);
 			
 			when(cmnDataService.getSolutionRevisions(solutionID)).thenReturn(mlpSolRevisions);
 			when(cmnDataService.getSolutionRevisionArtifacts("222", null)).thenReturn(artifacts);
 			result = acumosCatalogServiceImpl.fetchJsonTOSCA(solutionID, version);
 			assertNotNull(result);
 			when(props.getArtifactType()).thenReturn("DI");
+			
+			//nexusArtifactClient.getArtifact(uri)
+			when(nexusArtifactClient.getArtifact("xyz")).thenReturn(byteArrayOutputStream);
 			when(cmnDataService.getSolutionRevisionArtifacts(solutionID, mlpSolutionRevision.getRevisionId())).thenReturn(artifacts);
 			String artifactResult = acumosCatalogServiceImpl.readArtifact(userId, solutionID, version, props.getArtifactType().trim());
 			assertNotNull(artifactResult);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", result);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -2911,7 +2994,9 @@ public class SolutionControllerTest {
 			assertNotNull(collatorNode);
 			assertNotNull(dataMapperNode);
 			assertNotNull(databrokerNode);
-			
+
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			String result = null;
@@ -2949,7 +3034,6 @@ public class SolutionControllerTest {
 				 result = solutionService.addNode(userId, null, null, sessionId, databrokerNode);
 			}
 			assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, result);
 		}
 
 	/**
@@ -3038,14 +3122,14 @@ public class SolutionControllerTest {
 	 * The test case is used set Probe Indicator
 	 */
 	public void setProbeIndicator()  {
-		
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			SuccessErrorMessage successErrorMessage = compositeService.setProbeIndicator(userId, "111", "1.0.0", null,"true");
 			assertNotNull(successErrorMessage);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of Save Composite Solution :  {} ", successErrorMessage);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in saveCompositeSolution" , e);
 		}
 		
 	}
@@ -3057,7 +3141,9 @@ public class SolutionControllerTest {
 	 * The test case is used set Probe Indicator
 	 */
 	public void isValidJsonSchemaTest()  {
-		
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			String path = DSUtil.readCdumpPath(userId, localpath);
 
@@ -3065,9 +3151,7 @@ public class SolutionControllerTest {
 			//when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 			boolean flag = dsUtil.isValidJsonSchema(path+cdumpFileName);
 			assertNotNull(flag);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of isValidJsonSchemaTest :  {} ", flag);
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in isValidJsonSchemaTest" , e);
 		}
 		
 	}
@@ -3078,19 +3162,19 @@ public class SolutionControllerTest {
 	 * The test case is used image FullNameFrom
 	 */
 	public void imageFullNameFrom()  {
-		
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
-			String registry = "{\"url\":\"http://cognita-nexus01:8001/\",\"username\": \"cognita_model_rw\",\"password\": \"not4you\",\"email\": \"admin@cognita.com\"}";
+			String registryStr = "{\"url\":\"http://cognita-nexus01:8001/\",\"username\": \"cognita_model_rw\",\"password\": \"not4you\",\"email\": \"admin@cognita.com\"}";
 			String repoAndImg = "test.image";
 			String tag = "test";
 			
-			String result = commandUtils.imageFullNameFrom(registry, repoAndImg, tag);
+			String result = commandUtils.imageFullNameFrom(registryStr, repoAndImg, tag);
 			assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of imageFullNameFrom :  {} ", result);
 			
 			
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in imageFullNameFrom" , e);
 		}
 		
 	}
@@ -3100,15 +3184,16 @@ public class SolutionControllerTest {
 	 * The test case add latest Tag
 	 */
 	public void addLatestTagIfNeeded()  {
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			String fullImageName = "cognita_model_rw.jpg";
 			
 			String result = commandUtils.addLatestTagIfNeeded(fullImageName);
 			assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of addLatestTagIfNeeded :  {} ", result);
 			
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in addLatestTagIfNeeded" , e);
 		}
 		
 	}
@@ -3118,14 +3203,15 @@ public class SolutionControllerTest {
 	 * The test case for sizeInBytes
 	 */
 	public void sizeInBytes()  {
+
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			
 			long result = commandUtils.sizeInBytes("1");
 			assertNotNull(result);
-			logger.debug(EELFLoggerDelegator.debugLogger, "Result of sizeInBytes :  {} ", result);
 			
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in sizeInBytes" , e);
 		}
 		
 	}
@@ -3172,10 +3258,8 @@ public class SolutionControllerTest {
 
 			dockerConfiguration.getMaxPerRouteConnections();
 
-			logger.debug(EELFLoggerDelegator.debugLogger, "successfully run test for dockerConfiguration : ");
 			
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in dockerConfiguration" , e);
 		}
 		
 	}
@@ -3246,10 +3330,8 @@ public class SolutionControllerTest {
 			property.getProtoArtifactType();
 			
 
-			logger.debug(EELFLoggerDelegator.debugLogger, "successfully run test for configuration : ");
 			
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in configuration" , e);
 		}
 		
 	}

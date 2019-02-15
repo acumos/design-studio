@@ -20,67 +20,29 @@
 
 package org.acumos.designstudio.test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
+import java.lang.invoke.MethodHandles;
 
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.designstudio.ce.config.AppConfig;
-import org.acumos.designstudio.ce.controller.SolutionController;
-import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
-import org.acumos.designstudio.ce.service.ICompositeSolutionService;
-import org.acumos.designstudio.ce.service.SolutionServiceImpl;
+import org.acumos.designstudio.ce.config.HandlerInterceptorConfiguration;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
-import org.acumos.designstudio.ce.vo.DSCompositeSolution;
-import org.acumos.designstudio.ce.vo.cdump.Argument;
-import org.acumos.designstudio.ce.vo.cdump.Capabilities;
-import org.acumos.designstudio.ce.vo.cdump.CapabilityTarget;
-import org.acumos.designstudio.ce.vo.cdump.DataConnector;
-import org.acumos.designstudio.ce.vo.cdump.Message;
-import org.acumos.designstudio.ce.vo.cdump.Ndata;
-import org.acumos.designstudio.ce.vo.cdump.Nodes;
-import org.acumos.designstudio.ce.vo.cdump.Property;
-import org.acumos.designstudio.ce.vo.cdump.ReqCapability;
-import org.acumos.designstudio.ce.vo.cdump.Requirements;
-import org.acumos.designstudio.ce.vo.cdump.Target;
-import org.acumos.designstudio.ce.vo.cdump.Type;
-import org.acumos.designstudio.ce.vo.cdump.collator.CollatorInputField;
-import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMap;
-import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapInput;
-import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapOutput;
-import org.acumos.designstudio.ce.vo.cdump.collator.CollatorOutputField;
-import org.acumos.designstudio.ce.vo.cdump.databroker.DataBrokerMap;
-import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMap;
-import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMapInputField;
-import org.acumos.designstudio.ce.vo.cdump.datamapper.FieldMap;
-import org.acumos.designstudio.ce.vo.cdump.datamapper.MapInputs;
-import org.acumos.designstudio.ce.vo.cdump.datamapper.MapOutput;
-import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterInputField;
-import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMap;
-import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapInput;
-import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapOutput;
-import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterOutputField;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-
-import com.jayway.jsonpath.InvalidJsonException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 public class ConfigTest {
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ConfigTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	/*// CCDS TechMDev(8003) UserId, change it if the CCDS port changes.
 	String userId = "8fcc3384-e3f8-4520-af1c-413d9495a154";
 	// The local path folder which is there in local project Directory.
@@ -102,23 +64,24 @@ public class ConfigTest {
 	@Mock
 	ConfigurationProperties confprops;
 	
+	@Mock
+	HandlerInterceptorConfiguration handlerInterceptorConfiguration;
+	
 	@Test
 	/**
 	 * 	 Test Nexus Client Configuration class
-	 * @throws Exception
 	 */
-	public void nexusArtifactClientTest() throws Exception {
+	public void nexusArtifactClientTest(){
 		try {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			when(confprops.getNexusendpointurl()).thenReturn("http://localhost:8081/repository/repo_cognita_model_maven/");
 			when(confprops.getNexususername()).thenReturn("cognita");
 			when(confprops.getNexuspassword()).thenReturn("cognita");
 			NexusArtifactClient nexusArtifactClient = appConfig.nexusArtifactClient();
 			assertNotNull(nexusArtifactClient);
-			logger.debug(EELFLoggerDelegator.debugLogger, "nexusArtifactClientTest() : Success");
-			
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "CDUMP file not created", e);
-			throw e;
+			logger.error("Exception in NexusArtifactClientTest() testcase", e);
 		}
 	}
 

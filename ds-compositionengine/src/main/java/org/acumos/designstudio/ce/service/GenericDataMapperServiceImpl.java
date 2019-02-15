@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -33,8 +34,7 @@ import java.util.UUID;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 import org.acumos.designstudio.ce.docker.CreateImageCommand;
 import org.acumos.designstudio.ce.docker.DockerClientFactory;
@@ -44,7 +44,6 @@ import org.acumos.designstudio.ce.docker.TagImageCommand;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.util.DSUtil;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.vo.cdump.Cdump;
 import org.acumos.designstudio.ce.vo.cdump.Nodes;
@@ -54,6 +53,8 @@ import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMapInputField;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.DataMapOutputField;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.MapInputs;
 import org.acumos.designstudio.ce.vo.cdump.datamapper.MapOutput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -66,7 +67,7 @@ import com.google.gson.Gson;
 @Service("GenericDataMapperServiceImpl")
 public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(GenericDataMapperServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Autowired
 	private ConfigurationProperties confprops;
@@ -106,59 +107,59 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	public String createDeployGDM(Cdump cdump, String nodeId, String userId) throws ServiceException {
 		String dockerImageURI = null;
 		boolean result = false;
-		logger.debug(EELFLoggerDelegator.debugLogger, "createDeployGDM() : Begin");
+		logger.debug("createDeployGDM() : Begin");
 		//1. Create Proto buf file for cdump 
 		result = createProtobufFile(cdump, nodeId, userId);
 		
 		if(result){
-			logger.debug(EELFLoggerDelegator.debugLogger," 1. Protobuf File created ");
+			logger.debug("1. Protobuf File created ");
 			//2. generate and compile the java code as per the protobuf file.
 			result = generateProtoJavaCode(userId);
 		} else {
-			logger.debug(EELFLoggerDelegator.debugLogger, "Exception in createDeployGDM() ");
+			logger.debug("Exception in createDeployGDM() ");
 			throw new ServiceException("Not able to create Protobuf File ", props.getSolutionErrorCode(),
 					"Not able to Generate & compile  Proto Java Code ");
 		}
 		
 		if(result){
-			logger.debug(EELFLoggerDelegator.debugLogger," 2. generate and compile the java code as per the protobuf file. ");
+			logger.debug("2. generate and compile the java code as per the protobuf file. ");
 			//3. Generate the MappingDetails as per the cdump.
 			result = generateMappingDetails(cdump);
 		} else {
-			logger.debug(EELFLoggerDelegator.debugLogger, "Exception in createDeployGDM() ");
+			logger.debug("Exception in createDeployGDM() ");
 			throw new ServiceException("Not able to Generate & compile  Proto Java Code ", props.getSolutionErrorCode(),
 					"Not able to Generate & compile  Proto Java Code ");
 		}
 		
 		String jarPath = null;
 		if(result){
-			logger.debug(EELFLoggerDelegator.debugLogger," 3. Generated the MappingDetails as per the cdump.");
+			logger.debug("3. Generated the MappingDetails as per the cdump.");
 			//4. Create new the GDMJar 
 			jarPath = createNewGDMJar(userId);
 		} else {
-			logger.debug(EELFLoggerDelegator.debugLogger, "Exception in createDeployGDM() ");
+			logger.debug("Exception in createDeployGDM() ");
 			throw new ServiceException("Not able to Generate Field Mapping Details ", props.getSolutionErrorCode(),
 					"Not able to Generate Field Mapping Details ");
 		}
 		
 		if(null != jarPath){
-			logger.debug(EELFLoggerDelegator.debugLogger," 4. Created new the GDMJar");
+			logger.debug("4. Created new the GDMJar");
 			//5. Create Docker Image
 			String dockerFolder = jarPath.substring(0,jarPath.lastIndexOf("/")+1).trim();
 			String jarName = jarPath.substring(jarPath.lastIndexOf("/")+1).trim();
 			String tagId = "1";
 			dockerImageURI = createUploadDockerImage(userId, dockerFolder,jarName,tagId);
 		} else {
-			logger.debug(EELFLoggerDelegator.debugLogger, "Exception in createDeployGDM() ");
+			logger.debug("Exception in createDeployGDM() ");
 			throw new ServiceException("Not able to create Generic Data Mapper Jar", props.getSolutionErrorCode(),
 					"Not able to create Generic Data Mapper Jar");
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger," createDeployGDM() : End ");
+		logger.debug("createDeployGDM() : End ");
 		return dockerImageURI;
 	}
 
 	private String createNewGDMJar(String userId) throws ServiceException {
-		logger.debug(EELFLoggerDelegator.debugLogger, "createNewGDMJar() : Begin");
+		logger.debug("createNewGDMJar() : Begin");
 		
 		String result = null;
 		path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
@@ -224,15 +225,12 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
              jarUpdated = true;
              result = tempJarName;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			logger.error(EELFLoggerDelegator.errorLogger, "IOException in updateGDMJar() ", e);
+			logger.error("IOException in updateGDMJar() ", e);
 			throw new ServiceException("Failed to create Generic Data Mapper Jar because of IOException", props.getSolutionErrorCode(),
 					"Failed to create Generic Data Mapper Jar because of IOException");
 		} /*catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in updateGDMJar() ",e);
+			logger.error("Exception in updateGDMJar() ",e);
 			throw new ServiceException("Failed to create Generic Data Mapper Jar because of Exception", props.getSolutionErrorCode(),
 					"Failed to create Generic Data Mapper Jar because of Exception");
 		}*/
@@ -241,11 +239,10 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
             	tempJar.close();
             	jar.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
          }
-		logger.debug(EELFLoggerDelegator.debugLogger, "createNewGDMJar() : End ");
+		logger.debug("createNewGDMJar() : End ");
 		return result;
 	}
 	
@@ -281,15 +278,11 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			}
 				
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			
-			logger.error(EELFLoggerDelegator.errorLogger, "FileNotFoundException in addDataVOClasses() ",e);
+			logger.error("FileNotFoundException in addDataVOClasses() ",e);
 			throw new ServiceException("FileNotFoundException : Failed to add DataVO Classes to GDM Jar", props.getSolutionErrorCode(),
 					"Failed to add DataVO Classes to GDM Jar");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			
-			logger.error(EELFLoggerDelegator.errorLogger, "IOException in addDataVOClasses() ", e);
+			logger.error("IOException in addDataVOClasses() ", e);
 			throw new ServiceException("IOException : Failed to add DataVO Classes to GDM Jar", props.getSolutionErrorCode(),
 					"Failed to add DataVO Classes to GDM Jar");
 		} finally {
@@ -298,7 +291,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
             		fileInputStream.close();
             	
 			} catch (IOException e) {
-				logger.error(EELFLoggerDelegator.errorLogger, "IOException in While closing fileInputStream ", e);
+				logger.error("IOException in While closing fileInputStream ", e);
 				throw new ServiceException("IOException : Failed to close fineInputStream", props.getSolutionErrorCode(),
 						"Failed to add DataVO Classes to GDM Jar");
 			}
@@ -327,15 +320,11 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	           tempJar.write(buffer, 0, bytesRead);
 	        }
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			
-			logger.error(EELFLoggerDelegator.errorLogger, "FileNotFoundException in addProtobufFile() ", e);
+			logger.error("FileNotFoundException in addProtobufFile() ", e);
 			throw new ServiceException("FileNotFoundException : Failed to add default.proto to GDM Jar", props.getSolutionErrorCode(),
 					"Failed to add default.proto to GDM Jar");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			
-			logger.error(EELFLoggerDelegator.errorLogger, "IOException in addProtobufFile() ", e);
+			logger.error("IOException in addProtobufFile() ", e);
 			throw new ServiceException("IOException : Failed to add default.proto to GDM Jar", props.getSolutionErrorCode(),
 					"Failed to add default.proto to GDM Jar");
 		} finally {
@@ -344,7 +333,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
             		fileInputStream.close();
             	
 			} catch (IOException e) {
-				logger.error(EELFLoggerDelegator.errorLogger, "IOException while closing fileInputStream ", e);
+				logger.error("IOException while closing fileInputStream ", e);
 				throw new ServiceException("IOException : Failed to close fileInputStream", props.getSolutionErrorCode(),
 						"Failed to add default.proto to GDM Jar");
 			}
@@ -372,15 +361,11 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	           tempJar.write(buffer, 0, bytesRead);
 	        }
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			
-			logger.error(EELFLoggerDelegator.errorLogger, "FileNotFoundException in addFieldMapping() ", e);
+			logger.error("FileNotFoundException in addFieldMapping() ", e);
 			throw new ServiceException("FileNotFoundException : Failed to add FieldMapping.json to GDM Jar", props.getSolutionErrorCode(),
 					"Failed to add FieldMapping.json to GDM Jar");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			
-			logger.error(EELFLoggerDelegator.errorLogger, "IOException in addFieldMapping() ", e);
+			logger.error("IOException in addFieldMapping() ", e);
 			throw new ServiceException("IOException : Failed to add FieldMapping.json to GDM Jar", props.getSolutionErrorCode(),
 					"Failed to add FieldMapping.json to GDM Jar");
 		} finally {
@@ -389,7 +374,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
             		fileInputStream.close();
             	
 			} catch (IOException e) {
-				logger.error(EELFLoggerDelegator.errorLogger, "IOException while closing fileInputStream", e);
+				logger.error("IOException while closing fileInputStream", e);
 				throw new ServiceException("IOException : Failed to close fileInputStream", props.getSolutionErrorCode(),
 						"Failed to add FieldMapping.json to GDM Jar");
 			}
@@ -398,7 +383,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	}
 	
 	private boolean generateMappingDetails(Cdump cdump) {
-		logger.debug(EELFLoggerDelegator.debugLogger," generateMappingDetails() : Begin ");
+		logger.debug("generateMappingDetails() : Begin ");
 		
 		boolean result = false;
 		List<Nodes> nodes = null;
@@ -429,13 +414,13 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			DSUtil.writeDataToFile(targetPath, props.getFieldMapping(), "json", payload);
 			result = true;
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger," generateMappingDetails() : End ");
+		logger.debug("generateMappingDetails() : End ");
 		return result;
 	}
 	
 	private boolean generateProtoJavaCode(String userId) {
 		
-		logger.debug(EELFLoggerDelegator.debugLogger," generateProtoJavaCode() : Begin ");
+		logger.debug("generateProtoJavaCode() : Begin ");
 		
 		path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 		
@@ -450,23 +435,21 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			exitVal = DSUtil.runCommand(cmd);
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in generateProtoJavaCode" , e);
-			
+			logger.error("Exception in generateProtoJavaCode" , e);
 		}
 
 		if (exitVal != 0){
-			logger.debug(EELFLoggerDelegator.debugLogger,"Failed to generate java code");
+			logger.debug("Failed to generate java code");
 		}
 		else {
-			logger.debug(EELFLoggerDelegator.debugLogger,"Compiling java code");
+			logger.debug("Compiling java code");
 			result = compileProtoJavaCode();
 			if(result){
 				DSUtil.rmdir(new File(path+"org/"));
 			}
 		}
 		
-		logger.debug(EELFLoggerDelegator.debugLogger," generateProtoJavaCode() : End ");
+		logger.debug("generateProtoJavaCode() : End ");
 		
 		return result;
 		
@@ -475,7 +458,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	
 	private boolean compileProtoJavaCode() {
 		
-		logger.debug(EELFLoggerDelegator.debugLogger, "compileProtoJavaCode() : Begin ");
+		logger.debug("compileProtoJavaCode() : Begin ");
 		
 		boolean result = false;
 		//String buildPath;
@@ -496,32 +479,32 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 		
 		File libDir = new File(confprops.getLib());
 		if(libDir.exists() && libDir.isDirectory()){
-			logger.debug(EELFLoggerDelegator.debugLogger," libDir found ");
+			logger.debug("libDir found ");
 			File[] files = libDir.listFiles();
 			for(int i =0 ; i < files.length ; i++){
-				logger.debug(EELFLoggerDelegator.debugLogger, "{0} is : {1}", files[i].getName(), (files[i].isDirectory()? "Dir" : "File"));
+				logger.debug("{0} is : {1}", files[i].getName(), (files[i].isDirectory()? "Dir" : "File"));
 			}
 		} else {
-			logger.debug(EELFLoggerDelegator.debugLogger," libDir not found ");
+			logger.debug("libDir not found ");
 		}
 		File protobufJar = new File(protobufjarpath);
 		if(protobufJar.exists() && protobufJar.isFile()){
-			logger.debug(EELFLoggerDelegator.debugLogger," protobuf jar found ");
+			logger.debug("protobuf jar found ");
 		} else {
-			logger.debug(EELFLoggerDelegator.debugLogger," protobuf jar not found ");
+			logger.debug("protobuf jar not found ");
 		}
 		
 		File dataVOjava = new File(path + packagepath + className + ".java");
 		if(dataVOjava.exists() && dataVOjava.isFile()){
-			logger.debug(EELFLoggerDelegator.debugLogger," java class found ");
+			logger.debug("java class found ");
 		} else {
-			logger.debug(EELFLoggerDelegator.debugLogger," java class not found ");
+			logger.debug("java class not found ");
 		}
 		
 		if(targetDir.exists() && targetDir.isDirectory()){
-			logger.debug(EELFLoggerDelegator.debugLogger," targetDir exists ");
+			logger.debug("targetDir exists ");
 		} else {
-			logger.debug(EELFLoggerDelegator.debugLogger," targetDir does not exists ");
+			logger.debug("targetDir does not exists ");
 		}
 		
 		cmd = "/usr/bin/javac -cp " + protobufjarpath + " " + path + packagepath + className + ".java"
@@ -531,23 +514,23 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			exitVal = DSUtil.runCommand(cmd);
 
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception while compiling the ProtoJava Code", e);
+			logger.error("Exception while compiling the ProtoJava Code", e);
 			
 		}
 		if (exitVal != 0){
-			logger.debug(EELFLoggerDelegator.debugLogger,"Proto Code Compilation Failed...");
+			logger.debug("Proto Code Compilation Failed...");
 		} else {
-			logger.debug(EELFLoggerDelegator.debugLogger,"Proto Code compilation Successfull...");
+			logger.debug("Proto Code compilation Successfull...");
 			result = true;
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger," compileProtoJavaCode() : End ");
+		logger.debug("compileProtoJavaCode() : End ");
 		
 		return result;
 	}
 	
 	private boolean createProtobufFile(Cdump cdump, String nodeId, String userId) throws ServiceException {
 		//Get file from resources folder
-		logger.debug(EELFLoggerDelegator.debugLogger," createProtobufFile() : Begin ");
+		logger.debug("createProtobufFile() : Begin ");
 		boolean result = false;
 		StringBuilder inputMessage = new StringBuilder();
 		StringBuilder outputMessage = new StringBuilder();
@@ -587,7 +570,6 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 				int inputLength = inputs.length;
 				int outputLength = outputs.length;
 				
-				//TODO : Extract the below code into method
 				//TODO : current logic does not support the nested messages.  
 				for(int i = 0 ; i < inputLength ; i++){
 					DataMapInputField[] inputfields = inputs[i].getInput_fields();
@@ -633,20 +615,16 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 				result = true;
 				
 			} else {
-				logger.debug(EELFLoggerDelegator.debugLogger, "Exception in createProtobufFile()");
+				logger.debug("Exception in createProtobufFile()");
 				throw new ServiceException("  Exception in createProtobufFile() ", props.getSolutionErrorCode(),
 						"No Generic Data Mapper found");
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in createProtobufFile()", e);
+			logger.error("Exception in createProtobufFile()", e);
 			throw new ServiceException("Exception in createProtobufFile()", props.getSolutionErrorCode(),
 					props.getSolutionErrorDesc());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in createProtobufFile()", e);
+			logger.error("Exception in createProtobufFile()", e);
 			throw new ServiceException("Exception in createProtobufFile()", props.getSolutionErrorCode(),
 					props.getSolutionErrorDesc());
 		} finally {
@@ -659,12 +637,12 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 						scanner.close();
 					}
 				} catch (IOException e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "IOException while closing inputStream", e);
+					logger.error("IOException while closing inputStream", e);
 					throw new ServiceException("IOException while closing inputStream Exception in createProtobufFile()");
 			}
 							
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger," createProtobufFile() : End ");
+		logger.debug("createProtobufFile() : End ");
 		return result;
 	}
 	
@@ -674,7 +652,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	 * @param tagId
 	 */
 	private String createUploadDockerImage(String userId, String dockerFolder, String jarName, String tagId) throws ServiceException {
-		logger.debug(EELFLoggerDelegator.debugLogger," createUploadDockerImage() : Begin ");
+		logger.debug("createUploadDockerImage() : Begin ");
 		
 		String result = null;
 		
@@ -692,7 +670,6 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
         	
         	//Create the Docker File : 
     		createDockerFile(userId, jarName);
-    		Logger.getLogger("io.netty").setLevel(Level.OFF);
 			dockerClient = DockerClientFactory.getDockerClient(dockerConfiguration);
             CreateImageCommand createCMD = new CreateImageCommand(new File(dockerFolder), imageName, tagId, "Dockerfile", false, true);
             createCMD.setClient(dockerClient);
@@ -703,19 +680,19 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 					imageTagName, tagId, true, false);
 			tagImageCommand.setClient(dockerClient);
 			tagImageCommand.execute();
-			logger.debug(EELFLoggerDelegator.debugLogger,"Docker image tagging completed successfully");
+			logger.debug("Docker image tagging completed successfully");
 
-			logger.debug(EELFLoggerDelegator.debugLogger,"Starting pushing with Imagename: {0} and version : {1} in nexus", imageTagName, tagId );
+			logger.debug("Starting pushing with Imagename: {0} and version : {1} in nexus", imageTagName, tagId );
 			PushImageCommand pushImageCmd = new PushImageCommand(imageTagName, tagId, "");
 			pushImageCmd.setClient(dockerClient);
 			pushImageCmd.execute();
 
-            logger.debug(EELFLoggerDelegator.debugLogger,"image : {0} : {1} uploaded successfully", imageTagName, tagId);
+            logger.debug("image : {0} : {1} uploaded successfully", imageTagName, tagId);
             result  = imageTagName + ":" + tagId;
 		} finally {
 			
 		}
-        logger.debug(EELFLoggerDelegator.debugLogger," createUploadDockerImage() : End ");
+        logger.debug("createUploadDockerImage() : End ");
         
         return result;
 	}
@@ -725,7 +702,7 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 	 */
 	private void createDockerFile(String userId, String jarName) throws ServiceException {
 		//ClassLoader classLoader = getClass().getClassLoader();
-		logger.debug(EELFLoggerDelegator.debugLogger, " createDockerFile() : Begin ");
+		logger.debug("createDockerFile() : Begin ");
 		
 		Scanner scanner = null;
 		InputStream inputStream = null;
@@ -738,9 +715,9 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 			dockerfile = dockerfile.replace("gdmservice", jarName);
 			path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 			DSUtil.writeDataToFile(path, "Dockerfile", null, dockerfile);
-			logger.debug(EELFLoggerDelegator.debugLogger," Docker File created successfully.  {} ", dockerfile);
+			logger.debug("Docker File created successfully.  {} ", dockerfile);
 		} catch (IOException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in createDockerFile()", e);
+			logger.error("Exception in createDockerFile()", e);
 			throw new ServiceException("Failed to create Dockerfile", props.getSolutionErrorCode(),
 					"Failed to create Dockerfile");
 		} finally {
@@ -752,12 +729,12 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 					scanner.close();
 				}
 			} catch (IOException e) {
-				logger.error(EELFLoggerDelegator.errorLogger, "Exception while closing inputstream", e);
+				logger.error("Exception while closing inputstream", e);
 				throw new ServiceException("Failed to create Dockerfile", props.getSolutionErrorCode(),
 						"Failed to create Dockerfile");
 		}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger," createDockerFile() : End ");
+		logger.debug("createDockerFile() : End ");
 		
 	}
 	

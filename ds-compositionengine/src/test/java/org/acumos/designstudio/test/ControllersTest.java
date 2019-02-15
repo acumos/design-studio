@@ -22,25 +22,23 @@ package org.acumos.designstudio.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-import java.io.FileNotFoundException;
+import java.lang.invoke.MethodHandles;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
+import org.acumos.designstudio.ce.config.HandlerInterceptorConfiguration;
 import org.acumos.designstudio.ce.controller.AdminController;
 import org.acumos.designstudio.ce.controller.SolutionController;
-import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
+import org.acumos.designstudio.ce.exceptionhandler.AcumosException;
 import org.acumos.designstudio.ce.service.ICompositeSolutionService;
 import org.acumos.designstudio.ce.service.SolutionServiceImpl;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
-import org.acumos.designstudio.ce.vo.DSCompositeSolution;
 import org.acumos.designstudio.ce.vo.cdump.Argument;
 import org.acumos.designstudio.ce.vo.cdump.Capabilities;
 import org.acumos.designstudio.ce.vo.cdump.CapabilityTarget;
@@ -69,42 +67,62 @@ import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMap;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapInput;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapOutput;
 import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterOutputField;
+import org.json.JSONException;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 import com.jayway.jsonpath.InvalidJsonException;
 
 public class ControllersTest {
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ControllersTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	// CCDS TechMDev(8003) UserId, change it if the CCDS port changes.
 	String userId = "8fcc3384-e3f8-4520-af1c-413d9495a154";
 	// The local path folder which is there in local project Directory.
 	String localpath = "./src/test/resources/";
 	// For meanwhile hard coding the sessionID.
 	String sessionId = "4f91545a-e674-46af-a4ad-d6514f41de9b";
+	
 	@Rule
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
+	
 	@InjectMocks
 	SolutionController solutionController;
+	
 	@Mock
 	SolutionServiceImpl solutionService;
+	
 	@Mock
 	ICompositeSolutionService compositeServiceImpl;
+	
 	@Mock
 	org.acumos.designstudio.ce.util.Properties props;
 	
 	@Mock
     CommonDataServiceRestClientImpl cmnDataService;
 	
+	@Mock
+	HandlerInterceptorConfiguration handlerInterceptorConfiguration;
+	
 	@InjectMocks
 	AdminController adminController;
 	
 	private HttpServletResponse response = new MockHttpServletResponse();
+	
+	@Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
 
 	@Test
 	/**
@@ -114,24 +132,20 @@ public class ControllersTest {
 	 * stored in CDUMP.json.The file is used by ds-composition engine to
 	 * represent a composite solution made by connecting models.
 	 * 
-	 * @throws Exception
 	 */
-	public void createNewCompositeSolution() throws Exception {
-		try {
-			when(solutionService.createNewCompositeSolution(userId)).thenReturn(
-					"{\"cid\":\"5e12e047-08b6-4c6e-aa13-e5bf4f1ea4b1\",\"success\":\"true\",\"errorMessage\":\"\"}");
-			String results = solutionController.createNewCompositeSolution(userId);
-			assertNotNull(results);
-			if (results.contains("true")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-			} else {
-				throw new ServiceException("Not created", "4xx", "Unable to create composite solution");
+	public void createNewCompositeSolution() {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
+			try {
+				when(solutionService.createNewCompositeSolution(userId)).thenReturn(
+						"{\"cid\":\"5e12e047-08b6-4c6e-aa13-e5bf4f1ea4b1\",\"success\":\"true\",\"errorMessage\":\"\"}");
+			} catch (AcumosException e) {
+				logger.error("Exception in createNewCompositeSolution() testcase: ",e);
 			}
-		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "CDUMP file not created", e);
-			throw e;
-		}
+			String results = solutionController.createNewCompositeSolution(userId);
+			assertEquals("{\"cid\":\"5e12e047-08b6-4c6e-aa13-e5bf4f1ea4b1\",\"success\":\"true\",\"errorMessage\":\"\"}", results);
 	}
+
 
 	@Test
 	/**
@@ -139,10 +153,11 @@ public class ControllersTest {
 	 * The test case uses addNode method which consumes userId, solutionId,
 	 * version, cid, node and returns the node data which is stored in CDUMP.json.
 	 * 
-	 * @throws Exception
 	 */
-	public void addNode() throws Exception {
+	public void addNode() {
 		try {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			Nodes node = new Nodes();
 			node.setName("Node1");
 			node.setNodeId("1");
@@ -216,20 +231,12 @@ public class ControllersTest {
 			Type type = new Type();
 			type.setName("xyz1");
 			node.setType(type);
-
-			assertNotNull(data);
-			assertNotNull(node);
-			assertNotNull(msg);
-			assertEquals("200", data.getNtype());
-			assertEquals("1", node.getNodeId());
-			assertEquals("DataFrame", msg.getMessageName());
-
 			when(solutionService.addNode(userId, null, null, sessionId, node))
 					.thenReturn("{\"success\" : \"true\", \"errorDescription\" : \"\"}");
-			String results = solutionController.addNode(userId, null, null, sessionId, node);
-			logger.debug(EELFLoggerDelegator.debugLogger, results);
+			String result = solutionController.addNode(userId, null, null, sessionId, node);
+			assertEquals("{\"success\" : \"true\", \"errorDescription\" : \"\"}", result);
 		} catch (InvalidJsonException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in addNode() testcase: JSON schema not valid", e);
+			logger.error("Exception in addNode() testcase: JSON schema not valid", e);
 		}
 	}
 
@@ -242,41 +249,10 @@ public class ControllersTest {
 	 * property and updates the relation between the source and target node
 	 * stored in CDUMP.json.
 	 * 
-	 * @throws Exception
 	 */
-	public void addLink() throws Exception {
-		try {
-			Property property = new Property();
-			when(solutionService.addLink(userId, null, null, "Model to Model", "101", "Model 1", "1", "Model 2", "2",
-					"sourceNodeRequirement", "targetNodeCapabilityName", sessionId, null)).thenReturn(true);
-			String results = solutionController.addLink(userId, null, null, "Model to Model", "101", "Model 1", "1",
-					"Model 2", "2", "sourceNodeRequirement", "targetNodeCapabilityName", sessionId, property);
-			assertNotNull(results);
-			logger.debug(EELFLoggerDelegator.debugLogger, results);
-			if (results.contains("true")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-			} else {
-				throw new FileNotFoundException();
-			}
-		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in addLink() testcase: CDUMP file not found", e);
-		}
-
-	}
-
-	@Test
-	/**
-	 * The test case is used to link two nodes to create composite solution. The
-	 * test case uses addLink method which consumes userId, solutionId, version,
-	 * linkName, linkId, sourceNodeName, sourceNodeId, targetNodeName,
-	 * targetNodeId, sourceNodeRequirement, targetNodeCapabilityName, cid,
-	 * property and updates the relation between the source and target node
-	 * stored in CDUMP.json.
-	 * 
-	 * @throws Exception
-	 */
-	public void addLink1() throws Exception {
-		try {
+	public void addLink() {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			Property property = new Property();
 			DataMap data_map = new DataMap();
 			MapInputs[] map_inputs = new MapInputs[1];
@@ -298,27 +274,20 @@ public class ControllersTest {
 			data_map.setMap_outputs(map_outputs);
 			property.setData_map(data_map);
 
-			assertNotNull(property);
-			assertNotNull(data_map);
-			assertNotNull(map_inputsObj);
-			assertNotNull(input_fieldsobj);
-			assertTrue(map_inputs.length == 1);
-			assertEquals("1", input_fieldsobj.getTag());
-			assertEquals("Prediction", map_inputsObj.getMessage_name());
-
 			when(solutionService.addLink(userId, null, null, "Model to DM", "201", "Model 1", "1", "DM", "3",
-					"sourceNodeRequirement", "targetNodeCapabilityName", sessionId, null)).thenReturn(false);
-			String results = solutionController.addLink(userId, null, null, "Model to Model", "101", "Model 1", "1",
-					"Model 2", "2", "sourceNodeRequirement", "targetNodeCapabilityName", sessionId, property);
-			assertNotNull(results);
-			if (results.contains("false")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-			} else {
-				throw new FileNotFoundException();
-			}
-		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in addLink1() testcase: Cdump file not found", e);
-		}
+					"sourceNodeRequirement", "targetNodeCapabilityName", sessionId, property)).thenReturn(true);
+			String result = solutionController.addLink(userId, null, null, sessionId, "Model to DM", "201", "Model 1", "1", "DM", "3",
+					"sourceNodeRequirement", "targetNodeCapabilityName", property);
+			assertEquals("{\"success\" : \"true\", \"errorDescription\" : \"\"}", result);
+			
+			result = solutionController.addLink(userId, null, null, sessionId, "Model to DM", "101", "Model 1", "1", "DM", "3",
+					"sourceNodeRequirement", "targetNodeCapabilityName", property);
+			assertEquals("{\"success\" : \"false\", \"errorDescription\" : \"Link not added\"}", result);
+			
+			result = solutionController.addLink(userId, null, null, sessionId, null, null, null, null, null, null,
+					null, null, null);
+			assertNotNull(result);
+			assertEquals("[Source Node name missing , Link missing , target Node name missing , targetNodeCapabilityName mising , sourceNodeId mising ]", result);
 	}
 
 	@Test
@@ -328,23 +297,17 @@ public class ControllersTest {
 	 * updates CDUMP.json by deleting the node and its relation with other
 	 * nodes.
 	 * 
-	 * @throws Exception
 	 */
-	public void deleteNode() throws Exception {
-		try {
-			when(solutionService.deleteNode(userId, null, null, sessionId, "1")).thenReturn(true);
-			String results = solutionController.deleteNode(userId, null, null, sessionId, "1");
-			assertNotNull(results);
-			logger.debug(EELFLoggerDelegator.debugLogger, results);
-			if (results.contains("true")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-			} else {
-				throw new FileNotFoundException();
+	public void deleteNode() {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
+			try {
+				when(solutionService.deleteNode(userId, null, null, sessionId, "1")).thenReturn(true);
+			} catch (AcumosException e) {
+				logger.error("Exception in deleteNode() testcase: ",e);
 			}
-		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteNode() testcase: CDUMP file not found",
-					e);
-		}
+			String result = solutionController.deleteNode(userId, null, null, sessionId, "1");
+			assertEquals("{\"success\":\"true\", \"errorMessage\":\"\"}", result);
 	}
 
 	@Test
@@ -354,23 +317,17 @@ public class ControllersTest {
 	 * updates CDUMP.json by deleting the node and its relation with other
 	 * nodes.
 	 * 
-	 * @throws Exception
 	 */
-	public void deleteNode1() throws Exception {
-		try {
-			when(solutionService.deleteNode(userId, null, null, sessionId, "1")).thenReturn(false);
-			String results = solutionController.deleteNode(userId, null, null, sessionId, "1");
-			assertNotNull(results);
-			logger.debug(EELFLoggerDelegator.debugLogger, results);
-			if (results.contains("false")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-			} else {
-				throw new FileNotFoundException();
+	public void deleteNode1() {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
+			try {
+				when(solutionService.deleteNode(userId, null, null, sessionId, "1")).thenReturn(false);
+			} catch (AcumosException e) {
+				logger.error("Exception in deleteNode1() testcase: ",e);
 			}
-		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteNode1() testcase: CDUMP file not found",
-					e);
-		}
+			String result = solutionController.deleteNode(userId, null, null, sessionId, "1");
+			assertEquals("{\"success\":\"false\", \"errorMessage\":\"Invalid Node Id – not found\"}", result);
 	}
 
 	@Test
@@ -380,68 +337,43 @@ public class ControllersTest {
 	 * linkId and updates CDUMP.json by deleting relation between the source and
 	 * target nodes
 	 * 
-	 * @throws Exception
 	 */
-	public void deleteLink() throws Exception {
-		try {
+	public void deleteLink() {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			when(solutionService.deleteLink(userId, null, null, sessionId, "101")).thenReturn(true);
-			String results = solutionController.deleteLink(userId, null, null, sessionId, "101");
-			assertNotNull(results);
-			if (results.contains("true")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-			} else {
-				throw new FileNotFoundException();
-			}
-		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in deleteLink() testcase: CDUMP file not found",
-					e);
-		}
+			//TODO : Include code for deleteLink success
+			
+			String result = solutionController.deleteLink(userId, null, null, sessionId, "101");
+			assertEquals("{\"success\":\"false\", \"errorMessage\":\"Invalid Link Id – not found\"}", result);
 	}
 
 	@Test
 	/**
 	 * The test case is used to clear the composite solution.
 	 * 
-	 * @throws Exception
 	 */
-	public void clearCompositeSolution() throws Exception {
-		try {
+	public void clearCompositeSolution() {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			when(compositeServiceImpl.clearCompositeSolution(userId, null, "1.0.0", sessionId))
-					.thenReturn("Grapg cleared");
-			String results = solutionController.clearCompositeSolution(userId, null, "1.0.0", sessionId);
-			assertNotNull(results);
-			if (results.contains("cleared")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-			} else {
-				throw new FileNotFoundException();
-			}
-		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Exception in clearCompositeSolution() testcase: CDUMP file not found", e);
-		}
+					.thenReturn("Graph cleared");
+			String result = solutionController.clearCompositeSolution(userId, null, "1.0.0", sessionId);
+			assertEquals("Graph cleared", result);
 	}
 
 	@Test
 	/**
 	 * The test case is used to close the composite solution.
 	 * 
-	 * @throws Exception
 	 */
 	public void closeCompositeSolution() throws Exception {
-		try {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			when(compositeServiceImpl.closeCompositeSolution(userId, null, "1.0.0", sessionId))
 					.thenReturn("Graph closed");
-			String results = solutionController.closeCompositeSolution(userId, null, "1.0.0", sessionId);
-			assertNotNull(results);
-			if (results.contains("closed")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-			} else {
-				throw new FileNotFoundException();
-			}
-		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Exception in closeCompositeSolution() testcase: CDUMP file not found", e);
-		}
+			String result = solutionController.closeCompositeSolution(userId, null, "1.0.0", sessionId);
+			assertEquals("Graph closed", result);
 	}
 
 	@Test
@@ -449,42 +381,26 @@ public class ControllersTest {
 	 * The test case is used to delete the composite solution from nexus
 	 * repository as well as the database
 	 * 
-	 * @throws Exception
 	 */
-	public void deleteCompositeColution() throws Exception {
-		try {
-			when(compositeServiceImpl.deleteCompositeSolution(userId, sessionId, "1.0.0")).thenReturn(true);
-			String results = solutionController.deleteCompositeSolution(userId, sessionId, "1.0.0");
-			assertNotNull(results);
-			logger.debug(EELFLoggerDelegator.debugLogger, results);
-		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Exception in deleteCompositeColution() testcase: Not deleted", e);
-			throw e;
-		}
-	}
-
-	@Test
-	/**
-	 * The test case is used to delete the composite solution from nexus
-	 * repository as well as the database
-	 * 
-	 * @throws Exception
-	 */
-	public void deleteCompositeColution1() throws Exception {
-		try {
-			when(compositeServiceImpl.deleteCompositeSolution(userId, sessionId, "1.0.0")).thenReturn(false);
-			String results = solutionController.deleteCompositeSolution(userId, sessionId, "1.0.0");
-			assertNotNull(results);
-			if (results.contains("false")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-			} else {
-				throw new ServiceException("Not deleted", "4xx", "Exception : Unable to delete requested Solution");
+	public void deleteCompositeColution() {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
+			try {
+				when(compositeServiceImpl.deleteCompositeSolution(userId, sessionId, "1.0.0")).thenReturn(true);
+			} catch (AcumosException | JSONException e) {
+				logger.error("Exception in deleteCompositeColution() testcase: ",e);
 			}
-		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Unable to delete requested Solution", e);
-			throw e;
-		}
+			String result = solutionController.deleteCompositeSolution(userId, sessionId, "1.0.0");
+			assertEquals("{\"success\":\"true\",\"errorMessage\":\"\"}", result);
+			
+			
+			try {
+				when(compositeServiceImpl.deleteCompositeSolution(userId, sessionId, "1.0.0")).thenReturn(false);
+			} catch (AcumosException | JSONException e) {
+				logger.error("Exception in deleteCompositeColution() testcase: ",e);
+			}
+			result = solutionController.deleteCompositeSolution(userId, sessionId, "1.0.0");
+			assertEquals("{\"success\":\"false\",\"errorMessage\":\"Requested Solution Not Found\"}",result);
 	}
 
 	@Test
@@ -492,21 +408,18 @@ public class ControllersTest {
 	 * The test case is used to get the list of public or private or
 	 * organization or all composite solutions accessible by user
 	 * 
-	 * @throws Exception
 	 */
-	public void getCompositeSolutions() throws Exception {
-		try {
-			when(compositeServiceImpl.getCompositeSolutions(userId, "PV")).thenReturn("10 Composite solution found");
-			String results = solutionController.getCompositeSolutions(userId, "OR");
-			assertNotNull(results);
-			if (results.contains("Composite solution")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-			} else {
-				throw new ServiceException("Empty List returned", "4xx", "No composite solutions found");
+	public void getCompositeSolutions() {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
+			try {
+				when(compositeServiceImpl.getCompositeSolutions(userId, "PV")).thenReturn("[dssolution1,dssolution2]");
+			} catch (AcumosException e) {
+				logger.error("Exception in deleteCompositeColution() testcase: ",e);
 			}
-		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "No composite solutions found", e);
-		}
+			String result = solutionController.getCompositeSolutions(userId, "PV");
+			assertEquals("{\"items\" : [dssolution1,dssolution2]}",result);
+			
 	}
 
 	@Test
@@ -514,23 +427,19 @@ public class ControllersTest {
 	 * The test case is used to get the list of all the solutions that belongs
 	 * to the user from the database
 	 * 
-	 * @throws Exception
 	 */
-	public void getSolutions() throws Exception {
-		try {
-			when(solutionService.getSolutions(userId)).thenReturn(
-					"{\"items\" : [{\"solutionId\":\"1c1d1316-6884-4574-a8fc-749de037b965\", \"solutionName\":\"AlarmGenerator\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"null\", \"description\":\"AlarmGenerator\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-15-17-34-57-000\", \"icon\":\"null\"},{\"solutionId\":\"264aca36-4fa8-4885-bcd3-7661bb9de54b\", \"solutionName\":\"Predictor-DM\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"PR\", \"description\":\"Predictor-DM\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-16-09-22-000\", \"icon\":\"null\"},{\"solutionId\":\"4f151b2d-52a9-4cbd-b80c-131d52fbaab9\", \"solutionName\":\"Classifier\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"CL\", \"description\":\"Classifier\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-15-52-07-000\", \"icon\":\"null\"},{\"solutionId\":\"51120ed4-73de-4d1b-b34c-e86cd6d30da7\", \"solutionName\":\"Classifier-R\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"CL\", \"description\":\"Classifier-R\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-15-56-32-000\", \"icon\":\"null\"},{\"solutionId\":\"54edb103-83ec-40ad-a357-a7060a2778cf\", \"solutionName\":\"Aggregator\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"DT\", \"description\":\"Aggregator\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-15-18-33-40-000\", \"icon\":\"null\"},{\"solutionId\":\"7266d859-458d-464b-9d6e-4461f94835dd\", \"solutionName\":\"GenDataMapper\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"DT\", \"description\":\"GenDataMapper\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-12-00-33-000\", \"icon\":\"null\"},{\"solutionId\":\"b027f1d8-b61c-4484-bd9a-c81fe40245d1\", \"solutionName\":\"Predictor\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"PR\", \"description\":\"Predictor\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-16-07-00-000\", \"icon\":\"null\"},{\"solutionId\":\"b1d60b2a-16dd-4464-bd0e-3692a377a546\", \"solutionName\":\"DataMapper\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"DT\", \"description\":\"Cell_Tower-SFO\", \"visibilityLevel\":\"PR\", \"created\":\"2017-11-16-08-36-38-000\", \"icon\":\"null\"},{\"solutionId\":\"cbaf417b-5442-4873-bdec-914b55fe7f9a\", \"solutionName\":\"Classifier-DM\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"CL\", \"description\":\"Classifier-DM\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-16-03-30-000\", \"icon\":\"null\"},{\"solutionId\":\"dd01f926-eae2-4d2e-bcfd-80430490c2e2\", \"solutionName\":\"Predictor-R\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"PR\", \"description\":\"Predictor-R\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-15-59-58-000\", \"icon\":\"null\"}]}");
-			String results = solutionController.getSolutions(userId);
-			assertNotNull(results);
-			if (results.contains("solutionId")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-			} else {
-				throw new ServiceException("Empty result", "4xx", "No Models found");
+	public void getSolutions() {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			String results = null;
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
+			try {
+				when(solutionService.getSolutions(userId)).thenReturn(
+						"{\"items\" : [{\"solutionId\":\"1c1d1316-6884-4574-a8fc-749de037b965\", \"solutionName\":\"AlarmGenerator\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"null\", \"description\":\"AlarmGenerator\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-15-17-34-57-000\", \"icon\":\"null\"},{\"solutionId\":\"264aca36-4fa8-4885-bcd3-7661bb9de54b\", \"solutionName\":\"Predictor-DM\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"PR\", \"description\":\"Predictor-DM\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-16-09-22-000\", \"icon\":\"null\"},{\"solutionId\":\"4f151b2d-52a9-4cbd-b80c-131d52fbaab9\", \"solutionName\":\"Classifier\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"CL\", \"description\":\"Classifier\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-15-52-07-000\", \"icon\":\"null\"},{\"solutionId\":\"51120ed4-73de-4d1b-b34c-e86cd6d30da7\", \"solutionName\":\"Classifier-R\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"CL\", \"description\":\"Classifier-R\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-15-56-32-000\", \"icon\":\"null\"},{\"solutionId\":\"54edb103-83ec-40ad-a357-a7060a2778cf\", \"solutionName\":\"Aggregator\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"DT\", \"description\":\"Aggregator\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-15-18-33-40-000\", \"icon\":\"null\"},{\"solutionId\":\"7266d859-458d-464b-9d6e-4461f94835dd\", \"solutionName\":\"GenDataMapper\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"DT\", \"description\":\"GenDataMapper\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-12-00-33-000\", \"icon\":\"null\"},{\"solutionId\":\"b027f1d8-b61c-4484-bd9a-c81fe40245d1\", \"solutionName\":\"Predictor\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"PR\", \"description\":\"Predictor\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-16-07-00-000\", \"icon\":\"null\"},{\"solutionId\":\"b1d60b2a-16dd-4464-bd0e-3692a377a546\", \"solutionName\":\"DataMapper\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"DT\", \"description\":\"Cell_Tower-SFO\", \"visibilityLevel\":\"PR\", \"created\":\"2017-11-16-08-36-38-000\", \"icon\":\"null\"},{\"solutionId\":\"cbaf417b-5442-4873-bdec-914b55fe7f9a\", \"solutionName\":\"Classifier-DM\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"CL\", \"description\":\"Classifier-DM\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-16-03-30-000\", \"icon\":\"null\"},{\"solutionId\":\"dd01f926-eae2-4d2e-bcfd-80430490c2e2\", \"solutionName\":\"Predictor-R\", \"version\":\"1\", \"ownerId\":\"testdev testdev\", \"provider\":\"null\", \"toolKit\":\"H2\", \"category\":\"PR\", \"description\":\"Predictor-R\", \"visibilityLevel\":\"PB\", \"created\":\"2017-11-16-15-59-58-000\", \"icon\":\"null\"}]}");
+				results = solutionController.getSolutions(userId);
+				assertNotNull(results);
+			} catch (AcumosException e) {
+				logger.error("Exception in deleteCompositeColution() testcase: ",e);
 			}
-		} catch (ServiceException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "No Models found", e);
-			throw e;
-		}
 	}
 
 	@Test
@@ -540,10 +449,10 @@ public class ControllersTest {
 	 * version, cid, nodeId, nodeName, ndata, fieldmap and returns the modified
 	 * node data stored in CDUMP.json.
 	 * 
-	 * @throws Exception
 	 */
-	public void modifyNode() throws Exception {
-		try {
+	public void modifyNode() {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			String ndata = "{\"ntype\":\"500\",\"px\":\"500\",\"py\":\"500\",\"radius\":\"500\",\"fixed\":false}";
 			FieldMap fieldMap = new FieldMap();
 			fieldMap.setInput_field_message_name("Prediction");
@@ -623,47 +532,6 @@ public class ControllersTest {
 			SplitterMapOutput[] smoArr = smoList.toArray(new SplitterMapOutput[smoList.size()]);
 			splitterMap.setMap_outputs(smoArr);	
 
-			assertNotNull(databrokerMap);
-			assertNotNull(collatorMap);
-			assertNotNull(splitterMap);
-			assertNotNull(fieldMap);
-			
-			// assertEquals for collatorMap
-			assertEquals("Array-based", collatorMap.getCollator_type());
-			assertEquals("Json Format of Output msg Signature", collatorMap.getOutput_message_signature());
-			
-			// assertEquals for CollatorInputField
-			assertEquals("1.2", cmif.getMapped_to_field());
-			assertEquals("ParamName", cmif.getParameter_name());
-			assertEquals("1", cmif.getParameter_tag());
-			assertEquals("DataFrame", cmif.getParameter_type());
-			assertEquals("Aggregator", cmif.getSource_name());
-			assertEquals("False", cmif.getError_indicator());
-			
-			// assertEquals for CollatorOutputField
-			assertEquals("ParamName", cof.getParameter_name());
-			assertEquals("ParamTag", cof.getParameter_tag());
-			assertEquals("ParamType", cof.getParameter_type());
-			
-			// assertEquals for SplitterMap
-			assertEquals("Json Format of input msg Signature", splitterMap.getInput_message_signature());
-			assertEquals("Copy-based", splitterMap.getSplitter_type());
-			
-			// assertEquals for SplitterInputField
-			assertEquals("parameter name in Source Protobuf file", sif.getParameter_name());
-			assertEquals("parameter tag", sif.getParameter_tag());
-			assertEquals("name of parameter", sif.getParameter_type());
-			
-			// assertEquals for SplitterOutputField
-			assertEquals("parameter name in Source Protobuf file", sof.getTarget_name());
-			assertEquals("parameter name", sof.getParameter_name());
-			assertEquals("name of parameter", sof.getParameter_type());
-			assertEquals("tag number", sof.getParameter_tag());
-			assertEquals("tag number of the field", sof.getMapped_to_field());
-			assertEquals("False", sof.getError_indicator());
-			
-			assertEquals("Prediction", fieldMap.getInput_field_message_name());
-
 			DataConnector dataConnector = new DataConnector();
 			dataConnector.setDatabrokerMap(databrokerMap);;
 			dataConnector.setFieldMap(fieldMap);
@@ -674,15 +542,8 @@ public class ControllersTest {
 					.thenReturn("Node Modified");
 			String results = solutionController.modifyNode(userId, null, null, sessionId, "1", "New Node", ndata,
 					dataConnector);
-			assertNotNull(results);
-			if (results.contains("Modified")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-			} else {
-				throw new FileNotFoundException();
-			}
-		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in modifyNode(): CDUMP file not found", e);
-		}
+			assertEquals("Node Modified",results);
+			
 	}
 
 	@Test
@@ -692,22 +553,14 @@ public class ControllersTest {
 	 * linkId, linkName and updates the relation between the source and target
 	 * node stored in CDUMP.json.
 	 * 
-	 * @throws Exception
 	 */
-	public void modifyLink() throws Exception {
-		try {
+	public void modifyLink() {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 			when(solutionService.modifyLink(userId, sessionId, null, null, "202", "Model to DM"))
 					.thenReturn("Link Modified");
 			String results = solutionController.modifyLink(userId, sessionId, null, null, "202", "Model to DM");
-			assertNotNull(results);
-			if (results.contains("Modified")) {
-				logger.debug(EELFLoggerDelegator.debugLogger, results);
-			} else {
-				throw new FileNotFoundException();
-			}
-		} catch (FileNotFoundException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in modifyLink: CDUMP file not found", e);
-		}
+			assertEquals("Link Modified",results);
 	}
 
 	@Test
@@ -715,51 +568,35 @@ public class ControllersTest {
 	 * The test case is used to save the composite solution and store it in nexus
 	 * repository as well as the database
 	 * 
-	 * @throws Exception
 	 */
-	public void saveCompositeSolution() throws Exception {
-		DSCompositeSolution dscs = new DSCompositeSolution();
-		dscs.setAuthor(userId);
-		dscs.setSolutionName("solutionName");
-		dscs.setSolutionId("solutionId");
-		dscs.setVersion("version");
-		dscs.setOnBoarder(userId);
-		dscs.setDescription("description"); 
-		dscs.setProvider("Test");
-		dscs.setToolKit("CP");
-		dscs.setVisibilityLevel("PV");
-		dscs.setcId(sessionId);
-		dscs.setIgnoreLesserVersionConflictFlag(true);
-		assertNotNull(dscs);
-		assertEquals("solutionName", dscs.getSolutionName());
+	public void saveCompositeSolution() {
+		InterceptorRegistry registry = new InterceptorRegistry();
+		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		when(props.getProvider()).thenReturn("Test");
 		when(props.getToolKit()).thenReturn("CP");
 		when(props.getVisibilityLevel()).thenReturn("PV");
-		when(compositeServiceImpl.saveCompositeSolution(dscs)).thenReturn("Solution saved : " + sessionId);
-		HttpServletRequest request = null;
-		Object results = solutionController.saveCompositeSolution(request, userId, "Test", "1.0.0", null, "Test",
-				sessionId, true);
-		assertNotNull(dscs);
-		assertEquals("CP", dscs.getToolKit());
-		assertEquals("PV", dscs.getVisibilityLevel());
-		assertEquals("description", dscs.getDescription());
-		logger.debug(EELFLoggerDelegator.debugLogger, "results");
+		try {
+			when(compositeServiceImpl.saveCompositeSolution(Mockito.any())).thenReturn("Solution saved Successfully");
+			HttpServletRequest request = null;
+			String result = (String) solutionController.saveCompositeSolution(request, userId, "Test", "1.0.0", null, "Test",
+					sessionId, true);
+			assertEquals("Solution saved Successfully", result);
+		} catch (AcumosException | JSONException | URISyntaxException e) {
+			logger.error("Exception in saveCompositeSolution() testcase: ",e);
+		}
 	}
 	
 	@Test
 	/**
 	 * This test case is used to display the design studio version in the UI
 	 * 
-	 * @throws Exception
 	 */
-	public void getVersionTest() throws Exception {
-		try {
-			logger.debug(EELFLoggerDelegator.debugLogger, "Calling Controller Method to display version");
+	public void getVersionTest() {
+			InterceptorRegistry registry = new InterceptorRegistry();
+			Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
+			logger.debug("Calling Controller Method to display version");
 			String result = adminController.getVersion(response);
-			assertNotNull(result);
-		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in getVersionTest", e);
-		}
+			assertEquals("0.0.0",result);
 	}
 	
 	

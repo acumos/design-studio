@@ -27,6 +27,9 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.acumos.designstudio.ce.util.DSLogConstants.MDCs;
+import org.acumos.designstudio.ce.util.DSLogConstants.ResponseSeverity;
+import org.acumos.designstudio.ce.util.DSLogConstants.ResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.MDC;
 import org.slf4j.event.Level;
@@ -163,7 +166,7 @@ public class DSLogAdapter {
 		// Get the UserName
 		final String userName = defaultToEmpty(request.getUser());
 		MDC.put(DSLogConstants.MDCs.USER,userName);
-				
+		DSLogAdapter.setDefaultMDCs();
 
 		// Set standard MDCs. 
 		MDC.put(DSLogConstants.MDCs.INVOKE_TIMESTAMP,
@@ -173,7 +176,7 @@ public class DSLogAdapter {
 		if (!partnerName.isEmpty())
 			MDC.put(DSLogConstants.MDCs.PARTNER_NAME, partnerName);
 		MDC.put(DSLogConstants.MDCs.CLIENT_IP_ADDRESS, defaultToEmpty(request.getClientAddress()));
-		MDC.put(DSLogConstants.MDCs.SERVER_FQDN, defaultToEmpty(request.getServerAddress()));	
+		MDC.put(DSLogConstants.MDCs.SERVER_FQDN, defaultToEmpty(request.getServerAddress()));
 
 		return this;
 	}
@@ -359,7 +362,16 @@ public class DSLogAdapter {
 		 */
 		Object getUser();
 	}
-
+	
+	/**
+	 * Overrideable method to set MDCs based on property values.
+	 */
+	public static void setDefaultMDCs() {
+		MDC.put(MDCs.RESPONSE_CODE, "200");
+		MDC.put(MDCs.RESPONSE_DESCRIPTION, "200 OK");
+		MDC.put(MDCs.RESPONSE_SEVERITY, ResponseSeverity.INFO.toString());
+		MDC.put(MDCs.RESPONSE_STATUS_CODE, ResponseStatus.INPROGRESS.toString());
+	}
 	
 	/**
 	 * RequestAdapter for reading information from an incoming HTTPServlet request.

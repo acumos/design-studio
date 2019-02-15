@@ -104,6 +104,14 @@ public final class DSLogConstants {
 		public static final String INVOCATION_ID = "Invocation-ID";
 
 		public static final String PARTNER_NAME = "PartnerName";
+		
+		public static final String RESPONSE_CODE = "ResponseCode";
+		
+		public static final String RESPONSE_DESCRIPTION = "ResponseDescription";
+		
+		public static final String RESPONSE_SEVERITY = "ResponseSeverity";
+		
+		public static final String RESPONSE_STATUS_CODE = "ResponseStatusCode";
 
 		/**
 		 * Hide and forbid construction.
@@ -123,6 +131,22 @@ public final class DSLogConstants {
 
 		/** Not. */
 		ERROR,
+		
+		/** Inprogress. */
+		INPROGRESS 
+	}
+	
+	/**
+	 * Response of log level, for setting Severity.
+	 */
+	public enum ResponseSeverity {
+
+		INFO,
+		ERROR,
+		TRACE,
+		DEBUG,
+		WARN,
+		FATAL
 	}
 
 }

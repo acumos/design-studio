@@ -20,12 +20,15 @@
 
 package org.acumos.designstudio.ce.controller;
 
+import java.lang.invoke.MethodHandles;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.acumos.designstudio.ce.service.IAcumosCatalog;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.util.Properties;
 import org.acumos.designstudio.ce.util.SanitizeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,7 +41,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/dsce/artifact/")
 public class ArtfactDetailsController {
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(ArtfactDetailsController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	@Autowired
 	private IAcumosCatalog iacumosCatalog;
 	@Autowired
@@ -64,7 +67,7 @@ public class ArtfactDetailsController {
 	public String fetchJsonTOSCA(@RequestParam(value = "userId", required = true) String userId,
 			@RequestParam(value = "solutionId", required = true) String solutionId,
 			@RequestParam(value = "version", required = true) String version, HttpServletResponse response) {
-		logger.debug(EELFLoggerDelegator.debugLogger, "fetchJsonTOSCA() : Begin");
+		logger.debug("fetchJsonTOSCA() : Begin");
 		String result = "";
 		try {
 			result = iacumosCatalog.readArtifact(userId, SanitizeUtils.sanitize(solutionId), version, props.getArtifactType().trim());
@@ -74,11 +77,11 @@ public class ArtfactDetailsController {
 				result = "Failed to fetch the TOSCA details for specified solutionId and version";				
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in fetchJsonTOSCA() ", e);
+			logger.error("Exception in fetchJsonTOSCA() ", e);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			result = e.getMessage();
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "fetchJsonTOSCA() : End");
+		logger.debug("fetchJsonTOSCA() : End");
 		return result;
 	}
 
@@ -97,8 +100,7 @@ public class ArtfactDetailsController {
 	public String fetchProtoBufJSON(@RequestParam(value = "userId", required = true) String userId,
 			@RequestParam(value = "solutionId", required = true) String solutionId,
 			@RequestParam(value = "version", required = true) String version) {
-		logger.debug(EELFLoggerDelegator.debugLogger,
-				" fetchProtoBufJSON() : Begin");
+		logger.debug("fetchProtoBufJSON() : Begin");
 
 		String resultTemplate = "{\"protobuf_json\" : %s,\n \"success\" : \"%s\",\n \"errorMessage\" : \"%s\"}";
 		String result = "";
@@ -111,11 +113,10 @@ public class ArtfactDetailsController {
 				resultTemplate = String.format(resultTemplate, result, false, "Unable to read protoBufFile");
 			}
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Exception in fetchProtoBufJSON() ", e);
+			logger.error("Exception in fetchProtoBufJSON() ", e);
 			resultTemplate = String.format(resultTemplate, null, false, e.getMessage());
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger,
-				"fetchProtoBufJSON() : End");
+		logger.debug("fetchProtoBufJSON() : End");
 		return resultTemplate;
 	}
 

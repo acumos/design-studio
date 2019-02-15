@@ -27,12 +27,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.invoke.MethodHandles;
 
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -42,7 +45,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 public class DSUtil {
-	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(DSUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 * 
@@ -60,7 +63,7 @@ public class DSUtil {
 	 *             On failure to read
 	 */
 	public static String readFile(String filePath) throws IOException {
-		logger.debug(EELFLoggerDelegator.debugLogger, "  readFile() started ");
+		logger.debug("readFile() started ");
 		FileReader fr = new FileReader(filePath);
 		BufferedReader br = new BufferedReader(fr);
 		try {
@@ -72,7 +75,7 @@ public class DSUtil {
 				sb.append("\n");
 				line = br.readLine();
 			}
-			logger.debug(EELFLoggerDelegator.debugLogger, " readFile() ended ");
+			logger.debug("readFile() ended ");
 			return sb.toString();
 		} finally {
 			fr.close();
@@ -92,7 +95,7 @@ public class DSUtil {
 	 *            Data to write
 	 */
 	public static void writeDataToFile(String path, String fileName, String extension, String data) {
-		logger.debug(EELFLoggerDelegator.debugLogger, " writeDataToFile() started ");
+		logger.debug("writeDataToFile() started ");
 		PrintWriter writer = null;
 		String completeFileName = path + fileName;
 		if (null != extension && !extension.trim().equals("")) {
@@ -102,10 +105,9 @@ public class DSUtil {
 			writer = new PrintWriter(completeFileName, "UTF-8");
 			writer.write(data);
 
-			logger.debug(EELFLoggerDelegator.debugLogger, " writeDataToFile() ended ");
+			logger.debug("writeDataToFile() ended ");
 		} catch (Exception e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured   writeDataToFile() {} " , fileName, e);
+			logger.error("Exception Occured   writeDataToFile() {} " , fileName, e);
 		} finally {
 			if (null != writer) {
 				writer.close();
@@ -128,16 +130,13 @@ public class DSUtil {
 				Schema schema = SchemaLoader.load(rawSchema);
 				schema.validate(new JSONObject(josnString)); // throws a ValidationException if this object is invalid
 			} catch (JSONException e) {
-				logger.error(EELFLoggerDelegator.errorLogger,
-						"Exception Occured   isValidJsonSchema() ", e);
+				logger.error("Exception Occured   isValidJsonSchema() ", e);
 				return false;
 			}
 		} catch (IOException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Exception Occured   isValidJsonSchema() ", e);
+			logger.error("Exception Occured   isValidJsonSchema() ", e);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					"Exception Occured   isValidJsonSchema() ", ex);
+			logger.error("Exception Occured   isValidJsonSchema() ", ex);
 		}
 		return true;
 	}
@@ -186,7 +185,7 @@ public class DSUtil {
 		if (file.exists()) {
 			deleted = file.delete();
 			if (deleted) {
-				logger.debug(EELFLoggerDelegator.debugLogger, "file deleted successfully");
+				logger.debug("file deleted successfully");
 			}
 		}
 	}
@@ -208,7 +207,7 @@ public class DSUtil {
 					}
 					fRemoved = tmpF.delete();
 					if (fRemoved) {
-						logger.debug(EELFLoggerDelegator.debugLogger, "temp folder removed");
+						logger.debug("temp folder removed");
 					}
 				}
 			}
@@ -241,15 +240,13 @@ public class DSUtil {
 		try {
 			mapper.readTree(requirements);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured   isValidJsonSchemaContents_List() ", ex);
+			logger.error("Exception Occured   isValidJsonSchemaContents_List() ", ex);
 			sb.append("requirements ");
 		}
 		try {
 			mapper.readTree(capabilities);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured   isValidJsonSchemaContents_List() ", ex);
+			logger.error("Exception Occured   isValidJsonSchemaContents_List() ", ex);
 			sb.append("capabilities");
 		}
 		return sb.toString();
@@ -266,8 +263,7 @@ public class DSUtil {
 		try {
 			mapper.readTree(relationship);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured   isValidJsonaddLink() ", ex);
+			logger.error("Exception Occured   isValidJsonaddLink() ", ex);
 			err = "relationship";
 		}
 		return err;
@@ -284,8 +280,7 @@ public class DSUtil {
 			mapper.readTree(jsonInString);
 			return true;
 		} catch (IOException e) {
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured   isValidJsonaddLink() ", e);
+			logger.error("Exception Occured   isValidJsonaddLink() ", e);
 			return false;
 		}
 	}
@@ -299,7 +294,7 @@ public class DSUtil {
 	 * @throws Exception On failure
 	 */
 	public static int runCommand(String cmd) throws Exception {
-		logger.debug(EELFLoggerDelegator.debugLogger, "Exec:  {} ", cmd);
+		logger.debug("Exec:  {} ", cmd);
 		Process p = null;
 		int exitVal = 1;
 		try {
@@ -308,18 +303,17 @@ public class DSUtil {
 			// get the error stream of the process and print it
 			InputStream error = p.getErrorStream();
 			for (int i = 0; i < error.available(); i++) {
-				logger.debug(EELFLoggerDelegator.debugLogger, " {} ", error.read());
+				logger.debug("{} ", error.read());
 			}
 
 			exitVal = p.waitFor();
-			logger.debug(EELFLoggerDelegator.debugLogger, "Exit Value:  {} ", exitVal);
+			logger.debug("Exit Value:  {} ", exitVal);
 		} catch (Throwable t) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception Occured   runCommand() ", t);
+			logger.error("Exception Occured   runCommand() ", t);
 			StringWriter stack = new StringWriter();
 			t.printStackTrace(new PrintWriter(stack));
-			logger.debug(EELFLoggerDelegator.debugLogger, stack.toString());
-			logger.error(EELFLoggerDelegator.errorLogger,
-					" Exception Occured   runCommand() ", t);
+			logger.info(stack.toString());
+			logger.error("Exception Occured   runCommand() ", t);
 		}
 		return exitVal;
 	}

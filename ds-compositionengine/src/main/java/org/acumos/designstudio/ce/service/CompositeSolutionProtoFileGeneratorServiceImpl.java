@@ -21,6 +21,7 @@
 package org.acumos.designstudio.ce.service;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,7 +32,6 @@ import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
 import org.acumos.designstudio.ce.util.DSLogConstants;
-import org.acumos.designstudio.ce.util.EELFLoggerDelegator;
 import org.acumos.designstudio.ce.vo.compositeproto.Protobuf;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufMessage;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufMessageField;
@@ -39,13 +39,15 @@ import org.acumos.designstudio.ce.vo.compositeproto.ProtobufOption;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufService;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufServiceOperation;
 import org.acumos.nexus.client.NexusArtifactClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CompositeSolutionProtoFileGeneratorServiceImpl implements ICompositeSolutionProtoFileGeneratorService {
-	private static EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(CompositeSolutionProtoFileGeneratorServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	@Autowired
 	private CommonDataServiceRestClientImpl cdmsClient;
 	@Autowired
@@ -54,7 +56,7 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 	
 	@Override
 	public String getPayload(String solutionId, String version, String artifactType, String fileExtension) throws ServiceException {
-		logger.debug(EELFLoggerDelegator.debugLogger, "getPayload() : Begin");
+		logger.debug("getPayload() : Begin");
 		String result = "";
 		List<MLPSolutionRevision> mlpSolutionRevisionList;
 		String solutionRevisionId = null;
@@ -74,11 +76,10 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 						break;
 					}
 				}
-				logger.debug(EELFLoggerDelegator.debugLogger," SolutionRevisonId for Version :  {} ", solutionRevisionId );
+				logger.debug("SolutionRevisonId for Version :  {} ", solutionRevisionId );
 			}
 		} catch (NoSuchElementException | NullPointerException e) {
-			logger.error(EELFLoggerDelegator.errorLogger, "Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",
-					e);
+			logger.error("Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
 			throw new NoSuchElementException("Failed to fetch the Solution Revision Id of the solutionId for the user");
 		} 
 		
@@ -98,39 +99,35 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 						}
 					}
 
-					logger.debug(EELFLoggerDelegator.debugLogger, " Nexus URI :  {} ", nexusURI );
+					logger.debug("Nexus URI :  {} ", nexusURI );
 
 					if (null != nexusURI) {
 						byteArrayOutputStream = getPayload(nexusURI);
-						logger.debug(EELFLoggerDelegator.debugLogger,
-								" Response in String Format :  {} ", byteArrayOutputStream.toString() );
+						logger.debug("Response in String Format :  {} ", byteArrayOutputStream.toString() );
 						result = byteArrayOutputStream.toString();
 					}
 				} catch (NoSuchElementException | NullPointerException e) {
-					logger.error(EELFLoggerDelegator.errorLogger,"Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",e);
-					throw new NoSuchElementException(
-							"Could not search the artifact URI for artifactType " + artifactType);
+					logger.error("Error : Exception in getProtoUrl() : Failed to fetch the artifact URI for artifactType",e);
+					throw new NoSuchElementException("Could not search the artifact URI for artifactType " + artifactType);
 				} finally {
 					try {
 						if (byteArrayOutputStream != null) {
 							byteArrayOutputStream.close();
 						}
 					} catch (Exception e) {
-						logger.error(EELFLoggerDelegator.errorLogger,
-								"Error : Exception in getPayload() : Failed to close the byteArrayOutputStream", e);
-						throw new ServiceException("  Exception in getProtoUrl() ", "201",
-								"Failed to close the byteArrayOutputStream");
+						logger.error("Error : Exception in getPayload() : Failed to close the byteArrayOutputStream", e);
+						throw new ServiceException("  Exception in getProtoUrl() ", "201","Failed to close the byteArrayOutputStream");
 					}
 				}
 			}
 		}
-		logger.debug(EELFLoggerDelegator.debugLogger, "getPayload() : End");
+		logger.debug("getPayload() : End");
 		
 		return result;
 	}
 
 	private List<MLPArtifact> getSolutionArtifacts(String solutionId, String solutionRevisionId) throws ServiceException {
-		logger.debug(EELFLoggerDelegator.debugLogger, "getSolutionArtifacts : Begin");
+		logger.debug("getSolutionArtifacts : Begin");
 		List<MLPArtifact> mlpSolutionRevisions = null;
 		List<MLPArtifact> artifactList = new ArrayList<MLPArtifact>();
 		try {
@@ -144,10 +141,9 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 				}
 			}
 		} catch (IllegalArgumentException e) {
-			throw new ServiceException("  Exception in getSolutionArtifacts() ", "201",
-					"Not able to get the Artifacts for the Solution Revision");
+			throw new ServiceException("  Exception in getSolutionArtifacts() ", "201","Not able to get the Artifacts for the Solution Revision");
 		} 
-		logger.debug(EELFLoggerDelegator.debugLogger, "getSolutionArtifacts : End");
+		logger.debug("getSolutionArtifacts : End");
 		return artifactList;
 	}
 	
@@ -157,7 +153,7 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 		try {
 			outputStream = nexusArtifactClient.getArtifact(uri);
 		} catch (Exception ex) {
-			logger.error(EELFLoggerDelegator.errorLogger, " Exception in getListOfArtifacts() ", ex);
+			logger.error("Exception in getListOfArtifacts() ", ex);
 		}
 		return outputStream;
 	}
