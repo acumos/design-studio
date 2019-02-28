@@ -69,8 +69,7 @@
 
 	<!-- The root level is the default for all loggers, NOT a filter on any 
 		appender. This level can be set with property logging.level.root=LEVEL. -->
-		
-	<root level="INFO">
+	<root level="DEBUG">
 	<appender-ref ref="file-async" />
 	<appender-ref ref="STDOUT" />
 	</root>

@@ -34,7 +34,7 @@ import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolution;
 import org.acumos.cds.domain.MLPSolutionRevision;
-import org.acumos.cds.domain.MLPStepResult;
+import org.acumos.cds.domain.MLPTaskStepResult;
 import org.acumos.cds.transport.RestPageRequest;
 import org.acumos.cds.transport.RestPageResponse;
 import org.acumos.designstudio.ce.exceptionhandler.ServiceException;
@@ -539,7 +539,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 		queryParameters.put("solutionId", solutionId);
 		queryParameters.put("revisionId", revisionId);
 		queryParameters.put("statusCode", "FA");
-		RestPageResponse<MLPStepResult> searchResults = cmnDataService.searchStepResults(queryParameters, false,
+		RestPageResponse<MLPTaskStepResult> searchResults = cmnDataService.searchTaskStepResults(queryParameters, false,
 				null);
 		if(searchResults.getNumberOfElements() > 0){
 			errorInModel = true;

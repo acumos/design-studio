@@ -38,11 +38,12 @@ public final class DSLogConstants {
 	
 	public static final class MDCs{
 		
-		/** MDC correlating messages for an invocation. */
-		public static final String INVOCATION_ID = "InvocationID";
 		
 		/** MDC correlating messages for a logical transaction. */
 		public static final String REQUEST_ID = "X-ACUMOS-Request-Id";
+		
+		/** MDC recording target entity. */
+		public static final String TARGET_ENTITY = "TargetEntity";
 		
 		/** MDC recording calling service. */
 		public static final String PARTNER_NAME = "PartnerName";
@@ -67,9 +68,6 @@ public final class DSLogConstants {
 		 * scope as {@link #REQUEST_ID}.
 	    */
 		public static final String ENTRY_TIMESTAMP = "EntryTimestamp";
-
-		/** MDC recording timestamp at the start of the current invocation. */
-		public static final String INVOKE_TIMESTAMP = "InvokeTimestamp";
 
 		/** MDC reporting outcome code. */
 		public static final String RESPONSE_CODE = "ResponseCode";

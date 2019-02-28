@@ -20,9 +20,6 @@
 
 package org.acumos.designstudio.ce.util;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -160,24 +157,25 @@ public class DSLogAdapter {
 
 		// Extract MDC values from standard HTTP headers.
 		final String requestID = defaultToUUID(request.getHeader(DSLogConstants.Headers.REQUEST_ID));
-		final String invocationID = defaultToUUID(request.getHeader(DSLogConstants.Headers.INVOCATION_ID));
 		final String partnerName = defaultToEmpty(request.getHeader(DSLogConstants.Headers.PARTNER_NAME));
+		final String targetEntity = defaultToEmpty(request.getHeader(DSLogConstants.MDCs.TARGET_ENTITY));
+		final String targetServiceName = defaultToEmpty(request.getHeader(DSLogConstants.MDCs.TARGET_SERVICE_NAME));
 		
 		// Get the UserName
 		final String userName = defaultToEmpty(request.getUser());
 		MDC.put(DSLogConstants.MDCs.USER,userName);
+		
 		DSLogAdapter.setDefaultMDCs();
 
 		// Set standard MDCs. 
-		MDC.put(DSLogConstants.MDCs.INVOKE_TIMESTAMP,
-				ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT));
 		MDC.put(DSLogConstants.MDCs.REQUEST_ID, requestID);
-		MDC.put(DSLogConstants.MDCs.INVOCATION_ID, invocationID);
 		if (!partnerName.isEmpty())
 			MDC.put(DSLogConstants.MDCs.PARTNER_NAME, partnerName);
 		MDC.put(DSLogConstants.MDCs.CLIENT_IP_ADDRESS, defaultToEmpty(request.getClientAddress()));
 		MDC.put(DSLogConstants.MDCs.SERVER_FQDN, defaultToEmpty(request.getServerAddress()));
-
+		
+		MDC.put(DSLogConstants.MDCs.TARGET_ENTITY, targetEntity);
+		MDC.put(DSLogConstants.MDCs.TARGET_SERVICE_NAME, targetServiceName);
 		return this;
 	}
 

@@ -42,7 +42,7 @@ import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolution;
 import org.acumos.cds.domain.MLPSolutionRevision;
-import org.acumos.cds.domain.MLPStepResult;
+import org.acumos.cds.domain.MLPTaskStepResult;
 import org.acumos.cds.domain.MLPUser;
 import org.acumos.cds.transport.RestPageRequest;
 import org.acumos.cds.transport.RestPageResponse;
@@ -175,55 +175,48 @@ public class SolutionServiceImpl implements ISolutionService {
 	
 	@Override
 	public String getSolutions(String userID) throws ServiceException {
-
 		logger.debug("getSolutions() Begin ");
 		String result = null;
 		List<MLPSolution> mlpSolutionsList = null;
 		String solutionId = null;
-		DSSolution dssolution = null;
 		List<DSSolution> dsSolutionList = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
 		boolean errorInModel = false;
 		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
 			mapper.setSerializationInclusion(Include.NON_NULL);
-			Map<String, Object> queryParameters = new HashMap<>();
-			queryParameters.put("active", Boolean.TRUE);
-			// Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
-			RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
-					new RestPageRequest(0, confprops.getSolutionResultsetSize()));
-			mlpSolutionsList = pageResponse.getContent();
+			String[] nameKeyword = null;
+			String[] descriptionKeyword = null;
+			String[] accessTypeCodes = {"PB","PR","OR"};
+			String[] modelTypeCodes = null;
+			String[] tags = null;
+			boolean active = true;
+			String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
+			List<MLPSolution> matchingModelsolutionList = new ArrayList<MLPSolution>();
+			RestPageRequest pageRequest = new RestPageRequest(0, confprops.getSolutionResultsetSize());
+			RestPageResponse<MLPSolution> response = cmnDataService.findUserSolutions(nameKeyword, descriptionKeyword,
+					active, userID, accessTypeCodes, modelTypeCodes, tags, pageRequest);
+			mlpSolutionsList = response.getContent();
 			logger.debug("The Date Format :  {} ", confprops.getDateFormat());
 			if (null == mlpSolutionsList) {
-				logger.debug("CommonDataService returned null Solution list");
+				logger.debug("CommonDataService findUserSolutions() returned null Solution list");
 			} else if (mlpSolutionsList.isEmpty()) {
-				logger.debug("CommonDataService returned empty Solution list");
+				logger.debug("CommonDataService findUserSolutions() returned empty Solution list");
 			} else {
-				logger.debug("CommonDataService returned Solution list of size :  {} ", mlpSolutionsList.size());
-				List<MLPSolution> matchingModelsolutionList  = new ArrayList<MLPSolution>();
-				// Get the TypeCodes from Properties file
-				String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
-				String pbAccessTypeCode = props.getPublicAccessTypeCode();
-				String prAccessTypeCode = props.getPrivateAccessTypeCode();
-				String orAccessTypeCode = props.getOrganizationAccessTypeCode();
-				// For each solution check toolkittypeCode is not null and not equal to "CP".
+				logger.debug("CommonDataService findUserSolutions() returned Solution list of size :  {}",mlpSolutionsList.size());
 				for (MLPSolution mlpsolution : mlpSolutionsList) {
 					solutionId = mlpsolution.getSolutionId();
-					//allow for null toolkitType but if its not null then it should not be "CP"
+					// Don't allow composite solution i.e ToolKitType not equal to CP
 					if (!compoSolnTlkitTypeCode.equals(mlpsolution.getToolkitTypeCode())) {
 						List<MLPSolutionRevision> mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
 						for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
-							String accessTypeCode = mlpSolRevision.getAccessTypeCode();
-							if ((accessTypeCode.equals(pbAccessTypeCode)) || (mlpSolRevision.getUserId().equals(userID) && accessTypeCode.equals(prAccessTypeCode)) 
-									 || (accessTypeCode.equals(orAccessTypeCode)) ) {
-								errorInModel = checkErrorInModel(solutionId, mlpSolRevision.getRevisionId());
-								if(!errorInModel) {
-									String revisionUserID = mlpSolRevision.getUserId();
-									MLPUser mlpUser = cmnDataService.getUser(revisionUserID);
-									String userName = mlpUser.getFirstName() + " " + mlpUser.getLastName();
-									dsSolutionList.add(populateDsSolution(mlpsolution, sdf, userName, mlpSolRevision));
-									matchingModelsolutionList.add(mlpsolution);
-								}
+							errorInModel = checkErrorInModel(solutionId, mlpSolRevision.getRevisionId());
+							if (!errorInModel) {
+								String revisionUserID = mlpSolRevision.getUserId();
+								MLPUser mlpUser = cmnDataService.getUser(revisionUserID);
+								String userName = mlpUser.getFirstName() + " " + mlpUser.getLastName();
+								dsSolutionList.add(populateDsSolution(mlpsolution, sdf, userName, mlpSolRevision));
+								matchingModelsolutionList.add(mlpsolution);
 							}
 						}
 					}
@@ -232,16 +225,16 @@ public class SolutionServiceImpl implements ISolutionService {
 				matchingModelServiceComponent.setMatchingModelRevisionList(null);
 				matchingModelServiceComponent.setMatchingModelArtifactTigifFileList(null);
 			}
-
 			if (dsSolutionList.size() > 1) {
 				dsSolutionList = checkDuplicateSolution(dsSolutionList);
+				logger.debug("User Accessable  ML Solutions Size :" + dsSolutionList.size());
 				result = mapper.writeValueAsString(dsSolutionList);
 			} else {
 				result = props.getSolutionErrorDescription();
 			}
 		} catch (Exception e) {
 			logger.error("Exception in getSolutions() ", e);
-			throw new ServiceException("  Exception in getSolutions() ", props.getSolutionErrorCode(),
+			throw new ServiceException("Exception in getSolutions() ", props.getSolutionErrorCode(),
 					props.getSolutionErrorDesc());
 		}
 		logger.debug("getSolutions() End ");
@@ -254,7 +247,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		queryParameters.put("solutionId", solutionId);
 		queryParameters.put("revisionId", revisionId);
 		queryParameters.put("statusCode", "FA");
-		RestPageResponse<MLPStepResult> searchResults = cmnDataService.searchStepResults(queryParameters, false,
+		RestPageResponse<MLPTaskStepResult> searchResults = cmnDataService.searchTaskStepResults(queryParameters, false,
 				null);
 		if(searchResults.getNumberOfElements() > 0){
 			errorInModel = true;
