@@ -855,9 +855,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			StringBuilder strBuilder = new StringBuilder();
 			SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
 			RestPageRequest restPageRequest = new RestPageRequest(0,props.getSolutionResultsetSize());
-			
 			RestPageResponse<MLPSolution> pageResponse = cdmsClient.findUserSolutions(nameKeyword, descriptionKeyword,active, userID, accessTypeCodes, modelTypeCodes, tags, restPageRequest);
-			
 			mlpSolutions = pageResponse.getContent();
 			if (mlpSolutions == null) {
 				logger.debug("CommonDataService findUserSolutions() returned null Solution list in getCompositeSolutions()");
