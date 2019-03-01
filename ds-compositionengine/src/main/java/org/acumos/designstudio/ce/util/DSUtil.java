@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -316,6 +317,21 @@ public class DSUtil {
 			logger.error("Exception Occured   runCommand() ", t);
 		}
 		return exitVal;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	/**
+	 * @param input
+	 * 		Which accepts List 
+	 * @return 
+	 * 		boolean value as true or false
+	 */
+	public static boolean isEmptyList(List input) {
+		boolean isEmpty = false;
+		if (null == input || 0 == input.size()) {
+			isEmpty = true;
+		}
+		return isEmpty;
 	}
 
 }
