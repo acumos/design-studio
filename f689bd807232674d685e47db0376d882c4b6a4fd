@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d42fc066_a2ba5589",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-03-01T12:35:22Z",
+      "side": 1,
+      "message": "No need to write separate method, try using : \nif(null !\u003d inputlist \u0026\u0026 !inputlist.isEmpty())",
+      "range": {
+        "startLine": 254,
+        "startChar": 14,
+        "endLine": 254,
+        "endChar": 25
+      },
+      "revId": "f689bd807232674d685e47db0376d882c4b6a4fd",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "693ebf6d_082da3aa",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-03-01T12:35:22Z",
+      "side": 1,
+      "message": "No need to write separate method, try using : \nif(null !\u003d inputlist \u0026\u0026 !inputlist.isEmpty())",
+      "range": {
+        "startLine": 257,
+        "startChar": 16,
+        "endLine": 257,
+        "endChar": 27
+      },
+      "revId": "f689bd807232674d685e47db0376d882c4b6a4fd",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24fd710f_1a7c8fc8",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/util/DSUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-03-01T12:35:22Z",
+      "side": 1,
+      "message": "not required",
+      "range": {
+        "startLine": 329,
+        "startChar": 23,
+        "endLine": 329,
+        "endChar": 34
+      },
+      "revId": "f689bd807232674d685e47db0376d882c4b6a4fd",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
