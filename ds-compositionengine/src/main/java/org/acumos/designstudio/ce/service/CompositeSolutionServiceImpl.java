@@ -285,6 +285,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				cdump.setVersion(dscs.getVersion());
 				cdump.setValidSolution(false);
 				cdump.setSolutionId(mlpSolution.getSolutionId());
+				cdump.setRevisionId(mlpSolutionRevision.getRevisionId());
 				SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
 				cdump.setMtime(sdf.format(new Date()));
 				logger.debug("3. Successfully read the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
@@ -482,6 +483,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
 				cdump.setValidSolution(false);
 				cdump.setVersion(mlpSR.getVersion());
+				cdump.setRevisionId(mlpSR.getRevisionId());
 				Gson gson = new Gson();
 				String payload = gson.toJson(cdump);
 				DSUtil.writeDataToFile(path, cdumpFileName, "json", payload);
@@ -581,7 +583,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			logger.error("Error : Exception in updateSolnWithNewVersion() : Failed to create the Solution Revision", e);
 			throw new ServiceException("  Exception in updateSolnWithNewVersion() ", "222","Failed to create the Solution");
 		}
-
+		cdump.setRevisionId(mlpSolutionRevision.getRevisionId());
 		Gson gson = new Gson();
 		String payload = gson.toJson(cdump);
 
@@ -838,98 +840,61 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		logger.debug("getCompositeSolutions() Begin ");
 		String result = "[";
 		List<MLPSolution> mlpSolutions = null;
+		List<MLPSolution> portalMLPSolutions = null;
 		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
 			String[] nameKeyword = null;
 			String[] descriptionKeyword = null;
-			String[] accessTypeCodes = {"PB","PR","OR"};
+			String[] userAccessTypeCodes = {"PR"};
 			String[] modelTypeCodes = null;
 			String[] tags = null;
 			boolean active = true;
+			String[] ownerIds = {};
+			String[] portalAccessTypeCodes = {"OR","PB"};
 			String compoSolnTlkitTypeCode = props.getToolKit();
-			String solutionId = "";
-			DSSolution dssolution = null;
 			List<DSSolution> dsSolutions = new ArrayList<>();
 			List<String> solutionIds = new ArrayList<>();
-			List<MLPSolutionRevision> mlpSolRevisions = null;
 			StringBuilder strBuilder = new StringBuilder();
 			SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
 			RestPageRequest restPageRequest = new RestPageRequest(0,props.getSolutionResultsetSize());
-			RestPageResponse<MLPSolution> pageResponse = cdmsClient.findUserSolutions(nameKeyword, descriptionKeyword,active, userID, accessTypeCodes, modelTypeCodes, tags, restPageRequest);
-			mlpSolutions = pageResponse.getContent();
+			RestPageResponse<MLPSolution> userSolutionResponse = cdmsClient.findUserSolutions(nameKeyword, descriptionKeyword,active, userID, userAccessTypeCodes, modelTypeCodes, tags, restPageRequest);
+			RestPageResponse<MLPSolution> portalSolutionResponse = cdmsClient.findPortalSolutions(nameKeyword, descriptionKeyword, active, ownerIds, portalAccessTypeCodes, modelTypeCodes, tags, null, null, restPageRequest);
+			mlpSolutions = userSolutionResponse.getContent();
+			portalMLPSolutions = portalSolutionResponse.getContent();
 			if (mlpSolutions == null) {
 				logger.debug("CommonDataService findUserSolutions() returned null Solution list in getCompositeSolutions()");
 			} else if (mlpSolutions.isEmpty()) {
 				logger.debug("CommonDataService findUserSolutions() returned empty Solution list in getCompositeSolutions()");
 			} else {
 				logger.debug("CommonDataService findUserSolutions() returned Solution list of size :  {} in getCompositeSolutions()",mlpSolutions.size());
-				mlpSolRevisions = new ArrayList<>();
 				for (MLPSolution mlpsol : mlpSolutions) {
-					if (compoSolnTlkitTypeCode.equals(mlpsol.getToolkitTypeCode())) {
-						mlpSolRevisions = cdmsClient.getSolutionRevisions(mlpsol.getSolutionId());
-						for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
-							if (visibilityLevel.contains(mlpSolRevision.getAccessTypeCode())) {
-								String userId = mlpSolRevision.getUserId();
-								MLPUser user = cdmsClient.getUser(userId);
-								solutionId = mlpsol.getSolutionId();
-								solutionIds.add(solutionId);
-								String userName = user.getFirstName() + " " + user.getLastName();
-								if (mlpSolRevisions == null) {
-									logger.debug("CommonDataService returned null SolutionRevision list");
-								} else if (mlpSolRevisions.isEmpty()) {
-									logger.debug("CommonDataService returned empty SolutionRevision list");
-								} else {
-									logger.debug("CommonDataService returned SolutionRevision list of size : " + mlpSolRevisions.size());
-
-									dssolution = new DSSolution();
-									// Solution ID 
-									dssolution.setSolutionId(mlpsol.getSolutionId());
-									// Solution Revision
-									dssolution.setSolutionRevisionId(mlpSolRevision.getRevisionId());
-									// Solution Created Date
-									java.util.Date newDate = Date.from(mlpSolRevision.getCreated());
-									String formattedDate = sdf.format(newDate);
-									dssolution.setCreatedDate(formattedDate);
-									// Solution Icon
-									dssolution.setIcon(null);
-									// 1. Solution Name
-									dssolution.setSolutionName(mlpsol.getName());
-									// 2. Solution Version
-									dssolution.setVersion(mlpSolRevision.getVersion());
-									// 3. Solution On boarder
-									dssolution.setOnBoarder(userName);
-									// 4. Solution Author
-									dssolution.setAuthor(userName);
-									// 5. Solution Provider
-									dssolution.setProvider(mlpSolRevision.getPublisher());
-									// 6. Solution Tool Kit
-									dssolution.setToolKit(mlpsol.getToolkitTypeCode());
-									// 7. Solution Category
-									dssolution.setCategory(mlpsol.getModelTypeCode());
-									// 8. Solution Description
-									// dssolution.setDescription(mlpsol.getDescription());
-									// 9. Solution Visibility
-									dssolution.setVisibilityLevel(mlpSolRevision.getAccessTypeCode());
-									dsSolutions.add(dssolution);
-									strBuilder.append(dssolution.toJsonString());
-									strBuilder.append(",");
-								}
-							}
-						}
-					}
+					strBuilder.append(csSolutionExtractor(visibilityLevel, compoSolnTlkitTypeCode, dsSolutions, solutionIds,
+							sdf, mlpsol));
+				}
+			}
+			if(null != portalMLPSolutions && !portalMLPSolutions.isEmpty()){
+				StringBuilder builder2 = new StringBuilder();
+				for (MLPSolution mlpsol : portalMLPSolutions) {
+					builder2.append(csSolutionExtractor(visibilityLevel, compoSolnTlkitTypeCode, dsSolutions, solutionIds,
+							sdf, mlpsol));
+				}
+				if(builder2.length() > 1){
+					strBuilder.append(builder2);
 				}
 			}
 			if (strBuilder.length() > 1) {
 				result = result + strBuilder.substring(0, strBuilder.length() - 1);
 			}
 			result = result + "]";
-		} catch (Exception e) {
+		} catch (Exception e) { 
 			logger.error("Exception in getCompositeSolutions() ", e);
 			throw new ServiceException("Exception in getCompositeSolutions() ", props.getSolutionErrorCode(),props.getSolutionErrorDesc());
 		}
 		logger.debug("getCompositeSolutions() End ");
 		return result;
 	}
+
+	
 
 	@Override
 	public String validateCompositeSolution(String userId, String solutionName, String solutionId, String version)
@@ -2594,5 +2559,66 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		return protoPayload;
 	}
 	
+	private StringBuilder csSolutionExtractor(String visibilityLevel, String compoSolnTlkitTypeCode,
+			List<DSSolution> dsSolutions, List<String> solutionIds, SimpleDateFormat sdf,
+			MLPSolution mlpsol) {
+		String solutionId = null;
+		DSSolution dssolution = null;
+		StringBuilder strBuilder = new StringBuilder();
+		List<MLPSolutionRevision> mlpSolRevisions = null;
+		if (compoSolnTlkitTypeCode.equals(mlpsol.getToolkitTypeCode())) {
+			mlpSolRevisions = cdmsClient.getSolutionRevisions(mlpsol.getSolutionId());
+			for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
+				if (visibilityLevel.contains(mlpSolRevision.getAccessTypeCode())) {
+					String userId = mlpSolRevision.getUserId();
+					MLPUser user = cdmsClient.getUser(userId);
+					solutionId = mlpsol.getSolutionId();
+					solutionIds.add(solutionId);
+					String userName = user.getFirstName() + " " + user.getLastName();
+					if (mlpSolRevisions == null) {
+						logger.debug("CommonDataService returned null SolutionRevision list");
+					} else if (mlpSolRevisions.isEmpty()) {
+						logger.debug("CommonDataService returned empty SolutionRevision list");
+					} else {
+						logger.debug("CommonDataService returned SolutionRevision list of size : " + mlpSolRevisions.size());
+
+						dssolution = new DSSolution();
+						// Solution ID 
+						dssolution.setSolutionId(mlpsol.getSolutionId());
+						// Solution Revision
+						dssolution.setSolutionRevisionId(mlpSolRevision.getRevisionId());
+						// Solution Created Date
+						java.util.Date newDate = Date.from(mlpSolRevision.getCreated());
+						String formattedDate = sdf.format(newDate);
+						dssolution.setCreatedDate(formattedDate);
+						// Solution Icon
+						dssolution.setIcon(null);
+						// 1. Solution Name
+						dssolution.setSolutionName(mlpsol.getName());
+						// 2. Solution Version
+						dssolution.setVersion(mlpSolRevision.getVersion());
+						// 3. Solution On boarder
+						dssolution.setOnBoarder(userName);
+						// 4. Solution Author
+						dssolution.setAuthor(userName);
+						// 5. Solution Provider
+						dssolution.setProvider(mlpSolRevision.getPublisher());
+						// 6. Solution Tool Kit
+						dssolution.setToolKit(mlpsol.getToolkitTypeCode());
+						// 7. Solution Category
+						dssolution.setCategory(mlpsol.getModelTypeCode());
+						// 8. Solution Description
+						// dssolution.setDescription(mlpsol.getDescription());
+						// 9. Solution Visibility
+						dssolution.setVisibilityLevel(mlpSolRevision.getAccessTypeCode());
+						dsSolutions.add(dssolution);
+						strBuilder.append(dssolution.toJsonString());
+						strBuilder.append(",");
+					}
+				}
+			}
+		}
+		return strBuilder;
+	}
 }
 

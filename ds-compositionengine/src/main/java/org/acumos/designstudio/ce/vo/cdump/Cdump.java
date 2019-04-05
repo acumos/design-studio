@@ -36,6 +36,7 @@ public class Cdump implements Serializable{
 	private java.util.List<Nodes> nodes;
 	private java.util.List<Relations> relations;
 	private boolean validSolution;
+	private String revisionId;
 	
 	
 	public boolean isValidSolution() {
@@ -98,6 +99,15 @@ public class Cdump implements Serializable{
 	public void setProbeIndicator(String probeIndicator) {
 		this.probeIndicator = probeIndicator;
 	}
+	
+	public String getRevisionId() {
+		return revisionId;
+	}
+	
+	public void setRevisionId(String revisionId) {
+		this.revisionId = revisionId;
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
