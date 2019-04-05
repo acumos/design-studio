@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4806e5fd_b3944eff",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 869,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-04-05T15:28:57Z",
+      "side": 1,
+      "message": "Should return string builder.  Explore how to concatenate two string builder.",
+      "range": {
+        "startLine": 869,
+        "startChar": 5,
+        "endLine": 869,
+        "endChar": 24
+      },
+      "revId": "2d8a94456f108d4615e77c476cb8549db0b392d3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68409380_2263a60f",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 899,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-04-05T15:28:57Z",
+      "side": 1,
+      "message": "private methods should be at the end of the class and java doc not required.",
+      "range": {
+        "startLine": 891,
+        "startChar": 1,
+        "endLine": 899,
+        "endChar": 4
+      },
+      "revId": "2d8a94456f108d4615e77c476cb8549db0b392d3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a578635_3e48ccdc",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/SolutionServiceImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-04-05T15:28:57Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 214,
+        "startChar": 5,
+        "endLine": 214,
+        "endChar": 22
+      },
+      "revId": "2d8a94456f108d4615e77c476cb8549db0b392d3",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
