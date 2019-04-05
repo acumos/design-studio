@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -179,6 +180,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		logger.debug("getSolutions() Begin ");
 		String result = null;
 		List<MLPSolution> mlpSolutionsList = null;
+		List<MLPSolution> privateMLPSolutionsList = null;
 		String solutionId = null;
 		List<DSSolution> dsSolutionList = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
@@ -188,16 +190,19 @@ public class SolutionServiceImpl implements ISolutionService {
 			mapper.setSerializationInclusion(Include.NON_NULL);
 			String[] nameKeyword = null;
 			String[] descriptionKeyword = null;
-			String[] accessTypeCodes = {"PB","PR","OR"};
+			String[] accessTypeCodes = {"PB","OR"};
 			String[] modelTypeCodes = null;
 			String[] tags = null;
 			boolean active = true;
+			String[] ownerIds = {};
+			String[] ownerId = {userID};
+			String[] accessTypeCode = {"PR"};
 			String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
-			List<MLPSolution> matchingModelsolutionList = new ArrayList<MLPSolution>();
 			RestPageRequest pageRequest = new RestPageRequest(0, confprops.getSolutionResultsetSize());
-			RestPageResponse<MLPSolution> response = cmnDataService.findUserSolutions(nameKeyword, descriptionKeyword,
-					active, userID, accessTypeCodes, modelTypeCodes, tags, pageRequest);
+			RestPageResponse<MLPSolution> response = cmnDataService.findPortalSolutions(nameKeyword, descriptionKeyword, active, ownerIds, accessTypeCodes, modelTypeCodes, tags, null, null, pageRequest);
+			RestPageResponse<MLPSolution> response1 = cmnDataService.findPortalSolutions(nameKeyword, descriptionKeyword, active, ownerId, accessTypeCode, modelTypeCodes, tags, null, null, pageRequest);
 			mlpSolutionsList = response.getContent();
+			privateMLPSolutionsList = response1.getContent();
 			logger.debug("The Date Format :  {} ", confprops.getDateFormat());
 			if (null == mlpSolutionsList) {
 				logger.debug("CommonDataService findUserSolutions() returned null Solution list");
@@ -206,26 +211,15 @@ public class SolutionServiceImpl implements ISolutionService {
 			} else {
 				logger.debug("CommonDataService findUserSolutions() returned Solution list of size :  {}",mlpSolutionsList.size());
 				for (MLPSolution mlpsolution : mlpSolutionsList) {
-					solutionId = mlpsolution.getSolutionId();
-					// Don't allow composite solution i.e ToolKitType not equal to CP
-					if (!compoSolnTlkitTypeCode.equals(mlpsolution.getToolkitTypeCode())) {
-						List<MLPSolutionRevision> mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
-						for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
-							errorInModel = checkErrorInModel(solutionId, mlpSolRevision.getRevisionId());
-							if (!errorInModel) {
-								String revisionUserID = mlpSolRevision.getUserId();
-								MLPUser mlpUser = cmnDataService.getUser(revisionUserID);
-								String userName = mlpUser.getFirstName() + " " + mlpUser.getLastName();
-								dsSolutionList.add(populateDsSolution(mlpsolution, sdf, userName, mlpSolRevision));
-								matchingModelsolutionList.add(mlpsolution);
-							}
-						}
-					}
+					solutionExtractor(dsSolutionList, sdf, compoSolnTlkitTypeCode, mlpsolution);
 				}
-				matchingModelServiceComponent.setMatchingModelsolutionList(matchingModelsolutionList);
-				matchingModelServiceComponent.setMatchingModelRevisionList(null);
-				matchingModelServiceComponent.setMatchingModelArtifactTigifFileList(null);
 			}
+			if(null != privateMLPSolutionsList && !privateMLPSolutionsList.isEmpty()){
+				for (MLPSolution mlpsolution : privateMLPSolutionsList) {
+					solutionExtractor(dsSolutionList, sdf, compoSolnTlkitTypeCode, mlpsolution);
+				}
+			}
+			
 			if (dsSolutionList.size() > 1) {
 				dsSolutionList = checkDuplicateSolution(dsSolutionList);
 				logger.debug("User Accessable  ML Solutions Size :" + dsSolutionList.size());
@@ -240,6 +234,33 @@ public class SolutionServiceImpl implements ISolutionService {
 		}
 		logger.debug("getSolutions() End ");
 		return result;
+	}
+
+
+	/**
+	 * @param dsSolutionList
+	 * @param sdf
+	 * @param compoSolnTlkitTypeCode
+	 * @param mlpsolution
+	 */
+	private void solutionExtractor(List<DSSolution> dsSolutionList, SimpleDateFormat sdf, String compoSolnTlkitTypeCode,
+			MLPSolution mlpsolution) {
+		String solutionId;
+		boolean errorInModel;
+		solutionId = mlpsolution.getSolutionId();
+		// Don't allow composite solution i.e ToolKitType not equal to CP
+		if (!compoSolnTlkitTypeCode.equals(mlpsolution.getToolkitTypeCode())) {
+			List<MLPSolutionRevision> mlpSolRevisions = cmnDataService.getSolutionRevisions(solutionId);
+			for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
+				errorInModel = checkErrorInModel(solutionId, mlpSolRevision.getRevisionId());
+				if (!errorInModel) {
+					String revisionUserID = mlpSolRevision.getUserId();
+					MLPUser mlpUser = cmnDataService.getUser(revisionUserID);
+					String userName = mlpUser.getFirstName() + " " + mlpUser.getLastName();
+					dsSolutionList.add(populateDsSolution(mlpsolution, sdf, userName, mlpSolRevision));
+				}
+			}
+		}
 	}
 
 	private boolean checkErrorInModel(String solutionId, String revisionId) {
@@ -1589,25 +1610,28 @@ public class SolutionServiceImpl implements ISolutionService {
 				inKeyVO.setNumberofFields(numberOfFields);
 				inKeyVO.setPortType(props.getMatchingInputPortType());
 				//check if key is present in modelCacheForMatching 
-				if(modelCache.containsKey(inKeyVO)){
-					List<ModelDetailVO> modelDetVOList = new ArrayList<ModelDetailVO>();
-					modelDetVOList = modelCache.get(inKeyVO);
-					MessageBody[] messages = null;
-					List<MessageargumentList> msgArgList = null;
-					for(ModelDetailVO modeldetailVo : modelDetVOList){
-						modeldetailVo.getProtobufJsonString();
-						messages = mapper.readValue(modeldetailVo.getProtobufJsonString(), MessageBody[].class);
-						for(MessageBody messageBody	 : messages ){
-							msgArgList = messageBody.getMessageargumentList();
-							if(null != msgArgList && inMsgArgList.size() == msgArgList.size() && inMsgArgList.containsAll(msgArgList)) {
-								matchingModel = new MatchingModel();
-								matchingModel.setMatchingModelName(modeldetailVo.getModelName());
-								matchingModel.setTgifFileNexusURI(modeldetailVo.getTgifFileNexusURI());
-								matchingModelList.add(matchingModel);
+				if (null != modelCache) {
+					if (modelCache.containsKey(inKeyVO)) {
+						List<ModelDetailVO> modelDetVOList = new ArrayList<ModelDetailVO>();
+						modelDetVOList = modelCache.get(inKeyVO);
+						MessageBody[] messages = null;
+						List<MessageargumentList> msgArgList = null;
+						for (ModelDetailVO modeldetailVo : modelDetVOList) {
+							modeldetailVo.getProtobufJsonString();
+							messages = mapper.readValue(modeldetailVo.getProtobufJsonString(), MessageBody[].class);
+							for (MessageBody messageBody : messages) {
+								msgArgList = messageBody.getMessageargumentList();
+								if (null != msgArgList && inMsgArgList.size() == msgArgList.size()
+										&& inMsgArgList.containsAll(msgArgList)) {
+									matchingModel = new MatchingModel();
+									matchingModel.setMatchingModelName(modeldetailVo.getModelName());
+									matchingModel.setTgifFileNexusURI(modeldetailVo.getTgifFileNexusURI());
+									matchingModelList.add(matchingModel);
+								}
 							}
 						}
 					}
-				} 
+				}
 			}
 		}else if (portType.equals(props.getMatchingInputPortType())) {
 			if(null != inMsgArgList && !inMsgArgList.isEmpty()) {
@@ -1622,26 +1646,29 @@ public class SolutionServiceImpl implements ISolutionService {
 				inKeyVO.setNumberofFields(numberOfFields);
 				inKeyVO.setPortType(props.getMatchingOutputPortType());
 				//check if key is present in modelCacheForMatching 
-				if(modelCache.containsKey(inKeyVO)){
-					List<ModelDetailVO> modelDetVOList = new ArrayList<ModelDetailVO>();
-					modelDetVOList = modelCache.get(inKeyVO);
-					MessageBody[] messages = null;
-					List<MessageargumentList> msgArgList = null;
-					for(ModelDetailVO modeldetailVo : modelDetVOList){
-						modeldetailVo.getProtobufJsonString();
-						//e.g. [{"messageName":"ClassifyIn","messageargumentList":[{"role":"","name":"tok_corpus","tag":"1","type":"string"}]}]
-						messages = mapper.readValue(modeldetailVo.getProtobufJsonString(), MessageBody[].class);
-						for(MessageBody messageBody	 : messages ){
-							msgArgList = messageBody.getMessageargumentList();
-							if(null != msgArgList && inMsgArgList.size() == msgArgList.size() && inMsgArgList.containsAll(msgArgList)) {
-								matchingModel = new MatchingModel();
-								matchingModel.setMatchingModelName(modeldetailVo.getModelName());
-								matchingModel.setTgifFileNexusURI(modeldetailVo.getTgifFileNexusURI());
-								matchingModelList.add(matchingModel);
+				if (null != modelCache) {
+					if (modelCache.containsKey(inKeyVO)) {
+						List<ModelDetailVO> modelDetVOList = new ArrayList<ModelDetailVO>();
+						modelDetVOList = modelCache.get(inKeyVO);
+						MessageBody[] messages = null;
+						List<MessageargumentList> msgArgList = null;
+						for (ModelDetailVO modeldetailVo : modelDetVOList) {
+							modeldetailVo.getProtobufJsonString();
+							// e.g.[{"messageName":"ClassifyIn","messageargumentList":[{"role":"","name":"tok_corpus","tag":"1","type":"string"}]}]
+							messages = mapper.readValue(modeldetailVo.getProtobufJsonString(), MessageBody[].class);
+							for (MessageBody messageBody : messages) {
+								msgArgList = messageBody.getMessageargumentList();
+								if (null != msgArgList && inMsgArgList.size() == msgArgList.size()
+										&& inMsgArgList.containsAll(msgArgList)) {
+									matchingModel = new MatchingModel();
+									matchingModel.setMatchingModelName(modeldetailVo.getModelName());
+									matchingModel.setTgifFileNexusURI(modeldetailVo.getTgifFileNexusURI());
+									matchingModelList.add(matchingModel);
+								}
 							}
 						}
 					}
-				} 
+				}
 			}
 		}
 		logger.debug("getMatchingModels() End ");
