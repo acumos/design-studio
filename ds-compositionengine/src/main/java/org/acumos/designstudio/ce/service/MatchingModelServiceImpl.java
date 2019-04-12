@@ -34,6 +34,7 @@ import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolution;
 import org.acumos.cds.domain.MLPSolutionRevision;
+import org.acumos.cds.domain.MLPTask;
 import org.acumos.cds.domain.MLPTaskStepResult;
 import org.acumos.cds.transport.RestPageRequest;
 import org.acumos.cds.transport.RestPageResponse;
@@ -534,16 +535,32 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 
 
 	private boolean checkErrorInModel(String solutionId, String revisionId) {
-		boolean errorInModel = false; 
+		logger.debug("checkErrorInModel() Begin ");
+		boolean errorInModel = false;
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("solutionId", solutionId);
 		queryParameters.put("revisionId", revisionId);
-		queryParameters.put("statusCode", "FA");
-		RestPageResponse<MLPTaskStepResult> searchResults = cmnDataService.searchTaskStepResults(queryParameters, false,
-				null);
-		if(searchResults.getNumberOfElements() > 0){
-			errorInModel = true;
+
+		RestPageResponse<MLPTask> taskResponse = cmnDataService.searchTasks(queryParameters, false, null);
+		List<MLPTask> mlpTasks = taskResponse.getContent();
+
+		if (null != taskResponse) {
+			for (MLPTask mlpTask : mlpTasks) {
+				List<MLPTaskStepResult> mlpTaskStepResponse = cmnDataService.getTaskStepResults(mlpTask.getTaskId());
+				if (null != mlpTaskStepResponse) {
+					for (MLPTaskStepResult step : mlpTaskStepResponse) {
+						if ("FA".equals(step.getStatusCode())) {
+							errorInModel = true;
+							break;
+						}
+					}
+				}
+				if (errorInModel) {
+					break;
+				}
+			}
 		}
+		logger.debug("checkErrorInModel() End");
 		return errorInModel;
 	}
 	

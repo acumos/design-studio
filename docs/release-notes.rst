@@ -24,7 +24,7 @@ The Design Studio Composition Engine is packaged within a Docker image and avail
 Acumos docker registry.  The TOSCAGenerator Client library is published in the Acumos Nexus
 repository as a jar file.
 
-Version 2.0.7, 2019-04-05
+Version 2.0.7, 2019-04-12
 ---------------------------
 * ACUMOS-2696 : Models have disappeared from LF Design Studio.
 * ACUMOS-2709 : ds-compositionengine to populate RevisionId of each solution in CDUMP.
