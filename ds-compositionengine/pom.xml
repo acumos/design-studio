@@ -264,6 +264,9 @@
 									</inline>
 								</assembly>
 								<runCmds>
+									<!-- Ensure logs dir exists and is world writable -->
+									<runCmd>mkdir /maven/logs</runCmd>
+									<runCmd>chmod -R 777 /maven</runCmd>
 									<runCmd>
 										<![CDATA[curl --output /maven/${protobuf.java.jar.name} http://central.maven.org/maven2/com/google/protobuf/protobuf-java/${protobuf.java.version}/${protobuf.java.jar.name}]]>
 									</runCmd>
