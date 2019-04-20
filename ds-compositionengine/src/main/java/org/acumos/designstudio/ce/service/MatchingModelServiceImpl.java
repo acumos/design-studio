@@ -114,8 +114,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 					logger.debug("CommonDataService returned empty Solution list");
 				} else {
 					String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
-					String pbAccessTypeCode = props.getPublicAccessTypeCode();
-					String orAccessTypeCode = props.getOrganizationAccessTypeCode();
 					List<MLPSolutionRevision> mlpSolutionRevisionList = null;
 					boolean errorInModel = false;
 					for (MLPSolution mlpsolution : mlpSolutionsList) {
@@ -125,15 +123,11 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 									.getSolutionRevisions(mlpsolution.getSolutionId());
 							mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 							for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
-								String accessTypeCode = mlpSolRevision.getAccessTypeCode();
-								if (accessTypeCode.equals(pbAccessTypeCode)
-										|| accessTypeCode.equals(orAccessTypeCode)) {
 									errorInModel = checkErrorInModel(mlpsolution.getSolutionId(),
 											mlpSolRevision.getRevisionId());
 									if (!errorInModel) {
 										mlpSolutionRevisionList.add(mlpSolRevision);
 									}
-								}
 							}
 							if (mlpSolutionRevisionList.size() > 0) {
 								DSModelVO modelVO = new DSModelVO();
@@ -180,7 +174,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 			logger.debug("CommonDataService returned empty Solution list");
 		} else {
 			String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
-			String prAccessTypeCode = props.getPrivateAccessTypeCode();
 			List<MLPSolutionRevision> mlpSolutionRevisionList = null;
 			for (MLPSolution mlpsolution : mlpSolutionsList) {
 				if (mlpsolution.getToolkitTypeCode() != null
@@ -188,11 +181,8 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 					List<MLPSolutionRevision> mlpSolRevisions = cmnDataService
 							.getSolutionRevisions(mlpsolution.getSolutionId());
 					for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
-						String accessTypeCode = mlpSolRevision.getAccessTypeCode();
 						mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
-						if (accessTypeCode.equals(prAccessTypeCode)) {
-							mlpSolutionRevisionList.add(mlpSolRevision);
-						}
+						mlpSolutionRevisionList.add(mlpSolRevision);
 					}
 					DSModelVO modelVO = new DSModelVO();
 					modelVO.setMlpSolution(mlpsolution);
