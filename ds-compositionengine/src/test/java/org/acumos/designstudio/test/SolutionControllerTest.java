@@ -42,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.acumos.cds.AccessTypeCode;
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolution;
@@ -1244,7 +1243,6 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setVersion("1");
 		mlpSolutionRevision.setRevisionId("3232");
 		//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
-		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		mlpSolRevisions.add(mlpSolutionRevision);
 		List<MLPArtifact> artifacts = new ArrayList<MLPArtifact>();
@@ -1447,7 +1445,6 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion(dscs.getVersion());
 		//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
-		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		
 		mlpSols.add(mlpSolution);
@@ -1513,7 +1510,6 @@ public class SolutionControllerTest {
 			mlpSolutionRevision.setUserId(userId);
 			mlpSolutionRevision.setVersion("1.0.0");
 			//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
-			mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 			
 			CompositeSolutionServiceImpl csimpl = new CompositeSolutionServiceImpl();
 			List<MLPArtifact> artifacts = new ArrayList<MLPArtifact>();
@@ -1653,7 +1649,6 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setUserId("Acumos");
 		mlpSolutionRevision.setVersion("1.0.0");
 		//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
-		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
@@ -1709,8 +1704,9 @@ public class SolutionControllerTest {
 		String[] modelTypeCodes = null;
 		String[] tags = null;
 		boolean active = true;
+		boolean isPublished = false;
 		Pageable pageRequest = new PageRequest(0, 1000);
-		RestPageRequest restPageRequets = new RestPageRequest(0, 1000);
+		RestPageRequest restPageRequest = new RestPageRequest(0, 1000);
 		List<MLPSolution> mlpSolList = new ArrayList<MLPSolution>();
 		RestPageResponse<MLPSolution> pageResponse = new RestPageResponse<>(mlpSolList, pageRequest, 1);
 
@@ -1724,8 +1720,7 @@ public class SolutionControllerTest {
 			when(props.getOrganizationAccessTypeCode()).thenReturn("OR");
 			when(props.getSolutionResultsetSize()).thenReturn(1000);
 			solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
-			when(cmnDataService.findUserSolutions(nameKeywords, descriptionKeywords, active, userId, accessTypeCodes,
-					modelTypeCodes, tags, restPageRequets)).thenReturn(pageResponse);
+			when(cmnDataService.findUserSolutions(active, isPublished, userId, nameKeywords, descriptionKeywords, modelTypeCodes, tags, restPageRequest)).thenReturn(pageResponse);
 			String result = solutionService.getSolutions(userId);
 			assertNotNull(result);
 		} catch (Exception e) {
@@ -1744,6 +1739,7 @@ public class SolutionControllerTest {
 		String[] modelTypeCodes = null;
 		String[] tags = null;
 		boolean active = true;
+		boolean isPublished = true;
 		Pageable pageRequest = new PageRequest(0, 1000);
 		RestPageRequest restPageRequets = new RestPageRequest(0, 1000);
 		List<MLPSolution> mlpSolList = new ArrayList<MLPSolution>();
@@ -1759,7 +1755,7 @@ public class SolutionControllerTest {
 		solutionService.getRestCCDSClient((CommonDataServiceRestClientImpl) cmnDataService);
 		Map<String, Object> queryParameters = new HashMap<>();
 		queryParameters.put("active", Boolean.TRUE);
-		when(cmnDataService.findUserSolutions(nameKeywords, descriptionKeywords, active, userId, accessTypeCodes,
+		when(cmnDataService.findUserSolutions(active, isPublished, userId, nameKeywords, descriptionKeywords, 
 				modelTypeCodes, tags, restPageRequets)).thenReturn(null);
 		String result = solutionService.getSolutions(userId);
 		assertNotNull(result);
@@ -1776,6 +1772,7 @@ public class SolutionControllerTest {
 		String[] modelTypeCodes = null;
 		String[] tags = null;
 		boolean active = true;
+		boolean isPublished = true;
 
 		ArrayList<MLPSolution> mlpSolList = new ArrayList<MLPSolution>();
 		MLPSolution image_classifier = new MLPSolution();
@@ -1816,7 +1813,7 @@ public class SolutionControllerTest {
 			when(props.getOrganizationAccessTypeCode()).thenReturn("OR");
 			when(confprops.getSolutionResultsetSize()).thenReturn(1000);
 			when(cmnDataService.getSolutionRevisions(image_classifier.getSolutionId())).thenReturn(mlpSolRevList);
-			when(cmnDataService.findUserSolutions(nameKeywords, descriptionKeywords, active, userId, accessTypeCodes,
+			when(cmnDataService.findUserSolutions(active, isPublished, userId, nameKeywords, descriptionKeywords,
 					modelTypeCodes, tags, restPageRequets)).thenReturn(pageResponse);
 			when(cmnDataService.getUser(userId)).thenReturn(user);
 			String result = solutionService.getSolutions("111");
@@ -1964,7 +1961,6 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion("1.0.0");
 		//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
-		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -2054,7 +2050,6 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion("1.0.0");
 		//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
-		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
@@ -2145,7 +2140,6 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion("1.0.0");
 		//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
-		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
@@ -2264,7 +2258,6 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion(dscs.getVersion());
 		//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
-		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -2352,7 +2345,6 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion(dscs.getVersion());
 		//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
-		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		List<MLPSolutionRevision> mlpSolutionRevisionList = new ArrayList<MLPSolutionRevision>();
 		mlpSolutionRevisionList.add(mlpSolutionRevision);
@@ -2409,7 +2401,6 @@ public class SolutionControllerTest {
 		mlpSolutionRevision.setVersion(version);
 		mlpSolutionRevision.setRevisionId("111");
 		//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
-		mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 		
 		
 		List<MLPArtifact> artifacts = new ArrayList<MLPArtifact>();

@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.acumos.cds.AccessTypeCode;
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.domain.MLPArtifact;
 import org.acumos.cds.domain.MLPSolution;
@@ -257,7 +256,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			mlpSolutionRevision.setUserId(dscs.getAuthor());
 			mlpSolutionRevision.setVersion(dscs.getVersion());
 			//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
-			mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 			mlpSolutionRevision.setPublisher(dscs.getProvider());
 			
 			mlpSolutionRevision = cdmsClient.createSolutionRevision(mlpSolutionRevision);
@@ -472,54 +470,55 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		Date currentDate = new Date();
 		Instant dateInstant = Instant.now();
 		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
-		
-		if("PB".equals(mlpSR.getAccessTypeCode()) || "OR".equals(mlpSR.getAccessTypeCode())){
-			result = "{\"duplicateErrorCode\" : \"219\", \"duplicate\" : \"Solution In Public/Company. Please change either solution name, version or both.\"}";
+
+		if (null == cdump) {
+			logger.debug("Error : Cdump file not found for Solution ID :   {} ", mlpSolution.getSolutionId());
 		} else {
-			if (null == cdump) {
-				logger.debug("Error : Cdump file not found for Solution ID :   {} ", mlpSolution.getSolutionId());
-			} else {
-				// 5.2 Update the cdump file with mtime
-				cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
-				cdump.setValidSolution(false);
-				cdump.setVersion(mlpSR.getVersion());
-				cdump.setRevisionId(mlpSR.getRevisionId());
-				Gson gson = new Gson();
-				String payload = gson.toJson(cdump);
-				DSUtil.writeDataToFile(path, cdumpFileName, "json", payload);
-				Artifact cdumpArtifact = new Artifact(cdumpFileName, "json", mlpSolution.getSolutionId(), dscs.getVersion(),
-						path, payload.length());
-				logger.debug("4. Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
-				// 5.3 upload the cdump file in Nexus Repositry. (file name should be the same as previous one).
-				uploadFilesToRepository(mlpSolution.getSolutionId(), mlpSR.getRevisionId(), dscs.getVersion(), cdumpArtifact);
-	
-				// Fetch the existing artifact
-				List<MLPArtifact> artfactsList = cdmsClient.getSolutionRevisionArtifacts(mlpSR.getSolutionId(), mlpSR.getRevisionId());
-	
-				for (MLPArtifact mlpArtifact : artfactsList) {
-	
-					logger.debug("mlpArtifact.getArtifactTypeCode()  :  {} ", mlpArtifact.getArtifactTypeCode());
-					if (mlpArtifact.getArtifactTypeCode().equals(props.getArtifactTypeCode())) {
-						logger.debug("{0} = {1} ", mlpArtifact.getArtifactTypeCode(), props.getArtifactTypeCode());
-						dscs.setCdump(cdumpArtifact);
-						mlpArtifact.setUri(cdumpArtifact.getNexusURI());
-						mlpArtifact.setModified(dateInstant);
-						mlpArtifact.setSize(cdumpArtifact.getContentLength());
-						cdmsClient.updateArtifact(mlpArtifact);
-						logger.debug("Successfully updated the artifact for the cdumpfile for the solution : {0} artifact ID : {1}" , mlpSolution.getSolutionId(),  mlpArtifact.getArtifactId());
-						result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \"" + dscs.getVersion() + "\" }";
-						break;
-					}
+			// 5.2 Update the cdump file with mtime
+			cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
+			cdump.setValidSolution(false);
+			cdump.setVersion(mlpSR.getVersion());
+			cdump.setRevisionId(mlpSR.getRevisionId());
+			Gson gson = new Gson();
+			String payload = gson.toJson(cdump);
+			DSUtil.writeDataToFile(path, cdumpFileName, "json", payload);
+			Artifact cdumpArtifact = new Artifact(cdumpFileName, "json", mlpSolution.getSolutionId(), dscs.getVersion(),
+					path, payload.length());
+			logger.debug("4. Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
+			// 5.3 upload the cdump file in Nexus Repositry. (file name should  be the same as previous one).
+			uploadFilesToRepository(mlpSolution.getSolutionId(), mlpSR.getRevisionId(), dscs.getVersion(),
+					cdumpArtifact);
+
+			// Fetch the existing artifact
+			List<MLPArtifact> artfactsList = cdmsClient.getSolutionRevisionArtifacts(mlpSR.getSolutionId(),
+					mlpSR.getRevisionId());
+
+			for (MLPArtifact mlpArtifact : artfactsList) {
+
+				logger.debug("mlpArtifact.getArtifactTypeCode()  :  {} ", mlpArtifact.getArtifactTypeCode());
+				if (mlpArtifact.getArtifactTypeCode().equals(props.getArtifactTypeCode())) {
+					logger.debug("{0} = {1} ", mlpArtifact.getArtifactTypeCode(), props.getArtifactTypeCode());
+					dscs.setCdump(cdumpArtifact);
+					mlpArtifact.setUri(cdumpArtifact.getNexusURI());
+					mlpArtifact.setModified(dateInstant);
+					mlpArtifact.setSize(cdumpArtifact.getContentLength());
+					cdmsClient.updateArtifact(mlpArtifact);
+					logger.debug(
+							"Successfully updated the artifact for the cdumpfile for the solution : {0} artifact ID : {1}",
+							mlpSolution.getSolutionId(), mlpArtifact.getArtifactId());
+					result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \""
+							+ dscs.getVersion() + "\" }";
+					break;
 				}
-				// 5.4 update the solutionRevisoin (i.e., to update the modified date of the solutionrevision)
-				mlpSR.setModified(dateInstant);
-				//mlpSR.setDescription(dscs.getDescription());
-				cdmsClient.updateSolutionRevision(mlpSR);
-	
-				// 5.5 Update the solution (i.e., to update the modified date of the solution).
-				mlpSolution.setModified(dateInstant);
-				cdmsClient.updateSolution(mlpSolution);
 			}
+			// 5.4 update the solutionRevisoin (i.e., to update the modified date of the solutionrevision)
+			mlpSR.setModified(dateInstant);
+			// mlpSR.setDescription(dscs.getDescription());
+			cdmsClient.updateSolutionRevision(mlpSR);
+
+			// 5.5 Update the solution (i.e., to update the modified date of the solution).
+			mlpSolution.setModified(dateInstant);
+			cdmsClient.updateSolution(mlpSolution);
 		}
 		logger.debug("updateExistingSolution() End ");
 		return result;
@@ -570,8 +569,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			//mlpSolutionRevision.setDescription(dscs.getDescription());
 			mlpSolutionRevision.setUserId(dscs.getAuthor());
 			mlpSolutionRevision.setVersion(dscs.getVersion());
-			//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
-			mlpSolutionRevision.setAccessTypeCode(AccessTypeCode.PR.toString());
 			mlpSolutionRevision.setPublisher(dscs.getProvider());
 			
 			// Get the latest date in to variable and then use it.
@@ -840,27 +837,31 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		logger.debug("getCompositeSolutions() Begin ");
 		String result = "[";
 		List<MLPSolution> mlpSolutions = null;
-		List<MLPSolution> portalMLPSolutions = null;
+		List<MLPSolution> compSolutions = null;
 		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
-			String[] nameKeyword = null;
-			String[] descriptionKeyword = null;
-			String[] userAccessTypeCodes = {"PR"};
-			String[] modelTypeCodes = null;
-			String[] tags = null;
+			String[] nameKeyword = {};
+			String[] descriptionKeyword = {};
+			String[] modelTypeCodes = {};
+			String[] tags = {};
+			String[] anyTags = {};
+			String[] catalogIds = {};
 			boolean active = true;
+			boolean isPublished = false;
 			String[] ownerIds = {};
-			String[] portalAccessTypeCodes = {"OR","PB"};
 			String compoSolnTlkitTypeCode = props.getToolKit();
 			List<DSSolution> dsSolutions = new ArrayList<>();
 			List<String> solutionIds = new ArrayList<>();
 			StringBuilder strBuilder = new StringBuilder();
 			SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
 			RestPageRequest restPageRequest = new RestPageRequest(0,props.getSolutionResultsetSize());
-			RestPageResponse<MLPSolution> userSolutionResponse = cdmsClient.findUserSolutions(nameKeyword, descriptionKeyword,active, userID, userAccessTypeCodes, modelTypeCodes, tags, restPageRequest);
-			RestPageResponse<MLPSolution> portalSolutionResponse = cdmsClient.findPortalSolutions(nameKeyword, descriptionKeyword, active, ownerIds, portalAccessTypeCodes, modelTypeCodes, tags, null, null, restPageRequest);
-			mlpSolutions = userSolutionResponse.getContent();
-			portalMLPSolutions = portalSolutionResponse.getContent();
+			
+			
+			RestPageResponse<MLPSolution> catalogSolutions = cdmsClient.findPublishedSolutionsByKwAndTags(nameKeyword, active, ownerIds, modelTypeCodes, tags, anyTags, catalogIds, restPageRequest);
+			RestPageResponse<MLPSolution> unPublishedSolutions = cdmsClient.findUserSolutions(active, isPublished, userID, nameKeyword, descriptionKeyword, modelTypeCodes, tags, restPageRequest);
+			mlpSolutions = catalogSolutions.getContent();
+			compSolutions = unPublishedSolutions.getContent();
+			
 			if (mlpSolutions == null) {
 				logger.debug("CommonDataService findUserSolutions() returned null Solution list in getCompositeSolutions()");
 			} else if (mlpSolutions.isEmpty()) {
@@ -868,14 +869,14 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			} else {
 				logger.debug("CommonDataService findUserSolutions() returned Solution list of size :  {} in getCompositeSolutions()",mlpSolutions.size());
 				for (MLPSolution mlpsol : mlpSolutions) {
-					strBuilder.append(csSolutionExtractor(visibilityLevel, compoSolnTlkitTypeCode, dsSolutions, solutionIds,
+					strBuilder.append(csSolutionExtractor(compoSolnTlkitTypeCode, dsSolutions, solutionIds,
 							sdf, mlpsol));
 				}
 			}
-			if(null != portalMLPSolutions && !portalMLPSolutions.isEmpty()){
+			if(null != compSolutions && !compSolutions.isEmpty()){
 				StringBuilder builder2 = new StringBuilder();
-				for (MLPSolution mlpsol : portalMLPSolutions) {
-					builder2.append(csSolutionExtractor(visibilityLevel, compoSolnTlkitTypeCode, dsSolutions, solutionIds,
+				for (MLPSolution mlpsol : compSolutions) {
+					builder2.append(csSolutionExtractor(compoSolnTlkitTypeCode, dsSolutions, solutionIds,
 							sdf, mlpsol));
 				}
 				if(builder2.length() > 1){
@@ -2559,7 +2560,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		return protoPayload;
 	}
 	
-	private StringBuilder csSolutionExtractor(String visibilityLevel, String compoSolnTlkitTypeCode,
+	private StringBuilder csSolutionExtractor(String compoSolnTlkitTypeCode,
 			List<DSSolution> dsSolutions, List<String> solutionIds, SimpleDateFormat sdf,
 			MLPSolution mlpsol) {
 		String solutionId = null;
@@ -2569,7 +2570,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		if (compoSolnTlkitTypeCode.equals(mlpsol.getToolkitTypeCode())) {
 			mlpSolRevisions = cdmsClient.getSolutionRevisions(mlpsol.getSolutionId());
 			for (MLPSolutionRevision mlpSolRevision : mlpSolRevisions) {
-				if (visibilityLevel.contains(mlpSolRevision.getAccessTypeCode())) {
 					String userId = mlpSolRevision.getUserId();
 					MLPUser user = cdmsClient.getUser(userId);
 					solutionId = mlpsol.getSolutionId();
@@ -2607,15 +2607,10 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						dssolution.setToolKit(mlpsol.getToolkitTypeCode());
 						// 7. Solution Category
 						dssolution.setCategory(mlpsol.getModelTypeCode());
-						// 8. Solution Description
-						// dssolution.setDescription(mlpsol.getDescription());
-						// 9. Solution Visibility
-						dssolution.setVisibilityLevel(mlpSolRevision.getAccessTypeCode());
 						dsSolutions.add(dssolution);
 						strBuilder.append(dssolution.toJsonString());
 						strBuilder.append(",");
 					}
-				}
 			}
 		}
 		return strBuilder;
