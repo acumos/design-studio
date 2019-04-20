@@ -146,10 +146,11 @@ public class SolutionServiceImpl implements ISolutionService {
 				}
 				String[] accessTypeCodes = { props.getPublicAccessTypeCode(), props.getOrganizationAccessTypeCode() };
 				//String[] valStatusCodes = { props.getValidationStatusCode() };
-
 				// Make a call to CDS to get the updated models.
-				RestPageResponse<MLPSolution> updatedModels = cmnDataService.findSolutionsByDate(true, accessTypeCodes,
-						lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));
+				// TODO : Need to make sure that correct CDS method to be call.
+				RestPageResponse<MLPSolution> updatedModels = null;
+				/*RestPageResponse<MLPSolution> updatedModels = cmnDataService.findSolutionsByDate(true, accessTypeCodes,
+						lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));*/
 
 				if (null != updatedModels && updatedModels.getContent().size() > 0) {
 					List<DSModelVO> dsModels = getDSModels(updatedModels);
@@ -157,7 +158,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				}
 
 				// Make a call to get the deleted models.
-				updatedModels = cmnDataService.findSolutionsByDate(false, accessTypeCodes,lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));
+				//updatedModels = cmnDataService.findSolutionsByDate(false, accessTypeCodes,lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));
 
 				if (null != updatedModels && updatedModels.getContent().size() > 0) {
 					List<DSModelVO> dsModels = getDSModels(updatedModels);
@@ -179,47 +180,50 @@ public class SolutionServiceImpl implements ISolutionService {
 	public String getSolutions(String userID) throws ServiceException {
 		logger.debug("getSolutions() Begin ");
 		String result = null;
-		List<MLPSolution> mlpSolutionsList = null;
-		List<MLPSolution> privateMLPSolutionsList = null;
+		List<MLPSolution> mlpPublishedSolutions = null;
+		List<MLPSolution> mlpUserPrivateSolutions = null;
 		List<DSSolution> dsSolutionList = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat(confprops.getDateFormat());
 		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		try {
 			mapper.setSerializationInclusion(Include.NON_NULL);
-			String[] nameKeyword = null;
-			String[] descriptionKeyword = null;
-			String[] accessTypeCodes = {"PB","OR"};
-			String[] modelTypeCodes = null;
-			String[] tags = null;
+			String[] nameKeyword = {};
+			String[] descriptionKeywords = {};
+			String[] modelTypeCodes = {};
+			String[] tags = {};
+			String[] anyTags = {};
+			String[] catalogIds = {};
 			boolean active = true;
+			boolean isPublished = false;
 			String[] ownerIds = {};
-			String[] ownerId = {userID};
-			String[] accessTypeCode = {"PR"};
 			String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
 			RestPageRequest pageRequest = new RestPageRequest(0, confprops.getSolutionResultsetSize());
-			RestPageResponse<MLPSolution> pubOrgMLPResponse = cmnDataService.findPortalSolutions(nameKeyword, descriptionKeyword, active, ownerIds, accessTypeCodes, modelTypeCodes, tags, null, null, pageRequest);
-			RestPageResponse<MLPSolution> privateMLPResponse = cmnDataService.findPortalSolutions(nameKeyword, descriptionKeyword, active, ownerId, accessTypeCode, modelTypeCodes, tags, null, null, pageRequest);
-			mlpSolutionsList = pubOrgMLPResponse.getContent();
-			privateMLPSolutionsList = privateMLPResponse.getContent();
+			// This will get only the published solutions (independent of User)
+			RestPageResponse<MLPSolution> publishedSolutions = cmnDataService.findPublishedSolutionsByKwAndTags(nameKeyword, active, ownerIds, modelTypeCodes, tags, anyTags, catalogIds, pageRequest);
+			// This will get User Specific Solutions which are PrivateSolutions.(Get the Published and Unpublished models also)
+			RestPageResponse<MLPSolution> userPrivateSolutions = cmnDataService.findUserSolutions(active, isPublished, userID, nameKeyword, descriptionKeywords, modelTypeCodes, anyTags, pageRequest);
+			mlpPublishedSolutions = publishedSolutions.getContent();
+			mlpUserPrivateSolutions = userPrivateSolutions.getContent();
 			logger.debug("The Date Format :  {} ", confprops.getDateFormat());
-			if (null == mlpSolutionsList) {
+			if (null == mlpPublishedSolutions) {
 				logger.debug("CommonDataService findUserSolutions() returned null Solution list");
-			} else if (mlpSolutionsList.isEmpty()) {
+			} else if (mlpPublishedSolutions.isEmpty()) {
 				logger.debug("CommonDataService findUserSolutions() returned empty Solution list");
 			} else {
-				logger.debug("CommonDataService findUserSolutions() returned Solution list of size :  {}",mlpSolutionsList.size());
-				for (MLPSolution mlpsolution : mlpSolutionsList) {
+				logger.debug("CommonDataService findUserSolutions() returned Solution list of size :  {}" , mlpPublishedSolutions.size());
+				for (MLPSolution mlpsolution : mlpPublishedSolutions) {
 					dsSolutionList.addAll(solutionExtractor(sdf, compoSolnTlkitTypeCode, mlpsolution));
 				}
 			}
-			if(null != privateMLPSolutionsList && !privateMLPSolutionsList.isEmpty()){
-				for (MLPSolution mlpsolution : privateMLPSolutionsList) {
+			if(null != mlpUserPrivateSolutions && !mlpUserPrivateSolutions.isEmpty()){
+				for (MLPSolution mlpsolution : mlpUserPrivateSolutions) {
 						dsSolutionList.addAll(solutionExtractor(sdf, compoSolnTlkitTypeCode, mlpsolution));
 				}
 			}
 			if (dsSolutionList.size() > 1) {
 				dsSolutionList = checkDuplicateSolution(dsSolutionList);
 				logger.debug("User Accessable  ML Solutions Size :" + dsSolutionList.size());
+				
 				result = mapper.writeValueAsString(dsSolutionList);
 			} else {
 				result = props.getSolutionErrorDescription();
@@ -233,8 +237,6 @@ public class SolutionServiceImpl implements ISolutionService {
 		return result;
 	}
 
-
-	
 
 	private boolean checkErrorInModel(String solutionId, String revisionId) {
 		boolean errorInModel = false;
@@ -1137,7 +1139,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		// 8. Solution Description
 		//dssolution.setDescription(mlpsolution.getDescription());
 		// 9. Solution Visibility
-		dssolution.setVisibilityLevel(mlpSolRevision.getAccessTypeCode());
+		//dssolution.setVisibilityLevel(mlpSolRevision.getAccessTypeCode());
 		// 10. Solution Version
 		dssolution.setVersion(mlpSolRevision.getVersion());
 		// 11. Solution On boarder

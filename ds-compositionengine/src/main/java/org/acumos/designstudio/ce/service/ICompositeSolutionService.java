@@ -37,7 +37,7 @@ public interface ICompositeSolutionService {
 
 	public String clearCompositeSolution(String userId, String solutionId, String solutionVersion, String cid);
 
-	public String getCompositeSolutions(String userId, String visibilityLevel ) throws AcumosException;
+	public String getCompositeSolutions(String userId, String visibilityLevel) throws AcumosException;
 	
 	public String validateCompositeSolution(String userId, String solutionName, String solutionId, String version) throws AcumosException;
 	
