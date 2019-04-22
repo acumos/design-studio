@@ -136,6 +136,8 @@ public class SolutionServiceImpl implements ISolutionService {
 	public void getUpdatedModelsbyDate() throws InterruptedException, ServiceException {
 		logger.debug("getCacheMechanism() Begin ");
 		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
+		String[] catalogIds = {};
+		
 		try {
 			Map<KeyVO, List<ModelDetailVO>> publicModelCache = modelCacheForMatching.getPublicModelCache();
 			if (null != publicModelCache && !publicModelCache.isEmpty()) { // It should get created on application startup.
@@ -143,14 +145,9 @@ public class SolutionServiceImpl implements ISolutionService {
 				if (null == lastExecutionTime) {
 					lastExecutionTime = Instant.now();
 				}
-				//String[] accessTypeCodes = { props.getPublicAccessTypeCode(), props.getOrganizationAccessTypeCode() };
-				//String[] valStatusCodes = { props.getValidationStatusCode() };
-
 				// Make a call to CDS to get the updated models.
-				// TODO : Need to make sure that correct CDS method to be call.
-				RestPageResponse<MLPSolution> updatedModels = null;
-				/*RestPageResponse<MLPSolution> updatedModels = cmnDataService.findSolutionsByDate(true, accessTypeCodes,
-						lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));*/
+				
+				RestPageResponse<MLPSolution> updatedModels = cmnDataService.findPublishedSolutionsByDate(catalogIds, lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));
 
 				if (null != updatedModels && updatedModels.getContent().size() > 0) {
 					List<DSModelVO> dsModels = getDSModels(updatedModels);
@@ -158,7 +155,7 @@ public class SolutionServiceImpl implements ISolutionService {
 				}
 
 				// Make a call to get the deleted models.
-				//updatedModels = cmnDataService.findSolutionsByDate(false, accessTypeCodes,lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));
+				updatedModels = cmnDataService.findPublishedSolutionsByDate(catalogIds, lastExecutionTime, new RestPageRequest(0, props.getSolutionResultsetSize()));
 
 				if (null != updatedModels && updatedModels.getContent().size() > 0) {
 					List<DSModelVO> dsModels = getDSModels(updatedModels);
