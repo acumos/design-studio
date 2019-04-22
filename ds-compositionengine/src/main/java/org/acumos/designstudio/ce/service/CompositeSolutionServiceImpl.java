@@ -868,16 +868,20 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				logger.debug("CommonDataService findUserSolutions() returned empty Solution list in getCompositeSolutions()");
 			} else {
 				logger.debug("CommonDataService findUserSolutions() returned Solution list of size :  {} in getCompositeSolutions()",mlpSolutions.size());
+				DSSolution publishedSol = new DSSolution();
+				publishedSol.setVisibilityLevel("PB");
 				for (MLPSolution mlpsol : mlpSolutions) {
 					strBuilder.append(csSolutionExtractor(compoSolnTlkitTypeCode, dsSolutions, solutionIds,
-							sdf, mlpsol));
+							sdf, mlpsol,publishedSol));
 				}
 			}
 			if(null != compSolutions && !compSolutions.isEmpty()){
+				DSSolution privateSol = new DSSolution();
+				privateSol.setVisibilityLevel("PR");
 				StringBuilder builder2 = new StringBuilder();
 				for (MLPSolution mlpsol : compSolutions) {
 					builder2.append(csSolutionExtractor(compoSolnTlkitTypeCode, dsSolutions, solutionIds,
-							sdf, mlpsol));
+							sdf, mlpsol,privateSol));
 				}
 				if(builder2.length() > 1){
 					strBuilder.append(builder2);
@@ -2562,9 +2566,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	
 	private StringBuilder csSolutionExtractor(String compoSolnTlkitTypeCode,
 			List<DSSolution> dsSolutions, List<String> solutionIds, SimpleDateFormat sdf,
-			MLPSolution mlpsol) {
+			MLPSolution mlpsol,DSSolution dsSolution) {
 		String solutionId = null;
-		DSSolution dssolution = null;
 		StringBuilder strBuilder = new StringBuilder();
 		List<MLPSolutionRevision> mlpSolRevisions = null;
 		if (compoSolnTlkitTypeCode.equals(mlpsol.getToolkitTypeCode())) {
@@ -2581,34 +2584,32 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						logger.debug("CommonDataService returned empty SolutionRevision list");
 					} else {
 						logger.debug("CommonDataService returned SolutionRevision list of size : " + mlpSolRevisions.size());
-
-						dssolution = new DSSolution();
 						// Solution ID 
-						dssolution.setSolutionId(mlpsol.getSolutionId());
+						dsSolution.setSolutionId(mlpsol.getSolutionId());
 						// Solution Revision
-						dssolution.setSolutionRevisionId(mlpSolRevision.getRevisionId());
+						dsSolution.setSolutionRevisionId(mlpSolRevision.getRevisionId());
 						// Solution Created Date
 						java.util.Date newDate = Date.from(mlpSolRevision.getCreated());
 						String formattedDate = sdf.format(newDate);
-						dssolution.setCreatedDate(formattedDate);
+						dsSolution.setCreatedDate(formattedDate);
 						// Solution Icon
-						dssolution.setIcon(null);
+						dsSolution.setIcon(null);
 						// 1. Solution Name
-						dssolution.setSolutionName(mlpsol.getName());
+						dsSolution.setSolutionName(mlpsol.getName());
 						// 2. Solution Version
-						dssolution.setVersion(mlpSolRevision.getVersion());
+						dsSolution.setVersion(mlpSolRevision.getVersion());
 						// 3. Solution On boarder
-						dssolution.setOnBoarder(userName);
+						dsSolution.setOnBoarder(userName);
 						// 4. Solution Author
-						dssolution.setAuthor(userName);
+						dsSolution.setAuthor(userName);
 						// 5. Solution Provider
-						dssolution.setProvider(mlpSolRevision.getPublisher());
+						dsSolution.setProvider(mlpSolRevision.getPublisher());
 						// 6. Solution Tool Kit
-						dssolution.setToolKit(mlpsol.getToolkitTypeCode());
+						dsSolution.setToolKit(mlpsol.getToolkitTypeCode());
 						// 7. Solution Category
-						dssolution.setCategory(mlpsol.getModelTypeCode());
-						dsSolutions.add(dssolution);
-						strBuilder.append(dssolution.toJsonString());
+						dsSolution.setCategory(mlpsol.getModelTypeCode());
+						dsSolutions.add(dsSolution);
+						strBuilder.append(dsSolution.toJsonString());
 						strBuilder.append(",");
 					}
 			}
