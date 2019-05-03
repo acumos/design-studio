@@ -274,7 +274,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 						if (props.getArtifactType().equalsIgnoreCase(mlpArtifact.getArtifactTypeCode())) { //get TGIF file
 							try {
 								tgifFileNexusURI = mlpArtifact.getUri();
-								logger.debug("TgifFileNexusURI  : " + tgifFileNexusURI );
 								byteArrayOutputStream = getPayload(tgifFileNexusURI);
 								if(null != byteArrayOutputStream && !byteArrayOutputStream.toString().isEmpty()){
 									mapper.configure(Feature.AUTO_CLOSE_SOURCE, true);
@@ -390,7 +389,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 					if (props.getArtifactType().equalsIgnoreCase(mlpArtifact.getArtifactTypeCode())) { // get TGIF file
 						try {
 							tgifFileNexusURI = mlpArtifact.getUri();
-							logger.debug("TgifFileNexusURI 1  : " + tgifFileNexusURI);
 							byteArrayOutputStream = getPayload(tgifFileNexusURI);
 							if (null != byteArrayOutputStream && !byteArrayOutputStream.toString().isEmpty()) {
 								mapper.configure(Feature.AUTO_CLOSE_SOURCE, true);
@@ -525,7 +523,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 
 
 	private boolean checkErrorInModel(String solutionId, String revisionId) {
-		logger.debug("checkErrorInModel() Begin ");
 		boolean errorInModel = false;
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("solutionId", solutionId);
@@ -550,7 +547,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 				}
 			}
 		}
-		logger.debug("checkErrorInModel() End");
 		return errorInModel;
 	}
 	
