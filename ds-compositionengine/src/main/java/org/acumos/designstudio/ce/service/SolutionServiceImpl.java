@@ -438,11 +438,9 @@ public class SolutionServiceImpl implements ISolutionService {
 				List<MLPSolutionRevision> rev = getSolutionRevisions(solutionID);
 				if (null != rev && !rev.isEmpty()) {
 					for (MLPSolutionRevision mlp : rev) {
-						//description = mlp.getDescription();
 						if (mlp.getVersion().equalsIgnoreCase(version)) {
 							solutionRevisionId = mlp.getRevisionId();
 							isValidVersion = true;
-							logger.debug("SolutionRevisonId for Version :  {} ", solutionRevisionId );
 							break;
 						}
 					}
@@ -460,7 +458,6 @@ public class SolutionServiceImpl implements ISolutionService {
 				for (MLPArtifact mlpArti : mlpArtifact) {
 					if (mlpArti.getArtifactTypeCode().equalsIgnoreCase(props.getArtifactTypeCode())) {
 						nexusURI = mlpArti.getUri();
-						logger.debug("Nexus URI :  {} ", nexusURI );
 						break;
 					}
 				}
@@ -863,7 +860,6 @@ public class SolutionServiceImpl implements ISolutionService {
 							// delete properties field from DM
 							for (Nodes node : nodesList) {
 								// For all NodeTypes input is SourceNodeId which is same as nodeId in Nodes
-								logger.debug("1. For all NodeTypes input is SourceNodeId which is same as nodeId in Nodes ");
 								if (node.getNodeId().equals(sourceNodeId) && node.getProperties().length != 0) {
 									if (props.getGdmType().equals(node.getType().getName())) {
 										node.getProperties()[0].getData_map().setMap_outputs(new MapOutput[0]);
@@ -1050,10 +1046,6 @@ public class SolutionServiceImpl implements ISolutionService {
 
 			if (null != mlpArtifactList && !mlpArtifactList.isEmpty()) {
 				try {
-					// 3. Get the nexus URI for the SolutionId
-					/*nexusURI = mlpArtifactList.stream()
-							.filter(mlpArt -> mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType)).findFirst()
-							.get().getUri();*/
 					for(MLPArtifact mlpArt : mlpArtifactList){
 						if( null != fileExtention ){
 							if(mlpArt.getArtifactTypeCode().equalsIgnoreCase(artifactType) && mlpArt.getName().contains(fileExtention)){
@@ -1090,8 +1082,6 @@ public class SolutionServiceImpl implements ISolutionService {
 		for(DSSolution dss : dsSolutionList){
 			//check if it appears twice in clone
 			cnt = 0;
-			logger.debug("dss.getSolutionName() " + dss.getSolutionName());
-            logger.debug("dss.getVersion() " + dss.getVersion());
             if(null == dss.getSolutionName() && null == dss.getVersion() ){
             	break;
             }
@@ -1100,11 +1090,9 @@ public class SolutionServiceImpl implements ISolutionService {
                 if(null == dss1.getSolutionName() && null == dss1.getVersion()){
                 	break;
                 } else if(dss.getSolutionName().equals(dss1.getSolutionName()) && dss.getVersion().equals(dss1.getVersion())){
-                	logger.debug("dss1.getSolutionName() " + dss1.getSolutionName());
-                    logger.debug("dss1.getVersion() " + dss1.getVersion());
 					cnt++;
 				}
-				if(cnt == 2){  //indicating that same solution name and version appeared twice, so no need to check further 
+                if(cnt == 2){  //indicating that same solution name and version appeared twice, so no need to check further 
 					break;
 				}
 				

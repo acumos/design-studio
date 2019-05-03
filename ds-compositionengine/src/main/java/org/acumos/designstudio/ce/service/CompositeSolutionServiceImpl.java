@@ -494,28 +494,19 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					mlpSR.getRevisionId());
 
 			for (MLPArtifact mlpArtifact : artfactsList) {
-
-				logger.debug("mlpArtifact.getArtifactTypeCode()  :  {} ", mlpArtifact.getArtifactTypeCode());
 				if (mlpArtifact.getArtifactTypeCode().equals(props.getArtifactTypeCode())) {
-					logger.debug("{0} = {1} ", mlpArtifact.getArtifactTypeCode(), props.getArtifactTypeCode());
 					dscs.setCdump(cdumpArtifact);
 					mlpArtifact.setUri(cdumpArtifact.getNexusURI());
 					mlpArtifact.setModified(dateInstant);
 					mlpArtifact.setSize(cdumpArtifact.getContentLength());
 					cdmsClient.updateArtifact(mlpArtifact);
-					logger.debug(
-							"Successfully updated the artifact for the cdumpfile for the solution : {0} artifact ID : {1}",
-							mlpSolution.getSolutionId(), mlpArtifact.getArtifactId());
-					result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \""
-							+ dscs.getVersion() + "\" }";
+					result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \"" + dscs.getVersion() + "\" }";
 					break;
 				}
 			}
 			// 5.4 update the solutionRevisoin (i.e., to update the modified date of the solutionrevision)
 			mlpSR.setModified(dateInstant);
-			// mlpSR.setDescription(dscs.getDescription());
 			cdmsClient.updateSolutionRevision(mlpSR);
-
 			// 5.5 Update the solution (i.e., to update the modified date of the solution).
 			mlpSolution.setModified(dateInstant);
 			cdmsClient.updateSolution(mlpSolution);
@@ -696,11 +687,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								String artifactId = mlpArtifact.getArtifactId();
 								// Delete SolutionRevisionArtifact
 								cdmsClient.dropSolutionRevisionArtifact(solutionId, revisionId, artifactId);
-								logger.debug("Successfully Deleted the SolutionRevisionArtifact which is if CDUMP i.e CD ");
 								// Delete Artifact
 								// 3. Delete the artifact "CD"
 								cdmsClient.deleteArtifact(artifactId);
-								logger.debug("Successfully Deleted the CDUMP Artifact ");
 								// 4. Delete the cdump file from the Nexus
 								nexusArtifactClient.deleteArtifact(mlpArtifact.getUri());
 							}
@@ -711,9 +700,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								boolean artifactURI = mlpArtifact.getUri().endsWith("proto");
 								if(artifactURI){
 									cdmsClient.dropSolutionRevisionArtifact(solutionId, revisionId, artiId);
-									logger.debug("Successfully Deleted the SolutionRevisionArtifact which is if PROTO i.e MI");
 									cdmsClient.deleteArtifact(artiId);
-									logger.debug("Successfully Deleted the .proto file Artifact ");
 									nexusArtifactClient.deleteArtifact(mlpArtifact.getUri());
 								}
 							}
@@ -721,11 +708,9 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								String artifactId = mlpArtifact.getArtifactId();
 								// Delete SolutionRevisionArtifact
 								cdmsClient.dropSolutionRevisionArtifact(solutionId, revisionId, artifactId);
-								logger.debug("Successfully Deleted the SolutionRevisionArtifact which is if BLUEPRINT i.e BP");
 								// Delete Artifact
 								// 3. Delete the artifact "BP"
 								cdmsClient.deleteArtifact(artifactId);
-								logger.debug("Successfully Deleted the BluePrint Artifact ");
 								// 4. Delete the cdump file from the Nexus
 								nexusArtifactClient.deleteArtifact(mlpArtifact.getUri());
 							}
@@ -734,7 +719,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 
 						// 5. Delete the SolutionRevision from the DB
 						cdmsClient.deleteSolutionRevision(solutionId, mlpSolRevision.getRevisionId());
-						logger.debug("Successfully Deleted the Solution Revision ");
 						solutionFound = true;
 						result = true;
 						deleteMember(solutionId);
@@ -939,7 +923,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				resultVo = validateComposition(cdump);
 				if(resultVo.getSuccess().equals("true")){
 					// On successful validation generate the BluePrint file
-					// Update the Cdump file with validaSolution as true after successful validation conditions and Modified Time also
+					// Update the Cdump file with validaSolution as true after successful validation conditions and Modified Time also.
 					logger.debug("On successful validation generate the BluePrint file.");
 					cdump.setValidSolution(true);
 					cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
@@ -957,10 +941,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 								// get the protobuf file string for the target model
 								String protoUri = dataBrokerTargetNode.getProtoUri();
 								ByteArrayOutputStream bytes = nexusArtifactClient.getArtifact(protoUri);
-								logger.debug("ByteArrayOutputStream of ProtoFile :" + bytes);
 								if (null != bytes) {
 									String protobufFile = bytes.toString();
-									logger.debug("protobufFile in String Format :" + protobufFile);
 									// put protobufFile String in databroker
 									Property[] prop = firstNode.getProperties();
 									if (null != prop[0].getData_broker_map()) {
@@ -1701,13 +1683,11 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			nodeSolutionId = n.getNodeSolutionId(); // To get the DockerImageUrl
 			nodeVersion = n.getNodeVersion(); // To get the nodeVersion
 			// 11. Get the MlpSolutionRevisions from CDMSClient for the NodeSolutionId
-			logger.debug("11. Get the MlpSolutionRevisions from CDMSClient for the NodeSolutionId");
 			mlpSolRevision = getSolutionRevisions(nodeSolutionId, nodeVersion, mlpSolRevision);
 						
 			if (n.getType().getName().equalsIgnoreCase(props.getGdmType())) {
 				logger.debug("GDM Found :  {} ", n.getNodeId());
 				// For Generic Data Mapper, get the dockerImageUrl by deploying the GDM Construct the image for the Generic Data mapper
-				logger.debug("For Generic Data Mapper, get the dockerImageUrl by deploying the GDM Construct the image for the Generic Data mapper");
 				dockerImageURL = gdmService.createDeployGDM(cdump, n.getNodeId(), userId);
 				if (null == dockerImageURL) {
 					logger.debug("Error : Issue in createDeployGDM() : Failed to create the Solution Artifact ");
@@ -1729,7 +1709,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				dockerImageURL = getDockerImageURL(nodeSolutionId, mlpSolRevision);
 			}
 			// 13. Set the values in the bluePrint Node
-			logger.debug("13. Set the values in the bluePrint Node");
 			bpnode = new Node();
 			bpnode.setContainer_name(nodeName);
 			bpnode.setImage(dockerImageURL);
@@ -1812,7 +1791,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			}
 			bpnode.setOperation_signature_list(oslList);
 			// 14. Add the nodedetails to bluepring nodes list
-			logger.debug("14. Add the nodedetails to blueprint nodes list");
 			bpnodes.add(bpnode);
 		}
 		bluePrint.setNodes(bpnodes);
@@ -2263,8 +2241,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	private String getDockerImageURL(String nodeSolutionId, MLPSolutionRevision mlpSolRevision) {
 		List<MLPArtifact> mlpArtifacts;
 		mlpArtifacts = cdmsClient.getSolutionRevisionArtifacts(nodeSolutionId, mlpSolRevision.getRevisionId());
-		// Iterate over the MLPArtifacts and get the DockerImage ArticactCode as
-		// DI and get the DockerImage URL
+		// Iterate over the MLPArtifacts and get the DockerImage ArticactCode as DI and get the DockerImage URL
 		String dockerImageURL = "";
 		for (MLPArtifact a : mlpArtifacts) {
 			if ("DI".equals(a.getArtifactTypeCode())) {
@@ -2579,11 +2556,8 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 					solutionIds.add(solutionId);
 					String userName = user.getFirstName() + " " + user.getLastName();
 					if (mlpSolRevisions == null) {
-						logger.debug("CommonDataService returned null SolutionRevision list");
 					} else if (mlpSolRevisions.isEmpty()) {
-						logger.debug("CommonDataService returned empty SolutionRevision list");
 					} else {
-						logger.debug("CommonDataService returned SolutionRevision list of size : " + mlpSolRevisions.size());
 						// Solution ID 
 						dsSolution.setSolutionId(mlpsol.getSolutionId());
 						// Solution Revision
