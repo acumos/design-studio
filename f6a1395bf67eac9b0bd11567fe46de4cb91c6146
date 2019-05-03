@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da68bbed_e0e5963d",
+        "filename": "ds-compositionengine/src/main/resources/logback.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-05-03T10:03:00Z",
+      "side": 1,
+      "message": "new lines are not formatted.",
+      "range": {
+        "startLine": 69,
+        "startChar": 50,
+        "endLine": 69,
+        "endChar": 51
+      },
+      "revId": "f6a1395bf67eac9b0bd11567fe46de4cb91c6146",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
