@@ -66,9 +66,16 @@
 		<appender-ref ref="file-rolling" />
 		<includeCallerData>true</includeCallerData>
 	</appender>
+    <logger name="org.apache.http" level="INFO" /> 
+    <logger name="org.springframework" level="INFO" />
+    <logger name="org.springframework.web.HttpLogging" level="INFO" />
+    <logger name="org.acumos.cds.client.CommonDataServiceRestClientImpl" level="INFO" />
+    <logger name="springfox.documentation" level="INFO" />
+    <logger name="org.hibernate.validator" level="INFO" />
 
 	<!-- The root level is the default for all loggers, NOT a filter on any 
 		appender. This level can be set with property logging.level.root=LEVEL. -->
+		
 	<root level="DEBUG">
 	<appender-ref ref="file-async" />
 	<appender-ref ref="STDOUT" />
