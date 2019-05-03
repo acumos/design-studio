@@ -66,7 +66,7 @@ public class Application {
 	 * @throws ServiceException
 	 * 		This method throws Service Exception
 	 */
-	@Scheduled(cron = "* * */6 * * *")
+	@Scheduled(cron = "* */6 * * * *")
 	public void ExecuteForHour() throws ServiceException {
 		logger.debug("Scheduled on ExecuteForHour() Begin ");
 		try {
