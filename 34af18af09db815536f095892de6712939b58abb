@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b02c8be_2beea2a1",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/Application.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-05-03T10:32:15Z",
+      "side": 1,
+      "message": "Please keep it 6 hr. and not 12 hr.",
+      "range": {
+        "startLine": 69,
+        "startChar": 24,
+        "endLine": 69,
+        "endChar": 26
+      },
+      "revId": "34af18af09db815536f095892de6712939b58abb",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
