@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f93de56_e6a95338",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/CompositeSolutionProtoFileGeneratorServiceImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-05-27T16:33:23Z",
+      "side": 1,
+      "message": "License is missing",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 7
+      },
+      "revId": "77c2ad1b55d4a3ba43b2bd56eb4618dd36e56d7b",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2c4982f8_a1b14d31",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/SolutionControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1333,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-05-27T16:33:23Z",
+      "side": 1,
+      "message": "Please remove commented code, if its not required",
+      "range": {
+        "startLine": 1333,
+        "startChar": 0,
+        "endLine": 1333,
+        "endChar": 3
+      },
+      "revId": "77c2ad1b55d4a3ba43b2bd56eb4618dd36e56d7b",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
