@@ -1330,8 +1330,8 @@ public class SolutionControllerTest {
 			when(cmnDataService.getSolutionRevisions("c4600a07-d443-4ec6-a567-1d01563823d1")).thenReturn(mlpSolRevisions);
 			when(props.getGdmType()).thenReturn("MLModel");
 			when(props.getModelImageArtifactType()).thenReturn("MI");
-			when(cspfgService.getPayload(Mockito.anyString(), Mockito.anyString(),props.getModelImageArtifactType(), "proto")).thenReturn("dummy");
-			when(cspfgService.parseProtobuf("dummy")).thenReturn(proto);
+			//when(cspfgService.getPayload(Mockito.anyString(), Mockito.anyString(),props.getModelImageArtifactType(), "proto")).thenReturn("dummy");
+			//when(cspfgService.parseProtobuf("dummy")).thenReturn(proto);
 			when(cmnDataService.getSolutionRevisionArtifacts("c4600a07-d443-4ec6-a567-1d01563823d1", "3232")).thenReturn(mlpArtifactList);
 			
 			

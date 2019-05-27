@@ -1097,9 +1097,6 @@ public class SolutionServiceImpl implements ISolutionService {
 				}
 				
 			}
-			if(cnt == 1){
-				dss.setSolutionRevisionId("");
-			}
 			result.add(dss);
 		}
 		return result;
