@@ -496,7 +496,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 	}
 	
 	private boolean getIsNested(List<MessageargumentList> messagearguments) {
-		logger.debug("getIsNested() Begin ");
 		boolean isNestedMessage = false;
 		ComplexType complexType = null;
 		for(MessageargumentList msgargument : messagearguments) {
@@ -506,7 +505,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 				break;
 			}
 		}
-		logger.debug("getIsNested() End ");
 		return isNestedMessage;
 	}
 	
