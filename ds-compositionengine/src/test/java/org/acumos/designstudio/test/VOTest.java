@@ -35,11 +35,37 @@ import org.acumos.designstudio.ce.util.ConfigurationProperties;
 import org.acumos.designstudio.ce.vo.DSSolution;
 import org.acumos.designstudio.ce.vo.MatchingModel;
 import org.acumos.designstudio.ce.vo.SuccessErrorMessage;
+import org.acumos.designstudio.ce.vo.blueprint.BPCollatorMap;
+import org.acumos.designstudio.ce.vo.blueprint.BPDataBrokerMap;
+import org.acumos.designstudio.ce.vo.blueprint.BPSplitterMap;
 import org.acumos.designstudio.ce.vo.blueprint.BaseOperationSignature;
 import org.acumos.designstudio.ce.vo.blueprint.BluePrint;
 import org.acumos.designstudio.ce.vo.blueprint.Container;
+import org.acumos.designstudio.ce.vo.blueprint.DataSource;
 import org.acumos.designstudio.ce.vo.blueprint.Node;
+import org.acumos.designstudio.ce.vo.blueprint.NodeOperationSignature;
+import org.acumos.designstudio.ce.vo.blueprint.OperationSignatureList;
+import org.acumos.designstudio.ce.vo.blueprint.ProbeIndicator;
 import org.acumos.designstudio.ce.vo.cdump.Capability;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorInputField;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapInput;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapOutput;
+import org.acumos.designstudio.ce.vo.cdump.collator.CollatorOutputField;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBInputField;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapInput;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBMapOutput;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBOTypeAndRoleHierarchy;
+import org.acumos.designstudio.ce.vo.cdump.databroker.DBOutputField;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterInputField;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapInput;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterMapOutput;
+import org.acumos.designstudio.ce.vo.cdump.splitter.SplitterOutputField;
+import org.acumos.designstudio.ce.vo.compositeproto.Protobuf;
+import org.acumos.designstudio.ce.vo.compositeproto.ProtobufMessage;
+import org.acumos.designstudio.ce.vo.compositeproto.ProtobufMessageField;
+import org.acumos.designstudio.ce.vo.compositeproto.ProtobufOption;
+import org.acumos.designstudio.ce.vo.compositeproto.ProtobufService;
+import org.acumos.designstudio.ce.vo.compositeproto.ProtobufServiceOperation;
 import org.acumos.designstudio.ce.vo.tgif.Artifact;
 import org.acumos.designstudio.ce.vo.tgif.Auxiliary;
 import org.acumos.designstudio.ce.vo.tgif.Call;
@@ -161,15 +187,252 @@ public class VOTest  {
 		n.getContainer_name();
 		n.setImage("BPDI");
 		n.getImage();
+		n.setNode_type("MLModel");
+		n.getNode_type();
+		n.setProto_uri("ProtoURI");
+		n.getProto_uri();
 		
-		nodeList.add(n);
+		
+		
+		BPCollatorMap bpcm = new BPCollatorMap();
+		bpcm.setCollator_type("Array-based");
+		bpcm.getCollator_type();
+		bpcm.setOutput_message_signature("output");
+		bpcm.getOutput_message_signature();
+		
+		CollatorMapInput cmi = new CollatorMapInput();
+		CollatorInputField cif = new CollatorInputField();
+		cif.setError_indicator("false");
+		cif.getError_indicator();
+		cif.setMapped_to_field("Yes");
+		cif.getMapped_to_field();
+		cif.setMessage_signature("signature");
+		cif.getMessage_signature();
+		cif.setParameter_name("ParamName");
+		cif.getParameter_name();
+		cif.setParameter_role("Role");
+		cif.getParameter_role();
+		cif.setParameter_tag("Tag");
+		cif.getParameter_tag();
+		cif.setParameter_type("Type");
+		cif.getParameter_type();
+		cif.setSource_name("Source");
+		cif.getSource_name();
+		cmi.setInput_field(cif);
+		cmi.getInput_field();
+		List<CollatorMapInput> cmiList = new ArrayList<>();
+		cmiList.add(cmi);
+		
+		CollatorMapInput[] cmiArray = new CollatorMapInput[cmiList.size()];
+		cmiArray = cmiList.toArray(cmiArray);
+		bpcm.setMap_inputs(cmiArray);
+		bpcm.getMap_inputs();
+		
+		CollatorMapOutput cmo = new CollatorMapOutput();
+		CollatorOutputField cof = new CollatorOutputField();
+		cof.setParameter_name("Name");
+		cof.getParameter_name();
+		cof.setParameter_role("Role");
+		cof.getParameter_role();
+		cof.setParameter_tag("Tag");
+		cof.getParameter_tag();
+		cof.setParameter_type("Type");
+		cof.getParameter_type();
+		cmo.setOutput_field(cof);
+		cmo.getOutput_field();
+		List<CollatorMapOutput> cmoList = new ArrayList<>();
+		cmoList.add(cmo);
+		
+		CollatorMapOutput[] cmoArray = new CollatorMapOutput[cmoList.size()];
+		cmoArray = cmoList.toArray(cmoArray);
+		bpcm.setMap_outputs(cmoArray);
+		bpcm.getMap_outputs();
+		n.setCollator_map(bpcm);
+		n.getCollator_map();
+		
+		BPSplitterMap splMap = new BPSplitterMap();
+		splMap.setInput_message_signature("input_msg_signature");
+		splMap.getInput_message_signature();
+		splMap.setSplitter_type("Array-Based");
+		splMap.getSplitter_type();
+
+		// SplitterMapInputs
+		SplitterMapInput smi = new SplitterMapInput();
+		// need to set Input Field
+		SplitterInputField sif = new SplitterInputField();
+		sif.setParameter_name("PName");
+		sif.getParameter_name();
+		sif.setParameter_tag("PTag");
+		sif.getParameter_tag();
+		sif.setParameter_type("PType");
+		sif.getParameter_type();
+		sif.setParameter_role("PRole");
+		sif.getParameter_role();
+		smi.setInput_field(sif);
+		smi.getInput_field();
+		// Take a List of SplitterMapInput to convert it into Array
+		List<SplitterMapInput> smiList = new ArrayList<SplitterMapInput>();
+		smiList.add(smi);
+		SplitterMapInput[] map_inputs = smiList.toArray(new SplitterMapInput[smiList.size()]);
+
+		splMap.setMap_inputs(map_inputs);
+		splMap.getMap_inputs();
+
+		// SplitterMapOutput
+		SplitterMapOutput smo = new SplitterMapOutput();
+		SplitterOutputField sof = new SplitterOutputField();
+		sof.setTarget_name("parameter name in Source Protobuf file");
+		sof.getTarget_name();
+		sof.setParameter_type("name of parameter");
+		sof.getParameter_type();
+		sof.setParameter_name("parameter name");
+		sof.getParameter_name();
+		sof.setParameter_tag("tag number");
+		sof.getParameter_tag();
+		sof.setError_indicator("False");
+		sof.getError_indicator();
+		sof.setParameter_role("Role");
+		sof.getParameter_role();
+		sof.setMapped_to_field("tag number of the field");
+		sof.getMapped_to_field();
+		sof.setMessage_signature("MsgSignature");
+		sof.getMessage_signature();
+		smo.setOutput_field(sof);
+		smo.getOutput_field();
+		List<SplitterMapOutput> smoList = new ArrayList<SplitterMapOutput>();
+		smoList.add(smo);
+		SplitterMapOutput[] map_outputs = smoList.toArray(new SplitterMapOutput[smoList.size()]);
+		splMap.setMap_outputs(map_outputs);
+		splMap.getMap_outputs();
+			
+		n.setSplitter_map(splMap);
+		n.getSplitter_map();
+		
+		BPDataBrokerMap bpDBMap = new BPDataBrokerMap();
+		bpDBMap.setScript("this is the script");
+		bpDBMap.getScript();
+		bpDBMap.setCsv_file_field_separator(",");
+		bpDBMap.getCsv_file_field_separator();
+		bpDBMap.setData_broker_type("SQLDataBroker1");
+		bpDBMap.getData_broker_type();
+		bpDBMap.setFirst_row("Yes");
+		bpDBMap.getFirst_row();
+		bpDBMap.setLocal_system_data_file_path("localpath");
+		bpDBMap.getLocal_system_data_file_path();
+		bpDBMap.setTarget_system_url("remoteurl");
+		bpDBMap.getTarget_system_url();
+		bpDBMap.setUser_id("UserId");
+		bpDBMap.getUser_id();
+		bpDBMap.setDatabase_name("FileSystemDataBase");
+		bpDBMap.getDatabase_name();
+		bpDBMap.setJdbc_driver_data_source_class_name("openjpa.jdbc.Schema");
+		bpDBMap.getJdbc_driver_data_source_class_name();
+		bpDBMap.setLocal_system_data_file_path("localpath");
+		bpDBMap.getLocal_system_data_file_path();
+		bpDBMap.setPassword("password");
+		bpDBMap.getPassword();
+		bpDBMap.setProtobufFile("protobufFile");
+		bpDBMap.getProtobufFile();
+		bpDBMap.setTable_name("MLPSOLUTION");
+		bpDBMap.getTable_name();
+
+		// DataBrokerMap Input List
+		List<DBMapInput> dbmapInputLst = new ArrayList<DBMapInput>();
+		DBMapInput dbMapInput = new DBMapInput();
+		DBInputField dbInField = new DBInputField();
+
+		dbInField.setChecked("Yes");
+		dbInField.getChecked();
+		dbInField.setMapped_to_field("1.2");
+		dbInField.getMapped_to_field();
+		dbInField.setName("Name of SourceField");
+		dbInField.getName();
+		dbInField.setType("Float");
+		dbInField.getType();
+		dbInField.toString();
+		dbMapInput.setInput_field(dbInField);
+		dbMapInput.getInput_field();
+		dbMapInput.toString();
+		dbmapInputLst.add(dbMapInput);
+		DBMapInput[] dbMap_Inputs = new DBMapInput[dbmapInputLst.size()];
+		dbMap_Inputs = dbmapInputLst.toArray(dbMap_Inputs);
+
+		bpDBMap.setMap_inputs(dbMap_Inputs);
+		bpDBMap.getMap_inputs();
+		bpDBMap.toString();
+
+		// DataBrokerMap Output List
+		List<DBMapOutput> dbmapOutputLst = new ArrayList<DBMapOutput>();
+		DBMapOutput dbMapOutput = new DBMapOutput();
+		DBOutputField dbOutField = new DBOutputField();
+
+		dbOutField.setName("sepal_len");
+		dbOutField.getName();
+		dbOutField.setTag("1.3");
+		dbOutField.getTag();
+		dbOutField.toString();
+
+		List<DBOTypeAndRoleHierarchy> dboList = new ArrayList<DBOTypeAndRoleHierarchy>();
+		DBOTypeAndRoleHierarchy dboTypeAndRole = new DBOTypeAndRoleHierarchy();
+		DBOTypeAndRoleHierarchy[] dboTypeAndRoleHierarchyArr = null;
+
+		dboTypeAndRole.setName("DataFrameRow");
+		dboTypeAndRole.getName();
+		dboTypeAndRole.setRole("Repeated");
+		dboTypeAndRole.getRole();
+		dboTypeAndRole.toString();
+		dboList.add(dboTypeAndRole);
+		dboTypeAndRoleHierarchyArr = new DBOTypeAndRoleHierarchy[dboList.size()];
+		dboTypeAndRoleHierarchyArr = dboList.toArray(dboTypeAndRoleHierarchyArr);
+
+		dbOutField.setType_and_role_hierarchy_list(dboTypeAndRoleHierarchyArr);
+		dbOutField.getType_and_role_hierarchy_list();
+		dbMapOutput.setOutput_field(dbOutField);
+		dbMapOutput.getOutput_field();
+		dbMapOutput.toString();
+		dbmapOutputLst.add(dbMapOutput);
+
+		DBMapOutput[] dbMapOutputArr = new DBMapOutput[dbmapOutputLst.size()];
+		dbMapOutputArr = dbmapOutputLst.toArray(dbMapOutputArr);
+
+		bpDBMap.setMap_outputs(dbMapOutputArr);
+		bpDBMap.getMap_outputs();
+		bpDBMap.toString();
+		n.setData_broker_map(bpDBMap);
+		n.getData_broker_map();
+		
+		
 		
 		bp.setNodes(nodeList);
 		bp.getNodes();
 		
+	
 		Container con = new Container();
 		con.setContainer_name("BluePrint");
 		con.getContainer_name();
+		
+		List<Container> containerList = new ArrayList<>();
+		containerList.add(con);
+		bp.setInput_ports(containerList);
+		bp.getInput_ports();
+		
+	
+		
+		ProbeIndicator probe = new ProbeIndicator();
+		probe.setValue("1");
+		probe.getValue();
+		List<ProbeIndicator> probeList = new ArrayList<>();
+		probeList.add(probe);
+		bp.setProbeIndicator(probeList);
+		bp.getProbeIndicator();
+		
+		NodeOperationSignature nos = new NodeOperationSignature();
+		nos.setInput_message_name("Input");
+		nos.getInput_message_name();
+		nos.setOperation_name("Operation");
+		nos.getOperation_name();
+		nos.setOutput_message_name("output");
+		nos.getOutput_message_name();
 		
 		BaseOperationSignature bos = new BaseOperationSignature();
 		bos.setOperation_name("transform");
@@ -178,14 +441,32 @@ public class VOTest  {
 		con.setOperation_signature(bos);
 		con.getOperation_signature();
 		
+		DataSource ds = new DataSource();
+		ds.setName("DataSource");
+		ds.getName();
+		ds.setOperation_signature(bos);
+		ds.getOperation_signature();
+		List<DataSource> dataSourceList = new ArrayList<>();
+		dataSourceList.add(ds);
 		
 		List<Container> donList = new ArrayList<>();
 		donList.add(con);
 		
-		n.setContainer_name("Aggregate");
+		OperationSignatureList osl = new OperationSignatureList();
+		osl.setConnected_to(containerList);
+		osl.getConnected_to();
+		osl.setOperation_signature(nos);
+		osl.getOperation_signature();
+		List<OperationSignatureList> oslList = new ArrayList<>();
+		oslList.add(osl);
+		n.setOperation_signature_list(oslList);
+		n.getOperation_signature_list();
 		
-		logger.info(bp.toString());
+	
+		n.setData_sources(dataSourceList);
+		n.getData_sources();
 		
+		nodeList.add(n);
 		assertNotNull(bp);
 		assertEquals("BluePrint", bp.getName());
 
@@ -409,6 +690,74 @@ public class VOTest  {
 		successErrorMessage.setErrorMessage("400");
 		
 		assertNotNull(successErrorMessage);
+	}
+	
+	@Test
+	public void protobufTest(){
+		Protobuf proto = new Protobuf();
+		ProtobufMessage pMsg = new ProtobufMessage();
+		pMsg.setName("RegionDetectionSet");
+		pMsg.getName();
+		ProtobufMessageField pmf = new ProtobufMessageField();
+		pmf.setName("RegionDetections");
+		pmf.getName();
+		pmf.setRole("repeated");
+		pmf.getRole();
+		pmf.setTag(1);
+		pmf.getTag();
+		pmf.setType("RegionDetection");
+		pmf.getType();
+		List<ProtobufMessageField> pmfList = new ArrayList<>();
+		pmfList.add(pmf);
+		pMsg.setFields(pmfList);
+		pMsg.getFields();
+		
+		List<ProtobufMessage> pmList = new ArrayList<>();
+		pmList.add(pMsg);
+		proto.setMessages(pmList);
+		proto.getMessages();
+		
+		ProtobufOption pOption = new ProtobufOption();
+		pOption.setName("RegionDetections");
+		pOption.getName();
+		pOption.setValue("1");
+		pOption.getValue();
+		List<ProtobufOption> poList = new ArrayList<>();
+		poList.add(pOption);
+		proto.setOptions(poList);
+		proto.getOptions();
+		
+		proto.setPackageName("UbENTnRTKDmvMUwJokNTcYjStUylzrBO");
+		proto.getPackageName();
+		
+		ProtobufService service = new ProtobufService();
+		service.setName("RegionDetectionData");
+		service.getName();
+		
+		ProtobufServiceOperation pso = new ProtobufServiceOperation();
+		pso.setName("xfer_face_data");
+		pso.getName();
+		pso.setType("rpc");
+		pso.getType();
+		List<String> outputList = new ArrayList<String>();
+		outputList.add("RegionDetectionSet");
+		pso.setOutputMessageNames(outputList);
+		pso.getOutputMessageNames();
+		List<String> inputList = new ArrayList<>();
+		inputList.add("RegionDetectionData");
+		pso.setInputMessageNames(inputList);
+		pso.getInputMessageNames();
+		List<ProtobufServiceOperation> psoList = new ArrayList<>();
+		psoList.add(pso);
+		service.setOperations(psoList);
+		service.getOperations();
+		proto.setService(service);
+		proto.getService();
+		proto.setSyntax("proto3");
+		proto.getSyntax();
+		proto.getMessage(".RegionDetectionSet");
+		
+		proto.toString();
 	}
 	
 }
