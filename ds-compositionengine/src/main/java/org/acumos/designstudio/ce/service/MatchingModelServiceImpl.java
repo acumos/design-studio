@@ -88,9 +88,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 
 	private final ObjectMapper mapper = new ObjectMapper();
 	
-	List<DSModelVO> models = null;
-	
-	
 	@Override
 	public List<DSModelVO> getPublicDSModels() throws ServiceException {
 		logger.debug("getPublicDSModels() Begin ");
@@ -104,7 +101,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 
 		for (int i = 0; i < cdsCheckAttempt; i++) {
 			try {
-				
+		
 				RestPageResponse<MLPSolution> pageResponse = cmnDataService.searchSolutions(queryParameters, false,
 						new RestPageRequest(0, confprops.getSolutionResultsetSize()));
 				mlpSolutionsList = pageResponse.getContent();
@@ -255,7 +252,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 		result = (HashMap<KeyVO, List<ModelDetailVO>>) modelCacheForMatching.getPublicModelCache();
 		
 		if(null != dsModels	&& !dsModels.isEmpty() && null != result && !result.isEmpty()){
-			
 			List<MLPArtifact> mlpArtifacts = null;
 			Tgif tgif = null;
 			KeyVO key = null;
@@ -266,7 +262,7 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 			String tgifFileNexusURI = null;
 			boolean isNestedMessage = false;
 			int numberOfFields = 0;
-			for(DSModelVO model : models ){
+			for(DSModelVO model : dsModels){
 				List<MLPSolutionRevision> mlpSolRevisions = model.getMlpSolutionRevisions();
 				for(MLPSolutionRevision mlpSolRevision : mlpSolRevisions ){
 					mlpArtifacts = cmnDataService.getSolutionRevisionArtifacts(mlpSolRevision.getSolutionId(), mlpSolRevision.getRevisionId());
