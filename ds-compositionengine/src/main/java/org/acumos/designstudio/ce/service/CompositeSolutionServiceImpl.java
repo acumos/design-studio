@@ -172,6 +172,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				Boolean solutionsExists = false;
 				Map<String, Object> queryParameters = new HashMap<String, Object>();
 				queryParameters.put("name", dscs.getSolutionName());
+				queryParameters.put("active", true);
 				RestPageRequest restPageRequets = new RestPageRequest(0,props.getSolutionResultsetSize());
 				//Code changes are to match the change in the CDS API Definition searchSolution in version 1.13.x
 				RestPageResponse<MLPSolution> pageResponse = cdmsClient.searchSolutions(queryParameters, false, restPageRequets);

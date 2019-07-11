@@ -24,6 +24,10 @@ The Design Studio Composition Engine is packaged within a Docker image and avail
 Acumos docker registry.  The TOSCAGenerator Client library is published in the Acumos Nexus
 repository as a jar file.
 
+Version 2.2.0, 2019-07-12
+---------------------------
+* ACUMOS-3132 : Composite solution deleted from Portal doesn't allow Design Studio to create new composite solution with same name
+
 Version 2.1.0, 2019-05-30
 ---------------------------
 * ACUMOS-2844 : ds-compositionengine log output uses 100s of GB, fills disk.
