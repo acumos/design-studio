@@ -179,14 +179,20 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				List<MLPSolutionRevision> mlpSolnRevision;
 				if (null != mlpSolutions && !mlpSolutions.isEmpty()) {
 					for (MLPSolution mlpSol : mlpSolutions) {
-						mlpSolnRevision = cdmsClient.getSolutionRevisions(mlpSol.getSolutionId());
-						if (null != mlpSolnRevision && !mlpSolnRevision.isEmpty()) {
-							for (MLPSolutionRevision mlpSolRev : mlpSolnRevision) {
-								if (mlpSolRev.getVersion().equalsIgnoreCase(dscs.getVersion())) {
-									solutionsExists = true;
+						boolean isSolutionActive = mlpSol.isActive();
+							mlpSolnRevision = cdmsClient.getSolutionRevisions(mlpSol.getSolutionId());
+							if (null != mlpSolnRevision && !mlpSolnRevision.isEmpty()) {
+								for (MLPSolutionRevision mlpSolRev : mlpSolnRevision) {
+									if (mlpSolRev.getVersion().equalsIgnoreCase(dscs.getVersion())) {
+										if(!isSolutionActive){
+											break;
+										}else {
+											solutionsExists = true;
+										}
+										
+									}
 								}
 							}
-						}
 					}
 				}
 				if (solutionsExists) {
