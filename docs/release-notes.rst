@@ -26,7 +26,8 @@ repository as a jar file.
 
 Version 2.2.0, 2019-07-12
 ---------------------------
-* ACUMOS-3132 : Composite solution deleted from Portal doesn't allow Design Studio to create new composite solution with same name
+* ACUMOS-3132 : Composite solution deleted from Portal doesn't allow Design Studio to create new composite solution with same name.
+* ACUMOS-1206 : Sonar 40% code coverage for Design Studio project.
 
 Version 2.1.0, 2019-05-30
 ---------------------------
