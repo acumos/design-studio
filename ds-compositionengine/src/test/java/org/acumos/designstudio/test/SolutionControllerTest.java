@@ -153,7 +153,7 @@ public class SolutionControllerTest {
 	
 	@Mock
 	ConfigurationProperties confprops;
-
+	
 	@Mock
     CommonDataServiceRestClientImpl cmnDataService;
 
@@ -231,12 +231,6 @@ public class SolutionControllerTest {
 	 * @throws Exception
 	 */
 	public void setUp() throws Exception {
-	    /*CONFIG.load(SolutionControllerTest.class.getResourceAsStream("/application.properties"));
-		url = CONFIG.getProperty("cmndatasvc.cmndatasvcendpoinurlTest");
-		user = CONFIG.getProperty("cmndatasvc.cmndatasvcuserTest");
-		pass = CONFIG.getProperty("cmndatasvc.cmndatasvcpwdTest");
-		nexusArtifactClient = getNexusClient();
-		cmnDataService2 = CommonDataServiceRestClientImpl.getInstance(url.toString(), user, pass);*/
 		cmnDataService = mock(CommonDataServiceRestClientImpl.class);
 		MockitoAnnotations.initMocks(this);
 	}
@@ -1233,7 +1227,7 @@ public class SolutionControllerTest {
 	 */
 	public void validateCompositeSolution() throws URISyntaxException  {
 		CompositeSolutionServiceImpl csimpl = new CompositeSolutionServiceImpl();
-		
+	
 		
 		List<MLPSolutionRevision> mlpSolRevisions = new ArrayList<MLPSolutionRevision>();
 		MLPSolutionRevision mlpSolutionRevision = new MLPSolutionRevision();
@@ -3044,9 +3038,6 @@ public class SolutionControllerTest {
 			assertNotNull(result);
 		}
 
-	/**
-	 * @return
-	 */
 	private Ndata commonNdata() {
 		Ndata data = new Ndata();
 		data.setFixed(false);
@@ -3057,9 +3048,6 @@ public class SolutionControllerTest {
 		return data;
 	}
 
-	/**
-	 * @return
-	 */
 	private Requirements[] commonRequirements() {
 		Requirements req = new Requirements();
 		req.setName("ReqName");
@@ -3093,9 +3081,6 @@ public class SolutionControllerTest {
 		return reqArgs;
 	}
 
-	/**
-	 * @return
-	 */
 	private Capabilities[] commonCapabilities() {
 		Capabilities cap = new Capabilities();
 		cap.setId("1");
@@ -3148,161 +3133,50 @@ public class SolutionControllerTest {
 	/**
 	 * The test case is used set Probe Indicator
 	 */
-	public void isValidJsonSchemaTest()  {
-
+	public void isValidJsonSchemaTest() {
 		InterceptorRegistry registry = new InterceptorRegistry();
 		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
 		try {
 			String path = DSUtil.readCdumpPath(userId, localpath);
-
 			String cdumpFileName = "acumos-cdump-111.json";
-			//when(confprops.getToscaOutputFolder()).thenReturn(localpath);
-			boolean flag = dsUtil.isValidJsonSchema(path+cdumpFileName);
+			// when(confprops.getToscaOutputFolder()).thenReturn(localpath);
+			boolean flag = dsUtil.isValidJsonSchema(path + cdumpFileName);
 			assertNotNull(flag);
 		} catch (Exception e) {
 		}
-		
-	}
-	
-
-	@Test
-	/**
-	 * The test case is used image FullNameFrom
-	 */
-	public void imageFullNameFrom()  {
-
-		InterceptorRegistry registry = new InterceptorRegistry();
-		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
-		try {
-			String registryStr = "{\"url\":\"http://cognita-nexus01:8001/\",\"username\": \"cognita_model_rw\",\"password\": \"not4you\",\"email\": \"admin@cognita.com\"}";
-			String repoAndImg = "test.image";
-			String tag = "test";
-			
-			String result = commandUtils.imageFullNameFrom(registryStr, repoAndImg, tag);
-			assertNotNull(result);
-			
-			
-		} catch (Exception e) {
-		}
-		
-	}
-	
-	@Test
-	/**
-	 * The test case add latest Tag
-	 */
-	public void addLatestTagIfNeeded()  {
-
-		InterceptorRegistry registry = new InterceptorRegistry();
-		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
-		try {
-			String fullImageName = "cognita_model_rw.jpg";
-			
-			String result = commandUtils.addLatestTagIfNeeded(fullImageName);
-			assertNotNull(result);
-			
-		} catch (Exception e) {
-		}
-		
-	}
-	
-	@Test
-	/**
-	 * The test case for sizeInBytes
-	 */
-	public void sizeInBytes()  {
-
-		InterceptorRegistry registry = new InterceptorRegistry();
-		Mockito.doNothing().when(handlerInterceptorConfiguration).addInterceptors(registry);
-		try {
-			
-			long result = commandUtils.sizeInBytes("1");
-			assertNotNull(result);
-			
-		} catch (Exception e) {
-		}
-		
-	}
-	
-	@Test
-	/**
-	 * The test case is for dockerConfiguration
-	 */
-	public void dockerConfiguration()  {
-		try {
-			dockerConfiguration.getConfig();	
-			
-			dockerConfiguration.toUrl(); 				 
-
-			dockerConfiguration.getApiVersion();
-
-			dockerConfiguration.getHost();
-
-			dockerConfiguration.getPort(); 
-
-			dockerConfiguration.getRegistryUsername();
-
-			dockerConfiguration.getRegistryPassword();
-			
-			dockerConfiguration.getImagetagPrefix();
-			
-			dockerConfiguration.getRegistryUrl();
-
-			dockerConfiguration.getRegistryEmail();
-			
-			dockerConfiguration.getRequestTimeout();
-
-			dockerConfiguration.setRequestTimeout(1);
-			 
-			dockerConfiguration.isTlsVerify();
-
-			dockerConfiguration.getCertPath();
-
-			dockerConfiguration.isSocket();
-
-			dockerConfiguration.getCmdExecFactory();
-
-			dockerConfiguration.getMaxTotalConnections();
-
-			dockerConfiguration.getMaxPerRouteConnections();
-
-			
-		} catch (Exception e) {
-		}
-		
 	}
 	
 	@Test
 	/**
 	 * The test case is configuration
 	 */
-	public void configuration()  {
+	public void configuration() {
 		try {
-			
-			property.getSplitterType();	
-			
-			property.setSplitterType("Test"); 				 
+
+			property.getSplitterType();
+
+			property.setSplitterType("Test");
 
 			property.getCollatorType();
 
 			property.setCollatorType("Test");
 
-			property.getDefaultCollatorType(); 
+			property.getDefaultCollatorType();
 
 			property.setDefaultCollatorType("Test");
 
 			property.getDefaultSplitterType();
-			
+
 			property.setDefaultSplitterType("Test");
-			
+
 			property.getProtobuffFileExtention();
 
 			property.getModelImageArtifactType();
-			
+
 			property.getGdmType();
 
 			property.getDatabrokerType();
-			 
+
 			property.getBlueprintArtifactType();
 
 			property.getSolutionResultsetSize();
@@ -3314,7 +3188,7 @@ public class SolutionControllerTest {
 			property.getFieldMapping();
 
 			property.getProtobufjar();
-			
+
 			property.getPackagepath();
 			property.getClassName();
 			property.getProtobufFileName();
@@ -3336,12 +3210,8 @@ public class SolutionControllerTest {
 			property.getArtifactType();
 			property.getCompositSolutiontoolKitTypeCode();
 			property.getProtoArtifactType();
-			
-
-			
 		} catch (Exception e) {
 		}
-		
 	}
 }
 
