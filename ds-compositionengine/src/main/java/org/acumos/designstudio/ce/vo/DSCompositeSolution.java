@@ -72,13 +72,15 @@ public class DSCompositeSolution extends DSSolution {
 	 *            Composite ID
 	 * @param ignoreLesserVersionConflictFlag
 	 *            Boolean
+	 * @param isDuplicateSolution
+	 * 				boolean
 	 */
 	public DSCompositeSolution(String solutionId, String solutionRevisionId, String solutionName, String version,
 			String onBoarder, String author, String provider, String toolKit, String category, String description,
 			String visibilityLevel, String createdDate, String modifiedDate, String icon, String cId,
-			boolean ignoreLesserVersionConflictFlag) {
+			boolean ignoreLesserVersionConflictFlag, boolean isDuplicateSolution) {
 		super(solutionId, solutionRevisionId, solutionName, version, onBoarder, author, provider, toolKit, category,
-				description, visibilityLevel, createdDate, modifiedDate, icon);
+				description, visibilityLevel, createdDate, modifiedDate, icon, isDuplicateSolution);
 		this.cId = cId;
 		this.ignoreLesserVersionConflictFlag = ignoreLesserVersionConflictFlag;
 

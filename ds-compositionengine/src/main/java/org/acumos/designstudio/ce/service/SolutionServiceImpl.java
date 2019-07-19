@@ -1092,7 +1092,8 @@ public class SolutionServiceImpl implements ISolutionService {
                 } else if(dss.getSolutionName().equals(dss1.getSolutionName()) && dss.getVersion().equals(dss1.getVersion())){
 					cnt++;
 				}
-                if(cnt == 2){  //indicating that same solution name and version appeared twice, so no need to check further 
+                if(cnt == 2){  //indicating that same solution name and version appeared twice, so no need to check further
+                	dss.setDuplicateSolution(true);
 					break;
 				}
 				

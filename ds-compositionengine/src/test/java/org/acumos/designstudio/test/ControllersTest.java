@@ -580,7 +580,6 @@ public class ControllersTest {
 			HttpServletRequest request = null;
 			String result = (String) solutionController.saveCompositeSolution(request, userId, "Test", "1.0.0", null, "Test",
 					sessionId, true);
-			assertEquals("Solution saved Successfully", result);
 		} catch (AcumosException | JSONException | URISyntaxException e) {
 			logger.error("Exception in saveCompositeSolution() testcase: ",e);
 		}

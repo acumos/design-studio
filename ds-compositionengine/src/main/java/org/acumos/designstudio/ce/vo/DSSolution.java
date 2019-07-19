@@ -46,6 +46,7 @@ public class DSSolution implements Serializable {
 	private String createdDate;
 	private String modifiedDate;
 	private String icon; // the icon path.
+	private boolean isDuplicateSolution;
 
 	public DSSolution() {
 		super();
@@ -81,10 +82,12 @@ public class DSSolution implements Serializable {
 	 *            Date
 	 * @param icon
 	 *            Image
+	 * @param isDuplicateSolution 
+	 * 			boolean
 	 */
 	public DSSolution(String solutionId, String solutionRevisionId, String solutionName, String version,
 			String onBoarder, String author, String provider, String toolKit, String category, String description,
-			String visibilityLevel, String createdDate, String modifiedDate, String icon) {
+			String visibilityLevel, String createdDate, String modifiedDate, String icon, boolean isDuplicateSolution) {
 		super();
 
 		this.solutionId = solutionId;
@@ -99,6 +102,7 @@ public class DSSolution implements Serializable {
 		this.category = category;
 		this.description = description;
 		this.visibilityLevel = visibilityLevel;
+		this.isDuplicateSolution = isDuplicateSolution;
 	}
 
 	/**
@@ -314,13 +318,29 @@ public class DSSolution implements Serializable {
 	public void setVersion(String version) {
 		this.version = version;
 	}
+	
+	
+
+	/**
+	 * @return the isDuplicateSolution
+	 */
+	public boolean isDuplicateSolution() {
+		return isDuplicateSolution;
+	}
+
+	/**
+	 * @param isDuplicateSolution the isDuplicateSolution to set
+	 */
+	public void setDuplicateSolution(boolean isDuplicateSolution) {
+		this.isDuplicateSolution = isDuplicateSolution;
+	}
 
 	@Override
 	public String toString() {
 		return "DSSolution [solutionId=" + solutionId + "solutionRevisionId=" + solutionRevisionId + "name="
 				+ solutionName + ", version=" + version + ", onBoarder=" + onBoarder + ", author=" + author
 				+ ", provider=" + provider + ", toolKit=" + toolKit + ", category=" + category + ", description="
-				+ description + ", visibilityLevel=" + visibilityLevel + "]";
+				+ description + ", visibilityLevel=" + visibilityLevel + ", isDuplicateSolution=" + isDuplicateSolution + "]";
 	}
 
 	/**
@@ -334,7 +354,7 @@ public class DSSolution implements Serializable {
 				+ (null != provider ? provider.trim().replaceAll("[\n\r]", "") : provider) + "\", \"toolKit\":\""
 				+ toolKit + "\", \"category\":\"" + category + "\", \"description\":\""
 				+ (null != description ? description.trim().replaceAll("[\n\r]", "") : description)
-				+ "\", \"visibilityLevel\":\"" + visibilityLevel + "\", \"created\":\"" + createdDate
+				+ "\", \"visibilityLevel\":\"" + visibilityLevel + "\",  \"isDuplicateSolution\":\"" + isDuplicateSolution + "\" \"created\":\"" + createdDate
 				+ "\", \"icon\":\"" + icon + "\"}";
 	}
 
