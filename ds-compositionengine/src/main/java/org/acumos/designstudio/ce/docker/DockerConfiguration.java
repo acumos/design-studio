@@ -60,26 +60,25 @@ public class DockerConfiguration {
 
 	@Value("${docker.imagetag.prefix}")
 	private String imagetagPrefix;
-
-	/*
-	 * @Value("${}") 
-	 */
-	private Integer requestTimeout;
 	
 	@Value("${docker.tls.verify}")
 	private boolean tlsVerify;
+	
+	@Value("${docker.max_total_connections}")
+	private Integer maxTotalConnections;
 
+	@Value("${docker.max_per_route_connections}")
+	private Integer maxPerRouteConnections;
+
+	private Integer requestTimeout;
+	
 	private String certPath;
 
 	private boolean socket = false;
 
 	private String cmdExecFactory = "com.github.dockerjava.netty.NettyDockerCmdExecFactory";
 
-	@Value("${docker.max_total_connections}")
-	private Integer maxTotalConnections;
-
-	@Value("${docker.max_per_route_connections}")
-	private Integer maxPerRouteConnections;
+	
 
 	public String getConfig() {
 		return config;
@@ -103,8 +102,16 @@ public class DockerConfiguration {
 		return apiVersion;
 	}
 
+	public void setHost(String host) {
+		this.host = host;
+	}
+
 	public String getHost() {
 		return host;
+	}
+	
+	public void setPort(Integer port) {
+		this.port = port;
 	}
 
 	public Integer getPort() {
@@ -149,6 +156,10 @@ public class DockerConfiguration {
 
 	public String getCertPath() {
 		return certPath;
+	}
+	
+	public void setSocket(boolean socket) {
+		this.socket = socket;
 	}
 
 	public boolean isSocket() {
