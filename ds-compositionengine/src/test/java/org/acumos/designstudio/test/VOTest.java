@@ -25,6 +25,7 @@ package org.acumos.designstudio.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ import org.acumos.designstudio.ce.vo.blueprint.NodeOperationSignature;
 import org.acumos.designstudio.ce.vo.blueprint.OperationSignatureList;
 import org.acumos.designstudio.ce.vo.blueprint.ProbeIndicator;
 import org.acumos.designstudio.ce.vo.cdump.Capability;
+import org.acumos.designstudio.ce.vo.cdump.ComplexType;
 import org.acumos.designstudio.ce.vo.cdump.collator.CollatorInputField;
 import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapInput;
 import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapOutput;
@@ -66,6 +68,7 @@ import org.acumos.designstudio.ce.vo.compositeproto.ProtobufMessageField;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufOption;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufService;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufServiceOperation;
+import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
 import org.acumos.designstudio.ce.vo.tgif.Artifact;
 import org.acumos.designstudio.ce.vo.tgif.Auxiliary;
 import org.acumos.designstudio.ce.vo.tgif.Call;
@@ -758,6 +761,34 @@ public class VOTest  {
 		proto.getMessage(".RegionDetectionSet");
 		
 		proto.toString();
-	}
+		
+		/*MessageargumentList msgArg1 = new MessageargumentList();
+		msgArg1.setName("Name");
+		msgArg1.setRole("Role");
+		msgArg1.setTag("Tag");
+		msgArg1.setType("Type");
+		ComplexType complexType = new ComplexType();
+		
+		List<MessageargumentList> msgArgList = new ArrayList<MessageargumentList>();
+		msgArgList.add(msgArg1);
+		complexType.setMessageargumentList(msgArgList);
+		msgArg1.setComplexType(complexType);
+		
+		MessageargumentList msgArg2 = new MessageargumentList();
+		msgArg2.setName("Name");
+		msgArg2.setRole("Role");
+		msgArg2.setTag("Tag");
+		msgArg2.setType("Type");
+		ComplexType complexType1 = new ComplexType();
+		
+		List<MessageargumentList> msgArgList1 = new ArrayList<MessageargumentList>();
+		msgArgList1.add(msgArg2);
+		complexType1.setMessageargumentList(msgArgList1);
+		msgArg2.setComplexType(complexType1);
+		
+		assertEquals(msgArg2, msgArg1);
+		assertTrue( msgArg1.hashCode()==msgArg2.hashCode() );
+		//msgArg1.hashCode() == msgArg2.hashCode();
+*/	}
 	
 }
