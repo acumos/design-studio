@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a9c60190_511de9f9",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/GenericDataMapperServiceImplTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-07-23T11:37:56Z",
+      "side": 1,
+      "message": "remove commented code if not required",
+      "range": {
+        "startLine": 104,
+        "startChar": 10,
+        "endLine": 104,
+        "endChar": 24
+      },
+      "revId": "f7416818590b43b9aa17ec2263e4851dd3723e22",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "09a1ac80_67ff257a",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/VOTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-07-23T11:37:56Z",
+      "side": 1,
+      "message": "Please remove empty comment",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 3
+      },
+      "revId": "f7416818590b43b9aa17ec2263e4851dd3723e22",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab73290f_2e1a1e8d",
+        "filename": "ds-compositionengine/src/test/java/org/acumos/designstudio/test/VOTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-07-23T11:37:56Z",
+      "side": 1,
+      "message": "Please remove commented code, if not required.",
+      "range": {
+        "startLine": 765,
+        "startChar": 4,
+        "endLine": 765,
+        "endChar": 23
+      },
+      "revId": "f7416818590b43b9aa17ec2263e4851dd3723e22",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
