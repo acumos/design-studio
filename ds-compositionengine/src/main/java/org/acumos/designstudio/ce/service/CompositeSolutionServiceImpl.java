@@ -2583,6 +2583,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						dsSolution.setToolKit(mlpsol.getToolkitTypeCode());
 						// 7. Solution Category
 						dsSolution.setCategory(mlpsol.getModelTypeCode());
+						dsSolution.isDuplicateSolution();
 						dsSolutions.add(dsSolution);
 						strBuilder.append(dsSolution.toJsonString());
 						strBuilder.append(",");

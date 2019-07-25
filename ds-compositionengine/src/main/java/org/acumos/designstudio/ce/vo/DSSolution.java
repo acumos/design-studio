@@ -354,7 +354,7 @@ public class DSSolution implements Serializable {
 				+ (null != provider ? provider.trim().replaceAll("[\n\r]", "") : provider) + "\", \"toolKit\":\""
 				+ toolKit + "\", \"category\":\"" + category + "\", \"description\":\""
 				+ (null != description ? description.trim().replaceAll("[\n\r]", "") : description)
-				+ "\", \"visibilityLevel\":\"" + visibilityLevel + "\",  \"isDuplicateSolution\":\"" + isDuplicateSolution + "\" \"created\":\"" + createdDate
+				+ "\", \"visibilityLevel\":\"" + visibilityLevel + "\",  \"isDuplicateSolution\":\"" + isDuplicateSolution + "\", \"created\":\"" + createdDate
 				+ "\", \"icon\":\"" + icon + "\"}";
 	}
 
