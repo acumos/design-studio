@@ -23,11 +23,6 @@ package org.acumos.designstudio.toscagenerator.vo.protobuf;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * 
- * 
- *
- */
 public class Service implements Serializable {
    
 	private static final long serialVersionUID = -4847708638942802458L;

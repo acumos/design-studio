@@ -22,11 +22,6 @@ package org.acumos.designstudio.toscagenerator.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-/**
- * 
- * 
- *
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Artifact {
 
@@ -132,9 +127,4 @@ public class Artifact {
 		this.nexusURI = nexusURI;
 	}
 
-	/*
-	 * @Override public String toString(){ return "{name :" + name + ",type :" +
-	 * type + ",solutionID :" + solutionID + ",version :" + version + ",nexusURI :"
-	 * + nexusURI +",payloadURI :" + payloadURI +"}"; }
-	 */
 }

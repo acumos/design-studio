@@ -20,11 +20,6 @@
 
 package org.acumos.designstudio.toscagenerator.util;
 
-/**
- * 
- * 
- *
- */
 public class ConfigurationProperties {
 
 	private static ConfigurationProperties configurationProperties;
@@ -66,7 +61,7 @@ public class ConfigurationProperties {
 		this.cmnDataSvcPwd = cmnDataSvcPwd;
 	}
 
-	private ConfigurationProperties() {
+	public ConfigurationProperties() {
 
 	}
 

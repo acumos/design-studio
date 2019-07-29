@@ -24,11 +24,6 @@ import java.io.Serializable;
 
 import org.json.simple.JSONArray;
 
-/**
- * 
- * 
- *
- */
 public class Request implements Serializable {
 	private static final long serialVersionUID = 8483844197295612388L;
 

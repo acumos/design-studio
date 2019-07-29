@@ -22,15 +22,7 @@ package org.acumos.designstudio.toscagenerator.vo.protobuf;
 
 import java.io.Serializable;
 
-/**
- * 
- * 
- *
- */
 public class InputMessage implements Serializable {
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 4667774275328976156L;
 	
 	private String inputMessageName = "";

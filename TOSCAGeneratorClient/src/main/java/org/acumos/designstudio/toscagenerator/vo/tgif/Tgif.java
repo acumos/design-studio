@@ -22,11 +22,6 @@ package org.acumos.designstudio.toscagenerator.vo.tgif;
 
 import java.io.Serializable;
 
-/**
- * 
- * 
- *
- */
 public class Tgif implements Serializable {
 
 	private static final long serialVersionUID = 2032008896009138659L;

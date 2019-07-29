@@ -22,15 +22,8 @@ package org.acumos.designstudio.toscagenerator.vo.protobuf;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * @author AB00343130
- *
- */
 public class ComplexType implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8550690156793239836L;
 	
 	private String messageName ="";

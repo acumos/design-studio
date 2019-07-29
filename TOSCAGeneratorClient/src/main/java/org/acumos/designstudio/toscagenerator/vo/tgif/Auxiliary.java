@@ -22,19 +22,11 @@ package org.acumos.designstudio.toscagenerator.vo.tgif;
 
 import java.io.Serializable;
 
-/**
- * 
- * 
- *
- */
 public class Auxiliary implements Serializable{
 	
 	private static final long serialVersionUID = 464359521672306523L;
 	
 	private String temp;
-	
-	
-	
 	
 	/**
 	 * @return the temp
@@ -43,18 +35,12 @@ public class Auxiliary implements Serializable{
 		return temp;
 	}
 
-
-
-
 	/**
 	 * @param temp the temp to set
 	 */
 	public void setTemp(String temp) {
 		this.temp = temp;
 	}
-
-
-
 
 	public Auxiliary(){
 		

@@ -23,11 +23,6 @@ package org.acumos.designstudio.toscagenerator.vo.protobuf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * 
- * 
- *
- */
 public class MessageSortByTag implements SortComparator {
 	private static final Logger logger = LoggerFactory.getLogger(MessageSortByTag.class);
 	public int compare(MessageargumentList firstObject, MessageargumentList secondObject) {
