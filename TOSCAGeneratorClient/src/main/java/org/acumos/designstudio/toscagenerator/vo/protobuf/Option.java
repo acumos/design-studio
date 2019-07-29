@@ -22,16 +22,11 @@ package org.acumos.designstudio.toscagenerator.vo.protobuf;
 
 import java.io.Serializable;
 
-/**
- * 
- * 
- *
- */
 public class Option implements Serializable{
  
 	private static final long serialVersionUID = -8546454118094923717L;
 	private String key;
-       private String value;
+    private String value;
 	/**
 	 * @return the key
 	 */

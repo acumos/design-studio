@@ -22,11 +22,6 @@ package org.acumos.designstudio.toscagenerator.vo.protobuf;
 
 import java.io.Serializable;
 
-/**
- * 
- * @author *********
- *
- */
 public class MessageargumentList implements Serializable{
     
 	private static final long serialVersionUID = 3921037942106214981L;

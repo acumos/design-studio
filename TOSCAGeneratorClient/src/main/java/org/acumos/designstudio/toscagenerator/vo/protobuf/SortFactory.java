@@ -20,11 +20,6 @@
 
 package org.acumos.designstudio.toscagenerator.vo.protobuf;
 
-/**
- * 
- * 
- *
- */
 public class SortFactory {
 	 public static SortComparator getComparator(){
 		 return new MessageSortByTag();

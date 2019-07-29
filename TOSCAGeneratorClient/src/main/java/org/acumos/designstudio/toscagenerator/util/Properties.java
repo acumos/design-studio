@@ -27,11 +27,6 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * 
- * 
- *
- */
 public class Properties {
 	private static final Logger logger = LoggerFactory.getLogger(Properties.class);
 

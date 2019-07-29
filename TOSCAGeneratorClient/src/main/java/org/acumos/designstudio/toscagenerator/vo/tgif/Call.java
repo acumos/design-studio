@@ -22,20 +22,9 @@ package org.acumos.designstudio.toscagenerator.vo.tgif;
 
 import java.io.Serializable;
 
-/**
- * 
- * 
- *
- */
 public class Call implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2155426559340261877L;
-	/**
-	 * 
-	 */
 	
 	private String config_key;
 	private Request request;
@@ -46,6 +35,15 @@ public class Call implements Serializable{
 		
 	}
 	
+	/**
+	 * 
+	 * @param config_key
+	 * 			configKey
+	 * @param request
+	 * 			request
+	 * @param response
+	 * 			response
+	 */
 	public Call(String config_key, Request request, Response response) {
 		super();
 		this.config_key = config_key;

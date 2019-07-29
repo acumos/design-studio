@@ -25,7 +25,10 @@ import static org.junit.Assert.assertNotNull;
 import java.util.*;
 
 import org.acumos.designstudio.toscagenerator.util.EELFLoggerDelegator;
+import org.acumos.designstudio.toscagenerator.vo.Artifact;
 import org.acumos.designstudio.toscagenerator.vo.protobuf.*;
+import org.acumos.designstudio.toscagenerator.vo.tgif.Auxiliary;
+import org.acumos.designstudio.toscagenerator.vo.tgif.Parameter;
 import org.junit.Test;
 
 import com.google.gson.Gson;
@@ -43,11 +46,14 @@ public class ProtobufTest {
 	public void testProtobuf() throws Exception {
 		ProtoBufClass protoBufInstance = new ProtoBufClass();
 		protoBufInstance.setSyntax("proto3");
+		protoBufInstance.getSyntax();
 		protoBufInstance.setPackageName("java_package");
-
+		protoBufInstance.getPackageName();
 		Option option1 = new Option();
 		option1.setKey("java_package");
+		option1.getKey();
 		option1.setValue("com.google.protobuf");
+		option1.getValue();
 
 		Option option2 = new Option();
 		option2.setKey("java_outer_classname");
@@ -58,25 +64,12 @@ public class ProtobufTest {
 		listOfOption.add(option2);
 
 		protoBufInstance.setListOfOption(listOfOption);
-
+		protoBufInstance.getListOfOption();
+		
 		MessageBody messageBody = new MessageBody();
 		messageBody.setMessageName("DataFrame");
 
-		MessageargumentList messageargumentInstance1 = new MessageargumentList();
-		messageargumentInstance1.setRole("repeated");
-		messageargumentInstance1.setType("string");
-		messageargumentInstance1.setName("mime_type");
-		messageargumentInstance1.setTag("1");
-
-		MessageargumentList messageargumentInstance2 = new MessageargumentList();
-		messageargumentInstance2.setRole("repeated");
-		messageargumentInstance2.setType("int32");
-		messageargumentInstance2.setName("binary_stream");
-		messageargumentInstance2.setTag("2");
-
-		List<MessageargumentList> messageargumentList = new ArrayList<MessageargumentList>();
-		messageargumentList.add(messageargumentInstance1);
-		messageargumentList.add(messageargumentInstance2);
+		List<MessageargumentList> messageargumentList = getComplexType();
 
 		messageBody.setMessageargumentList(messageargumentList);
 
@@ -87,10 +80,12 @@ public class ProtobufTest {
 
 		Service service = new Service();
 		service.setName("Aggrgator");
-
+		service.getName();
 		Operation operation = new Operation();
 		operation.setOperationType("rpc");
+		operation.getOperationType();
 		operation.setOperationName("aggregate");
+		operation.getOperationName();
 
 		InputMessage inputMessage = new InputMessage();
 		inputMessage.setInputMessageName("DataFrame");
@@ -111,13 +106,89 @@ public class ProtobufTest {
 		listOfOperations.add(operation);
 
 		service.setListOfOperations(listOfOperations);
-
+		service.getListOfOperations();
 		protoBufInstance.setService(service);
 		assertNotNull(protoBufInstance);
 		Gson gson = new Gson();
 		String protoBufToJsonString = gson.toJson(protoBufInstance);
 		assertNotNull(protoBufToJsonString);
 		logger.info("protoBufToJsonString" + protoBufToJsonString);
+		
+		ComplexType cType = new ComplexType();
+		List<MessageargumentList> msgArgList = getComplexType();
+		cType.setMessageargumentList(msgArgList);
+		cType.getMessageargumentList();
+		cType.setMessageName("MsgName");
+		cType.getMessageName();
 
+	}
+	
+	@Test
+	public void ArtifactTest(){
+		Artifact arti = new Artifact();
+		arti.setContentLength(1);
+		arti.getContentLength();
+		arti.setExtension(".proto");
+		arti.getExtension();
+		arti.setName("Artifact");
+		arti.getName();
+		arti.setNexusURI("uri");
+		arti.getNexusURI();
+		arti.setPayloadURI("payloadUri");
+		arti.getPayloadURI();
+		arti.setSolutionID("1");
+		arti.getSolutionID();
+		arti.setType("Type");
+		arti.getType();
+		arti.setVersion("1");
+		arti.getVersion();
+		arti = new Artifact("Name", ".proto", "1", "1", "payloadUri", 1);
+	}
+	
+	@Test
+	public void messageSortTest(){
+		MessageargumentList messageargumentInstance1 = new MessageargumentList();
+		messageargumentInstance1.setRole("repeated");
+		messageargumentInstance1.setType("string");
+		messageargumentInstance1.setName("mime_type");
+		messageargumentInstance1.setTag("1");
+
+		MessageargumentList messageargumentInstance2 = new MessageargumentList();
+		messageargumentInstance2.setRole("repeated");
+		messageargumentInstance2.setType("int32");
+		messageargumentInstance2.setName("binary_stream");
+		messageargumentInstance2.setTag("2");
+		messageargumentInstance2.setComplexType(new ComplexType());
+		messageargumentInstance2.getComplexType();
+		
+		MessageSortByTag tag = new MessageSortByTag();
+		tag.compare(messageargumentInstance1, null);
+		
+		SortFactory factory = new SortFactory();
+		factory.getComparator();
+	}
+
+	private List<MessageargumentList> getComplexType() {
+		MessageargumentList messageargumentInstance1 = new MessageargumentList();
+		messageargumentInstance1.setRole("repeated");
+		messageargumentInstance1.setType("string");
+		messageargumentInstance1.setName("mime_type");
+		messageargumentInstance1.setTag("1");
+
+		MessageargumentList messageargumentInstance2 = new MessageargumentList();
+		messageargumentInstance2.setRole("repeated");
+		messageargumentInstance2.setType("int32");
+		messageargumentInstance2.setName("binary_stream");
+		messageargumentInstance2.setTag("2");
+		messageargumentInstance2.setComplexType(new ComplexType());
+		messageargumentInstance2.getComplexType();
+		
+		MessageSortByTag tag = new MessageSortByTag();
+		tag.compare(messageargumentInstance1, messageargumentInstance2);
+		
+		List<MessageargumentList> messageargumentList = new ArrayList<MessageargumentList>();
+		messageargumentList.add(messageargumentInstance1);
+		messageargumentList.add(messageargumentInstance2);
+		return messageargumentList;
 	}
 }

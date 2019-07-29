@@ -25,7 +25,10 @@ import static org.junit.Assert.*;
 import java.util.*;
 
 import org.acumos.designstudio.toscagenerator.util.EELFLoggerDelegator;
+import org.acumos.designstudio.toscagenerator.vo.tgif.Artifact;
+import org.acumos.designstudio.toscagenerator.vo.tgif.Auxiliary;
 import org.acumos.designstudio.toscagenerator.vo.tgif.Call;
+import org.acumos.designstudio.toscagenerator.vo.tgif.Parameter;
 import org.acumos.designstudio.toscagenerator.vo.tgif.Provide;
 import org.acumos.designstudio.toscagenerator.vo.tgif.Request;
 import org.acumos.designstudio.toscagenerator.vo.tgif.Response;
@@ -40,11 +43,6 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 
-/**
- * 
- * @author NB00350480
- *
- */
 public class TGIFTest {
 	private static final EELFLoggerDelegator logger = EELFLoggerDelegator.getLogger(TGIFTest.class);
 
@@ -65,28 +63,80 @@ public class TGIFTest {
 		Self selfObj = new Self();
 
 		selfObj.setVersion("1.1.1");
+		selfObj.getVersion();
+		
 		selfObj.setName("Gen");
+		selfObj.getName();
 		selfObj.setDescription("Tgif file test");
+		selfObj.getDescription();
 		selfObj.setComponent_type("Docker");
+		selfObj.getComponent_type();
+		
+		selfObj = new Self("1", "Name", "Description", "ComponentType");
 
 		tgif.setSelf(selfObj);
+		tgif.getSelf();
 
 		Stream stream = new Stream();
 		String[] subscribes = new String[1];
 		String[] publishes = new String[1];
 
 		stream.setSubscribes(subscribes);
+		stream.getSubscribes();
 		stream.setPublishes(publishes);
+		stream.getPublishes();
+		
+		stream = new Stream(subscribes, publishes);
 
 		tgif.setStreams(stream);
+		tgif.getStreams();
 
 		Service service = new Service();
 		Call[] callList = getCallDetails();
 		Provide[] provideList = getProvide();
 		service.setCalls(callList);
+		service.getCalls();
 		service.setProvides(provideList);
+		service.getProvides();
+		service = new Service(callList, provideList);
 
 		tgif.setServices(service);
+		tgif.getServices();
+		
+		Parameter param1 = new Parameter();
+		param1.setDescription("Description");
+		param1.getDescription();
+		param1.setName("Name");
+		param1.getName();
+		param1.setValue("Value");
+		param1.getValue();
+		Parameter param2 = new Parameter("Name", "Value", "Description");
+		
+		Auxiliary aux = new Auxiliary();
+		aux.setTemp("Temp");
+		aux.getTemp();
+		
+		
+		tgif.setParameters(new Parameter[0]);
+		tgif.getParameters();
+		
+		tgif.setArtifacts(new Artifact[0]);
+		tgif.getArtifacts();
+		
+		tgif.setAuxiliary(aux);
+		tgif.getAuxiliary();
+		
+		Artifact arti = new Artifact();
+		arti.setType("Type");
+		arti.getType();
+		arti.setUri("uri");
+		arti.getUri();
+		arti =  new Artifact("uri", "type");
+		
+		
+		
+		Tgif tgif1 = new Tgif(selfObj, stream, service, new Parameter[0], aux, new Artifact[0]);
+		
 
 		assertNotNull(tgif);
 		Gson gson = new Gson();
@@ -106,8 +156,10 @@ public class TGIFTest {
 	private Call[] getCallDetails() throws ParseException {
 		Call call = new Call();
 		call.setConfig_key("config_key");
-
+		call.getConfig_key();
+		
 		Request request = new Request();
+		
 		String jsonString = "[{\"messageName\": \"Prediction\",\"messageargumentList\": [{\"name\": \"myRow\",\"role\": \"repeated\",\"tag\": \"1\",\"type\": \"int64\"}]}]";
 
 		Object object = null;
@@ -117,16 +169,28 @@ public class TGIFTest {
 		arrayObj = (JSONArray) object;
 
 		request.setFormat(arrayObj);
-		request.setVersion("");
+		request.getFormat();
+		request.setVersion("1");
+		request.getVersion();
+		
+		Request request1 = new Request(arrayObj, "1");
 
 		call.setRequest(request);
+		call.getRequest();
 
 		Response response = new Response();
 		response.setFormat(new org.json.simple.JSONArray());
+		response.getFormat();
 		response.setVersion("");
+		response.getVersion();
+		
+		Response response1 = new Response(arrayObj, "1");
 
 		call.setResponse(response);
+		call.getResponse();
 		Call[] callList = { call };
+		
+		Call call1 = new Call("ConfigKey", request, response);
 		return callList;
 	}
 
@@ -141,6 +205,7 @@ public class TGIFTest {
 	private Provide[] getProvide() throws ParseException {
 		Provide provide = new Provide();
 		provide.setRoute("transform");
+		provide.getRoute();
 
 		Request request = new Request();
 		String jsonString = "[{\"messageName\": \"Prediction\",\"messageargumentList\": [{\"name\": \"myRow\",\"role\": \"repeated\",\"tag\": \"1\",\"type\": \"int64\"}]}]";
@@ -152,15 +217,20 @@ public class TGIFTest {
 		arrayObj = (JSONArray) object;
 
 		request.setFormat(arrayObj);
-		request.setVersion("");
-
+		request.getFormat();
+		request.setVersion("1");
+		request.getVersion();
 		provide.setRequest(request);
+		provide.getRequest();
 
 		Response response = new Response();
 		response.setFormat(new org.json.simple.JSONArray());
-		response.setVersion("");
+		response.setVersion("1");
 
 		provide.setResponse(response);
+		provide.getResponse();
+		
+		provide = new Provide("route", request, response);
 		Provide[] provideList = { provide };
 		return provideList;
 	}

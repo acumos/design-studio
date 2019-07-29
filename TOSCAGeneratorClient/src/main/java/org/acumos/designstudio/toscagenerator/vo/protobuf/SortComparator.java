@@ -22,11 +22,6 @@ package org.acumos.designstudio.toscagenerator.vo.protobuf;
 
 import java.util.Comparator;
 
-/**
- * 
- * 
- *
- */
 public interface SortComparator extends Comparator<MessageargumentList> {
 	public int compare(MessageargumentList firstObject, MessageargumentList secondObject);
 }

@@ -22,11 +22,6 @@ package org.acumos.designstudio.toscagenerator.vo.tgif;
 
 import java.io.Serializable;
 
-/**
- * 
- * 
- *
- */
 public class Stream implements Serializable {
 
 	private static final long serialVersionUID = -2733793486307877528L;
