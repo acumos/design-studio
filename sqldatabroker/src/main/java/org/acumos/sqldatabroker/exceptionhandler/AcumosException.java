@@ -25,6 +25,7 @@ package org.acumos.sqldatabroker.exceptionhandler;
 
 public abstract class AcumosException extends Exception {
 
+	private static final long serialVersionUID = 5709752203134434735L;
 	private Object param;
 	private String errorCode;
 	private String errorDesc;
