@@ -39,12 +39,6 @@ public class EELFLoggerDelegator extends SLF4jWrapper implements EELFLogger {
 	public static EELFLogger errorLogger = EELFManager.getInstance().getErrorLogger();
 	public static EELFLogger applicationLogger = EELFManager.getInstance().getApplicationLogger();
 	public static EELFLogger debugLogger = EELFManager.getInstance().getDebugLogger();
-	// Usage of the audit and metrics loggers is required in certain
-	// environments
-	// public static EELFLogger auditLogger =
-	// EELFManager.getInstance().getAuditLogger();
-	// public static EELFLogger metricsLogger =
-	// EELFManager.getInstance().getMetricsLogger();
 
 	private static final String MDC_CLASS_NAME = "ClassName";
 	private String className;
