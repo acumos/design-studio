@@ -22,7 +22,6 @@ package org.acumos.designstudio.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -45,7 +44,6 @@ import org.acumos.designstudio.ce.vo.blueprint.NodeOperationSignature;
 import org.acumos.designstudio.ce.vo.blueprint.OperationSignatureList;
 import org.acumos.designstudio.ce.vo.blueprint.ProbeIndicator;
 import org.acumos.designstudio.ce.vo.cdump.Capability;
-import org.acumos.designstudio.ce.vo.cdump.ComplexType;
 import org.acumos.designstudio.ce.vo.cdump.collator.CollatorInputField;
 import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapInput;
 import org.acumos.designstudio.ce.vo.cdump.collator.CollatorMapOutput;
@@ -65,7 +63,6 @@ import org.acumos.designstudio.ce.vo.compositeproto.ProtobufMessageField;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufOption;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufService;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufServiceOperation;
-import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
 import org.acumos.designstudio.ce.vo.tgif.Artifact;
 import org.acumos.designstudio.ce.vo.tgif.Auxiliary;
 import org.acumos.designstudio.ce.vo.tgif.Call;
