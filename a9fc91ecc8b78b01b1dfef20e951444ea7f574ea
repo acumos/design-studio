@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ae95808_4e282cd2",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/vo/CSVDataBrokerVoTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-08-07T10:27:46Z",
+      "side": 1,
+      "message": "Remove 2018, also fix similar other occurrences.",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "a9fc91ecc8b78b01b1dfef20e951444ea7f574ea",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
