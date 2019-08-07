@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ac1ff0f_ed95dbb9",
+        "filename": "TOSCAGeneratorClient/src/test/java/org/acumos/designstudio/toscagenerator/test/ToscaGeneratorClientTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-08-07T10:25:23Z",
+      "side": 1,
+      "message": "update to 2019",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "b58d0b3990e77126413ff8069019086b03b6d445",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67e1e943_439f73a7",
+        "filename": "TOSCAGeneratorClient/src/test/java/org/acumos/designstudio/toscagenerator/test/ToscaGeneratorClientTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-08-07T10:25:23Z",
+      "side": 1,
+      "message": "Class don\u0027t have any test method",
+      "range": {
+        "startLine": 56,
+        "startChar": 1,
+        "endLine": 56,
+        "endChar": 4
+      },
+      "revId": "b58d0b3990e77126413ff8069019086b03b6d445",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d13dbe0d_9d14ccf0",
+        "filename": "TOSCAGeneratorClient/src/test/java/org/acumos/designstudio/toscagenerator/test/ToscaGeneratorClientTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-08-07T10:25:23Z",
+      "side": 1,
+      "message": "Remove commented code.",
+      "range": {
+        "startLine": 110,
+        "startChar": 3,
+        "endLine": 110,
+        "endChar": 5
+      },
+      "revId": "b58d0b3990e77126413ff8069019086b03b6d445",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "acc810fc_5786a36c",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/vo/CSVdatabrokerVOTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-08-07T10:25:23Z",
+      "side": 1,
+      "message": "Remove 2018, should be consistent across",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "b58d0b3990e77126413ff8069019086b03b6d445",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05625b9e_a8cde44a",
+        "filename": "sqldatabroker/src/test/java/org/acumos/sqldatabroker/vo/DataBrokerMapVOTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-08-07T10:25:23Z",
+      "side": 1,
+      "message": "Remove 2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "b58d0b3990e77126413ff8069019086b03b6d445",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
