@@ -471,50 +471,57 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		Date currentDate = new Date();
 		Instant dateInstant = Instant.now();
 		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
-
-		if (null == cdump) {
-			logger.debug("Error : Cdump file not found for Solution ID :   {} ", mlpSolution.getSolutionId());
+		if ("PB".equals(dscs.getVisibilityLevel())) {
+			result = "{\"duplicateErrorCode\" : \"219\", \"duplicate\" : \"Solution In Public/Company. Please change either solution name, version or both.\"}";
 		} else {
-			// 5.2 Update the cdump file with mtime
-			cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
-			cdump.setValidSolution(false);
-			cdump.setVersion(mlpSR.getVersion());
-			cdump.setRevisionId(mlpSR.getRevisionId());
-			Gson gson = new Gson();
-			String payload = gson.toJson(cdump);
-			DSUtil.writeDataToFile(path, cdumpFileName, "json", payload);
-			Artifact cdumpArtifact = new Artifact(cdumpFileName, "json", mlpSolution.getSolutionId(), dscs.getVersion(),
-					path, payload.length());
-			logger.debug("4. Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
-			// 5.3 upload the cdump file in Nexus Repositry. (file name should  be the same as previous one).
-			uploadFilesToRepository(mlpSolution.getSolutionId(), mlpSR.getRevisionId(), dscs.getVersion(),
-					cdumpArtifact);
+			if (null == cdump) {
+				logger.debug("Error : Cdump file not found for Solution ID :   {} ", mlpSolution.getSolutionId());
+			} else {
+				// 5.2 Update the cdump file with mtime
+				cdump.setMtime(new SimpleDateFormat(confprops.getDateFormat()).format(currentDate));
+				cdump.setValidSolution(false);
+				cdump.setVersion(mlpSR.getVersion());
+				cdump.setRevisionId(mlpSR.getRevisionId());
+				Gson gson = new Gson();
+				String payload = gson.toJson(cdump);
+				DSUtil.writeDataToFile(path, cdumpFileName, "json", payload);
+				Artifact cdumpArtifact = new Artifact(cdumpFileName, "json", mlpSolution.getSolutionId(),
+						dscs.getVersion(), path, payload.length());
+				logger.debug("4. Successfully updated the Cdump file for solution ID :  {} ",
+						mlpSolution.getSolutionId());
+				// 5.3 upload the cdump file in Nexus Repositry. (file name should be the same as previous one).
+				uploadFilesToRepository(mlpSolution.getSolutionId(), mlpSR.getRevisionId(), dscs.getVersion(),
+						cdumpArtifact);
 
-			// Fetch the existing artifact
-			List<MLPArtifact> artfactsList = cdmsClient.getSolutionRevisionArtifacts(mlpSR.getSolutionId(),
-					mlpSR.getRevisionId());
+				// Fetch the existing artifact
+				List<MLPArtifact> artfactsList = cdmsClient.getSolutionRevisionArtifacts(mlpSR.getSolutionId(),
+						mlpSR.getRevisionId());
 
-			for (MLPArtifact mlpArtifact : artfactsList) {
-				if (mlpArtifact.getArtifactTypeCode().equals(props.getArtifactTypeCode())) {
-					dscs.setCdump(cdumpArtifact);
-					mlpArtifact.setUri(cdumpArtifact.getNexusURI());
-					mlpArtifact.setModified(dateInstant);
-					mlpArtifact.setSize(cdumpArtifact.getContentLength());
-					cdmsClient.updateArtifact(mlpArtifact);
-					result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \"" + dscs.getVersion() + "\" }";
-					break;
+				for (MLPArtifact mlpArtifact : artfactsList) {
+					if (mlpArtifact.getArtifactTypeCode().equals(props.getArtifactTypeCode())) {
+						dscs.setCdump(cdumpArtifact);
+						mlpArtifact.setUri(cdumpArtifact.getNexusURI());
+						mlpArtifact.setModified(dateInstant);
+						mlpArtifact.setSize(cdumpArtifact.getContentLength());
+						cdmsClient.updateArtifact(mlpArtifact);
+						result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \""
+								+ dscs.getVersion() + "\" }";
+						break;
+					}
 				}
+				// 5.4 update the solutionRevisoin (i.e., to update the modified date of the solutionrevision)
+				mlpSR.setModified(dateInstant);
+				cdmsClient.updateSolutionRevision(mlpSR);
+				// 5.5 Update the solution (i.e., to update the modified date of the solution).
+				mlpSolution.setModified(dateInstant);
+				cdmsClient.updateSolution(mlpSolution);
 			}
-			// 5.4 update the solutionRevisoin (i.e., to update the modified date of the solutionrevision)
-			mlpSR.setModified(dateInstant);
-			cdmsClient.updateSolutionRevision(mlpSR);
-			// 5.5 Update the solution (i.e., to update the modified date of the solution).
-			mlpSolution.setModified(dateInstant);
-			cdmsClient.updateSolution(mlpSolution);
 		}
+
 		logger.debug("updateExistingSolution() End ");
 		return result;
 	}
+
 
 	/**
 	 * @param mlpSolution

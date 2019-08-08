@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class CSVDataBrokerVoTest {
+public class CSVDataBrokerVOTest {
 
 	@Test
 	public void DataBrokerMapTest() {
@@ -90,8 +90,6 @@ public class CSVDataBrokerVoTest {
 		protobufOption.setValue("test");
 		assertTrue(protobufOption.getValue() == "test");
 		protobufOption.toString();
-		
-		
 
 	}
 
