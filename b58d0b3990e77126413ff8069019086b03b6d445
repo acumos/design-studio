@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e3741309_b070f557",
+        "filename": "TOSCAGeneratorClient/src/test/java/org/acumos/designstudio/toscagenerator/test/ToscaGeneratorClientTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 356
+      },
+      "writtenOn": "2019-08-08T07:00:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ac1ff0f_ed95dbb9",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "b58d0b3990e77126413ff8069019086b03b6d445",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67e1e943_439f73a7",
         "filename": "TOSCAGeneratorClient/src/test/java/org/acumos/designstudio/toscagenerator/test/ToscaGeneratorClientTest.java",
         "patchSetId": 1
@@ -94,6 +118,30 @@
     },
     {
       "key": {
+        "uuid": "681048d2_c79b9c29",
+        "filename": "csvdatabroker/src/test/java/org/acumos/csvdatabroker/vo/CSVdatabrokerVOTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 356
+      },
+      "writtenOn": "2019-08-08T07:00:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "acc810fc_5786a36c",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "b58d0b3990e77126413ff8069019086b03b6d445",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05625b9e_a8cde44a",
         "filename": "sqldatabroker/src/test/java/org/acumos/sqldatabroker/vo/DataBrokerMapVOTest.java",
         "patchSetId": 1
@@ -105,6 +153,30 @@
       "writtenOn": "2019-08-07T10:25:23Z",
       "side": 1,
       "message": "Remove 2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "b58d0b3990e77126413ff8069019086b03b6d445",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "737ce9d2_cfb2c402",
+        "filename": "sqldatabroker/src/test/java/org/acumos/sqldatabroker/vo/DataBrokerMapVOTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 356
+      },
+      "writtenOn": "2019-08-08T07:00:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05625b9e_a8cde44a",
       "range": {
         "startLine": 5,
         "startChar": 17,
