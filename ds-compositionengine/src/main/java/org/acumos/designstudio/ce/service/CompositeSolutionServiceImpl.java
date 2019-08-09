@@ -41,6 +41,7 @@ import java.util.Set;
 
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
 import org.acumos.cds.domain.MLPArtifact;
+import org.acumos.cds.domain.MLPCatalog;
 import org.acumos.cds.domain.MLPSolution;
 import org.acumos.cds.domain.MLPSolutionRevision;
 import org.acumos.cds.domain.MLPUser;
@@ -471,6 +472,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		Date currentDate = new Date();
 		Instant dateInstant = Instant.now();
 		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
+		String SolId = mlpSolution.getSolutionId();
+		List<MLPCatalog> mlpCatList = cdmsClient.getSolutionCatalogs(SolId);
+		for(MLPCatalog cat : mlpCatList){
+			cat.getCatalogId();
+			dscs.setVisibilityLevel("PB");
+		}
 		if ("PB".equals(dscs.getVisibilityLevel())) {
 			result = "{\"duplicateErrorCode\" : \"219\", \"duplicate\" : \"Solution In Public/Company. Please change either solution name, version or both.\"}";
 		} else {
