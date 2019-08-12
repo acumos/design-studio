@@ -21,9 +21,18 @@ package org.acumos.csvdatabroker.vo;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
+
+import org.acumos.csvdatabroker.util.LocalScriptExecutor;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CSVDataBrokerVOTest {
+	
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	@Test
 	public void DataBrokerMapTest() {
@@ -90,6 +99,13 @@ public class CSVDataBrokerVOTest {
 		protobufOption.setValue("test");
 		assertTrue(protobufOption.getValue() == "test");
 		protobufOption.toString();
+
+		LocalScriptExecutor localScriptExecutor = new LocalScriptExecutor();
+		try {
+			localScriptExecutor.createScriptFile("test");
+		} catch (IOException e) {
+			logger.error("IOException occured in createScriptFile()");
+		}
 
 	}
 
