@@ -211,7 +211,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				result = updateCompositeSolution(dscs);
 			} catch (IOException e) {
 				logger.error("Exception in updateCompositeSolution ", e);
-				throw new ServiceException("  Exception in insertCompositeSolution ", "222","Exception in updateCompositeSolution");
+				throw new ServiceException("  Exception in updateCompositeSolution ", "222","Exception in updateCompositeSolution");
 			}
 			logger.debug("Ended implementation of Case 2 : cid is null and SolutionId is present");
 		} else {
@@ -222,13 +222,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param dscs
-	 * @return
-	 * @throws AcumosException
-	 * @throws IOException
-	 */
 	private String insertCompositeSolution(DSCompositeSolution dscs) throws AcumosException, IOException {
 
 		logger.debug("insertCompositeSolution() Begin ");
@@ -353,8 +346,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		// 5. Detete the cdump file
 
 		logger.debug("insertCompositeSolution() End ");
-
-		return "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \"" + dscs.getVersion() + "\" }";
+		return "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"revisionId\" : \"" + mlpSolutionRevision.getRevisionId() + "\" , \"version\" : \"" + dscs.getVersion() + "\" }";
 
 	}
 
@@ -372,6 +364,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	 * @throws URISyntaxException
 	 * 		In Exception Case 
 	 */
+	@SuppressWarnings("unused")
 	public String updateCompositeSolution(DSCompositeSolution dscs) throws AcumosException, IOException, URISyntaxException {
 		logger.debug("updateCompositeSolution() Begin ");
 
@@ -388,14 +381,11 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		Cdump cdump = mapper.readValue(new File(path.concat(cdumpFileName).concat(".json")), Cdump.class);
 		
 		if (null != mlpSolution) {
-			
 			// 2. check the solution name with input solution name, if solution name is different then its altogether new solution.
 			if (mlpSolution.getName().equalsIgnoreCase(dscs.getSolutionName())) {
-
 				// 3. get the list of solutionRevision details using CDS : MLPSolutionRevison sorted in descending order.
-				List<MLPSolutionRevision> mlpSolutionList = cdmsClient.getSolutionRevisions(dscs.getSolutionId());
-
-				Collections.sort(mlpSolutionList, new Comparator<MLPSolutionRevision>() {
+				List<MLPSolutionRevision> mlpSolutionRevisionList = cdmsClient.getSolutionRevisions(dscs.getSolutionId());
+				Collections.sort(mlpSolutionRevisionList, new Comparator<MLPSolutionRevision>() {
 					@Override
 					public int compare(MLPSolutionRevision s1, MLPSolutionRevision s2) {
 						return s2.getCreated().compareTo(s1.getCreated());
@@ -403,7 +393,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				});
 				
 				MLPSolutionRevision mlpSolutionRevision = null;
-				for(MLPSolutionRevision mlpsr : mlpSolutionList){
+				for(MLPSolutionRevision mlpsr : mlpSolutionRevisionList){
 					if(mlpsr.getVersion().equals(dscs.getVersion())){
 						mlpSolutionRevision = mlpsr;
 					}
@@ -427,17 +417,16 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				// update members (parent-child relationships) of composite solutions into CDS.
 				boolean flag = storeCompositeSolutionMembers(cdump);
 				logger.debug("Store members (parent-child relationships) of composite solutions into CDS : Status : {}", flag);
-			
 			} else {
 				// New Case: When user tries to update the existting solution with a different name Update the dscs with the new values
 				dscs.setcId(dscs.getSolutionId());
 				dscs.setSolutionId(null);
 				// call the save method to get the normal flow saving a solution
 				result = saveCompositeSolution(dscs);
-
 			}
-		} else
+		} else{
 			result = String.format(error, "207", "Solution does not exist in the Database");
+		}
 		logger.debug("updateCompositeSolution() End ");
 		return result;
 	}
@@ -510,8 +499,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 						mlpArtifact.setModified(dateInstant);
 						mlpArtifact.setSize(cdumpArtifact.getContentLength());
 						cdmsClient.updateArtifact(mlpArtifact);
-						result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \""
-								+ dscs.getVersion() + "\" }";
+						result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"revisionId\" : \"" + mlpSR.getRevisionId() + "\" , \"version\" : \"" + dscs.getVersion() + "\" }";
 						break;
 					}
 				}
@@ -541,14 +529,12 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 	 *             On error
 	 */
 	public String updateSolnWithNewVersion(MLPSolution mlpSolution, DSCompositeSolution dscs) throws IOException, AcumosException {
-
+		logger.debug("UpdateSolnWithNewVersion() Start ");
 		// Set solution active to true
 		mlpSolution.setActive(true);
 		cdmsClient.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
 		cdmsClient.updateSolution(mlpSolution);
-
 		// 6. Case 3 - update the solution with new version
-		logger.debug("updateSolnWithNewVersion() Start ");
 		String result = "";
 		Date currentDate = new Date();
 		Instant dateInstant = Instant.now();
@@ -594,7 +580,6 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 				path, payload.length());
 		logger.debug("Successfully updated the Cdump file for solution ID :  {} ", mlpSolution.getSolutionId());
 		// 5.3 upload the cdump file in Nexus Repositry. : this will return the nexus URI
-
 		try {
 			uploadFilesToRepository(mlpSolution.getSolutionId(), mlpSolutionRevision.getRevisionId(), dscs.getVersion(), cdumpArtifact);
 			dscs.setCdump(cdumpArtifact);
@@ -625,7 +610,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 			mlpArtifact = cdmsClient.createArtifact(mlpArtifact);
 
 			logger.debug("Successfully created the artifact for the cdumpfile for the solution : {0} artifact ID : {1}" ,mlpSolution.getSolutionId() , mlpArtifact.getArtifactId());
-			// 6.5 assocaite the artifact with solutionrevision using CDS.
+			// 6.5 associate the artifact with solution revision using CDS.
 			cdmsClient.addSolutionRevisionArtifact(mlpSolution.getSolutionId(), mlpSolutionRevision.getRevisionId(),
 					mlpArtifact.getArtifactId());
 
@@ -637,7 +622,7 @@ public class CompositeSolutionServiceImpl implements ICompositeSolutionService {
 		// 5.5 Update the solution (i.e., to update the modified date of the solution).
 		mlpSolution.setModified(dateInstant);
 		cdmsClient.updateSolution(mlpSolution);
-		result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"version\" : \"" + dscs.getVersion() + "\" }";
+		result = "{\"solutionId\": \"" + mlpSolution.getSolutionId() + "\", \"revisionId\" : \"" + mlpSolutionRevision.getRevisionId() + "\" , \"version\" : \"" + dscs.getVersion() + "\" }";
 		logger.debug("updateSolnWithNewVersion() End ");
 		return result;
 	}

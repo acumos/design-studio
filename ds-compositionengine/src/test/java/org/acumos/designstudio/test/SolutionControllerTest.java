@@ -130,15 +130,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
-/**
- *
- *
- */
 @RunWith(MockitoJUnitRunner.class)
 public class SolutionControllerTest {
-	private String url = "";
-	private String user = "";
-	private String pass = "";
 	
 	public static Properties CONFIG = new Properties();
 
@@ -236,6 +229,7 @@ public class SolutionControllerTest {
 	}
 	
 	
+	@SuppressWarnings("unused")
 	@Test
 	/**
 	 * The test case is used to create a new composite solution. The test case
@@ -595,6 +589,7 @@ public class SolutionControllerTest {
 		assertNotNull(result);
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	/**
 	 * The test case is used to link two models to create composite solution.
@@ -616,9 +611,9 @@ public class SolutionControllerTest {
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		boolean result = solutionService.addLink(userId, null, null, "Node1 to Node2", "101", "My DataBroker", "ZIPDataBroker1", "CPM21",
 				"CPM21", "Req2", "Cap2", "333", property);
-		//assertTrue(result);
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	/**
 	 * The test case is used to link Input port of DM to model to create
@@ -665,7 +660,6 @@ public class SolutionControllerTest {
 		when(confprops.getToscaOutputFolder()).thenReturn(localpath);
 		boolean result = solutionService.addLink(userId, null, null, "Node1 to DM", "202", "Node1", "1", "DM", "3",
 				"Req2", "Cap2", sessionId, property);
-		//assertFalse(result);
 	}
 
 	@Test
@@ -884,6 +878,7 @@ public class SolutionControllerTest {
 		
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	/**
 	 * The test case is used to modify node(a model)in a composite solution. The
@@ -957,6 +952,7 @@ public class SolutionControllerTest {
 	//	assertNotNull(result);
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	/**
 	 * The test case is used to modify DM node(a model)in a composite solution.
@@ -1214,6 +1210,7 @@ public class SolutionControllerTest {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	/**
 	 * The test case is used to validate the composite solution and create a
@@ -1391,6 +1388,7 @@ public class SolutionControllerTest {
 		}
 	}
 
+	@SuppressWarnings({ "unused", "deprecation" })
 	@Test
 	/**
 	 * The test case is used to save the composite solution and store it in
@@ -1472,6 +1470,7 @@ public class SolutionControllerTest {
 		}		
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	/**
 	 * The test case is used to delete the composite solution from nexus
@@ -1628,7 +1627,6 @@ public class SolutionControllerTest {
 	public void readCompositeSolutionGraph() throws AcumosException, URISyntaxException {
 		String sId = "111";
 		String version = "1.0.0";
-		ObjectMapper mapper1 = new ObjectMapper();
 		MLPSolution mlpSolution = new MLPSolution();
 		mlpSolution.setSolutionId(sId);
 		mlpSolution.setName("testPubVer");
@@ -1689,6 +1687,7 @@ public class SolutionControllerTest {
 	}
 
 	//@Test
+	@SuppressWarnings({ "unused", "deprecation" })
 	public void getSolutionsReturnEmptySolList() throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		sdf.format(new Date());
@@ -1724,6 +1723,7 @@ public class SolutionControllerTest {
 	}
 
    // @Test
+	@SuppressWarnings({ "deprecation", "unused" })
 	public void getSolutionsReturnNoSolution() throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		sdf.format(new Date());
@@ -2133,6 +2133,7 @@ public class SolutionControllerTest {
 		//mlpSolutionRevision.setDescription(dscs.getDescription()); 
 		mlpSolutionRevision.setUserId(dscs.getAuthor());
 		mlpSolutionRevision.setVersion("1.0.0");
+		mlpSolutionRevision.setRevisionId("111");
 		//mlpSolutionRevision.setValidationStatusCode(ValidationStatusCode.IP.toString());
 		
 		
@@ -2198,7 +2199,7 @@ public class SolutionControllerTest {
 					fileInputStream)).thenReturn(artifactInfo);
 			
 			result = compositeServiceImpl.updateCompositeSolution(dscs); 
-			assertEquals("{\"solutionId\": \"111\", \"version\" : \"1.0.1\" }", result);
+			assertEquals("{\"solutionId\": \"111\",\"revisionId\" : \"111\" , \"version\" : \"1.0.1\" }", result);
 		} catch (Exception e) {
 		}
 		
