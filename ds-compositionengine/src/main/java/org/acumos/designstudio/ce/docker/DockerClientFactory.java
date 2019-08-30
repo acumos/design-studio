@@ -68,7 +68,7 @@ public final class DockerClientFactory {
 			configBuilder.withDockerCertPath(config.getCertPath());
 		}
 		String cmdExecFactory = config.getCmdExecFactory();
-		DockerCmdExecFactory factory;
+		DockerCmdExecFactory factory; 
 		if (cmdExecFactory.equals(JerseyDockerCmdExecFactory.class.getName())) {
 			factory = new JerseyDockerCmdExecFactory();
 			((JerseyDockerCmdExecFactory) factory).withReadTimeout(config.getRequestTimeout())

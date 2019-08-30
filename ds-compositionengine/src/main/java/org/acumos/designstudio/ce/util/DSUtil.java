@@ -79,7 +79,10 @@ public class DSUtil {
 			return sb.toString();
 		} finally {
 			fr.close();
-			br.close();
+			if (null != br) {
+				br.close();
+			}
+
 		}
 	}
 

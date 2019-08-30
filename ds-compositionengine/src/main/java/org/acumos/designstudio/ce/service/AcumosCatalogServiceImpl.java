@@ -76,8 +76,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 			// 1. Get the list of SolutionRevision for the solutionId.
 			mlpSolutionRevisionList = getSolutionRevisionsList(solutionId);
 
-			// 2. Match the version with the SolutionRevision and get the
-			// solutionRevisionId.
+			// 2. Match the version with the SolutionRevision and get the solutionRevisionId.
 			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
 				solutionRevisionId = mlpSolutionRevisionList.stream().filter(mlp -> mlp.getVersion().equals(version))
 						.findFirst().get().getRevisionId();
@@ -86,10 +85,11 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 				result = String.format(error, "501", "Failed to fetch the Solution Revision List");
 			}
 		} catch (Exception e) {
-			logger.error("Error : Exception in fetchJsonTOSCA() : Failed to fetch the Solution Revision List",e);
-			result = String.format(error, "501","Failed to fetch the Solution Revision List for the version {} ", version);
+			logger.error("Error : Exception in fetchJsonTOSCA() : Failed to fetch the Solution Revision List", e);
+			result = String.format(error, "501", "Failed to fetch the Solution Revision List for the version {} ",
+					version);
 		}
-
+		// TODO : PUSHPENDRA NEED TO CHECK THIS BUG IF WE CAN REMOVE IF CONDITION
 		if (null != solutionRevisionId) {
 			// 3. Get the list of Artifiact for the SolutionId and SolutionRevisionId.
 			mlpArtifactList = getListOfArtifacts(solutionId, solutionRevisionId);
@@ -200,8 +200,7 @@ public class AcumosCatalogServiceImpl implements IAcumosCatalog {
 			// 1. Get the list of SolutionRevision for the solutionId.
 			mlpSolutionRevisionList = getSolutionRevisionsList(solutionId);
 
-			// 2. Match the version with the SolutionRevision and get the
-			// solutionRevisionId.
+			// 2. Match the version with the SolutionRevision and get the solutionRevisionId.
 			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
 				solutionRevisionId = mlpSolutionRevisionList.stream().filter(mlp -> mlp.getVersion().equals(version))
 						// && mlp.getOwnerId().equalsIgnoreCase(userId))

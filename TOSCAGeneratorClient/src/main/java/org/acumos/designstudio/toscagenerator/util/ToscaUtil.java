@@ -115,7 +115,8 @@ public class ToscaUtil {
 			Object obj = parser.parse(new FileReader(filePath));
 			jsonObject = (JSONObject) obj;
 			logger.debug("JSON Object : " + jsonObject.toJSONString());
-
+		} catch (NullPointerException e) {
+			logger.error(" ---------- NullPointerException Occured  readJSONFile() -----------", e);
 		} catch (FileNotFoundException e) {
 			logger.error(" ---------- Exception Occured  readJSONFile() -----------", e);
 		} catch (IOException e) {
