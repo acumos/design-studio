@@ -160,88 +160,84 @@ public class GenericDataMapperServiceImpl implements IGenericDataMapperService {
 
 	private String createNewGDMJar(String userId) throws ServiceException {
 		logger.debug("createNewGDMJar() : Begin");
-		
+
 		String result = null;
 		path = DSUtil.readCdumpPath(userId, confprops.getToscaOutputFolder());
 		String libPath = confprops.getLib();
 		String gdmJarName = libPath + confprops.getGdmJarName();
 		UUID id = UUID.randomUUID();
 		String tempJarName = path + id.toString() + "_" + confprops.getGdmJarName();
-		
+
 		String fieldMappingJarEntryName = "BOOT-INF/classes/FieldMapping.json";
 		String protobufJarEntryName = "BOOT-INF/classes/default.proto";
 		String DataVOClassEntryName = "BOOT-INF/classes/org/acumos/vo/";
-		
+
 		File jarFile = new File(gdmJarName);
 		File tempJarFile = new File(tempJarName);
 		JarFile jar = null;
 		JarOutputStream tempJar = null;
-		
+
 		// Allocate a buffer for reading entry data.
-        byte[] buffer = new byte[1024];
-        int bytesRead;
-		
+		byte[] buffer = new byte[1024];
+		int bytesRead;
+
 		boolean jarUpdated = false;
 		try {
-			
-			//Create the temp jar 
+
+			// Create the temp jar
 			tempJar = new JarOutputStream(new FileOutputStream(tempJarFile));
-			
-	         
-	         //add the FieldMapping file 
-	         addFieldMapping(fieldMappingJarEntryName, tempJar);
-	         
-	         //add protobuf file 
-	         addProtobufFile(protobufJarEntryName, tempJar);
-	         //add DavaVO.class file
-	         List<String> dataVOEntryList = addDataVOClasses(DataVOClassEntryName,tempJar);
-             JarEntry entry = null;
-           //Open the original jar 
- 			jar = new JarFile(jarFile);
-          // Loop through the jar entries and add them to the temp jar,
-             // skipping the entry that was added to the temp jar already.
 
-             for (Enumeration entries = jar.entries(); entries.hasMoreElements(); ) {
-                // Get the next entry.
+			// add the FieldMapping file
+			addFieldMapping(fieldMappingJarEntryName, tempJar);
 
-                 entry = (JarEntry) entries.nextElement();
+			// add protobuf file
+			addProtobufFile(protobufJarEntryName, tempJar);
+			// add DavaVO.class file
+			List<String> dataVOEntryList = addDataVOClasses(DataVOClassEntryName, tempJar);
+			JarEntry entry = null;
+			// Open the original jar
+			jar = new JarFile(jarFile);
+			// Loop through the jar entries and add them to the temp jar,
+			// skipping the entry that was added to the temp jar already.
 
-                // If the entry has not been added already, add it.
-                 
-                if (! entry.getName().equals(fieldMappingJarEntryName) && !dataVOEntryList.contains(entry.getName())) {
-                   // Get an input stream for the entry.
-                
-                   InputStream entryStream = jar.getInputStream(entry);
+			for (Enumeration entries = jar.entries(); entries.hasMoreElements();) {
+				// Get the next entry.
 
-                   // Read the entry and write it to the temp jar.
+				entry = (JarEntry) entries.nextElement();
 
-                   tempJar.putNextEntry(entry);
+				// If the entry has not been added already, add it.
 
-                   while ((bytesRead = entryStream.read(buffer)) != -1) {
-                      tempJar.write(buffer, 0, bytesRead);
-                   }
-                }
-             }
-             jarUpdated = true;
-             result = tempJarName;
+				if (!entry.getName().equals(fieldMappingJarEntryName) && !dataVOEntryList.contains(entry.getName())) {
+					// Get an input stream for the entry.
+
+					InputStream entryStream = jar.getInputStream(entry);
+
+					// Read the entry and write it to the temp jar.
+
+					tempJar.putNextEntry(entry);
+
+					while ((bytesRead = entryStream.read(buffer)) != -1) {
+						tempJar.write(buffer, 0, bytesRead);
+					}
+				}
+			}
+			jarUpdated = true;
+			result = tempJarName;
 		} catch (IOException e) {
 			logger.error("IOException in updateGDMJar() ", e);
-			throw new ServiceException("Failed to create Generic Data Mapper Jar because of IOException", props.getSolutionErrorCode(),
-					"Failed to create Generic Data Mapper Jar because of IOException");
-		} /*catch (Exception e) {
-			e.printStackTrace();
-			logger.error("Exception in updateGDMJar() ",e);
-			throw new ServiceException("Failed to create Generic Data Mapper Jar because of Exception", props.getSolutionErrorCode(),
-					"Failed to create Generic Data Mapper Jar because of Exception");
-		}*/
-		finally {
-            try {
-            	tempJar.close();
-            	jar.close();
+			throw new ServiceException("Failed to create Generic Data Mapper Jar because of IOException",
+					props.getSolutionErrorCode(), "Failed to create Generic Data Mapper Jar because of IOException");
+		} finally {
+			try {
+				tempJar.close();
+				if (null != jar) {
+					jar.close();
+				}
+
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("IOException in updateGDMJar() ", e);
 			}
-         }
+		}
 		logger.debug("createNewGDMJar() : End ");
 		return result;
 	}
