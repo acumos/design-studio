@@ -1,0 +1,261 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3985a3de_d7ddea90",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-09-03T08:43:30Z",
+      "side": 1,
+      "message": "Because of complete class formatting, comments  is multi lined, Please get the comment on same line.",
+      "range": {
+        "startLine": 124,
+        "startChar": 6,
+        "endLine": 124,
+        "endChar": 10
+      },
+      "revId": "6fd4297c07c5fba0459fc9f02d04657901e86f6f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d34ba60e_7735ce39",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-09-03T08:43:30Z",
+      "side": 1,
+      "message": "Because of complete class formatting, comments  is multi lined, Please get the comment on same line.",
+      "revId": "6fd4297c07c5fba0459fc9f02d04657901e86f6f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9de36166_81f96990",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-09-03T08:43:30Z",
+      "side": 1,
+      "message": "Please remove unnecessary empty lines.",
+      "revId": "6fd4297c07c5fba0459fc9f02d04657901e86f6f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e83ce881_385ff678",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-09-03T08:43:30Z",
+      "side": 1,
+      "message": "unnecessary empty line, please remove.",
+      "range": {
+        "startLine": 315,
+        "startChar": 0,
+        "endLine": 315,
+        "endChar": 14
+      },
+      "revId": "6fd4297c07c5fba0459fc9f02d04657901e86f6f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a697510_f644bb96",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-09-03T08:43:30Z",
+      "side": 1,
+      "message": "multi line comment, make it on single line.",
+      "range": {
+        "startLine": 376,
+        "startChar": 11,
+        "endLine": 376,
+        "endChar": 12
+      },
+      "revId": "6fd4297c07c5fba0459fc9f02d04657901e86f6f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3a5f930_8890de44",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-09-03T08:43:30Z",
+      "side": 1,
+      "message": "unnecessary empty line",
+      "range": {
+        "startLine": 455,
+        "startChar": 0,
+        "endLine": 455,
+        "endChar": 18
+      },
+      "revId": "6fd4297c07c5fba0459fc9f02d04657901e86f6f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59159f74_9dbb54cd",
+        "filename": "csvdatabroker/src/main/java/org/acumos/csvdatabroker/service/ProtobufServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-09-03T08:43:30Z",
+      "side": 1,
+      "message": "Because of complete class formatting, comments in TODO is multi lined, Please get the comment on same line.",
+      "range": {
+        "startLine": 531,
+        "startChar": 3,
+        "endLine": 531,
+        "endChar": 5
+      },
+      "revId": "6fd4297c07c5fba0459fc9f02d04657901e86f6f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dc56ad9_a48e4c60",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/AcumosCatalogServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-09-03T08:43:30Z",
+      "side": 1,
+      "message": "Please fix the TODO pending on you.",
+      "range": {
+        "startLine": 80,
+        "startChar": 3,
+        "endLine": 80,
+        "endChar": 5
+      },
+      "revId": "6fd4297c07c5fba0459fc9f02d04657901e86f6f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f7a122b_a36adf1b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/AcumosCatalogServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-09-03T08:43:30Z",
+      "side": 1,
+      "message": "Please fix the TODO pending on you.",
+      "revId": "6fd4297c07c5fba0459fc9f02d04657901e86f6f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977e5c1e_3c49ae64",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionProtoFileGeneratorServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-09-03T08:43:30Z",
+      "side": 1,
+      "message": "Please get it on same line.",
+      "revId": "6fd4297c07c5fba0459fc9f02d04657901e86f6f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "690d22b9_6aa7ec88",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionProtoFileGeneratorServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-09-03T08:43:30Z",
+      "side": 1,
+      "message": "Please get the stmt on same line.",
+      "revId": "6fd4297c07c5fba0459fc9f02d04657901e86f6f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "160f1327_f80abf0b",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/CompositeSolutionProtoFileGeneratorServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-09-03T08:43:30Z",
+      "side": 1,
+      "message": "please get it on same line.",
+      "revId": "6fd4297c07c5fba0459fc9f02d04657901e86f6f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3230b5d_23eb9eca",
+        "filename": "ds-compositionengine/src/main/java/org/acumos/designstudio/ce/service/GenericDataMapperServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-09-03T08:43:30Z",
+      "side": 1,
+      "message": "Please remove unnecessary empty lines.  Please check rest of the class and remove empty lines.",
+      "revId": "6fd4297c07c5fba0459fc9f02d04657901e86f6f",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
