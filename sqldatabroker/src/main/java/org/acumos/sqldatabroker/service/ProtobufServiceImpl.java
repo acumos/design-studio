@@ -245,14 +245,21 @@ public class ProtobufServiceImpl implements ProtobufService {
 		List<Object> result = null;
 		//System.out.println("input value class : " + value.getClass().getSimpleName());
 		//Strip {} || [] || () || ""
-		if (value instanceof String) {
+		if(value.getClass().getSimpleName().equals("String")){
 			String val = (String) value;
-			if (checkBeginEnd(val, "\"", "\"") || checkBeginEnd(val, "{", "}") || checkBeginEnd(val, "[", "]")
-					|| checkBeginEnd(val, "(", ")")) {
-				val = val.substring(1, val.length() - 1);
+			if(checkBeginEnd(val,"\"","\"")){
+				val = val.substring(1, val.length()-1);
 			}
-
-			if (DatabrokerConstants.PROTOBUF_DATA_TYPE.contains(type)) {
+			
+			if(checkBeginEnd(val,"{","}")){
+				val = val.substring(1, val.length()-1);
+			} else if(checkBeginEnd(val,"[","]")){
+				val = val.substring(1, val.length()-1);
+			} else if(checkBeginEnd(val,"(",")")){
+				val = val.substring(1, val.length()-1);
+			} 
+			
+			if(DatabrokerConstants.PROTOBUF_DATA_TYPE.contains(type)) {
 				Object[] inputs = val.split(",");
 				result = Arrays.asList(inputs);
 			} else {
@@ -280,10 +287,10 @@ public class ProtobufServiceImpl implements ProtobufService {
 				}
 			}
 			
-		} else if (value instanceof ArrayList) { // ArrayList
-			// TODO : Need to be implemented
-		} else if (value.getClass().getSimpleName().contains("[")) { // Array
-			// TODO : Need to be implemented
+		} else if(value.getClass().getSimpleName().equals("ArrayList")){ //ArrayList
+			//TODO : Need to be implemented 
+		} else if(value.getClass().getSimpleName().contains("[")) { //Array
+			//TODO : Need to be implemented 
 		}
 		
 		return result;

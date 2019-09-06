@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSetMetaData;
 
 import javax.sql.DataSource;
 
@@ -118,15 +118,6 @@ public class SQLDatabrokerServiceImpl implements SQLDatabrokerService {
 					stmt.close();
 				} catch (SQLException e) {
 					logger.error(EELFLoggerDelegator.errorLogger, "SQL Exception : Not able to close statement", e);
-				}
-				
-				
-			}
-			if(null != con) {
-				try {
-					con.close();
-				} catch (Exception e) {
-					logger.error(EELFLoggerDelegator.errorLogger, "Exception occured : Not able to close connection", e);
 				}
 			}
 		}

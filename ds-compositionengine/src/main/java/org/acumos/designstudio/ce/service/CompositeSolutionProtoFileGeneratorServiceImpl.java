@@ -39,7 +39,6 @@ import org.acumos.designstudio.ce.vo.compositeproto.ProtobufOption;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufService;
 import org.acumos.designstudio.ce.vo.compositeproto.ProtobufServiceOperation;
 import org.acumos.nexus.client.NexusArtifactClient;
-import org.apache.maven.wagon.ConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -53,10 +52,10 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 	private CommonDataServiceRestClientImpl cdmsClient;
 	@Autowired
 	private NexusArtifactClient nexusArtifactClient;
-
+	
+	
 	@Override
-	public String getPayload(String solutionId, String version, String artifactType, String fileExtension)
-			throws ServiceException {
+	public String getPayload(String solutionId, String version, String artifactType, String fileExtension) throws ServiceException {
 		logger.debug("getPayload() : Begin");
 		String result = "";
 		List<MLPSolutionRevision> mlpSolutionRevisionList;
@@ -68,21 +67,22 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 			// 1. Get the list of SolutionRevision for the solutionId.
 			mlpSolutionRevisionList = cdmsClient.getSolutionRevisions(solutionId);
 
-			// 2. Match the version with the SolutionRevision and get the solutionRevisionId.
+			// 2. Match the version with the SolutionRevision and get the
+			// solutionRevisionId.
 			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
-				for (MLPSolutionRevision mlpSolRev : mlpSolutionRevisionList) {
-					if (mlpSolRev.getVersion().equals(version)) { // TODO : Need  to check if revision is delete or not in future.
+				for(MLPSolutionRevision mlpSolRev : mlpSolutionRevisionList) {
+					if(mlpSolRev.getVersion().equals(version) ){  //TODO : Need to check if revision is delete or not in future. 
 						solutionRevisionId = mlpSolRev.getRevisionId();
 						break;
 					}
 				}
-				logger.debug("SolutionRevisonId for Version :  {} ", solutionRevisionId);
+				logger.debug("SolutionRevisonId for Version :  {} ", solutionRevisionId );
 			}
 		} catch (NoSuchElementException | NullPointerException e) {
-			logger.error("Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id", e);
+			logger.error("Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
 			throw new NoSuchElementException("Failed to fetch the Solution Revision Id of the solutionId for the user");
-		}
-
+		} 
+		
 		if (null != solutionRevisionId) {
 			// 3. Get the list of Artifact for the SolutionId and SolutionRevisionId.
 			mlpArtifactList = getSolutionArtifacts(solutionId, solutionRevisionId);
@@ -99,11 +99,11 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 						}
 					}
 
-					logger.debug("Nexus URI :  {} ", nexusURI);
+					logger.debug("Nexus URI :  {} ", nexusURI );
 
 					if (null != nexusURI) {
 						byteArrayOutputStream = getPayload(nexusURI);
-						logger.debug("Response in String Format :  {} ", byteArrayOutputStream.toString());
+						logger.debug("Response in String Format :  {} ", byteArrayOutputStream.toString() );
 						result = byteArrayOutputStream.toString();
 					}
 				} catch (NoSuchElementException | NullPointerException e) {
@@ -115,46 +115,43 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 							byteArrayOutputStream.close();
 						}
 					} catch (Exception e) {
-						logger.error("Error : Exception in getPayload() : Failed to close the byteArrayOutputStream",e);
+						logger.error("Error : Exception in getPayload() : Failed to close the byteArrayOutputStream", e);
+						throw new ServiceException("  Exception in getProtoUrl() ", "201","Failed to close the byteArrayOutputStream");
 					}
 				}
 			}
 		}
 		logger.debug("getPayload() : End");
-
+		
 		return result;
 	}
 
-	private List<MLPArtifact> getSolutionArtifacts(String solutionId, String solutionRevisionId)
-			throws ServiceException {
+	private List<MLPArtifact> getSolutionArtifacts(String solutionId, String solutionRevisionId) throws ServiceException {
 		logger.debug("getSolutionArtifacts : Begin");
 		List<MLPArtifact> mlpSolutionRevisions = null;
 		List<MLPArtifact> artifactList = new ArrayList<MLPArtifact>();
 		try {
 			mlpSolutionRevisions = cdmsClient.getSolutionRevisionArtifacts(solutionId, solutionRevisionId);
-			if (mlpSolutionRevisions != null) {
+			if(mlpSolutionRevisions != null) {
 				for (MLPArtifact artifact : mlpSolutionRevisions) {
 					String[] st = artifact.getUri().split("/");
-					String name = st[st.length - 1];
+					String name = st[st.length-1];
 					artifact.setName(name);
 					artifactList.add(artifact);
 				}
 			}
 		} catch (IllegalArgumentException e) {
-			throw new ServiceException("  Exception in getSolutionArtifacts() ", "201",
-					"Not able to get the Artifacts for the Solution Revision");
-		}
+			throw new ServiceException("  Exception in getSolutionArtifacts() ", "201","Not able to get the Artifacts for the Solution Revision");
+		} 
 		logger.debug("getSolutionArtifacts : End");
 		return artifactList;
 	}
-
+	
 	private ByteArrayOutputStream getPayload(String uri) {
 
 		ByteArrayOutputStream outputStream = null;
 		try {
 			outputStream = nexusArtifactClient.getArtifact(uri);
-		} catch (ConnectionException ex) {
-			logger.error("ConnectionException in getListOfArtifacts() ", ex);
 		} catch (Exception ex) {
 			logger.error("Exception in getListOfArtifacts() ", ex);
 		}
@@ -163,119 +160,97 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 
 	@Override
 	public Protobuf parseProtobuf(String protoData) {
-		Scanner scanner = null;
-		Protobuf protobuf = null;
-		try {
-			scanner = new Scanner(protoData);
-			protobuf = new Protobuf();
-			boolean serviceBegin = false;
+			Scanner scanner = new Scanner(protoData);
+			Protobuf protobuf= new Protobuf();
+			boolean serviceBegin = false; 
 			boolean serviceDone = false;
-
+			
 			boolean messageBegin = false;
-
+			
 			StringBuilder serviceStr = null;
 			StringBuilder messageStr = null;
-
+			
 			while (scanner.hasNextLine()) {
-				String line = scanner.nextLine().trim();
-
-				if (serviceBegin && !serviceDone) {
-					serviceStr.append(line);
-					serviceStr.append("\n");
-					if (line.contains("}")) {
-						serviceBegin = false;
-						ProtobufService service = parserService(serviceStr.toString().trim());
-						protobuf.setService(service);
-						serviceDone = true;
-					}
-				} else if (messageBegin) {
-					messageStr.append(line);
-					messageStr.append("\n");
-					if (line.contains("}")) {
-						messageBegin = false;
-						ProtobufMessage message = parseMessage(messageStr.toString().trim());
-						protobuf.getMessages().add(message);
-					}
-				} else {
-					if (line.startsWith("service") && !serviceDone) {
-						serviceBegin = true;
-						serviceStr = new StringBuilder();
-						serviceStr.append(line);
-						serviceStr.append("\n");
-					}
-
-					if (line.startsWith("message")) {
-						messageBegin = true;
-						messageStr = new StringBuilder();
-						messageStr.append(line);
-						messageStr.append("\n");
-					}
-					if (line.startsWith("syntax")) {
-						String value = line.substring(line.indexOf("=") + 1, line.length() - 1);
-						protobuf.setSyntax(value.replace("\"", "").trim());
-					}
-
-					if (line.startsWith("option")) {
-						ProtobufOption option = parseOption(line.trim());
-						protobuf.getOptions().add(option);
-					}
-					if (line.startsWith("package")) {
-						String value = line.substring(line.indexOf(" ") + 1, line.length() - 1);
-						protobuf.setPackageName(value.replace("\"", "").trim());
-					}
-
-				}
+			  String line = scanner.nextLine().trim();
+			  
+			  if(serviceBegin && !serviceDone){
+				  serviceStr.append(line);
+				  serviceStr.append("\n");
+				  if(line.contains("}")){
+					  serviceBegin = false;
+					  ProtobufService service = parserService(serviceStr.toString().trim());
+					  protobuf.setService(service);
+					  serviceDone = true;
+				  }
+			  } else if(messageBegin) {
+				  messageStr.append(line);
+				  messageStr.append("\n");
+				  if(line.contains("}")){
+					  messageBegin = false;
+					  ProtobufMessage message = parseMessage(messageStr.toString().trim());
+					  protobuf.getMessages().add(message);
+				  }
+			  } else {
+				  if(line.startsWith("service") && !serviceDone){
+					   serviceBegin = true; 
+					   serviceStr = new StringBuilder();
+					   serviceStr.append(line);
+					   serviceStr.append("\n");
+				  }
+				  
+				  if(line.startsWith("message")){
+					  messageBegin = true;
+					  messageStr = new StringBuilder();
+					  messageStr.append(line);
+					  messageStr.append("\n");
+				  }
+				  if(line.startsWith("syntax")){
+					  String value = line.substring(line.indexOf("=")+1, line.length()-1);
+					  protobuf.setSyntax(value.replace("\"", "").trim());
+				  }
+				  
+				  if(line.startsWith("option")){
+					  ProtobufOption option = parseOption(line.trim());
+					  protobuf.getOptions().add(option);
+				  }
+				  if(line.startsWith("package")){
+					  String value = line.substring(line.indexOf(" ")+1, line.length()-1);
+					  protobuf.setPackageName(value.replace("\"", "").trim());
+				  }
+				  
+			  }
 			}
-		} catch (Exception e) {
-			logger.error("Exception in parseProtobuf ", e);
-		} finally {
-			if (null != scanner) {
-				scanner.close();
-			}
-
+			scanner.close();
+			return protobuf;
 		}
-
-		return protobuf;
-	}
-
+	
 	private ProtobufService parserService(String serviceStr) {
-		Scanner scanner = null;
-		ProtobufService service = null;
-		try {
-			scanner = new Scanner(serviceStr);
-			service = new ProtobufService();
-			while (scanner.hasNextLine()) {
-				String line = scanner.nextLine().trim();
-				if (line.startsWith("service")) {
-					String name = line.replace("\t", "").replace("service", "").trim();
-					if (name.contains("{")) {
-						name = name.substring(0, name.lastIndexOf("{")).trim();
-					} else {
-						name = name.trim();
-					}
-					service.setName(name);
-				} else if (line.length() > 1) {
-					if (line.indexOf("{") > -1) {
-						line = line.replace("{", "").trim();
-					}
-					if (line.contains("}")) {
-						line = line.replace("}", "").trim();
-					}
-					ProtobufServiceOperation operation = parseServiceOperation(line);
-					service.getOperations().add(operation);
-				}
-			}
-		} catch (Exception e) {
-			logger.error("Exception in parserService ", e);
-		} finally {
-			if (null != scanner) {
-				scanner.close();
-			}
-
+		Scanner scanner = new Scanner(serviceStr);
+		ProtobufService service = new ProtobufService();
+		while (scanner.hasNextLine()) {
+			  String line = scanner.nextLine().trim();
+			  if(line.startsWith("service")){
+				  String name = line.replace("\t", "").replace("service", "").trim();
+				  if(name.contains("{")){
+					  name = name.substring(0, name.lastIndexOf("{")).trim();
+				  } else {
+					  name = name.trim();
+				  }
+				  service.setName(name);
+			  } else if(line.length() > 1){
+				  if(line.indexOf("{") > - 1){
+					  line = line.replace("{", "").trim();
+				  }
+				  if(line.contains("}")){
+					  line = line.replace("}", "").trim();
+				  }
+				  ProtobufServiceOperation operation = parseServiceOperation(line);
+				  service.getOperations().add(operation);
+			  }
 		}
 		return service;
 	}
-
+	
 	private ProtobufServiceOperation parseServiceOperation(String line) {
 		ProtobufServiceOperation operation = new ProtobufServiceOperation();
 		line = line.replace("\t", "").trim();
@@ -297,10 +272,10 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 		int outputParamSize = outputParamArray.length;
 		List<String> inputParamList = new ArrayList<String>();
 		List<String> outputParamList = new ArrayList<String>();
-		for (int i = 0; i < inputParamSize; i++) {
+		for(int i =0 ; i < inputParamSize ; i++ ){
 			inputParamList.add(inputParamArray[i].trim());
 		}
-		for (int i = 0; i < outputParamSize; i++) {
+		for(int i =0 ; i < outputParamSize ; i++ ){
 			outputParamList.add(outputParamArray[i].trim());
 		}
 		operation.setName(operationName);
@@ -309,65 +284,55 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 		operation.setOutputMessageNames(outputParamList);
 		return operation;
 	}
-
+	
+	
 	private ProtobufMessage parseMessage(String messageStr) {
-		Scanner scanner = null;
-		ProtobufMessage message = null;
-		try {
-			scanner = new Scanner(messageStr);
-			message = new ProtobufMessage();
-			ProtobufMessageField field = null;
-			while (scanner.hasNextLine()) {
-				String line = scanner.nextLine().trim();
-				if (line.startsWith("message")) {
-					String name = null;
-					line = line.replace("\t", "").replace("message", "");
-					if (line.contains("{")) {
-						name = line.substring(0, line.lastIndexOf("{")).trim();
-						if (line.contains(";")) {
-							line = line.substring(line.lastIndexOf("{") + 1, line.length()).trim();
-							field = parseMessageField(line);
-							message.getFields().add(field);
-						}
-					} else {
-						name = line.trim();
-					}
-					message.setName(name);
-				} else if (line.length() > 1) {
-					if (line.indexOf("{") > -1) {
-						line = line.replace("{", "").trim();
-					}
-					if (line.contains("}")) {
-						line = line.replace("}", "").trim();
-					}
-					field = parseMessageField(line);
-					message.getFields().add(field);
-				}
-			}
-		} catch (Exception e) {
-			logger.error("Exception in parseMessage ", e);
-		} finally {
-			if (null != scanner) {
-				scanner.close();
-			}
-
+		Scanner scanner = new Scanner(messageStr);
+		ProtobufMessage message = new ProtobufMessage();
+		ProtobufMessageField field = null;
+		while (scanner.hasNextLine()) {
+			  String line = scanner.nextLine().trim();
+			  if(line.startsWith("message")){
+				  String name = null;
+				  line = line.replace("\t", "").replace("message", "");
+				  if(line.contains("{")){
+					  name = line.substring(0, line.lastIndexOf("{")).trim();
+					  if(line.contains(";")){
+						  line = line.substring(line.lastIndexOf("{")+1, line.length()).trim();
+						  field = parseMessageField(line);
+						  message.getFields().add(field);
+					  }
+				  } else {
+					  name = line.trim();
+				  }
+				  message.setName(name);
+			  } else if(line.length() > 1){
+				  if(line.indexOf("{") > - 1){
+					  line = line.replace("{", "").trim();
+				  }
+				  if(line.contains("}")){
+					  line = line.replace("}", "").trim();
+				  }
+				  field = parseMessageField(line);
+				  message.getFields().add(field);
+			  }
 		}
-
+		scanner.close();
 		return message;
 	}
-
+	
 	private ProtobufMessageField parseMessageField(String line) {
 		ProtobufMessageField field = new ProtobufMessageField();
 		line = line.replace(";", "").trim();
-
+		
 		String[] fields = line.split(" ");
 		int size = fields.length;
-		if (size == 5) {
+		if(size == 5){
 			field.setRole(fields[0]);
 			field.setType(fields[1]);
 			field.setName(fields[2]);
 			field.setTag(Integer.valueOf(fields[4]));
-		} else if (size == 4) {
+		} else if( size == 4){
 			field.setRole("");
 			field.setType(fields[0]);
 			field.setName(fields[1]);
@@ -377,17 +342,17 @@ public class CompositeSolutionProtoFileGeneratorServiceImpl implements IComposit
 		}
 		return field;
 	}
-
+	
 	private ProtobufOption parseOption(String line) {
 		ProtobufOption option = new ProtobufOption();
 		line = line.replace("\t", "").trim();
 		line = line.replace("option", "").trim();
 		line = line.trim();
-		String name = line.substring(0, line.indexOf("=") - 1).trim();
-		String value = line.substring(line.indexOf("=") + 1, line.length());
+		String name = line.substring(0,line.indexOf("=")-1).trim();
+		String value = line.substring(line.indexOf("=")+1, line.length());
 		option.setName(name.trim());
 		option.setValue(value.replace(";", "").replace("\"", "").trim());
 		return option;
 	}
-
+	
 }

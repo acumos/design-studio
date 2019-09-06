@@ -56,9 +56,8 @@ public class DSUtil {
 	public static String readFile(String filePath) throws IOException {
 		logger.debug(EELFLoggerDelegator.debugLogger, "  readFile() started ");
 		FileReader fr = new FileReader(filePath);
-		BufferedReader br = null;
+		BufferedReader br = new BufferedReader(fr);
 		try {
-			br = new BufferedReader(fr);
 			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();
 
@@ -71,10 +70,7 @@ public class DSUtil {
 			return sb.toString();
 		} finally {
 			fr.close();
-			if (null != br) {
-				br.close();
-			}
-
+			br.close();
 		}
 	}
 

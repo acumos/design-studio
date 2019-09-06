@@ -143,8 +143,6 @@ public class MatchingModelServiceImpl implements IMatchingModelService{
 					Thread.sleep(cdsCheckInterval);
 				} catch (InterruptedException ie) {
 					logger.error("getPublicDSModels() : Connection to CDS failed...trying with {} attempt ", i);
-					 // Restore interrupted state...
-				    Thread.currentThread().interrupt();
 				}
 				if (i >= cdsCheckAttempt - 1) {
 					throw new ServiceException("Connection to CDS failed");

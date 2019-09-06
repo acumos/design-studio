@@ -86,7 +86,6 @@ import org.acumos.designstudio.ce.vo.matchingmodel.ModelDetailVO;
 import org.acumos.designstudio.ce.vo.protobuf.MessageBody;
 import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
 import org.acumos.nexus.client.NexusArtifactClient;
-import org.apache.maven.wagon.ConnectionException;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,15 +163,11 @@ public class SolutionServiceImpl implements ISolutionService {
 				}
 				lastExecutionTime = Instant.now();
 			} else {
-				long time=1000 * 60;
-				Thread.sleep(time);
+				Thread.sleep(1000 * 60);
 			}
 		} catch (InterruptedException e) {
 			logger.error("Interrupted Exception Occured in getCacheMechanism() {}", e);
-		    // Restore interrupted state...
-		    Thread.currentThread().interrupt();
 			throw new ServiceException("Failed for Creating the Cache");
-			
 		}
 		logger.debug("getCacheMechanism() End ");
 	}
@@ -364,9 +359,13 @@ public class SolutionServiceImpl implements ISolutionService {
 					node1.setNdata(node.getNdata());
 					node1.setNodeSolutionId(node.getNodeSolutionId());
 					node1.setNodeVersion(node.getNodeVersion());
-					node1.setProtoUri(getProtoUrl(node.getNodeSolutionId(), node.getNodeVersion(),
-							props.getModelImageArtifactType(), props.getProtobuffFileExtention()));
-					node1.setProperties(propertyarray);
+					node1.setProtoUri(
+							getProtoUrl(node.getNodeSolutionId(), node.getNodeVersion(), props.getModelImageArtifactType(), props.getProtobuffFileExtention()));
+					if (node.getProperties() == null) {
+						node1.setProperties(propertyarray);
+					} else {
+						node1.setProperties(propertyarray);
+					}
 					if (node.getTypeInfo() == null) {
 						node1.setTypeInfo(null);
 					} else {
@@ -389,9 +388,13 @@ public class SolutionServiceImpl implements ISolutionService {
 				node1.setNdata(node.getNdata());
 				node1.setNodeSolutionId(node.getNodeSolutionId());
 				node1.setNodeVersion(node.getNodeVersion());
-				node1.setProtoUri(getProtoUrl(node.getNodeSolutionId(), node.getNodeVersion(),
-						props.getModelImageArtifactType(), props.getProtobuffFileExtention()));
-				node1.setProperties(propertyarray);
+				node1.setProtoUri(
+						getProtoUrl(node.getNodeSolutionId(), node.getNodeVersion(), props.getModelImageArtifactType(), props.getProtobuffFileExtention()));
+				if (node.getProperties() == null) {
+					node1.setProperties(propertyarray);
+				} else {
+					node1.setProperties(propertyarray);
+				}
 				if (node.getTypeInfo() == null) {
 					node1.setTypeInfo(null);
 				} else {
@@ -461,7 +464,6 @@ public class SolutionServiceImpl implements ISolutionService {
 			}
 
 			if (null != nexusURI && !"".equals(nexusURI)) {
-				try{
 				byteArrayOutputStream = getPayload(nexusURI);
 				result = byteArrayOutputStream.toString();
 				dsPayload.setPayload(result);
@@ -470,15 +472,6 @@ public class SolutionServiceImpl implements ISolutionService {
 				DSUtil.writeDataToFile(path, "acumos-cdump" + "-" + solutionID, "json", result);
 				result = mapper.writeValueAsString(dsPayload);
 				logger.debug("Response in String Format :  {} ", result );
-				}
-				catch (NullPointerException e) {
-					logger.error("NullPointerException occured in readCompositeSolutionGraph()",e);
-					throw new ServiceException("Failed to read the CompositeSolution");
-				}
-				catch (Exception e) {
-					logger.error("exception occured in readCompositeSolutionGraph()",e);
-					throw new ServiceException("Failed to read the CompositeSolution");
-				}
 
 			} else {
 				result = "{\"error\": \"CDUMP Artifact Not Found for this solution\"}";
@@ -719,7 +712,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		String id = "";
 		Gson gson = new Gson();
 		String nodeToUpdate = "";
-		boolean addedLink = false; 
+		boolean addedLink = false;
 		List<Nodes> nodesList = new ArrayList<>();
 		try {
 			if (null != cid && null == solutionId) {
@@ -739,7 +732,7 @@ public class SolutionServiceImpl implements ISolutionService {
 						sourceNodeRequirement, targetNodeCapabilityName, cdump);
 				addedLink = true;
 			}
-			if (null != property && null != property.getSplitter_map()) {
+			if (null != property.getSplitter_map()) {
 				nodeToUpdate = targetNodeId;
 				if (nodesList != null && !nodesList.isEmpty()) {
 					for (Nodes node : nodesList) {
@@ -1020,23 +1013,26 @@ public class SolutionServiceImpl implements ISolutionService {
 		String solutionRevisionId = null;
 		List<MLPArtifact> mlpArtifactList;
 		cmnDataService.setRequestId(MDC.get(DSLogConstants.MDCs.REQUEST_ID));
-		try { 
+		try {
 			// 1. Get the list of SolutionRevision for the solutionId.
-			
-			mlpSolutionRevisionList = cmnDataService.getSolutionRevisions(solutionId);
+			try {
+				mlpSolutionRevisionList = cmnDataService.getSolutionRevisions(solutionId);
+			} catch (Exception e) {
+				logger.error("Exception in getSolutionRevisions() ",e);
+				throw new ServiceException("Failed to get the SolutionRevisionList");
+			}
 
 			// 2. Match the version with the SolutionRevision and get the solutionRevisionId.
 			if (null != mlpSolutionRevisionList && !mlpSolutionRevisionList.isEmpty()) {
 				solutionRevisionId = mlpSolutionRevisionList.stream().filter(mlp -> mlp.getVersion().equals(version))
 						.findFirst().get().getRevisionId();
-				logger.debug("SolutionRevisonId for Version :  {} ", solutionRevisionId);
+				logger.debug("SolutionRevisonId for Version :  {} ", solutionRevisionId );
 			}
-
 		} catch (NoSuchElementException | NullPointerException e) {
-			logger.error("Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id", e);
+			logger.error("Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
 			throw new NoSuchElementException("Failed to fetch the Solution Revision Id of the solutionId for the user");
 		} catch (Exception e) {
-			logger.error("Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id", e);
+			logger.error("Error : Exception in getProtoUrl() : Failed to fetch the Solution Revision Id",e);
 			throw new ServiceException("Failed to fetch the Solution Revision Id for the solutionId " + solutionId);
 		}
 
@@ -1167,11 +1163,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		ByteArrayOutputStream outputStream = null;
 		try {
 			outputStream = nexusArtifactClient.getArtifact(uri);
-		} 
-		catch (ConnectionException e) {
-			logger.error("ConnectionException in getPayload()", e);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.error("Exception in getPayload()", e);
 		}
 		return outputStream;
