@@ -50,9 +50,11 @@ public class LocalScriptExecutor {
 	private ProtobufService protoService;
 	
 	/**
-	 * LocalScriptExecutor construct accept the localdir path and the script file name to be created. 
-	 * @param localPath 
-	 * 	The local file path where the data file is placed
+	 * LocalScriptExecutor construct accept the localdir path and the script file name to be created.
+	 * @param localPath
+	 * 			The local file path where the data file is placed
+	 * @param protoService
+	 * 			The Proto Service
 	 */
 	public LocalScriptExecutor(String localPath, ProtobufService protoService) { 
 		this.localPath = localPath; 
@@ -177,6 +179,15 @@ public class LocalScriptExecutor {
 	 * @throws Exception
 	 * 		This method throws the Exception
 	 * 
+	 */
+	/**
+	 * This method read the file on local machine and writes data to the OutputStream
+	 * @param out
+	 * 			This method accepts out
+	 * @param filePath
+	 * 			This method accepts filePath
+	 * @throws Exception
+	 * 			Throws Exception on case of any failure
 	 */
 	public void getData(OutputStream out, String filePath) throws Exception {
 		BufferedReader reader = null;

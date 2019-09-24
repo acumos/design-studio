@@ -1128,8 +1128,11 @@ public final class DataVO {
      */
     java.util.List<java.lang.String>
         getNameList();
+    
     /**
-     * <code>repeated string name = 2;</code>
+     * Get the name count
+     * @return
+     * 		returns int value
      */
     int getNameCount();
     /**
