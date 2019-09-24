@@ -25,11 +25,12 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = SQLDatabrokerApplication.class)
-public class SQLDatabrokerApplicationTest {
-	@Test
-	public void contextLoads() throws Exception {
-		SQLDatabrokerApplication.main(new String[0]);
-	}
-}
+/*
+ * @RunWith(SpringRunner.class)
+ * 
+ * @SpringBootTest(classes = SQLDatabrokerApplication.class) public class
+ * SQLDatabrokerApplicationTest {
+ * 
+ * @Test public void contextLoads() throws Exception {
+ * SQLDatabrokerApplication.main(new String[0]); } }
+ */
