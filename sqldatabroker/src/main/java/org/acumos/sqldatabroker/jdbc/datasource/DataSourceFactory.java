@@ -34,12 +34,13 @@ public class DataSourceFactory {
 	
 	/**
 	 * Return the BasicDataSource instance as per the data source class name configured in the configuration instance passed in. 
-	 * Currently supporting MYSQL and Oracle only. 
+	 * Currently supporting MYSQL and Oracle only.
 	 * @param conf
-	 * 	Configuration details
+	 * 			Configuration details
 	 * @return
-	 * 	BasicDataSource 
+	 * 			BasicDataSource 
 	 * @throws ServiceException
+	 * 			Throws ServiceException in case any failure
 	 */
 	public BasicDataSource getDataSource(Configuration conf) throws ServiceException {
 

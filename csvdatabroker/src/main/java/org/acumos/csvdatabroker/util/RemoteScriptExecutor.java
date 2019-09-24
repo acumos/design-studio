@@ -341,6 +341,15 @@ public class RemoteScriptExecutor {
 	 * 		This method throws the Exception
 	 * 
 	 */
+	/**
+	 * This method read file on the remote server and writes data to the OutputStream
+	 * @param out
+	 * 			This method accepts out
+	 * @param filePath
+	 * 			This method accepts filePath
+	 * @throws Exception
+	 * 			This method throws the Exception
+	 */
 	public void getData(OutputStream out, String filePath) throws Exception {
 
 		BufferedReader reader = null;

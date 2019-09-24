@@ -37,7 +37,7 @@ import org.slf4j.event.Level;
 */
 public class DSLogAdapter {
 
-	/** String constant for messages <tt>ENTERING</tt>, <tt>EXITING</tt>, etc. */
+	/** String constant for messages ENTERING, EXITING, etc. */
 	private static final String EMPTY_MESSAGE = "";
 
 	/** Logger delegate. */
@@ -69,7 +69,7 @@ public class DSLogAdapter {
 	}
 
 	/**
-	 * Report <tt>ENTERING</tt> marker.
+	 * Report ENTERING marker.
 	 *
 	 * @param request
 	 *            non-null incoming request (wrapper).
@@ -89,7 +89,7 @@ public class DSLogAdapter {
 	}
 
 	/**
-	 * Report <tt>ENTERING</tt> marker.
+	 * Report ENTERING marker.
 	 *
 	 * @param request
 	 *            non-null incoming request.
@@ -100,10 +100,13 @@ public class DSLogAdapter {
 	}
 
 	/**
-	 * 
+	 *  Report ENTERING marker.
 	 * @param request
+	 * 		non-null incoming request.
 	 * @param format
+	 * 		SLF4J format string
 	 * @param arguments
+	 * 		Optional arguments as referenced in the format string
 	 * @return
 	 * 		DSLogAdapter
 	 */
@@ -112,7 +115,7 @@ public class DSLogAdapter {
 	}
 
 	/**
-	 * Report <tt>EXITING</tt> marker.
+	 * Report EXITING marker.
 	 *
 	 * @return this.
 	 */
@@ -226,7 +229,7 @@ public class DSLogAdapter {
 	/**
 	 * Response is different in that response MDCs are normally only reported once,
 	 * for a single log message. (But there's no method for clearing them, because
-	 * this is only expected to be called during <tt>#exiting</tt>.)
+	 * this is only expected to be called during exiting.)
 	 */
 	public static class ResponseDescriptor {
 
@@ -239,7 +242,7 @@ public class DSLogAdapter {
 		/** Response severity. */
 		protected Level mSeverity;
 
-		/** Response status, of {<tt>COMPLETED</tt>, <tt>ERROR</tt>}. */
+		/** Response status, of {COMPLETED, ERROR}. */
 		protected DSLogConstants.ResponseStatus mStatus;
 
 		/**
@@ -313,7 +316,7 @@ public class DSLogAdapter {
 	 * Adapter for reading information from an incoming HTTP request.
 	 *
 	 * Incoming is generally easy, because in most cases you'll be able to get your
-	 * hands on the <tt>HttpServletRequest</tt>.
+	 * hands on the HttpServletRequest.
 	 *
 	 * Perhaps should be generalized to refer to constants instead of requiring the
 	 * implementation of specific methods.
@@ -375,7 +378,7 @@ public class DSLogAdapter {
 	 * RequestAdapter for reading information from an incoming HTTPServlet request.
 	 *
 	 * Incoming is generally easy, because in most cases you'll be able to get your
-	 * hands on the <tt>HttpServletRequestAdapter</tt>.
+	 * hands on the HttpServletRequestAdapter.
 	 *
 	 * Perhaps should be generalized to refer to constants instead of requiring the
 	 * implementation of specific methods.
