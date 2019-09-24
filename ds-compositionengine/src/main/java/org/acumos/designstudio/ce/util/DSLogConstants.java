@@ -120,7 +120,7 @@ public final class DSLogConstants {
 	}
 	
 	/**
-	 * Response success or not, for setting <tt>StatusCode</tt>.
+	 * Response success or not, for setting StatusCode.
 	 */
 	public enum ResponseStatus {
 

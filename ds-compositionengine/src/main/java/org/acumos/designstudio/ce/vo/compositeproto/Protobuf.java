@@ -111,10 +111,12 @@ public class Protobuf implements Serializable {
 	}
 	
 	/**
-        * This method returns ProtobufMessage for given messageName
-        * @param messageName
-        *	The name of the Protobuf message
-        */
+	 * This method returns ProtobufMessage for given messageName
+	 * @param messageName
+	 * 			The name of the Protobuf message
+	 * @return
+	 * 			The ProtobufMessage
+	 */
 	public ProtobufMessage getMessage(String messageName){
 		//check if messageName is for nested message 
 		if(messageName.indexOf(".") != -1){
@@ -130,9 +132,6 @@ public class Protobuf implements Serializable {
 		return message;
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
