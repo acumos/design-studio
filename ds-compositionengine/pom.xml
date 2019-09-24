@@ -23,7 +23,7 @@
 
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>ds-compositionengine</artifactId>
-	<version>2.2.3-SNAPSHOT</version>
+	<version>2.2.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Design Studio Composition Engine</name>
 
@@ -47,7 +47,7 @@
 		<!-- Supplied by Jenkins -->
 		<docker.push.registry>${env.NEXUS3_PUSH_REGISTRY}</docker.push.registry>
 		<!-- Protobuf java -->
-		<protobuf.java.version>3.4.0</protobuf.java.version>
+		<protobuf.java.version>3.9.2</protobuf.java.version>
 		<protobuf.java.jar.name>protobuf-java-${protobuf.java.version}.jar</protobuf.java.jar.name>
 		<!-- Generic Datamapper Service -->
 		<gdmservice.version>1.2.0-SNAPSHOT</gdmservice.version>
@@ -56,6 +56,7 @@
 	</properties>
 
 	<dependencies>
+	
 		<dependency>
 			<groupId>org.acumos.acumos-nexus-client</groupId>
 			<artifactId>acumos-nexus-client</artifactId>
@@ -140,25 +141,25 @@
 		
 		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito -->
 		<dependency>
-   			<groupId>org.powermock</groupId>
-    			<artifactId>powermock-api-mockito</artifactId>
+   			 <groupId>org.powermock</groupId>
+    		<artifactId>powermock-api-mockito</artifactId>
    			<version>1.7.4</version>
    			<scope>test</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4 -->
 		<dependency>
    		 	<groupId>org.powermock</groupId>
-    			<artifactId>powermock-module-junit4</artifactId>
+    		<artifactId>powermock-module-junit4</artifactId>
    			<version>1.5.1</version>
-    			<scope>test</scope>
+    		<scope>test</scope>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-modules -->
 		<dependency>
    		 	<groupId>org.powermock</groupId>
-    			<artifactId>powermock-modules</artifactId>
-    			<version>1.6.6</version>
-    			<type>pom</type>
+    		<artifactId>powermock-modules</artifactId>
+    		<version>1.6.6</version>
+    		<type>pom</type>
 		</dependency>
 		
 	</dependencies>
@@ -172,7 +173,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
-				<version>1.14</version>
+				<version>1.17</version>
 				<configuration>
 					<licenseName>acumos</licenseName>
 					<licenseResolver>${project.baseUri}/src/license</licenseResolver>
@@ -187,15 +188,79 @@
 					<canUpdateDescription>true</canUpdateDescription>
 					<canUpdateLicense>true</canUpdateLicense>
 					<emptyLineAfterHeader>true</emptyLineAfterHeader>
+					<includes>
+						<include>**/*.java</include>
+						<!-- <include>**/*.js</include> -->
+						<!-- <include>**/*.ts</include> -->
+					</includes>
 				</configuration>
 			</plugin>
-			<!-- Require Java 1.8 -->
+			<!-- Require Java 11 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>enforce-versions</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<bannedPlugins>
+									<!-- will only display a warning but does not fail the build. -->
+									<level>WARN</level>
+									<excludes>
+										<exclude>org.apache.maven.plugins:maven-verifier-plugin</exclude>
+									</excludes>
+									<message>Please consider using the maven-invoker-plugin (http://maven.apache.org/plugins/maven-invoker-plugin/)!</message>
+								</bannedPlugins>
+								<requireMavenVersion>
+									<version>3.0.3</version>
+								</requireMavenVersion>
+								<requireJavaVersion>
+									<version>11</version>
+								</requireJavaVersion>
+								<!-- <requireOS>
+                  <family>unix</family>
+                </requireOS> -->
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<configuration>
+					<generateBackupPoms>false</generateBackupPoms>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>11</release>
+                                	<forceJavacCompilerUse>true</forceJavacCompilerUse>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.0</version>
+				<configuration>
+					<argLine> --illegal-access=permit
+					</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.22.0</version>
+				<configuration>
+					<argLine> --illegal-access=permit
+					</argLine>
 				</configuration>
 			</plugin>
 			<!-- add build information to manifest -->
@@ -238,7 +303,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.6.201602180812</version>
+				<version>0.8.1</version>
 				<executions>
 					<execution>
 						<id>default-prepare-agent</id>
@@ -258,7 +323,7 @@
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.21.0</version>
+				<version>0.30.0</version>
 				<configuration>
 					<verbose>true</verbose>
 					<!-- docker runs on the LF build minion so the default value is ok -->
@@ -272,7 +337,7 @@
 							<name>ds-compositionengine:${project.version}</name>
 							<build>
 								<!-- This is the same FROM used in a Dockerfile -->
-								<from>openjdk:8-jdk</from>
+								<from>adoptopenjdk/openjdk11-openj9:alpine-jre</from>
 								<tags>
 									<!-- Add tag with build number -->
 									<tag>${project.version}-b${build.number}</tag>
@@ -299,10 +364,10 @@
 									</runCmd>
 									<runCmd>
 										<!-- CDATA prevents Eclipse formatter from breaking line -->
-										<![CDATA[curl -OL https://github.com/google/protobuf/releases/download/v3.4.0/protoc-3.4.0-linux-x86_64.zip]]>
+										<![CDATA[curl -OL https://github.com/google/protobuf/releases/download/v3.9.2/protoc-3.9.2-linux-x86_64.zip]]>
 									</runCmd>
 									<runCmd>
-										unzip protoc-3.4.0-linux-x86_64.zip -d protoc3
+										unzip protoc-3.9.2-linux-x86_64.zip -d protoc3
 									</runCmd>
 									<runCmd>
 										mv protoc3/bin/* /usr/local/bin/

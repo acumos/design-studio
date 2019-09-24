@@ -92,9 +92,9 @@ public class ProtobufGeneratorService {
 	public String createProtoJson(String solutionId, String version, File localMetadataFile) throws ServiceException {
 		logger.debug("CreateProtoJson() started");
 		protoBufClass = new ProtoBufClass();
-		messageBodyList = new ArrayList<>();
-		listOfInputAndOutputMessage = new ArrayList<>();
-		listOfOption = new ArrayList<>();
+		messageBodyList = new ArrayList<MessageBody>();
+		listOfInputAndOutputMessage = new ArrayList<String>();
+		listOfOption = new ArrayList<Option>();
 		BufferedReader br = null;
 		FileReader fr = null;
 		String protoBufToJsonString = "";
