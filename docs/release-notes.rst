@@ -27,6 +27,7 @@ repository as a jar file.
 Version 3.0.1, 2019-10-16
 ---------------------------
  * ACUMOS-1206 : Sonar 40% code coverage for Design Studio project
+ * ACUMOS-3480 : User Guide | Design Studio | Acu-Compose | MLWB : Few section need to update
 
 Version 3.0.0, 2019-09-30
 ---------------------------
