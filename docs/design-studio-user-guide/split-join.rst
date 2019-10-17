@@ -311,3 +311,5 @@ To generate a TOSCA blueprint for deployment to a cloud environment, select the
 enabled. On click of any of the cloud platforms, you will be redirected to the
 **Manage my Model- Deploy to Cloud** page. At this point, this model should be
 usable with the Data Broker when deployed.
+
+The Splitter and Collator are not deployable models.

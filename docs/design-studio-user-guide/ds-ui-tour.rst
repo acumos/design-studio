@@ -27,7 +27,7 @@ The Design Studio UI, shown below, consists of a Design Canvas with a grid backg
 
 1. Models Tab: Displays the catalog of the ML Models – the basic building blocks used for creating composite solutions. The models are currently classified under four categories – Classification, Prediction, Regression and Others
 
-2. Solutions Tab: Displays the catalog of composite solutions (built out of basic building blocks) that have either “Public” visibility or belong to the logged in persons “Organization”
+2. Solutions Tab: Displays the catalog of composite solutions (built out of basic building blocks) that have either “Public” visibility, which is published to the catalogs.
 
 3. Data Transformation Tools: A set of useful data transformation utilities are displayed here. Currently there is a Data Mapper which performs mapping between some basic Protobuf data types, such as int32, string, float, double and bool. An Aggregator is another utility that is planned to be deployed there.
 
@@ -42,7 +42,9 @@ The Design Studio UI, shown below, consists of a Design Canvas with a grid backg
 
 8. New:    The user clicks this button to create a new composite solution.
 
-9. Clear: The user clicks this button to clear an unsaved solution.
+9. Clear: The user clicks this button to clear an unsaved solution. Then design studio will displays a pop up which is telling that, Would you like to save current solution?
+
+    .. image:: ../images/design-studio-user-guide/ClearCanvasPopup.png
 
 10. Save: The user clicks this button to save a new composite solution or save changes to an existing solution. The user is prompted to provide the name, version and a description of the solution. The user can make modification to the solution and save it as a separate solution by providing a new name or new version or both.
 

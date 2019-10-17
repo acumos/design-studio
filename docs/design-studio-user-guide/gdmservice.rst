@@ -38,7 +38,7 @@ The Generic Data Mapper has the following functionality:
 A Generic Data Mapper can be found in Design Studio UI under the **"Data Transfrom Tools"** palette.
 
 .. note::
-    The Generic Data Wrapper functionality requires that a specific "Data Transformation & Toolkit" model be onboarded in order for the functionality to be enabled. If you do not see a Generic Data Mapper in the **Data Transform Tools** palette, contact your Acumos Admin for further information.
+    The Generic Data Mapper functionality requires that a specific "Data Transformation & Toolkit" model be onboarded in order for the functionality to be enabled. If you do not see a Generic Data Mapper in the **Data Transform Tools** palette, contact your Acumos Admin for further information.
 
 Connecting Incompatible Ports
 -----------------------------
