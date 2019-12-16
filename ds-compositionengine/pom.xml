@@ -23,7 +23,7 @@
 
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>ds-compositionengine</artifactId>
-	<version>3.0.2-SNAPSHOT</version>
+	<version>3.0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Design Studio Composition Engine</name>
 
@@ -161,6 +161,13 @@
     		<version>1.6.6</version>
     		<type>pom</type>
 		</dependency>
+		
+		<dependency>
+        		<groupId>org.acumos.platform-oam</groupId>
+        		<artifactId>logging-demo</artifactId>
+        		<version>3.0.5-SNAPSHOT</version>
+        	</dependency>
+		
 		
 	</dependencies>
 	<build>

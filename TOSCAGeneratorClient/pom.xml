@@ -116,6 +116,11 @@
 			<artifactId>eelf-core</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+        		<groupId>org.acumos.platform-oam</groupId>
+        		<artifactId>logging-demo</artifactId>
+        		<version>3.0.5-SNAPSHOT</version>
+        	</dependency>
 		
 	</dependencies>
 	<build>
