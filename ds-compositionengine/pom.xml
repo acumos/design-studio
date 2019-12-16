@@ -23,7 +23,7 @@
 
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>ds-compositionengine</artifactId>
-	<version>3.0.2-SNAPSHOT</version>
+	<version>3.0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Design Studio Composition Engine</name>
 
@@ -142,25 +142,32 @@
 		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito -->
 		<dependency>
    			 <groupId>org.powermock</groupId>
-    		<artifactId>powermock-api-mockito</artifactId>
+    			 <artifactId>powermock-api-mockito</artifactId>
    			<version>1.7.4</version>
    			<scope>test</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4 -->
 		<dependency>
    		 	<groupId>org.powermock</groupId>
-    		<artifactId>powermock-module-junit4</artifactId>
+    			<artifactId>powermock-module-junit4</artifactId>
    			<version>1.5.1</version>
-    		<scope>test</scope>
+    			<scope>test</scope>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-modules -->
 		<dependency>
    		 	<groupId>org.powermock</groupId>
-    		<artifactId>powermock-modules</artifactId>
-    		<version>1.6.6</version>
-    		<type>pom</type>
+    			<artifactId>powermock-modules</artifactId>
+    			<version>1.6.6</version>
+    			<type>pom</type>
 		</dependency>
+		
+		<dependency>
+        		<groupId>org.acumos.platform-oam</groupId>
+        		<artifactId>logging-demo</artifactId>
+        		<version>3.0.5-SNAPSHOT</version>
+        	</dependency>
+		
 		
 	</dependencies>
 	<build>
