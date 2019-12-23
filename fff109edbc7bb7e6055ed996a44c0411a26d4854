@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c9596642_afa8a9b7",
+        "filename": "TOSCAGeneratorClient/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2019-12-23T12:39:22Z",
+      "side": 1,
+      "message": "Please format the entry.",
+      "revId": "fff109edbc7bb7e6055ed996a44c0411a26d4854",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": true
+    }
+  ]
+}
