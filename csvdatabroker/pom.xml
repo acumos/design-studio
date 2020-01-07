@@ -357,8 +357,9 @@
 					<!-- LF credentials are not supplied here -->
 					<images>
 						<image>
+							<!-- Prefix must be "acumos/" -->
 							<!-- Specify a tag to avoid default tag "latest" -->
-							<name>${project.artifactId}:${project.version}</name>
+							<name>acumos/${project.artifactId}:${project.version}</name>
 							<build>
 								<!-- This is the same FROM used in a Dockerfile -->
 								<from>adoptopenjdk/openjdk11-openj9:alpine-jre</from>
