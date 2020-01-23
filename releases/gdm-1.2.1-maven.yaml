@@ -1,0 +1,5 @@
+---
+distribution_type: maven
+version: 1.2.1
+project: design-studio
+log_dir: design-studio-gdmservice-maven-stage-master/430
