@@ -23,7 +23,7 @@
 
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>ds-compositionengine</artifactId>
-	<version>3.0.3-SNAPSHOT</version>
+	<version>3.0.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Design Studio Composition Engine</name>
 
@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>org.acumos.common-dataservice</groupId>
 			<artifactId>cmn-data-svc-client</artifactId>
-			<version>3.1.0</version>
+			<version>3.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -165,7 +165,7 @@
 		<dependency>
         		<groupId>org.acumos.platform-oam</groupId>
         		<artifactId>logging-demo</artifactId>
-        		<version>3.0.5-SNAPSHOT</version>
+        		<version>3.0.5</version>
         	</dependency>
 		
 		
