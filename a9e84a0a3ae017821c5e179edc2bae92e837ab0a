@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe077e93_286a8b1c",
+        "filename": "docs/release-notes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2020-01-30T08:38:27Z",
+      "side": 1,
+      "message": "Please keep consistency for CDS upgrade : \"Updated DS modules to CDS 3.1.0 version compatibility\"",
+      "revId": "a9e84a0a3ae017821c5e179edc2bae92e837ab0a",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": false
+    }
+  ]
+}
