@@ -135,6 +135,53 @@ public class TgifGeneratorService {
 		logger.debug("--------  createTgif() End ------------");
 		return result;
 	}
+	/**
+	 * To create TGIF artifact for Solution
+	 * 
+	 * @param solutionID
+	 * 			solution Id
+	 * @param version
+	 * 			version
+	 * @param protobuf
+	 * 			Protobuf spec 			
+	 * @param solutionName
+	 * 			solution name
+	 * @return
+	 * @throws AcumosException
+	 * 			on Failure
+	 */
+	public Artifact createTgifForSolution(String solutionID, String version, String protobuf, String solutionName)
+			throws AcumosException {
+		logger.debug("--------  createTgif() Started ------------");
+		Artifact result = null;
+		String path = Properties.getTempFolderPath(solutionID, version);
+		JSONParser parser = new JSONParser();
+		String jsonString = "";
+		try {
+			Object obj = parser.parse(protobuf.replace("\t", ""));
+			JSONObject protobufJson = (JSONObject) obj;
+			Tgif tgif = populateTgifForSolution(version, solutionName, protobufJson);
+			// convert Tgif to json
+			ObjectMapper mapper = new ObjectMapper();
+			jsonString = mapper.writeValueAsString(tgif);
+			jsonString = jsonString.replace("[null]", "[]");
+			jsonString = jsonString.replace("null", "{}");
+			logger.debug("Generated TGIF.json : " + jsonString);
+			ToscaUtil.writeDataToFile(path, "TGIF", "json", jsonString);
+			result = new Artifact("TGIF", "json", solutionID, version, path, jsonString.length());
+
+		} catch (Exception e) {
+			logger.error("------------- Exception Occured in createTgif() -------------", e);
+			logger.error("solutionName : " + solutionName);
+			logger.error("protobuf : " + protobuf);
+			logger.error("tgif : " + jsonString);
+			throw new ServiceException(
+					" --------------- Exception Occurred parsing either metaData or protobuf --------------",
+					Properties.getDecryptionErrorCode(), "Error creating TGIF details", e.getCause());
+		}
+		logger.debug("--------  createTgif() End ------------");
+		return result;
+	}
 
 	/**
 	 * 
@@ -178,6 +225,49 @@ public class TgifGeneratorService {
 		logger.debug("--------  populateTgif() End ------------");
 		return result;
 	}
+	/**
+	 * 
+	 * @param version
+	 * @param solutionName
+	 * @param protobufJson
+	 * @return
+	 */
+	private Tgif populateTgifForSolution(String version, String solutionName, JSONObject protobufJson) {
+		logger.debug("--------  populateTgif() Begin ------------");
+
+//		@SuppressWarnings("unchecked")
+//		String solutionName = metaDataJson.getOrDefault("name", "Key not found").toString();
+//		@SuppressWarnings("unchecked")
+//		String description = metaDataJson.getOrDefault("description", "").toString();
+		String COMPONENT_TYPE = "Docker";
+
+		// Set Self
+		Self self = new Self(version, solutionName, "", COMPONENT_TYPE);
+
+		// Set empty Stream
+		Stream streams = null;
+
+		// Set services
+		Call[] scalls = getCalls(protobufJson);
+		Provide[] sprovides = getProvides(protobufJson);
+
+		Service services = new Service(scalls, sprovides);
+
+		// Set array of Parameters
+		Parameter[] parameters = getParameters(protobufJson);
+
+		// Set Auxilary
+		Auxiliary auxiliary = null;
+
+		// Set array of artifacts
+		org.acumos.designstudio.toscagenerator.vo.tgif.Artifact[] artifacts = getArtifacts(protobufJson);
+
+		Tgif result = new Tgif(self, streams, services, parameters, auxiliary, artifacts);
+
+		logger.debug("--------  populateTgif() End ------------");
+		return result;
+	}
+
 
 	/**
 	 * 

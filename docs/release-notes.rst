@@ -24,6 +24,13 @@ The Design Studio Composition Engine is packaged within a Docker image and avail
 Acumos docker registry.  The TOSCAGenerator Client library is published in the Acumos Nexus
 repository as a jar file.
 
+Version 3.0.5, 2020-03-12
+---------------------------
+* Updated the existing download url for protobuf-java jar in ds-compositionengine pom.xml
+* Updated major, minor and patch version 
+  TOSCAModelGeneratorClient:2.0.8
+* ACUMOS-4062 : Updated TOSCAModelGeneratorClient to create new API to accept model name & protobuf to generate the TOSCA artifacts
+
 Version 3.0.4, 2020-01-29
 ---------------------------
 * Updated DS modules to CDS 3.1.1 version compatibility.

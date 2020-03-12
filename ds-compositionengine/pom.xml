@@ -23,7 +23,7 @@
 
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>ds-compositionengine</artifactId>
-	<version>3.0.4-SNAPSHOT</version>
+	<version>3.0.5-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Design Studio Composition Engine</name>
 
@@ -364,7 +364,7 @@
                                                                 	<runCmd>rm -rf /var/cache/apk/*</runCmd>
                                                                 	<runCmd>apk --no-cache add curl</runCmd>
 									<runCmd>
-										<![CDATA[curl --output /maven/${protobuf.java.jar.name} http://central.maven.org/maven2/com/google/protobuf/protobuf-java/${protobuf.java.version}/${protobuf.java.jar.name}]]>
+										<![CDATA[curl --output /maven/${protobuf.java.jar.name} https://repo1.maven.org/maven2/com/google/protobuf/protobuf-java/${protobuf.java.version}/${protobuf.java.jar.name}]]>
 									</runCmd>
 									<runCmd>
 										<![CDATA[curl --output /maven/${gdmservice.jar.name} https://nexus.acumos.org/content/repositories/releases/org/acumos/design-studio/gdmservice/${gdmservice.version}/${gdmservice.jar.name}]]>
