@@ -87,7 +87,7 @@ public class TgifGeneratorService {
 	}
 
 	/**
-	 * 
+	 * To create the TGIF file
 	 * @param solutionID
 	 *            solution ID
 	 * @param version
@@ -96,7 +96,8 @@ public class TgifGeneratorService {
 	 *            Protobuf spec
 	 * @param metaData
 	 *            metadata
-	 * @return the TGIF as JSON
+	 * @return 
+	 *    		  the TGIF as JSON
 	 * @throws AcumosException
 	 *             on Failure
 	 */
@@ -110,10 +111,13 @@ public class TgifGeneratorService {
 		try {
 			Object obj = parser.parse(metaData.replace("\t", ""));
 			JSONObject metaDataJson = (JSONObject) obj;
-			// String jsonString = jsonObject.toJSONString();
 			obj = parser.parse(protobuf.replace("\t", ""));
 			JSONObject protobufJson = (JSONObject) obj;
-			Tgif tgif = populateTgif(version, metaDataJson, protobufJson);
+			@SuppressWarnings("unchecked")
+			String solutionName = metaDataJson.getOrDefault("name", "Key not found").toString();
+			@SuppressWarnings("unchecked")
+			String description = metaDataJson.getOrDefault("description", "").toString();
+			Tgif tgif = populateTgif(version, solutionName, description, protobufJson);
 			// convert Tgif to json
 			ObjectMapper mapper = new ObjectMapper();
 			jsonString = mapper.writeValueAsString(tgif);
@@ -135,6 +139,56 @@ public class TgifGeneratorService {
 		logger.debug("--------  createTgif() End ------------");
 		return result;
 	}
+	/**
+	 * To create TGIF artifact for Solution
+	 * 
+	 * @param solutionID
+	 * 			solution Id
+	 * @param version
+	 * 			version
+	 * @param protobuf
+	 * 			Protobuf spec 			
+	 * @param solutionName
+	 * 			solution name
+	 * @param description
+	 * 			description
+	 * @return
+	 * 			Artifact
+	 * @throws AcumosException
+	 * 			on Failure
+	 */
+	public Artifact createTgif(String solutionID, String version, String protobuf, String solutionName,String description)
+			throws AcumosException {
+		logger.debug("--------  createTgif() Started ------------");
+		Artifact result = null;
+		String path = Properties.getTempFolderPath(solutionID, version);
+		JSONParser parser = new JSONParser();
+		String jsonString = "";
+		try {
+			Object obj = parser.parse(protobuf.replace("\t", ""));
+			JSONObject protobufJson = (JSONObject) obj;
+			Tgif tgif = populateTgif(version, solutionName,description, protobufJson);
+			// convert Tgif to json
+			ObjectMapper mapper = new ObjectMapper();
+			jsonString = mapper.writeValueAsString(tgif);
+			jsonString = jsonString.replace("[null]", "[]");
+			jsonString = jsonString.replace("null", "{}");
+			logger.debug("Generated TGIF.json : " + jsonString);
+			ToscaUtil.writeDataToFile(path, "TGIF", "json", jsonString);
+			result = new Artifact("TGIF", "json", solutionID, version, path, jsonString.length());
+
+		} catch (Exception e) {
+			logger.error("------------- Exception Occured in createTgif() -------------", e);
+			logger.error("solutionName : " + solutionName);
+			logger.error("protobuf : " + protobuf);
+			logger.error("tgif : " + jsonString);
+			throw new ServiceException(
+					" --------------- Exception Occurred parsing either metaData or protobuf --------------",
+					Properties.getDecryptionErrorCode(), "Error creating TGIF details", e.getCause());
+		}
+		logger.debug("--------  createTgif() End ------------");
+		return result;
+	}
 
 	/**
 	 * 
@@ -143,15 +197,10 @@ public class TgifGeneratorService {
 	 * @param protobufJson
 	 * @return
 	 */
-	private Tgif populateTgif(String version, JSONObject metaDataJson, JSONObject protobufJson) {
+	private Tgif populateTgif(String version, String solutionName, String description, JSONObject protobufJson) {
 		logger.debug("--------  populateTgif() Begin ------------");
 
-		@SuppressWarnings("unchecked")
-		String solutionName = metaDataJson.getOrDefault("name", "Key not found").toString();
-		@SuppressWarnings("unchecked")
-		String description = metaDataJson.getOrDefault("description", "").toString();
 		String COMPONENT_TYPE = "Docker";
-
 		// Set Self
 		Self self = new Self(version, solutionName, description, COMPONENT_TYPE);
 
