@@ -106,55 +106,44 @@ public class ToscaGeneratorClient {
 				nexusPassword, nexusGroupId, cmnDataSvcEndPoinURL, cmnDataSvcUser, cmnDataSvcPwd);
 	}
 
+
 	/**
-	 * This method is to generate the TOSCA files and update the SolutionRevision
-	 * accordingly.
+	 * This method is to generate the TOSCA files and update the SolutionRevision accordingly.
 	 * 
 	 * @param ownerID
 	 *            owner ID
 	 * @param solutionID
 	 *            solution ID
 	 * @param version
-	 *            version string
+	 *            version
 	 * @param solutionRevisionID
 	 *            revision ID
 	 * @param localProtobufFile
 	 *            protobuf file
 	 * @param localMetadataFile
 	 *            metadata file
-	 * @return on success {solutionID:"solutionv id value",version:"version value"}
+	 * @return 
+	 *            json response as string
 	 * @throws AcumosException
-	 *             On failure
+	 *            On failure
 	 */
 	public String generateTOSCA(String ownerID, String solutionID, String version, String solutionRevisionID,
 			File localProtobufFile, File localMetadataFile) throws AcumosException {
 
-		logger.info("-------------- generateTOSCA() ----- : Begin");
+		logger.info(" generateTOSCA() : Begin");
 		String result = null;
 		String success = "{solutionID:\"%s\",version:\"%s\"}";
 		String error = "{errorCode : \"%s\", errorDescription : \"%s\"}";
-
-		@SuppressWarnings("unused")
-		String response = null;
 		List<Artifact> toscaFiles = null;
 		try {
 			if (ownerID != null && solutionID != null && !solutionID.trim().isEmpty() && localProtobufFile != null
 					&& localMetadataFile != null && version != null && !version.trim().isEmpty()) {
-
 				toscaFiles = new ArrayList<Artifact>();
-
-				// Define the switch to enable/disable the invocation of TSOCA Python Server.
-				// 1. Integrate TOSCA Model Generator Python Web Service & 2. process the
-				// response.
-				// Disabling the call to TOSCA Generator.
-
+				// Define the switch to enable/disable the invocation of TOSCA Python Server.
+				// 1. Integrate TOSCA Model Generator Python Web Service & 2. process the response.
 				// 2. Decrypt the content of each file using Base64 &
-				// 3. Store the decrypted content into corresponding file and store the file at
-				// configured location
-				// Disabling the TOSCA file generation
-
-				// Include the .proto file in the toscaFiles to be uploaded : Already uploaded
-				// by On Boarding.
+				// 3. Store the decrypted content into corresponding file and store the file at configured location
+				// Include the .proto file in the toscaFiles to be uploaded : Already uploaded by On Boarding.
 				String path = Properties.getTempFolderPath(solutionID, version);
 
 				// Generate Protobuf.json from protoData
@@ -168,11 +157,101 @@ public class ToscaGeneratorClient {
 				Artifact tgif = tgifService.createTgif(solutionID, version, protoJsonStr, metaData);
 				toscaFiles.add(tgif);
 
+				// 4. Invoke the library to store the files in Nexus :
+				service.uploadFilesToRepository(solutionID, version, toscaFiles);
+
+				logger.debug(" After uploading in Nexus ");
+				if (toscaFiles != null && !toscaFiles.isEmpty()) {
+					for (Artifact artifact : toscaFiles) {
+						logger.debug("SolutionID :" + artifact.getSolutionID());
+						logger.debug("version :" + artifact.getVersion());
+						logger.debug("ArtifactType : " + artifact.getType());
+						logger.debug("ArtifactType : " + artifact.getPayloadURI());
+						logger.debug(artifact.getNexusURI());
+					}
+				}
+				// 5. Invoke the Common Data Microservice putArtifact
+				service.postArtifact(solutionID, solutionRevisionID, ownerID, toscaFiles);
+				result = String.format(success, solutionID, version);
+			} else {
+				result = String.format(error, Properties.getMetaDataErrorCode(), Properties.getMetaDataErrorDesc());
+			}
+		} catch (AcumosException e) {
+			logger.error("Exception in  TOSCA Model Generator Client", e);
+			result = String.format(error, e.getErrorCode(), e.getErrorDesc());
+
+		} catch (Exception e) {
+			logger.error(" Exception in  TOSCA Model Generator Client ", e);
+			result = String.format(error, Properties.getTOSCAFileGenerationErrorCode(),
+					Properties.getTOSCAFileGenerationErrorDesc(), Properties.getTOSCAFileGenerationErrorDesc());
+			throw new ControllerException(e.getMessage(), Properties.getTOSCAFileGenerationErrorCode(),
+					Properties.getTOSCAFileGenerationErrorDesc(), e);
+
+		} finally {
+			//6. Delete the TOSCA File from payloadPath
+			deleteTOSCAFiles(solutionID, version);
+		}
+		// 7. Construct the return JSON and send the response"
+		logger.info("generateTOSCA() : End");
+		return result;
+	}
+	
+	/**
+	 * This method is to generate the TOSCA files accepting Solution Name and Description accordingly.
+	 * 
+	 * @param ownerID
+	 *            owner ID
+	 * @param solutionID
+	 *            solution ID
+	 * @param version
+	 *            version string
+	 * @param solutionRevisionID
+	 *            revision ID
+	 * @param localProtobufFile
+	 *            protobuf file
+	 * @param solutionName
+	 *            solutionName 
+	 * @param description
+	 *            description
+	 * @return 
+         *            json response as string
+	 * @throws AcumosException
+	 *            On failure
+	 */
+	public String generateTOSCA(String ownerID, String solutionID, String version, String solutionRevisionID,
+			File localProtobufFile, String solutionName, String description) throws AcumosException {
+
+		logger.info(" generateTOSCA() : Begin");
+		String result = null;
+		String success = "{solutionID:\"%s\",version:\"%s\"}";
+		String error = "{errorCode : \"%s\", errorDescription : \"%s\"}";
+		List<Artifact> toscaFiles = null;
+		try {
+			if (ownerID != null && solutionID != null && !solutionID.trim().isEmpty() && localProtobufFile != null
+					&& solutionName != null && version != null && !version.trim().isEmpty()) {
+
+				toscaFiles = new ArrayList<Artifact>();
+
+				// Define the switch to enable/disable the invocation of TSOCA Python Server.
+				// 1. Integrate TOSCA Model Generator Python Web Service & 2. process the response.
+				// 2. Decrypt the content of each file using Base64 &
+				// 3. Store the decrypted content into corresponding file and store the file at configured location
+				// Include the .proto file in the toscaFiles to be uploaded : Already uploaded by On Boarding.
+				String path = Properties.getTempFolderPath(solutionID, version);
+
+				// Generate Protobuf.json from protoData
+				String protoJsonStr = protoService.createProtoJson(solutionID, version, localProtobufFile);
+				ToscaUtil.writeDataToFile(path, "PROTOBUF", "json", protoJsonStr);
+				Artifact protoJson = new Artifact("PROTOBUF", "json", solutionID, version, path, protoJsonStr.length());
+				toscaFiles.add(protoJson);
+
+				//4.  Create the tgif.json file and add it to toscaFiles list
+				Artifact tgif = tgifService.createTgif(solutionID, version, protoJsonStr, solutionName, description);
+				toscaFiles.add(tgif);
 				// 5. Invoke the library to store the files in Nexus :
 				service.uploadFilesToRepository(solutionID, version, toscaFiles);
 
-				// Testing -- Begin
-				logger.debug("-------- After uploading in Nexus ----------");
+				logger.debug(" After uploading in Nexus ");
 				if (toscaFiles != null && !toscaFiles.isEmpty()) {
 					for (Artifact artifact : toscaFiles) {
 						logger.debug("SolutionID :" + artifact.getSolutionID());
@@ -188,23 +267,21 @@ public class ToscaGeneratorClient {
 			} else {
 				result = String.format(error, Properties.getMetaDataErrorCode(), Properties.getMetaDataErrorDesc());
 			}
-			logger.info("--------------generateTOSCA() ----- : End");
 		} catch (AcumosException e) {
-			logger.error("--------- Exception in  TOSCA Model Generator Client -----------", e);
+			logger.error(" Exception in  TOSCA Model Generator Client ", e);
 			result = String.format(error, e.getErrorCode(), e.getErrorDesc());
-
 		} catch (Exception e) {
-			logger.error("--------- Exception in  TOSCA Model Generator Client -----------", e);
+			logger.error(" Exception in  TOSCA Model Generator Client ", e);
 			result = String.format(error, Properties.getTOSCAFileGenerationErrorCode(),
 					Properties.getTOSCAFileGenerationErrorDesc(), Properties.getTOSCAFileGenerationErrorDesc());
 			throw new ControllerException(e.getMessage(), Properties.getTOSCAFileGenerationErrorCode(),
 					Properties.getTOSCAFileGenerationErrorDesc(), e);
-
 		} finally {
 			// Delete the TOSCA File from payloadPath
 			deleteTOSCAFiles(solutionID, version);
 		}
 		// 7. Construct the return JSON and send the response"
+		logger.info(" generateTOSCA() : End");
 		return result;
 	}
 
