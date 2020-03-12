@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2039d197_a127cbfc",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/ToscaGeneratorClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2020-03-12T14:36:43Z",
+      "side": 1,
+      "message": "Instead of creating new method do method overloading",
+      "revId": "d1c7e7e56f3b8b04a5a13bdfde758a5bd95b52ff",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bba173d4_b2f5d6d5",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/TgifGeneratorService.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2020-03-12T14:36:43Z",
+      "side": 1,
+      "message": "Do method Overloading",
+      "revId": "d1c7e7e56f3b8b04a5a13bdfde758a5bd95b52ff",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa857157_116f87be",
+        "filename": "TOSCAGeneratorClient/src/main/java/org/acumos/designstudio/toscagenerator/service/TgifGeneratorService.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 11
+      },
+      "writtenOn": "2020-03-12T14:36:43Z",
+      "side": 1,
+      "message": "No need to duplicate whole method, instead change the parameters",
+      "revId": "d1c7e7e56f3b8b04a5a13bdfde758a5bd95b52ff",
+      "serverId": "655300a2-7a56-4504-9153-881edd907bea",
+      "unresolved": true
+    }
+  ]
+}
