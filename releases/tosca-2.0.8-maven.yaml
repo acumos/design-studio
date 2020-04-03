@@ -1,0 +1,5 @@
+---
+distribution_type: maven
+version: 2.0.8
+project: design-studio
+log_dir: design-studio-tosca-maven-stage-master/532
