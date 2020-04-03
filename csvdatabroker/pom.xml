@@ -23,7 +23,7 @@
 
   <groupId>org.acumos.design-studio</groupId>
   <artifactId>csvdatabroker</artifactId>
-  <version>1.4.1-SNAPSHOT</version>
+  <version>1.4.1</version>
   <packaging>jar</packaging>
   <name>Design Studio CSV Databroker </name>
 
