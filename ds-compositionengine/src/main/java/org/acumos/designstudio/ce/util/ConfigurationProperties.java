@@ -81,6 +81,13 @@ public class ConfigurationProperties {
 	
 	@Value("${gdmJarName}")
 	private String gdmJarName;
+	
+	@Value("${lum.on}")
+	private boolean LUMOn;
+	
+	@Value("${lum.url}")
+	private String lumURL;
+	
 	/**
 	 * @return
 	 * 		 the gdmJarName
@@ -210,10 +217,19 @@ public class ConfigurationProperties {
 	public String getDateFormat() {
 		return dateFormat;
 	}
-	
-	
 
-	
-	
+	/**
+	 * @return the lUMOn
+	 */
+	public boolean isLUMOn() {
+		return LUMOn;
+	}
+
+	/**
+	 * @return the lumURL
+	 */
+	public String getLumURL() {
+		return lumURL;
+	}
 	
 }

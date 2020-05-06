@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.acumos.cds.client.CommonDataServiceRestClientImpl;
@@ -85,6 +87,10 @@ import org.acumos.designstudio.ce.vo.matchingmodel.KeyVO;
 import org.acumos.designstudio.ce.vo.matchingmodel.ModelDetailVO;
 import org.acumos.designstudio.ce.vo.protobuf.MessageBody;
 import org.acumos.designstudio.ce.vo.protobuf.MessageargumentList;
+import org.acumos.licensemanager.client.model.LicenseAction;
+import org.acumos.licensemanager.client.rtu.LicenseAsset;
+import org.acumos.lum.model.GetEntitledSwidTagsResponse;
+import org.acumos.lum.model.SwidTagsWithAvailableEntitlementSwidTagsWithAvailableEntitlement;
 import org.acumos.nexus.client.NexusArtifactClient;
 import org.json.JSONArray;
 import org.slf4j.Logger;
@@ -195,27 +201,34 @@ public class SolutionServiceImpl implements ISolutionService {
 			String[] ownerIds = {};
 			String compoSolnTlkitTypeCode = props.getCompositSolutiontoolKitTypeCode();
 			RestPageRequest pageRequest = new RestPageRequest(0, confprops.getSolutionResultsetSize());
-			// This will get only the published solutions (independent of User)
-			RestPageResponse<MLPSolution> publishedSolutions = cmnDataService.findPublishedSolutionsByKwAndTags(
-					nameKeyword, active, ownerIds, modelTypeCodes, tags, anyTags, catalogIds, pageRequest);
+			RestPageResponse<MLPSolution> publishedSolutions = null;
+			logger.debug("The Date Format :  {} ", confprops.getDateFormat());
+			
+			// Check if LUM is ON
+			if(confprops.isLUMOn()) {
+				// Get Entitled Solution by LUM
+				dsSolutionList.addAll(getEntiteled(userID, sdf));
+			} else {
+				// This will get all the published solutions (independent of User)
+				publishedSolutions = cmnDataService.findPublishedSolutionsByKwAndTags(
+						nameKeyword, active, ownerIds, modelTypeCodes, tags, anyTags, catalogIds, pageRequest);
+				mlpPublishedSolutions = publishedSolutions.getContent();
+				if (null == mlpPublishedSolutions) {
+					logger.debug("CommonDataService findUserSolutions() returned null Solution list");
+				} else if (mlpPublishedSolutions.isEmpty()) {
+					logger.debug("CommonDataService findUserSolutions() returned empty Solution list");
+				} else {
+					logger.debug("CommonDataService findUserSolutions() returned Solution list of size :  {}",mlpPublishedSolutions.size());
+					for (MLPSolution mlpsolution : mlpPublishedSolutions) {
+						dsSolutionList.addAll(solutionExtractor(sdf, compoSolnTlkitTypeCode, mlpsolution));
+					}
+				}
+			}
+			
 			// This will get User Specific Solutions which are PrivateSolutions.(Get the Published and Unpublished models also)
 			RestPageResponse<MLPSolution> userPrivateSolutions = cmnDataService.findUserSolutions(active, isPublished,
 					userID, nameKeyword, descriptionKeywords, modelTypeCodes, anyTags, pageRequest);
-			
-			mlpPublishedSolutions = publishedSolutions.getContent();
 			mlpUserPrivateSolutions = userPrivateSolutions.getContent();
-			
-			logger.debug("The Date Format :  {} ", confprops.getDateFormat());
-			if (null == mlpPublishedSolutions) {
-				logger.debug("CommonDataService findUserSolutions() returned null Solution list");
-			} else if (mlpPublishedSolutions.isEmpty()) {
-				logger.debug("CommonDataService findUserSolutions() returned empty Solution list");
-			} else {
-				logger.debug("CommonDataService findUserSolutions() returned Solution list of size :  {}",mlpPublishedSolutions.size());
-				for (MLPSolution mlpsolution : mlpPublishedSolutions) {
-					dsSolutionList.addAll(solutionExtractor(sdf, compoSolnTlkitTypeCode, mlpsolution));
-				}
-			}
 			if(null != mlpUserPrivateSolutions && !mlpUserPrivateSolutions.isEmpty()){
 				for (MLPSolution mlpsolution : mlpUserPrivateSolutions) {
 						dsSolutionList.addAll(solutionExtractor(sdf, compoSolnTlkitTypeCode, mlpsolution));
@@ -1774,5 +1787,39 @@ public class SolutionServiceImpl implements ISolutionService {
 		}
 		return dsSolutionList;
 	}
+	
+	private List<DSSolution> getEntiteled(String userId, SimpleDateFormat sdf) throws InterruptedException, ExecutionException {
+		List<DSSolution> dsSolutionList = new ArrayList<>();
+		LicenseAction licenseAction = LicenseAction.AGGREGATE;
+		String lumServer = confprops.getLumURL();
+		
+		String solutionId = null;
+		String revisionId = null;
+		MLPSolution mlpsolution = null;
+		MLPSolutionRevision mlpSolRevision = null;
+		MLPUser mlpUser = null;
+		
+		LicenseAsset licenseAsset = new LicenseAsset(cmnDataService, lumServer, nexusArtifactClient);
+		CompletableFuture<GetEntitledSwidTagsResponse> swidTags = licenseAsset.getEntitledSwidTagsByUser(userId,
+				licenseAction.toString());
+		GetEntitledSwidTagsResponse tagsResponse = swidTags.get();
+		List<SwidTagsWithAvailableEntitlementSwidTagsWithAvailableEntitlement>  availableEntitlements = tagsResponse.getSwidTagsWithAvailableEntitlement();
+		if(null != availableEntitlements && !availableEntitlements.isEmpty()) {
+			for(SwidTagsWithAvailableEntitlementSwidTagsWithAvailableEntitlement availableEntitlement : availableEntitlements) {
+				solutionId = availableEntitlement.getSwPersistentId().toString(); // SolutionId
+				revisionId = availableEntitlement.getSwTagId(); // RevisionId
+				// get MLPSolution for the given solutionId
+				mlpsolution = cmnDataService.getSolution(solutionId);
+				// get the MLPSolutionRevision for the given revisionId
+				mlpSolRevision = cmnDataService.getSolutionRevision(solutionId, revisionId);
+				// get the MLPUSer for the revisionId
+				mlpUser = cmnDataService.getUser(mlpSolRevision.getUserId());
+				String userName = mlpUser.getFirstName() + " " + mlpUser.getLastName();
+				dsSolutionList.add(populateDsSolution(mlpsolution, sdf, userName, mlpSolRevision));
+			}
+		}
+		return dsSolutionList;
+	}
+
 	
 }
