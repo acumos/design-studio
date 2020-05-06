@@ -138,6 +138,8 @@ public class SolutionServiceImpl implements ISolutionService {
 	
 	private Instant lastExecutionTime; 
 	
+	private String LICENSEACTION_AGGREGATE = "aggregate";
+	
 	@Override
 	public void getUpdatedModelsbyDate() throws InterruptedException, ServiceException {
 		logger.debug("getCacheMechanism() Begin ");
@@ -1790,7 +1792,7 @@ public class SolutionServiceImpl implements ISolutionService {
 	
 	private List<DSSolution> getEntiteled(String userId, SimpleDateFormat sdf) throws InterruptedException, ExecutionException {
 		List<DSSolution> dsSolutionList = new ArrayList<>();
-		LicenseAction licenseAction = LicenseAction.AGGREGATE;
+			
 		String lumServer = confprops.getLumURL();
 		
 		String solutionId = null;
@@ -1801,7 +1803,7 @@ public class SolutionServiceImpl implements ISolutionService {
 		
 		LicenseAsset licenseAsset = new LicenseAsset(cmnDataService, lumServer, nexusArtifactClient);
 		CompletableFuture<GetEntitledSwidTagsResponse> swidTags = licenseAsset.getEntitledSwidTagsByUser(userId,
-				licenseAction.toString());
+				LICENSEACTION_AGGREGATE);
 		GetEntitledSwidTagsResponse tagsResponse = swidTags.get();
 		List<SwidTagsWithAvailableEntitlementSwidTagsWithAvailableEntitlement>  availableEntitlements = tagsResponse.getSwidTagsWithAvailableEntitlement();
 		if(null != availableEntitlements && !availableEntitlements.isEmpty()) {
