@@ -23,7 +23,7 @@
 
 	<groupId>org.acumos.design-studio</groupId>
 	<artifactId>ds-compositionengine</artifactId>
-	<version>3.0.5-SNAPSHOT</version>
+	<version>3.0.6-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Design Studio Composition Engine</name>
 
@@ -167,8 +167,17 @@
         		<artifactId>logging-demo</artifactId>
         		<version>3.0.5</version>
         	</dependency>
-		
-		
+        	<dependency>
+			<groupId>org.acumos.license-manager</groupId>
+			<artifactId>license-manager-client-library</artifactId>
+			<version>1.4.4-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.collections</groupId>
+					<artifactId>google-collections</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>

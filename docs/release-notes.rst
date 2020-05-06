@@ -24,6 +24,10 @@ The Design Studio Composition Engine is packaged within a Docker image and avail
 Acumos docker registry.  The TOSCAGenerator Client library is published in the Acumos Nexus
 repository as a jar file.
 
+Version 3.0.6, 2020-05-06
+---------------------------
+* ACUMOS-3483 : As a Supplier, I should be able allow/deny my model to be included in creation of composite models (i.e. chaining models)
+
 Version 3.0.5, 2020-03-12
 ---------------------------
 * Updated the existing download url for protobuf-java jar in ds-compositionengine pom.xml
