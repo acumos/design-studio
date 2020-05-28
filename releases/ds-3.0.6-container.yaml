@@ -1,0 +1,10 @@
+---
+distribution_type: container
+container_release_tag: 3.0.6
+container_pull_registry: nexus3.acumos.org:10004
+container_push_registry: nexus3.acumos.org:10002
+project: design-studio
+ref: 3f93fcc46bc2f5468455adf20138cd3605acfc05
+containers:
+        - name: ds-compositionengine
+          version: 3.0.6
