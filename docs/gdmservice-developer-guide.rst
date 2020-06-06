@@ -94,7 +94,7 @@ Design Studio Generic Datamapper Service Developer Guide
 		 
     Clone the Repository in some user accessible directory, lets call this as <homeDirectory>
 
-       git clone https://<username>@gerrit.acumos.org/r/a/design-studio
+       git clone --depth 1 https://<username>@gerrit.acumos.org/r/a/design-studio
 
     After successful clone, new directory <homeDirectory>/**design-studio** with following sub directories should get created.
 	
