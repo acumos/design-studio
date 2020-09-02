@@ -1,4 +1,5 @@
 # UUID                                                                          	Group Name
 #
+334b712cb7d05554208bffcadac8d4debccc5b81                                        	saml/acumos-gerrit-design-studio-committers
 42f0c83244389e408b42fa668348002012ecba46                                        	GitHub Replication
 ldap:cn=acumos-gerrit-design-studio-committers,ou=Groups,dc=freestandards,dc=org	ldap/acumos-gerrit-design-studio-committers
